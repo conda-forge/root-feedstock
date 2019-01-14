@@ -19,7 +19,7 @@ source:
     - patches/clang-4.0.0_cxx11.patch  # [osx]
 
 build:
-  number: 0
+  number: 1000
   skip: True  # [win]
   skip: True  # [osx]
   features:
