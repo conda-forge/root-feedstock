@@ -1,3 +1,5 @@
+build_number_decrement:
+- '0'
 c_compiler:
 - gcc
 channel_sources:
@@ -7,9 +9,9 @@ channel_targets:
 cxx_compiler:
 - gxx
 docker_image:
-- condaforge/linux-anvil
+- condaforge/linux-anvil-comp7
 fortran_compiler:
-- toolchain_fort
+- gfortran
 freetype:
 - 2.9.1
 giflib:
@@ -72,5 +74,13 @@ sqlite:
 - '3'
 xz:
 - '5.2'
+zip_keys:
+- - c_compiler
+  - cxx_compiler
+  - fortran_compiler
+  - channel_sources
+  - channel_targets
+  - docker_image
+  - build_number_decrement
 zlib:
 - '1.2'
