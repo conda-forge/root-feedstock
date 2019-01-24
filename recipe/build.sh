@@ -9,6 +9,10 @@ sed -i.bak -e 's@CMAKE_BUILD_WITH_INSTALL_RPATH FALSE@CMAKE_BUILD_WITH_INSTALL_R
 sed -i.bak -e 's@include_directories(${LIBXML2_INCLUDE_DIR})@include_directories(${LIBXML2_INCLUDE_DIR} ${LIBXML2_INCLUDE_DIRS})@g' \
     root-source/io/xmlparser/CMakeLists.txt && rm $_.bak
 
+sed -i 's@addSystemInclude(DriverArgs, CC1Args, SysRoot + "/usr/local/include");@addSystemInclude(DriverArgs, CC1Args, "'"${PREFIX}/x86_64-conda_cos6-linux-gnu/sysroot/usr/include"'");@g' \
+    root-source/interpreter/llvm/src/tools/clang/lib/Driver/ToolChains/Linux.cpp
+
+
 mkdir build-dir
 cd build-dir
 
@@ -40,7 +44,7 @@ cmake -LAH \
     -Dgnuinstall=OFF \
     -Dshared=ON \
     -Dsoversion=ON \
-    -Dbuiltin_clang=OFF \
+    -Dbuiltin_clang=ON \
     -Dbuiltin_glew=OFF \
     -Dbuiltin_xrootd=OFF \
     -Dbuiltin_davix=OFF \
