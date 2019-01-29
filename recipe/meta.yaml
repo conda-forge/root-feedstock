@@ -16,7 +16,7 @@ source:
     - patches/clang-4.0.0_cxx11.patch  # [osx]
 
 build:
-  number: 1000
+  number: 0
   skip: True  # [win]
   skip: True  # [osx]
   features:
@@ -42,7 +42,7 @@ requirements:
     - openblas
     - cfitsio
     - clangdev={{ clang_version }}
-    - clang_variant * cling
+    - clang_variant * cling_{{ version }}
     - davix
     - fftw
     - freetype
@@ -85,7 +85,7 @@ requirements:
     - openblas
     - cfitsio
     - clangdev={{ clang_version }}
-    - clang_variant * cling
+    - clang_variant * cling_{{ version }}
     - davix
     - fftw
     - freetype
