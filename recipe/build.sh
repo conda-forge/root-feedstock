@@ -9,6 +9,7 @@ sed -i.bak -e 's@CMAKE_BUILD_WITH_INSTALL_RPATH FALSE@CMAKE_BUILD_WITH_INSTALL_R
 sed -i.bak -e 's@include_directories(${LIBXML2_INCLUDE_DIR})@include_directories(${LIBXML2_INCLUDE_DIR} ${LIBXML2_INCLUDE_DIRS})@g' \
     root-source/io/xmlparser/CMakeLists.txt && rm $_.bak
 
+
 mkdir build-dir
 cd build-dir
 
@@ -87,11 +88,6 @@ ln -s "${PREFIX}/lib/libPyMVA.so" "${SP_DIR}/"
 
 # Remove the PCH as we will regenerate in the post install hook
 rm "${PREFIX}/etc/allDict.cxx.pch"
-
-# Fix broken symlinks that ROOT makes when installing
-unlink "${PREFIX}/bin/clang++"
-unlink "${PREFIX}/bin/clang-cl"
-unlink "${PREFIX}/bin/clang-cpp"
 
 # Add the post activate/deactivate scripts
 mkdir -p "${PREFIX}/etc/conda/activate.d"

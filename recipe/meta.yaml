@@ -1,5 +1,5 @@
 {% set name = "root" %}
-{% set version = "6.14.06" %}
+{% set version = "6.16.00" %}
 {% set variant = "openblas" %}
 {% set clang_version = "5.0.0" %}
 
@@ -13,13 +13,10 @@ source:
   folder: root-source
   patches:
     - patches/root-6.12.06_cling-runtime-sysroot.patch
-    - patches/root-6.16.00_googletest-pass-ar.patch
-    - patches/root-6.14.00_fno-plt-arg-skip.patch
-    - patches/root-6.16.00_python-initalisation.patch
     - patches/clang-4.0.0_cxx11.patch  # [osx]
 
 build:
-  number: 1000
+  number: 0
   skip: True  # [win]
   skip: True  # [osx]
   features:
@@ -45,7 +42,7 @@ requirements:
     - openblas
     - cfitsio
     - clangdev={{ clang_version }}
-    - clang_variant * cling
+    - clang_variant * cling_{{ version }}
     - davix
     - fftw
     - freetype
@@ -88,7 +85,7 @@ requirements:
     - openblas
     - cfitsio
     - clangdev={{ clang_version }}
-    - clang_variant * cling
+    - clang_variant * cling_{{ version }}
     - davix
     - fftw
     - freetype
@@ -134,6 +131,9 @@ test:
     - root -l -b -q -x
     - root -l -b -q -x ${RECIPE_DIR}/test.cpp
     - root -l -b -q -x ${RECIPE_DIR}/test.cpp++
+    # When testing with -e, explicitly set the return code to zero
+    - root -b -l -q -x -e '2+3; 0'
+    - root -b -l -q -x -e 'gSystem->LoadAllLibraries(); 0'
 
 about:
   home: https://root.cern/
