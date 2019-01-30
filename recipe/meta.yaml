@@ -14,11 +14,12 @@ source:
   patches:
     - patches/root-6.12.06_cling-runtime-sysroot.patch
     - patches/clang-4.0.0_cxx11.patch  # [osx]
+    - patches/root-6.16.xx_allow_setting_clang_version.patch  # [osx]
 
 build:
   number: 1
   skip: True  # [win]
-  skip: True  # [osx]
+  skip: True  # [linux]
   features:
     - blas_{{ variant }}
   run_exports:
