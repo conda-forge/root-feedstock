@@ -131,8 +131,9 @@ test:
     - root -l -b -q -x
     - root -l -b -q -x ${RECIPE_DIR}/test.cpp
     - root -l -b -q -x ${RECIPE_DIR}/test.cpp++
-    - root -b -l -q -x -e 2+3-5
-    - root -b -l -q -x -e 'gSystem->LoadAllLibraries()'
+    # When testing with -e, explicitly set the return code to zero
+    - root -b -l -q -x -e '2+3; 0'
+    - root -b -l -q -x -e 'gSystem->LoadAllLibraries(); 0'
 
 about:
   home: https://root.cern/
