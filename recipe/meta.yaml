@@ -16,7 +16,7 @@ source:
     - patches/clang-4.0.0_cxx11.patch  # [osx]
 
 build:
-  number: 0
+  number: 1
   skip: True  # [win]
   skip: True  # [osx]
   features:
@@ -33,7 +33,7 @@ requirements:
     - {{ cdt('mesa-libgl-devel') }}  # [linux]
     - cmake
     - git
-    - pkgconfig
+    - pkg-config
   host:
     - {{ compiler('c') }}  # [linux]
     - {{ compiler('cxx') }}  # [linux]
@@ -97,7 +97,6 @@ requirements:
     - libpng
     - libtiff
     - libxml2
-    - llvmdev==5
     - lz4
     - lz4-c
     # - mysql
@@ -125,9 +124,13 @@ requirements:
     - cling 9999
 
 test:
+  requires:
+    - ipython
   imports:
     - ROOT
+    - JupyROOT
   commands:
+    - ipython -c 'import JsMVA'
     - root -l -b -q -x
     - root -l -b -q -x ${RECIPE_DIR}/test.cpp
     - root -l -b -q -x ${RECIPE_DIR}/test.cpp++

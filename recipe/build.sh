@@ -14,7 +14,7 @@ mkdir build-dir
 cd build-dir
 
 if [ "$(uname)" == "Linux" ]; then
-    cmake_args="-DCMAKE_TOOLCHAIN_FILE=${RECIPE_DIR}/toolchain.cmake -DCMAKE_AR=${GCC_AR} -DCLANG_DEFAULT_LINKER=${LD_GOLD} -DDEFAULT_SYSROOT=${PREFIX}/x86_64-conda_cos6-linux-gnu/sysroot -Dx11=ON -DRT_LIBRARY=${PREFIX}/x86_64-conda_cos6-linux-gnu/sysroot/usr/lib/librt.so"
+    cmake_args="-DCMAKE_TOOLCHAIN_FILE=${RECIPE_DIR}/toolchain.cmake -DCMAKE_AR=${GCC_AR} -DCLANG_DEFAULT_LINKER=${LD_GOLD} -DDEFAULT_SYSROOT=${PREFIX}/${HOST}/sysroot -Dx11=ON -DRT_LIBRARY=${PREFIX}/${HOST}/sysroot/usr/lib/librt.so"
 else
     cmake_args="-Dcocoa=ON"
 fi
@@ -85,6 +85,7 @@ ln -s "${PREFIX}/lib/JupyROOT/" "${SP_DIR}/"
 test "$(ls "${PREFIX}"/lib/libPy* | wc -l) = 2"
 ln -s "${PREFIX}/lib/libPyROOT.so" "${SP_DIR}/"
 ln -s "${PREFIX}/lib/libPyMVA.so" "${SP_DIR}/"
+ln -s "${PREFIX}/lib/libJupyROOT.so" "${SP_DIR}/"
 
 # Remove the PCH as we will regenerate in the post install hook
 rm "${PREFIX}/etc/allDict.cxx.pch"
