@@ -33,7 +33,7 @@ requirements:
     - {{ cdt('mesa-libgl-devel') }}  # [linux]
     - cmake
     - git
-    - pkgconfig
+    - pkg-config
   host:
     - {{ compiler('c') }}  # [linux]
     - {{ compiler('cxx') }}  # [linux]
