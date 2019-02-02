@@ -97,7 +97,6 @@ requirements:
     - libpng
     - libtiff
     - libxml2
-    - llvmdev==5
     - lz4
     - lz4-c
     # - mysql
