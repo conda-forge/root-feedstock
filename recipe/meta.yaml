@@ -124,7 +124,7 @@ requirements:
     - cling 9999
 
 test:
-  requirements:
+  requires:
     - ipython
   imports:
     - ROOT
