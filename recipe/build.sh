@@ -10,7 +10,7 @@ sed -i.bak -e 's@include_directories(${LIBXML2_INCLUDE_DIR})@include_directories
     root-source/io/xmlparser/CMakeLists.txt && rm $_.bak
 
 
-mkdir build-dir
+mkdir -p build-dir
 cd build-dir
 
 if [ "$(uname)" == "Linux" ]; then
@@ -57,7 +57,7 @@ cmake -LAH \
     -Dcxx14=OFF \
     -Dcxx17=ON \
     -Dminuit2=ON \
-    -Dgviz=ON \
+    -Dgviz=OFF \
     -Droofit=ON \
     -Dtbb=ON \
     -Dcastor=OFF \
@@ -72,8 +72,12 @@ cmake -LAH \
     -Droottest=OFF \
     ../root-source
 
-make VERBOSE=1
-# make -j${CPU_COUNT}
+# Fix for in-place run of rootcling during build
+DYLD_FALLBACK_LIBRARY_PATH="${PWD}/lib;${PREFIX}/lib"
+export DYLD_FALLBACK_LIBRARY_PATH
+
+# make VERBOSE=1
+make -j${CPU_COUNT}
 
 make install
 

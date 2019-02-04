@@ -2,6 +2,7 @@
 {% set version = "6.16.00" %}
 {% set variant = "openblas" %}
 {% set clang_version = "5.0.0" %}
+{% set clang_patches_version = "6.16.00" %}
 
 package:
   name: {{ name|lower }}
@@ -43,8 +44,7 @@ requirements:
     - openblas
     - cfitsio
     - clangdev={{ clang_version }}
-    - clang_variant * cling_{{ version }}
-    - libcxx=4
+    - clang_variant * cling_{{ clang_patches_version }}
     - davix
     - fftw
     - freetype
@@ -56,6 +56,7 @@ requirements:
     - libpng
     - libtiff
     - libxml2
+    - llvmdev==5
     - lz4
     - lz4-c
     # - mysql
@@ -87,7 +88,6 @@ requirements:
     - cfitsio
     - clangdev={{ clang_version }}
     - clang_variant * cling_{{ version }}
-    - libcxx=4
     - davix
     - fftw
     - freetype
@@ -95,6 +95,7 @@ requirements:
     - graphviz
     - gsl
     - krb5  # [osx]
+    - libcxx=4  # [osx]
     - libglu  # [linux]
     - libpng
     - libtiff
