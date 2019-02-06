@@ -9,19 +9,13 @@ set -e
 sed -i.bak -e 's@include_directories(${LIBXML2_INCLUDE_DIR})@include_directories(${LIBXML2_INCLUDE_DIR} ${LIBXML2_INCLUDE_DIRS})@g' \
     root-source/io/xmlparser/CMakeLists.txt && rm $_.bak
 
-
 mkdir -p build-dir
 cd build-dir
 
 if [ "$(uname)" == "Linux" ]; then
     cmake_args="-DCMAKE_TOOLCHAIN_FILE=${RECIPE_DIR}/toolchain.cmake -DCMAKE_AR=${GCC_AR} -DCLANG_DEFAULT_LINKER=${LD_GOLD} -DDEFAULT_SYSROOT=${PREFIX}/${HOST}/sysroot -Dx11=ON -DRT_LIBRARY=${PREFIX}/${HOST}/sysroot/usr/lib/librt.so"
 else
-    cmake_args="-Dcocoa=OFF -DCLANG_RESOURCE_DIR_VERSION='5.0.0'"
-    # TODO: (chrisburr) Remove, this should be fixed in clangdev
-    export SDKROOT="${CONDA_BUILD_SYSROOT}"
-    export CFLAGS="${CFLAGS} -isysroot ${CONDA_BUILD_SYSROOT}"
-    export CXXFLAGS="${CXXFLAGS} -isysroot ${CONDA_BUILD_SYSROOT}"
-    export LDFLAGS="${LDFLAGS} -isysroot ${CONDA_BUILD_SYSROOT}"
+    cmake_args="-Dcocoa=ON -DCLANG_RESOURCE_DIR_VERSION='5.0.0'"
 fi
 
 CXXFLAGS=$(echo "${CXXFLAGS}" | echo "${CXXFLAGS}" | sed -E 's@-std=c\+\+[^ ]+@@g')
@@ -40,6 +34,7 @@ cmake -LAH \
     -DCMAKE_CXX_COMPILER="${GXX}" \
     -DCMAKE_CXX_FLAGS="${CXXFLAGS}" \
     -DCLING_BUILD_PLUGINS=OFF \
+    -DPYTHON_EXECUTABLE=${PYTHON} \
     -Dexplicitlink=ON \
     -Dexceptions=ON \
     -Dfail-on-missing=ON \
