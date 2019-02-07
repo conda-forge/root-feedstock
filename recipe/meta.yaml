@@ -44,7 +44,7 @@ requirements:
     - {{ compiler('c') }}  # [linux]
     - {{ compiler('cxx') }}  # [linux]
     - {{ compiler('fortran') }}  # [linux]
-    - afterimage
+    # - afterimage
     - openblas
     - cfitsio
     - clangdev={{ clang_version }}
@@ -88,7 +88,7 @@ requirements:
     - {{ compiler('cxx') }}
     - {{ compiler('fortran') }}  # [linux]
     - {{ pin_compatible('numpy') }}
-    - afterimage
+    # - afterimage
     - openblas
     - cfitsio
     - clangdev={{ clang_version }}
