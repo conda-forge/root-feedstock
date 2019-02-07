@@ -9,6 +9,17 @@ set -e
 sed -i.bak -e 's@include_directories(${LIBXML2_INCLUDE_DIR})@include_directories(${LIBXML2_INCLUDE_DIR} ${LIBXML2_INCLUDE_DIRS})@g' \
     root-source/io/xmlparser/CMakeLists.txt && rm $_.bak
 
+sed -i.bak -e 's@SetLibraryPath();@@g' \
+    root-source/rootx/src/rootx.cxx && rm $_.bak
+
+# Manually set the deployment_target
+OLDVERSIONMACOS='${MACOSX_VERSION}'
+sed -i.bak -e "s@${OLDVERSIONMACOS}@${MACOSX_DEPLOYMENT_TARGET}@g" \
+    root-source/cmake/modules/SetUpMacOS.cmake && rm $_.bak
+
+# This is part of CMake
+rm root-source/cmake/modules/FindGSL.cmake
+
 mkdir -p build-dir
 cd build-dir
 
@@ -26,6 +37,7 @@ cmake -LAH \
     -DCMAKE_PREFIX_PATH="${PREFIX}" \
     -DCMAKE_INSTALL_PREFIX="${PREFIX}" \
     -DCMAKE_INSTALL_RPATH="${PREFIX}/lib" \
+    -DCMAKE_INSTALL_NAME_DIR="${PREFIX}/lib" \
     -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON \
     -DCMAKE_INSTALL_RPATH_USE_LINK_PATH=ON \
     ${cmake_args} \
@@ -66,10 +78,6 @@ cmake -LAH \
     -Dtesting=ON \
     -Droottest=OFF \
     ../root-source
-
-# Fix for in-place run of rootcling during build
-DYLD_FALLBACK_LIBRARY_PATH="${PWD}/lib;${PREFIX}/lib"
-export DYLD_FALLBACK_LIBRARY_PATH
 
 # make VERBOSE=1
 make -j${CPU_COUNT}
