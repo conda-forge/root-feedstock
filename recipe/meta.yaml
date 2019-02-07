@@ -23,6 +23,7 @@ build:
   number: 1
   skip: True  # [win]
   skip: True  # [linux]
+  skip: True  # [py36]
   features:
     - blas_{{ variant }}
   run_exports:
