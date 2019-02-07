@@ -1,0 +1,22 @@
+diff --git a/core/clingutils/CMakeLists.txt b/core/clingutils/CMakeLists.txt
+index 293b5d7dbc..388a8c3556 100644
+--- a/core/clingutils/CMakeLists.txt
++++ b/core/clingutils/CMakeLists.txt
+@@ -119,17 +119,6 @@ foreach(file  multimap  multiset)
+   install(FILES ${CMAKE_SOURCE_DIR}/interpreter/cling/include/cling/cint/${file} DESTINATION ${CMAKE_INSTALL_SYSCONFDIR}/cling/cint)
+ endforeach()
+
+-# These headers do not have complete include guards on all platforms we
+-# support. This means that the PCH cannot provide their representation at
+-# runtime and clang will hit disk, triggering a possible incompatibility
+-# of that file in build-time versus run-time (different length etc).
+-# Capture their build-time version here, and inject it into runtime.
+-foreach(file wchar.h bits/stat.h bits/time.h)
+-  if(EXISTS /usr/include/${file})
+-    list(APPEND copy_commands COMMAND ${CMAKE_COMMAND} -E copy /usr/include/${file} ${CMAKE_BINARY_DIR}/etc/cling/lib/clang/${CLANG_RESOURCE_DIR_VERSION}/include/${file})
+-  endif()
+-endforeach()
+-
+ set(stamp_file ${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/LLVMRES.stamp)
+ if(MSVC)
+   add_custom_command(OUTPUT ${stamp_file}

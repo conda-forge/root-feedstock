@@ -18,6 +18,7 @@ source:
     - patches/clang-4.0.0_cxx11.patch  # [osx]
     - patches/root-6.16.xx_allow_setting_clang_version.patch  # [osx]
     - patches/root-6.16.xx_python_mac_os.patch  # [osx]
+    - patches/root-x.xx.xx-remove-hard.patch  # [osx]
 
 build:
   number: 2

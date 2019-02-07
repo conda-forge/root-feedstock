@@ -85,9 +85,7 @@ cmake -LAH \
     -Droottest=OFF \
     ../root-source
 
-# make VERBOSE=1
 make -j${CPU_COUNT}
-
 make install
 
 # Create symlinks so conda can find the Python bindings
