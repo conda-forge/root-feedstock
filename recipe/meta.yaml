@@ -82,8 +82,8 @@ requirements:
     - xz
     - zlib
   run:
-    - {{ compiler('c') }}  # [linux]
-    - {{ compiler('cxx') }}  # [linux]
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
     - {{ compiler('fortran') }}  # [linux]
     - {{ pin_compatible('numpy') }}
     - afterimage
@@ -136,6 +136,8 @@ test:
     - JupyROOT
   commands:
     - ipython -c 'import JsMVA'
+    - root.exe -b -l -q -e
+    - root.exe -b -l -q -e 'gSystem->Load("libGeom")'
     - root -l -b -q -x
     - root -l -b -q -x ${RECIPE_DIR}/test.cpp
     - root -l -b -q -x ${RECIPE_DIR}/test.cpp++
