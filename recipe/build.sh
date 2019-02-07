@@ -88,8 +88,7 @@ cmake -LAH \
     -Droottest=OFF \
     ../root-source
 
-# make VERBOSE=1
-make -j${CPU_COUNT}
+make VERBOSE=1 -j${CPU_COUNT}
 
 make install
 
