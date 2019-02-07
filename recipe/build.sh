@@ -34,6 +34,7 @@ else
     cmake_args="-Dcocoa=ON -DCLANG_RESOURCE_DIR_VERSION='5.0.0'"
     echo "SDKROOT is: '${SDKROOT}'"
     echo "CONDA_BUILD_SYSROOT is: '${CONDA_BUILD_SYSROOT}'"
+    export SDKROOT=${CONDA_BUILD_SYSROOT}
 fi
 
 CXXFLAGS=$(echo "${CXXFLAGS}" | echo "${CXXFLAGS}" | sed -E 's@-std=c\+\+[^ ]+@@g')
