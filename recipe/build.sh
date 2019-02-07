@@ -1,23 +1,28 @@
 #!/bin/bash
 set -e
 
-# Backup method required on macOS, and supported on linux.
+# Backup method of sed required on macOS, and supported on linux.
 
+# Not needed on macOS, breaks the build
 # sed -i.bak -e 's@CMAKE_BUILD_WITH_INSTALL_RPATH FALSE@CMAKE_BUILD_WITH_INSTALL_RPATH TRUE@g' \
 #   root-source/cmake/modules/RootBuildOptions.cmake && rm $_.bak
 
+# Fix for missing libraries. CMake > 3.10 doesn't need LIBXML2_INCLUDE_DIR
 sed -i.bak -e 's@include_directories(${LIBXML2_INCLUDE_DIR})@include_directories(${LIBXML2_INCLUDE_DIR} ${LIBXML2_INCLUDE_DIRS})@g' \
     root-source/io/xmlparser/CMakeLists.txt && rm $_.bak
 
+# Remove the library path muddling that `root` tries to do
 sed -i.bak -e 's@SetLibraryPath();@@g' \
     root-source/rootx/src/rootx.cxx && rm $_.bak
 
 # Manually set the deployment_target
+# May not be very important but nice to do
 OLDVERSIONMACOS='${MACOSX_VERSION}'
 sed -i.bak -e "s@${OLDVERSIONMACOS}@${MACOSX_DEPLOYMENT_TARGET}@g" \
     root-source/cmake/modules/SetUpMacOS.cmake && rm $_.bak
 
-# This is part of CMake
+# This is part of CMake, and is manually removed for a better link
+# May not be needed, but nice to do
 rm root-source/cmake/modules/FindGSL.cmake
 
 mkdir -p build-dir
@@ -31,6 +36,7 @@ fi
 
 CXXFLAGS=$(echo "${CXXFLAGS}" | echo "${CXXFLAGS}" | sed -E 's@-std=c\+\+[^ ]+@@g')
 export CXXFLAGS
+
 
 cmake -LAH \
     -DCMAKE_BUILD_TYPE=Release \

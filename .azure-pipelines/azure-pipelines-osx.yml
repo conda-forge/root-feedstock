@@ -13,6 +13,9 @@ jobs:
       osx_python2.7:
         CONFIG: osx_python2.7
         UPLOAD_PACKAGES: False
+      osx_python3.6:
+        CONFIG: osx_python3.6
+        UPLOAD_PACKAGES: False
       osx_python3.7:
         CONFIG: osx_python3.7
         UPLOAD_PACKAGES: False
