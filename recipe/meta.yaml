@@ -20,8 +20,9 @@ source:
     - patches/root-6.16.xx_python_mac_os.patch  # [osx]
 
 build:
-  number: 2
-  skip: True  # [win]
+  number: 0
+  skip: True  # [not osx]
+  skip: True  # [not py37]
   features:
     - blas_{{ variant }}
   run_exports:
