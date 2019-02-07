@@ -21,8 +21,9 @@ source:
     - patches/root-x.xx.xx-remove-hard.patch  # [osx]
 
 build:
-  number: 2
-  skip: True  # [win]
+  number: 0
+  skip: True  # [not osx]
+  skip: True  # [not py37]
   features:
     - blas_{{ variant }}
   run_exports:
