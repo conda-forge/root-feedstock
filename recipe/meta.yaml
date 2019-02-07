@@ -23,7 +23,8 @@ source:
 build:
   number: 0
   skip: True  # [not osx]
-  skip: True  # [not py37]
+  skip: True  # [py27]
+  skip: True  # [py36]
   features:
     - blas_{{ variant }}
   run_exports:
