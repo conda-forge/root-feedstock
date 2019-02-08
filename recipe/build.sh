@@ -80,7 +80,7 @@ cmake -LAH \
     -Doracle=OFF \
     -Dpgsql=OFF \
     -Dpythia6=OFF \
-    -Dpythia8=OFF \
+    -Dpythia8=ON \
     -Dtesting=ON \
     -Droottest=OFF \
     ../root-source
@@ -110,5 +110,10 @@ rm "${PREFIX}/etc/allDict.cxx.pch"
 # Add the post activate/deactivate scripts
 mkdir -p "${PREFIX}/etc/conda/activate.d"
 cp "${RECIPE_DIR}/activate.sh" "${PREFIX}/etc/conda/activate.d/activate-root.sh"
+cp "${RECIPE_DIR}/activate.csh" "${PREFIX}/etc/conda/activate.d/activate-root.csh"
+cp "${RECIPE_DIR}/activate.fish" "${PREFIX}/etc/conda/activate.d/activate-root.fish"
+
 mkdir -p "${PREFIX}/etc/conda/deactivate.d"
 cp "${RECIPE_DIR}/deactivate.sh" "${PREFIX}/etc/conda/deactivate.d/deactivate-root.sh"
+cp "${RECIPE_DIR}/deactivate.csh" "${PREFIX}/etc/conda/deactivate.d/deactivate-root.csh"
+cp "${RECIPE_DIR}/deactivate.fish" "${PREFIX}/etc/conda/deactivate.d/deactivate-root.fish"

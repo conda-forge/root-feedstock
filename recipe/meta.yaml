@@ -66,6 +66,7 @@ requirements:
     - openssl
     - pcre
     # - postgresql
+    - pythia8
     - python
     - qt
     - sqlite
@@ -109,6 +110,7 @@ requirements:
     - openssl
     - pcre
     # - postgresql
+    - pythia8
     - python
     - qt
     - sqlite
