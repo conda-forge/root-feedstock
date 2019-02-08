@@ -3,10 +3,6 @@ set -e
 
 # Backup method of sed required on macOS, and supported on linux.
 
-# Not needed on macOS, breaks the build
-# sed -i.bak -e 's@CMAKE_BUILD_WITH_INSTALL_RPATH FALSE@CMAKE_BUILD_WITH_INSTALL_RPATH TRUE@g' \
-#   root-source/cmake/modules/RootBuildOptions.cmake && rm $_.bak
-
 # Fix for missing libraries. CMake > 3.10 doesn't need LIBXML2_INCLUDE_DIR
 sed -i.bak -e 's@include_directories(${LIBXML2_INCLUDE_DIR})@include_directories(${LIBXML2_INCLUDE_DIR} ${LIBXML2_INCLUDE_DIRS})@g' \
     root-source/io/xmlparser/CMakeLists.txt && rm $_.bak
@@ -32,11 +28,13 @@ if [ "$(uname)" == "Linux" ]; then
     cmake_args="-DCMAKE_TOOLCHAIN_FILE=${RECIPE_DIR}/toolchain.cmake -DCMAKE_AR=${GCC_AR} -DCLANG_DEFAULT_LINKER=${LD_GOLD} -DDEFAULT_SYSROOT=${PREFIX}/${HOST}/sysroot -Dx11=ON -DRT_LIBRARY=${PREFIX}/${HOST}/sysroot/usr/lib/librt.so"
 else
     cmake_args="-Dcocoa=ON -DCLANG_RESOURCE_DIR_VERSION='5.0.0'"
+    echo "SDKROOT is: '${SDKROOT}'"
+    echo "CONDA_BUILD_SYSROOT is: '${CONDA_BUILD_SYSROOT}'"
+    export SDKROOT="${CONDA_BUILD_SYSROOT}"
 fi
 
 CXXFLAGS=$(echo "${CXXFLAGS}" | echo "${CXXFLAGS}" | sed -E 's@-std=c\+\+[^ ]+@@g')
 export CXXFLAGS
-
 
 cmake -LAH \
     -DCMAKE_BUILD_TYPE=Release \
