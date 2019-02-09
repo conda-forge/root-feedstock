@@ -28,16 +28,10 @@ sed -i.bak -e "s@${OLDVERSIONMACOS}@${MACOSX_DEPLOYMENT_TARGET}@g" \
 # Is in a current PR to ROOT: #3397
 rm root-source/cmake/modules/FindGSL.cmake
 
-mkdir -p build-dir
-cd build-dir
-
 if [ "$(uname)" == "Linux" ]; then
     cmake_args="-DCMAKE_TOOLCHAIN_FILE=${RECIPE_DIR}/toolchain.cmake -DCMAKE_AR=${GCC_AR} -DCLANG_DEFAULT_LINKER=${LD_GOLD} -DDEFAULT_SYSROOT=${PREFIX}/${HOST}/sysroot -Dx11=ON -DRT_LIBRARY=${PREFIX}/${HOST}/sysroot/usr/lib/librt.so"
 else
     cmake_args="-Dcocoa=ON -DCLANG_RESOURCE_DIR_VERSION='5.0.0'"
-    echo "SDKROOT is: '${SDKROOT}'"
-    echo "CONDA_BUILD_SYSROOT is: '${CONDA_BUILD_SYSROOT}'"
-    export SDKROOT="${CONDA_BUILD_SYSROOT}"
 
     # This is a patch for the macOS needing to be unlinked
     # Not solved in ROOT yet.
@@ -45,6 +39,9 @@ else
     sed -i.bak -e "s@// load any dependent libraries@if(moduleBasename.Contains(\"PyROOT\") || moduleBasename.Contains(\"PyMVA\")) gSystem->Load(\"${PYLIBNAME}\");@g" \
         root-source/core/base/src/TSystem.cxx && rm $_.bak
 fi
+
+mkdir -p build-dir
+cd build-dir
 
 CXXFLAGS=$(echo "${CXXFLAGS}" | echo "${CXXFLAGS}" | sed -E 's@-std=c\+\+[^ ]+@@g')
 export CXXFLAGS
