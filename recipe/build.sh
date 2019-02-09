@@ -3,9 +3,15 @@ set -e
 
 # Backup method of sed required on macOS, and supported on linux.
 
+# Fixed in 6.16.02
 # Fix for missing libraries. CMake > 3.10 doesn't need LIBXML2_INCLUDE_DIR
 sed -i.bak -e 's@include_directories(${LIBXML2_INCLUDE_DIR})@include_directories(${LIBXML2_INCLUDE_DIR} ${LIBXML2_INCLUDE_DIRS})@g' \
     root-source/io/xmlparser/CMakeLists.txt && rm $_.bak
+
+# Fixed in 6.16.02
+# Fix ROOT includes on case-insensitive file systems
+sed -i.bak -e 's@<ROOT/RConfig.h>@"ROOT/RConfig.h"@g' \
+    root-source/core/base/inc/RConfig.h && rm $_.bak
 
 # Remove the library path muddling that `root` tries to do
 sed -i.bak -e 's@SetLibraryPath();@@g' \
@@ -19,6 +25,7 @@ sed -i.bak -e "s@${OLDVERSIONMACOS}@${MACOSX_DEPLOYMENT_TARGET}@g" \
 
 # This is part of CMake, and is manually removed for a better link
 # May not be needed, but nice to do
+# Is in a current PR to ROOT: #3397
 rm root-source/cmake/modules/FindGSL.cmake
 
 mkdir -p build-dir
@@ -31,6 +38,12 @@ else
     echo "SDKROOT is: '${SDKROOT}'"
     echo "CONDA_BUILD_SYSROOT is: '${CONDA_BUILD_SYSROOT}'"
     export SDKROOT="${CONDA_BUILD_SYSROOT}"
+
+    # This is a patch for the macOS needing to be unlinked
+    # Not solved in ROOT yet.
+    PYLIBNAME=$(python -c 'import sysconfig; print("libpython" + sysconfig.get_config_var("VERSION") + (sysconfig.get_config_var("ABIFLAGS") or sysconfig.get_config_var("abiflags") or ""))')
+    sed -i.bak -e "s@// load any dependent libraries@if(moduleBasename.Contains(\"PyROOT\") || moduleBasename.Contains(\"PyMVA\")) gSystem->Load(\"${PYLIBNAME}\");@g" \
+        root-source/core/base/src/TSystem.cxx && rm $_.bak
 fi
 
 CXXFLAGS=$(echo "${CXXFLAGS}" | echo "${CXXFLAGS}" | sed -E 's@-std=c\+\+[^ ]+@@g')

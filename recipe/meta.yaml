@@ -16,9 +16,9 @@ source:
   patches:
     - patches/root-6.12.06_cling-runtime-sysroot.patch
     - patches/clang-4.0.0_cxx11.patch  # [osx]
-    - patches/root-6.16.xx_allow_setting_clang_version.patch  # [osx]
-    - patches/root-6.16.xx_python_mac_os.patch  # [osx]
-    - patches/root-x.xx.xx-remove-hard.patch  # [osx]
+    - patches/root-6.16.02_allow_setting_clang_version.patch  # [osx]
+    - patches/root-x.xx.xx_python_mac_os.patch  # [osx]
+    - patches/root-x.xx.xx-copy-abspath-headers.patch  # [osx]
 
 build:
   number: 2
@@ -51,7 +51,6 @@ requirements:
     - fftw
     - freetype
     - giflib
-    - graphviz
     - gsl
     - krb5  # [osx]
     - libglu  # [linux]
@@ -96,10 +95,8 @@ requirements:
     - fftw
     - freetype
     - giflib
-    - graphviz
     - gsl
     - krb5  # [osx]
-    - libcxx=4  # [osx]
     - libglu  # [linux]
     - libpng
     - libtiff
@@ -138,8 +135,6 @@ test:
     - JupyROOT
   commands:
     - ipython -c 'import JsMVA'
-    - root.exe -b -l -q -e
-    - root.exe -b -l -q -e 'gSystem->Load("libGeom")'
     - root -l -b -q -x
     - root -l -b -q -x ${RECIPE_DIR}/test.cpp
     - root -l -b -q -x ${RECIPE_DIR}/test.cpp++
