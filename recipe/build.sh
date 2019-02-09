@@ -33,6 +33,11 @@ if [ "$(uname)" == "Linux" ]; then
 else
     cmake_args="-Dcocoa=ON -DCLANG_RESOURCE_DIR_VERSION='5.0.0'"
 
+    # Print out and possibly fix SDKROOT (Might help Azure)
+    echo "SDKROOT is: '${SDKROOT}'"
+    echo "CONDA_BUILD_SYSROOT is: '${CONDA_BUILD_SYSROOT}'"
+    export SDKROOT="${CONDA_BUILD_SYSROOT}"
+
     # This is a patch for the macOS needing to be unlinked
     # Not solved in ROOT yet.
     PYLIBNAME=$(python -c 'import sysconfig; print("libpython" + sysconfig.get_config_var("VERSION") + (sysconfig.get_config_var("ABIFLAGS") or sysconfig.get_config_var("abiflags") or ""))')
