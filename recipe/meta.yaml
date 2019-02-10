@@ -143,9 +143,8 @@ test:
     - root -b -l -q -x -e '2+3; 0'
     - root -b -l -q -x -e 'gSystem->LoadAllLibraries(); 0'
     - echo ${CONDA_BUILD_SYSROOT}  # [osx]
-    - grep -r ${CONDA_BUILD_SYSROOT} ${CONDA_PREFIX}  # [osx]
     # There should be no hard coded references to the SDK
-    - "! grep -rq ${CONDA_BUILD_SYSROOT} ${CONDA_PREFIX}/lib"  # [osx]
+    - "! grep -r ${CONDA_BUILD_SYSROOT} ${CONDA_PREFIX}/lib"  # [osx]
 
 about:
   home: https://root.cern/
