@@ -19,15 +19,19 @@ source:
     - patches/root-6.16.02_allow_setting_clang_version.patch  # [osx]
     - patches/root-x.xx.xx_python_mac_os.patch  # [osx]
     - patches/root-x.xx.xx-copy-abspath-headers.patch  # [osx]
+    - patches/root-x.xx.xx-osx-remove-hardcoded-sysroot.patch  # [osx]
 
 build:
-  number: 2
+  number: 3
   skip: True  # [win]
   features:
     - blas_{{ variant }}
   run_exports:
     # https://abi-laboratory.pro/?view=timeline&l=root
     - {{ pin_subpackage('root', max_pin='x.x.x') }}
+  ignore_prefix_files:
+    # FIXME: Figure out how to correct the paths in the PCH
+    - etc/allDict.cxx.pch  # [osx]
 
 requirements:
   build:
@@ -89,8 +93,8 @@ requirements:
     - afterimage
     - openblas
     - cfitsio
-    - clangdev={{ clang_version }}
-    - clang_variant * cling_{{ version }}
+    # - clangdev={{ clang_version }}
+    # - clang_variant * cling_{{ version }}
     - davix
     - fftw
     - freetype
@@ -141,6 +145,9 @@ test:
     # When testing with -e, explicitly set the return code to zero
     - root -b -l -q -x -e '2+3; 0'
     - root -b -l -q -x -e 'gSystem->LoadAllLibraries(); 0'
+    - echo ${CONDA_BUILD_SYSROOT}  # [osx]
+    # There should be no hard coded references to the SDK
+    - "! grep -r ${CONDA_BUILD_SYSROOT} ${CONDA_PREFIX}/lib"  # [osx]
 
 about:
   home: https://root.cern/

@@ -117,8 +117,18 @@ ln -s "${PREFIX}/lib/libPyROOT.so" "${SP_DIR}/"
 ln -s "${PREFIX}/lib/libPyMVA.so" "${SP_DIR}/"
 ln -s "${PREFIX}/lib/libJupyROOT.so" "${SP_DIR}/"
 
-# Remove the PCH as we will regenerate in the post install hook
-rm "${PREFIX}/etc/allDict.cxx.pch"
+if [ "$(uname)" == "Linux" ]; then
+    # Remove the PCH as we will regenerate it in the post install hook
+    rm "${PREFIX}/etc/allDict.cxx.pch"
+else
+    # On macOS we can't reliably generate the PCH at install time instead
+    # regenerate the PCH so it contains runtime paths rather than the build paths
+    (cd "${PREFIX}" &&
+     ROOTIGNOREPREFIX=1 python \
+         "${PREFIX}/etc/dictpch/makepch.py" \
+         "${PREFIX}/etc/allDict.cxx.pch" \
+         -I"${PREFIX}/include")
+fi
 
 # Add the post activate/deactivate scripts
 mkdir -p "${PREFIX}/etc/conda/activate.d"
