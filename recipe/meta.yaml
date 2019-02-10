@@ -90,8 +90,8 @@ requirements:
     - afterimage
     - openblas
     - cfitsio
-    - clangdev={{ clang_version }}
-    - clang_variant * cling_{{ version }}
+    # - clangdev={{ clang_version }}
+    # - clang_variant * cling_{{ version }}
     - davix
     - fftw
     - freetype
