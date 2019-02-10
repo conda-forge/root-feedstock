@@ -1,0 +1,40 @@
+diff --git a/bindings/pyroot/CMakeLists.txt b/bindings/pyroot/CMakeLists.txt
+index a0c96f5780..9b3ddd96a0 100644
+--- a/bindings/pyroot/CMakeLists.txt
++++ b/bindings/pyroot/CMakeLists.txt
+@@ -64,7 +64,13 @@ ROOT_ADD_CXX_FLAG(_PyROOT_FLAGS -Wno-register)
+ separate_arguments(_PyROOT_FLAGS)
+
+ target_compile_options(PyROOT PRIVATE ${_PyROOT_FLAGS})
+-target_link_libraries(PyROOT PRIVATE ${PYTHON_LIBRARIES})
++
++if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin" AND "${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
++    set_property(TARGET PyROOT APPEND PROPERTY LINK_FLAGS "-undefined dynamic_lookup")
++else()
++    target_link_libraries(PyROOT PRIVATE ${PYTHON_LIBRARIES})
++endif()
++
+ target_include_directories(PyROOT PRIVATE ${PYTHON_INCLUDE_DIRS})
+
+ ROOT_LINKER_LIBRARY(JupyROOT JupyROOT/src/IOHandler.cxx DEPENDENCIES Core CMAKENOEXPORT)
+diff --git a/tmva/pymva/CMakeLists.txt b/tmva/pymva/CMakeLists.txt
+index 2e786ed6b1..747a91d7d2 100644
+--- a/tmva/pymva/CMakeLists.txt
++++ b/tmva/pymva/CMakeLists.txt
+@@ -17,9 +17,16 @@ set(PY_HEADERS ${CMAKE_SOURCE_DIR}/tmva/pymva/inc/TMVA/PyMethodBase.h
+                ${CMAKE_SOURCE_DIR}/tmva/pymva/inc/TMVA/MethodPyGTB.h
+                ${CMAKE_SOURCE_DIR}/tmva/pymva/inc/TMVA/MethodPyKeras.h)
+
++if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin" AND "${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
++ROOT_STANDARD_LIBRARY_PACKAGE(PyMVA
++                              HEADERS ${PY_HEADERS}
++                              DEPENDENCIES Core Matrix Thread RIO TMVA)
++set_property(TARGET PyMVA APPEND PROPERTY LINK_FLAGS "-undefined dynamic_lookup")
++else()
+ ROOT_STANDARD_LIBRARY_PACKAGE(PyMVA
+                               HEADERS ${PY_HEADERS}
+                               LIBRARIES ${PYTHON_LIBRARIES}
+                               DEPENDENCIES Core Matrix Thread RIO TMVA)
++endif()
+
+ ROOT_ADD_TEST_SUBDIRECTORY(test)

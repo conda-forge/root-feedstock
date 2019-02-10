@@ -1,24 +1,28 @@
 {% set name = "root" %}
 {% set version = "6.16.00" %}
+{% set hash = "c8415df5a0ec1619df5da0a2a36d79a47f1cf5927ee66cb5f045b39bb250c79a" %}
 {% set variant = "openblas" %}
 {% set clang_version = "5.0.0" %}
+{% set clang_patches_version = "6.16.00" %}
 
 package:
   name: {{ name|lower }}
   version: {{ version }}
 
 source:
-  git_url: https://github.com/root-project/root.git
-  git_rev: v{{ version|replace(".","-") }}
+  url: https://github.com/root-project/root/archive/v{{ version|replace(".","-") }}.tar.gz
+  sha256: {{ hash }}
   folder: root-source
   patches:
     - patches/root-6.12.06_cling-runtime-sysroot.patch
     - patches/clang-4.0.0_cxx11.patch  # [osx]
+    - patches/root-6.16.02_allow_setting_clang_version.patch  # [osx]
+    - patches/root-x.xx.xx_python_mac_os.patch  # [osx]
+    - patches/root-x.xx.xx-copy-abspath-headers.patch  # [osx]
 
 build:
-  number: 1
+  number: 2
   skip: True  # [win]
-  skip: True  # [osx]
   features:
     - blas_{{ variant }}
   run_exports:
@@ -42,12 +46,11 @@ requirements:
     - openblas
     - cfitsio
     - clangdev={{ clang_version }}
-    - clang_variant * cling_{{ version }}
+    - clang_variant * cling_{{ clang_patches_version }}
     - davix
     - fftw
     - freetype
     - giflib
-    - graphviz
     - gsl
     - krb5  # [osx]
     - libglu  # [linux]
@@ -62,6 +65,7 @@ requirements:
     - openssl
     - pcre
     # - postgresql
+    - pythia8
     - python
     - qt
     - sqlite
@@ -78,9 +82,10 @@ requirements:
     - xz
     - zlib
   run:
-    - {{ compiler('c') }}  # [linux]
-    - {{ compiler('cxx') }}  # [linux]
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
     - {{ compiler('fortran') }}  # [linux]
+    - {{ pin_compatible('numpy') }}
     - afterimage
     - openblas
     - cfitsio
@@ -90,7 +95,6 @@ requirements:
     - fftw
     - freetype
     - giflib
-    - graphviz
     - gsl
     - krb5  # [osx]
     - libglu  # [linux]
@@ -100,10 +104,10 @@ requirements:
     - lz4
     - lz4-c
     # - mysql
-    - numpy
     - openssl
     - pcre
     # - postgresql
+    - pythia8
     - python
     - qt
     - sqlite

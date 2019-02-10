@@ -18,8 +18,7 @@ Summary: Data Analysis Framework
 Current build status
 ====================
 
-[![Linux](https://img.shields.io/circleci/project/github/conda-forge/root-feedstock/master.svg?label=Linux)](https://circleci.com/gh/conda-forge/root-feedstock)
-![OSX disabled](https://img.shields.io/badge/OSX-disabled-lightgrey.svg)
+[![Linux,OSX](https://img.shields.io/circleci/project/github/conda-forge/root-feedstock/master.svg?label=Linux,OSX)](https://circleci.com/gh/conda-forge/root-feedstock)
 ![Windows disabled](https://img.shields.io/badge/Windows-disabled-lightgrey.svg)
 
 Current release info
