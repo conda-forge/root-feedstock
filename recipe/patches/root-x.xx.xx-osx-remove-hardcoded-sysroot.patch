@@ -1,0 +1,26 @@
+From 7eebe4c44a6115de50d674586310617a750e2abb Mon Sep 17 00:00:00 2001
+From: Chris Burr <chrisburr@users.noreply.github.com>
+Date: Sun, 10 Feb 2019 10:23:21 +0000
+Subject: [PATCH] Remove CLING_OSX_SYSROOT for conda
+
+---
+ interpreter/cling/lib/Interpreter/CMakeLists.txt | 6 ------
+ 1 file changed, 6 deletions(-)
+
+diff --git a/interpreter/cling/lib/Interpreter/CMakeLists.txt b/interpreter/cling/lib/Interpreter/CMakeLists.txt
+index 840cc0b818d..b7c31fdd620 100644
+--- a/interpreter/cling/lib/Interpreter/CMakeLists.txt
++++ b/interpreter/cling/lib/Interpreter/CMakeLists.txt
+@@ -291,12 +291,6 @@ if (UNIX)
+     #define CLING_CXX_INCL \"${CLING_CXX_HEADERS}\"
+     #define CLING_INCLUDE_PATHS \"${CLING_INCLUDE_PATHS}\"
+   ")
+-  if (CMAKE_OSX_SYSROOT)
+-    file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/cling-compiledata.h.in
+-      "
+-      #define CLING_OSX_SYSROOT \"${CMAKE_OSX_SYSROOT}\"
+-    ")
+-  endif()
+   if (CLING_CXX_PATH)
+     MESSAGE(STATUS "And if not found, will invoke: '${CLING_CXX_PATH}' for them.")
+     file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/cling-compiledata.h.in

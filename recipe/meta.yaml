@@ -19,6 +19,7 @@ source:
     - patches/root-6.16.02_allow_setting_clang_version.patch  # [osx]
     - patches/root-x.xx.xx_python_mac_os.patch  # [osx]
     - patches/root-x.xx.xx-copy-abspath-headers.patch  # [osx]
+    - patches/root-x.xx.xx-osx-remove-hardcoded-sysroot.patch  # [osx]
 
 build:
   number: 2
@@ -141,6 +142,10 @@ test:
     # When testing with -e, explicitly set the return code to zero
     - root -b -l -q -x -e '2+3; 0'
     - root -b -l -q -x -e 'gSystem->LoadAllLibraries(); 0'
+    - echo ${CONDA_BUILD_SYSROOT}  # [osx]
+    - grep -r ${CONDA_BUILD_SYSROOT} ${CONDA_PREFIX}  # [osx]
+    # There should be no hard coded references to the SDK
+    - "! grep -rq ${CONDA_BUILD_SYSROOT} ${CONDA_PREFIX}/lib"  # [osx]
 
 about:
   home: https://root.cern/
