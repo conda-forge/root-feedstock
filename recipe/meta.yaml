@@ -29,8 +29,8 @@ build:
   run_exports:
     # https://abi-laboratory.pro/?view=timeline&l=root
     - {{ pin_subpackage('root', max_pin='x.x.x') }}
-  has_prefix_files:
-    # The PCH should be treated as a text file instead of a binary file
+  ignore_prefix_files:
+    # FIXME: Figure out how to correct the paths in the PCH
     - etc/allDict.cxx.pch  # [osx]
 
 requirements:
