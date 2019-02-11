@@ -14,16 +14,16 @@ source:
   sha256: {{ hash }}
   folder: root-source
   patches:
-    - patches/root-6.12.06_cling-runtime-sysroot.patch
+    - patches/root-x.xx.xx_cling-runtime-sysroot.patch
     - patches/root-6.16.xx_root_config_cxxstd_flags.patch
-    - patches/clang-4.0.0_cxx11.patch  # [osx]
     - patches/root-6.16.02_allow_setting_clang_version.patch  # [osx]
+    - patches/root-x.xx.xx_not_test_cxx11_clang_4.patch  # [osx]
     - patches/root-x.xx.xx_python_mac_os.patch  # [osx]
     - patches/root-x.xx.xx-copy-abspath-headers.patch  # [osx]
     - patches/root-x.xx.xx-osx-remove-hardcoded-sysroot.patch  # [osx]
 
 build:
-  number: 3
+  number: 4
   skip: True  # [win]
   features:
     - blas_{{ variant }}
