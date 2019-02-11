@@ -18,8 +18,6 @@ echo "Configuring conda."
 source ~/miniconda3/bin/activate root
 
 conda install -n root -c conda-forge --quiet --yes conda-forge-ci-setup=2 conda-build
-# Patch conda to use a shorter testing prefix
-pip install --upgrade git+https://github.com/chrisburr/conda-build.git@patch-1
 mangle_compiler ./ ./recipe .ci_support/${CONFIG}.yaml
 setup_conda_rc ./ ./recipe ./.ci_support/${CONFIG}.yaml
 

@@ -12,12 +12,16 @@ fortran_compiler:
 - gfortran
 freetype:
 - 2.9.1
+gdk_pixbuf:
+- 2.36.12
 giflib:
 - '5.1'
 gsl:
 - '2.4'
 libpng:
 - 1.6.35
+librsvg:
+- 2.44.3
 libtiff:
 - 4.0.9
 libxml2:
@@ -33,11 +37,15 @@ openssl:
 pin_run_as_build:
   freetype:
     max_pin: x
+  gdk_pixbuf:
+    max_pin: x.x
   giflib:
     max_pin: x.x
   gsl:
     max_pin: x.x
   libpng:
+    max_pin: x.x
+  librsvg:
     max_pin: x.x
   libtiff:
     max_pin: x
