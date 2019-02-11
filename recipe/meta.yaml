@@ -15,6 +15,7 @@ source:
   folder: root-source
   patches:
     - patches/root-6.12.06_cling-runtime-sysroot.patch
+    - patches/root-6.16.xx_root_config_cxxstd_flags.patch
     - patches/clang-4.0.0_cxx11.patch  # [osx]
     - patches/root-6.16.02_allow_setting_clang_version.patch  # [osx]
     - patches/root-x.xx.xx_python_mac_os.patch  # [osx]
@@ -130,6 +131,8 @@ requirements:
   run_constrained:
     # FIXME Add support in ROOT for building with an external cling
     - cling 9999
+  conflicts:
+    - root5
 
 test:
   requires:
