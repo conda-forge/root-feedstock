@@ -57,9 +57,11 @@ requirements:
     - freetype
     - giflib
     - gsl
+    - gdk-pixbuf
     - krb5  # [osx]
     - libglu  # [linux]
     - libpng
+    - librsvg
     - libtiff
     - libxml2
     - llvmdev==5
@@ -101,9 +103,11 @@ requirements:
     - freetype
     - giflib
     - gsl
+    - gdk-pixbuf
     - krb5  # [osx]
     - libglu  # [linux]
     - libpng
+    - librsvg
     - libtiff
     - libxml2
     - lz4
