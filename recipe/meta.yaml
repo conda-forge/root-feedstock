@@ -14,15 +14,16 @@ source:
   sha256: {{ hash }}
   folder: root-source
   patches:
-    - patches/root-6.12.06_cling-runtime-sysroot.patch
-    - patches/clang-4.0.0_cxx11.patch  # [osx]
+    - patches/root-x.xx.xx_cling-runtime-sysroot.patch
+    - patches/root-6.16.xx_root_config_cxxstd_flags.patch
     - patches/root-6.16.02_allow_setting_clang_version.patch  # [osx]
+    - patches/root-x.xx.xx_not_test_cxx11_clang_4.patch  # [osx]
     - patches/root-x.xx.xx_python_mac_os.patch  # [osx]
     - patches/root-x.xx.xx-copy-abspath-headers.patch  # [osx]
     - patches/root-x.xx.xx-osx-remove-hardcoded-sysroot.patch  # [osx]
 
 build:
-  number: 3
+  number: 4
   skip: True  # [win]
   features:
     - blas_{{ variant }}
@@ -56,9 +57,11 @@ requirements:
     - freetype
     - giflib
     - gsl
+    - gdk-pixbuf
     - krb5  # [osx]
     - libglu  # [linux]
     - libpng
+    - librsvg
     - libtiff
     - libxml2
     - llvmdev==5
@@ -86,9 +89,7 @@ requirements:
     - xz
     - zlib
   run:
-    - {{ compiler('c') }}
-    - {{ compiler('cxx') }}
-    - {{ compiler('fortran') }}  # [linux]
+    - compilers
     - {{ pin_compatible('numpy') }}
     - afterimage
     - openblas
@@ -100,9 +101,11 @@ requirements:
     - freetype
     - giflib
     - gsl
+    - gdk-pixbuf
     - krb5  # [osx]
     - libglu  # [linux]
     - libpng
+    - librsvg
     - libtiff
     - libxml2
     - lz4
@@ -128,8 +131,10 @@ requirements:
     - xz
     - zlib
   run_constrained:
+    # Items listed here conflict with ROOT
     # FIXME Add support in ROOT for building with an external cling
     - cling 9999
+    - root5 9999
 
 test:
   requires:

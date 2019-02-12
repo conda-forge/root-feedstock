@@ -48,8 +48,6 @@ jobs:
       export PATH=$(Build.StagingDirectory)/miniconda/bin:$PATH
       set -x -e
       conda install -n base -c conda-forge --quiet --yes conda-forge-ci-setup=2 conda-build
-      # Patch conda use a shorter testing prefix
-      pip install --upgrade git+https://github.com/chrisburr/conda-build.git@patch-1
     displayName: 'Add conda-forge-ci-setup=2'
 
   - script: |
