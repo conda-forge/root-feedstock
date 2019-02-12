@@ -1,8 +1,8 @@
 diff --git a/cmake/modules/RootConfiguration.cmake b/cmake/modules/RootConfiguration.cmake
-index 6098c0eb67..d566c099bf 100644
+index c18d4d719d..8c367d4a35 100644
 --- a/cmake/modules/RootConfiguration.cmake
 +++ b/cmake/modules/RootConfiguration.cmake
-@@ -560,6 +560,7 @@ string(REPLACE "c++11" "cxx11" features ${features}) # change the name of the c+
+@@ -651,6 +651,7 @@ string(REPLACE "c++11" "cxx11" features ${features}) # change the name of the c+
  set(configfeatures ${features})
  set(configargs ${ROOT_CONFIGARGS})
  set(configoptions ${ROOT_CONFIGARGS})
@@ -11,14 +11,14 @@ index 6098c0eb67..d566c099bf 100644
  get_filename_component(altcxx ${CMAKE_CXX_COMPILER} NAME)
  get_filename_component(altf77 "${CMAKE_Fortran_COMPILER}" NAME)
 diff --git a/config/root-config.in b/config/root-config.in
-index f024833bb6..178d16a056 100755
+index 193551e601..115b510423 100755
 --- a/config/root-config.in
 +++ b/config/root-config.in
-@@ -145,7 +145,7 @@ fi
+@@ -146,7 +146,7 @@ fi
  ### machine dependent settings ###
 
  # Set the C++ standard version
--cxxversionflag="-std=c++@CMAKE_CXX_STANDARD@ "
+-cxxversionflag="-std=${cxxversion} "
 +cxxversionflag="@configstd@ "
 
  case $arch in
