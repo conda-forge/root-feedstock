@@ -135,8 +135,6 @@ requirements:
   run_constrained:
     # FIXME Add support in ROOT for building with an external cling
     - cling 9999
-  conflicts:
-    - root5
 
 test:
   requires:
