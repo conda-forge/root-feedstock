@@ -11,7 +11,48 @@ Package license: LGPL-2.1
 
 Feedstock license: BSD 3-Clause
 
-Summary: Data Analysis Framework
+Summary: ROOT is a modular scientific software toolkit. It provides all the functionalities needed to deal with big data processing, statistical analysis, visualisation and storage. It is mainly written in C++ but integrated with other languages such as Python and R. [Start from examples](https://root.cern/doc/master/group__Tutorials.html) or [try it in your browser](http://cern.ch/swanserver/cgi-bin/go?projurl=https://github.com/cernphsft/rootbinder.git)!
+
+Almost everything in ROOT should be supported in this Conda package; ROOT was built with lots of options turned on. Here are a few things to try:
+
+* `root`: you can start up a session and see the splash screen; Control-D to exit.
+* `python` followed by `import ROOT` will load PyROOT.
+* `root --notebook` will start a notebook server with a ROOT kernel choice.
+* `rootbrowse` will open a TBrowser session so you can look through files.
+* `root -l -q $ROOTSYS/tutorials/dataframe/df013_InspectAnalysis.C`: This will run a DataFrame example with an animated plot.
+* `root -b -q -l -n -e "std::cout << TROOT::GetTutorialDir() << std::endl;"`: Print the tutorial dir.
+* `root -b -l -q -e 'std::cout << (float) TPython::Eval("1+1") << endl;'`: Run Python from C++ ROOT.
+
+See the post [here](https://iscinumpy.gitlab.io/post/root-conda/) for more information about using this Conda package.
+
+Caveats
+=======
+
+General
+-------
+
+The ROOT package will prepare the required compilers (see below). Everything in Conda is symlinked into `$CONDA_PREFIX` if you build things by hand; tools like CMake should find it automatically. The `thisroot.*` scripts should not be used. Graphics, `rootbrowse`, etc. all should work.
+
+Linux
+-----
+
+On Linux, there really aren't any special caveats, just a few general to Conda itself, and the compilers package. When ROOT is in the active environment, `g++` and `$CXX` are the conda compilers, GCC 7.3.
+
+ROOT was built with and will report `-std=c++17` from `root-config`.
+
+
+macOS
+-----
+
+The caveats on macOS are a bit larger, but have the same reason for existing as on Linux. When ROOT is in the active environment, `clang++` and `$CXX` will be the Conda compilers; but those compilers are Clang 4.0 and the macOS 10.9 SDK.
+You must install the macOS 10.9 SDK, [as mentioned in the conda documentation](https://conda.io/projects/conda-build/en/latest/source/compiler-tools.html#macos-sdk), if you want to build anything.
+And, while normal ROOT and PyROOT are fine, commands like `root MyFile.C+` actively build things, so this is probably something many users will want to do. Once the macOS is downloaded
+and extracted on your system, you should set `CONDA_BUILD_SYSROOT` to point to the SDK root location, such as `/opt/MacOSX10.9.sdk`.
+
+ROOT does not link to Python directly in order to properly support PyROOT from Python, but has been patched to provide the correct behavior to allow PyROOT to also be used from ROOT's C++ command line.
+
+ROOT was built with and will report `-std=c++1z` from `root-config`.
+
 
 
 
