@@ -138,6 +138,11 @@ for suffix in .sh .csh .fish; do
     chmod +x "${PREFIX}/bin/thisroot.${suffix}"
 done
 
+# Add the kernel for normal Jupyter
+cp -r "${PREFIX}/etc/notebook/kernels/root" "${PREFIX}/share/jupyter/kernels/"
+# Create the config file for root --notebook
+cp "${RECIPE_DIR}/jupyter_notebook_config.py" "${PREFIX}/etc/notebook/"
+
 # Add the post activate/deactivate scripts
 mkdir -p "${PREFIX}/etc/conda/activate.d"
 cp "${RECIPE_DIR}/activate.sh" "${PREFIX}/etc/conda/activate.d/activate-root.sh"
