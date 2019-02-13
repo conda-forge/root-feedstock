@@ -155,6 +155,10 @@ test:
     - echo ${CONDA_BUILD_SYSROOT}  # [osx]
     # There should be no hard coded references to the SDK
     - "! grep -r ${CONDA_BUILD_SYSROOT} ${CONDA_PREFIX}/lib"  # [osx]
+    # Check the thisroot scripts work
+    - thisroot.sh
+    - thisroot.csh
+    - thisroot.fish
 
 about:
   home: https://root.cern/
