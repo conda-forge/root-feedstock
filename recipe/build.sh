@@ -139,6 +139,7 @@ for suffix in .sh .csh .fish; do
 done
 
 # Add the kernel for normal Jupyter
+mkdir -p "${PREFIX}/share/jupyter/kernels/"
 cp -r "${PREFIX}/etc/notebook/kernels/root" "${PREFIX}/share/jupyter/kernels/"
 # Create the config file for root --notebook
 cp "${RECIPE_DIR}/jupyter_notebook_config.py" "${PREFIX}/etc/notebook/"
