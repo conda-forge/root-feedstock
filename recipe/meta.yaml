@@ -15,9 +15,9 @@ source:
   folder: root-source
   patches:
     - patches/root-x.xx.xx_cling-runtime-sysroot.patch
-    - patches/root-6.16.xx_root_config_cxxstd_flags.patch
+    - patches/root-6.18.00_root_config_cxxstd_flags.patch
     - patches/root-6.16.02_allow_setting_clang_version.patch  # [osx]
-    - patches/root-x.xx.xx_not_test_cxx11_clang_4.patch  # [osx]
+    - patches/root-6.16.02_not_test_cxx11_clang_4.patch  # [osx]
     - patches/root-x.xx.xx_python_mac_os.patch  # [osx]
     - patches/root-x.xx.xx-copy-abspath-headers.patch  # [osx]
     - patches/root-x.xx.xx-osx-remove-hardcoded-sysroot.patch  # [osx]
@@ -111,6 +111,8 @@ requirements:
     - lz4
     - lz4-c
     # - mysql
+    - metakernel
+    - notebook
     - openssl
     - pcre
     # - postgresql
