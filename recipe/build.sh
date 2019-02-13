@@ -133,7 +133,7 @@ fi
 # Remove thisroot.*
 test "$(ls "${PREFIX}"/bin/thisroot.* | wc -l) = 3"
 rm "${PREFIX}"/bin/thisroot.*
-for suffix in .sh .csh .fish; do
+for suffix in sh csh fish; do
     cp "${RECIPE_DIR}/thisroot" "${PREFIX}/bin/thisroot.${suffix}"
     chmod +x "${PREFIX}/bin/thisroot.${suffix}"
 done
