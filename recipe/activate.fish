@@ -1,6 +1,6 @@
 #!/usr/bin/env fish
 
-set -x ROOTSYS "$CONDA_PREFIX"
+set -gx ROOTSYS "$CONDA_PREFIX"
 
 # Only on macOS
 switch (uname)
