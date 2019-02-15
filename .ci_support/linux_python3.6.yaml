@@ -38,7 +38,7 @@ pin_run_as_build:
   freetype:
     max_pin: x
   gdk_pixbuf:
-    max_pin: x.x.x
+    max_bin: x.x
   giflib:
     max_pin: x.x
   gsl:
