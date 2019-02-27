@@ -6,7 +6,7 @@ index c18d4d719d..8c367d4a35 100644
  set(configfeatures ${features})
  set(configargs ${ROOT_CONFIGARGS})
  set(configoptions ${ROOT_CONFIGARGS})
-+set(configstd ${CMAKE_CXX${CMAKE_CXX_STANDARD}_STANDARD_COMPILE_OPTION})
++set(configstd ${CMAKE_CXX17_STANDARD_COMPILE_OPTION})
  get_filename_component(altcc ${CMAKE_C_COMPILER} NAME)
  get_filename_component(altcxx ${CMAKE_CXX_COMPILER} NAME)
  get_filename_component(altf77 "${CMAKE_Fortran_COMPILER}" NAME)
