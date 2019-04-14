@@ -22,6 +22,8 @@ gdk_pixbuf:
 - 2.36.12
 giflib:
 - 5.1.7
+glew:
+- 2.0.0
 gsl:
 - '2.4'
 libblas:
@@ -37,7 +39,7 @@ libtiff:
 libxml2:
 - '2.9'
 lz4_c:
-- 1.8.1
+- 1.8.3
 numpy:
 - '1.9'
 openssl:
@@ -47,6 +49,8 @@ pin_run_as_build:
     max_pin: x
   gdk_pixbuf:
     max_pin: x.x.x
+  glew:
+    max_pin: x.x
   gsl:
     max_pin: x.x
   libpng:
