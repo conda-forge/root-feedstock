@@ -64,7 +64,8 @@ fi
 mkdir -p build-dir
 cd build-dir
 
-CXXFLAGS=$(echo "${CXXFLAGS}" | echo "${CXXFLAGS}" | sed -E 's@-std=c\+\+[^ ]+@@g')
+# Remove -std=c++XX from build ${CXXFLAGS}
+CXXFLAGS=$(echo "${CXXFLAGS}" | sed -E 's@-std=c\+\+[^ ]+@@g')
 export CXXFLAGS
 
 # The cross-linux toolchain breaks find_file relative to the current file
@@ -73,7 +74,7 @@ sed -i -E 's#(ROOT_TEST_DRIVER RootTestDriver.cmake PATHS \$\{THISDIR\} \$\{CMAK
     ../root-source/cmake/modules/RootNewMacros.cmake
 
 cmake -LAH \
-    ${CMAKE_PLATFORM_FLAGS[@]} \
+    "${CMAKE_PLATFORM_FLAGS[@]}" \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_PREFIX_PATH="${PREFIX}" \
     -DCMAKE_INSTALL_PREFIX="${PREFIX}" \
@@ -81,10 +82,6 @@ cmake -LAH \
     -DCMAKE_INSTALL_NAME_DIR="${PREFIX}/lib" \
     -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON \
     -DCMAKE_INSTALL_RPATH_USE_LINK_PATH=ON \
-    -DCMAKE_C_COMPILER="${GCC}" \
-    -DCMAKE_C_FLAGS="${CFLAGS}" \
-    -DCMAKE_CXX_COMPILER="${GXX}" \
-    -DCMAKE_CXX_FLAGS="${CXXFLAGS}" \
     -DCLING_BUILD_PLUGINS=OFF \
     -DPYTHON_EXECUTABLE="${PYTHON}" \
     -DTBB_ROOT_DIR="${PREFIX}" \
