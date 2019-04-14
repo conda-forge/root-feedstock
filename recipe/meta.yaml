@@ -176,6 +176,9 @@ test:
     - thisroot.fish
     # Test if OpenGL is working
     - root -b -l -q -x -e 'gStyle->SetCanvasPreferGL(kTRUE); c = new TCanvas(); if (!c->UseGL()) { throw std::runtime_error("OpenGL does not appear to be working"); }'
+    # This test will fail due to lack of graphics support but try it anyway
+    # It should exit with "TEveException: TEveManager::Create ROOT is running in batch mode."
+    - root -b -l -q -x "${ROOTSYS}/tutorials/eve/geom_lhcb.C" || true
 
 about:
   home: https://root.cern/
