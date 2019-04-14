@@ -121,6 +121,12 @@ cmake -LAH \
     ../root-source
 
 make -j${CPU_COUNT}
+
+if [[ -n "${ROOT_RUN_GTESTS}" ]]; then
+    # Run gtests
+    ctest -j${CPU_COUNT} -T test --no-compress-output
+fi
+
 make install
 
 # Create symlinks so conda can find the Python bindings

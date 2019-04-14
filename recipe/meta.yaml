@@ -9,14 +9,21 @@ package:
   version: {{ version }}
 
 source:
+{%- if "ROOT_JENKINS_GIT_REV" in os.environ %}
+  git_url: {{ os.environ.get("ROOT_JENKINS_GIT_URL", "https://github.com/root-project/root.git") }}
+  git_rev: {{ os.environ["ROOT_JENKINS_GIT_REV"] }}
+{%- else %}
   url: https://github.com/root-project/root/archive/v{{ version|replace(".","-") }}.tar.gz
   sha256: {{ hash }}
+{%- endif %}
   folder: root-source
   patches:
-    - patches/root-x.xx.xx_cling-runtime-sysroot.patch
+{%- if "ROOT_JENKINS_GIT_REV" not in os.environ %}
     - patches/root-6.18.00_root_config_cxxstd_flags.patch
     - patches/root-6.16.02_allow_setting_clang_version.patch  # [osx]
     - patches/root-6.16.02_not_test_cxx11_clang_4.patch  # [osx]
+{%- endif %}
+    - patches/root-x.xx.xx_cling-runtime-sysroot.patch
     - patches/root-x.xx.xx_python_mac_os.patch  # [osx]
     - patches/root-x.xx.xx-copy-abspath-headers.patch  # [osx]
     - patches/root-x.xx.xx-osx-remove-hardcoded-sysroot.patch  # [osx]
