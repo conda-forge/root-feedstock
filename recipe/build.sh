@@ -1,27 +1,25 @@
 #!/bin/bash
 set -e
 
-# Backup method of sed required on macOS, and supported on linux.
-
 # Fixed in 6.16.02
 # Fix for missing libraries. CMake > 3.10 doesn't need LIBXML2_INCLUDE_DIR
-sed -i.bak -e 's@include_directories(${LIBXML2_INCLUDE_DIR})@include_directories(${LIBXML2_INCLUDE_DIR} ${LIBXML2_INCLUDE_DIRS})@g' \
-    root-source/io/xmlparser/CMakeLists.txt && rm $_.bak
+sed -i -e 's@include_directories(${LIBXML2_INCLUDE_DIR})@include_directories(${LIBXML2_INCLUDE_DIR} ${LIBXML2_INCLUDE_DIRS})@g' \
+    root-source/io/xmlparser/CMakeLists.txt
 
 # Fixed in 6.16.02
 # Fix ROOT includes on case-insensitive file systems
-sed -i.bak -e 's@<ROOT/RConfig.h>@"ROOT/RConfig.h"@g' \
-    root-source/core/base/inc/RConfig.h && rm $_.bak
+sed -i -e 's@<ROOT/RConfig.h>@"ROOT/RConfig.h"@g' \
+    root-source/core/base/inc/RConfig.h
 
 # Remove the library path muddling that `root` tries to do
-sed -i.bak -e 's@SetLibraryPath();@@g' \
-    root-source/rootx/src/rootx.cxx && rm $_.bak
+sed -i -e 's@SetLibraryPath();@@g' \
+    root-source/rootx/src/rootx.cxx
 
 # Manually set the deployment_target
 # May not be very important but nice to do
 OLDVERSIONMACOS='${MACOSX_VERSION}'
-sed -i.bak -e "s@${OLDVERSIONMACOS}@${MACOSX_DEPLOYMENT_TARGET}@g" \
-    root-source/cmake/modules/SetUpMacOS.cmake && rm $_.bak
+sed -i -e "s@${OLDVERSIONMACOS}@${MACOSX_DEPLOYMENT_TARGET}@g" \
+    root-source/cmake/modules/SetUpMacOS.cmake
 
 # This is part of CMake, and is manually removed for a better link
 # May not be needed, but nice to do
@@ -41,8 +39,8 @@ else
     # This is a patch for the macOS needing to be unlinked
     # Not solved in ROOT yet.
     PYLIBNAME=$(python -c 'import sysconfig; print("libpython" + sysconfig.get_config_var("VERSION") + (sysconfig.get_config_var("ABIFLAGS") or sysconfig.get_config_var("abiflags") or ""))')
-    sed -i.bak -e "s@// load any dependent libraries@if(moduleBasename.Contains(\"PyROOT\") || moduleBasename.Contains(\"PyMVA\")) gSystem->Load(\"${PYLIBNAME}\");@g" \
-        root-source/core/base/src/TSystem.cxx && rm $_.bak
+    sed -i -e "s@// load any dependent libraries@if(moduleBasename.Contains(\"PyROOT\") || moduleBasename.Contains(\"PyMVA\")) gSystem->Load(\"${PYLIBNAME}\");@g" \
+        root-source/core/base/src/TSystem.cxx
 fi
 
 mkdir -p build-dir
