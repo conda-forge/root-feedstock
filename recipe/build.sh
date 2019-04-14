@@ -89,7 +89,7 @@ cmake -LAH \
     -Dcastor=OFF \
     -Dgfal=OFF \
     -Dmysql=OFF \
-    -Dopengl=OFF \
+    -Dopengl=ON \
     -Doracle=OFF \
     -Dpgsql=OFF \
     -Dpythia6=OFF \

@@ -37,10 +37,17 @@ requirements:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     - {{ compiler('fortran') }}
-    - {{ cdt('mesa-libgl-devel') }}  # [linux]
     - cmake
     - git
     - pkg-config
+    - sed
+    # Required for OpenGL support
+    # See https://conda-forge.org/docs/maintainer/knowledge_base.html?highlight=cdt#libgl
+    - {{ cdt('mesa-libgl-devel') }}  # [linux]
+    - {{ cdt('mesa-dri-drivers') }}  # [linux]
+    - {{ cdt('libselinux') }}  # [linux]
+    - {{ cdt('libxdamage') }}  # [linux]
+    - {{ cdt('libxxf86vm') }}  # [linux]
   host:
     - libblas
     - libcblas
@@ -54,9 +61,10 @@ requirements:
     - davix
     - fftw
     - freetype
-    - giflib
-    - gsl
     - gdk-pixbuf
+    - giflib
+    - glew
+    - gsl
     - krb5  # [osx]
     - libglu  # [linux]
     - libpng
@@ -82,6 +90,7 @@ requirements:
     - xorg-libxau  # [linux]
     - xorg-libxcursor  # [linux]
     - xorg-libxext  # [linux]
+    - xorg-libxfixes  # [linux]
     - xorg-libxft  # [linux]
     - xorg-libxpm  # [linux]
     - xrootd
@@ -97,9 +106,10 @@ requirements:
     - davix
     - fftw
     - freetype
-    - giflib
-    - gsl
     - gdk-pixbuf
+    - giflib
+    - glew
+    - gsl
     - krb5  # [osx]
     - libglu  # [linux]
     - libpng
