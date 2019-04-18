@@ -179,6 +179,7 @@ test:
     # This test will fail due to lack of graphics support but try it anyway
     # It should exit with "TEveException: TEveManager::Create ROOT is running in batch mode."
     - root -b -l -q -x "${ROOTSYS}/tutorials/eve/geom_lhcb.C" || true
+    # This tutorial uses davix to access a ROOT file over HTTP
     - root -b -l -q -x "${ROOTSYS}/tutorials/tree/run_h1analysis.C"
 
 about:
