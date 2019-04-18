@@ -29,7 +29,7 @@ source:
     - patches/root-x.xx.xx-osx-remove-hardcoded-sysroot.patch  # [osx]
 
 build:
-  number: 9
+  number: 10
   skip: True  # [win]
   features:
   run_exports:
@@ -65,7 +65,7 @@ requirements:
     - cfitsio
     - clangdev={{ clang_version }}
     - clang_variant * cling_{{ clang_patches_version }}
-    - davix
+    - davix ==0.6.7
     - fftw
     - freetype
     - gdk-pixbuf
@@ -179,6 +179,7 @@ test:
     # This test will fail due to lack of graphics support but try it anyway
     # It should exit with "TEveException: TEveManager::Create ROOT is running in batch mode."
     - root -b -l -q -x "${ROOTSYS}/tutorials/eve/geom_lhcb.C" || true
+    - root -b -l -q -x "${ROOTSYS}/tutorials/tree/run_h1analysis.C"
 
 about:
   home: https://root.cern/
