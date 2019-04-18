@@ -42,9 +42,11 @@ if [ "$(uname)" == "Linux" ]; then
     # https://github.com/Kitware/CMake/blob/e59e17c1c7059b7d0f02d6b12bc3094a2afee778/Modules/FindX11.cmake
     cp "${RECIPE_DIR}/FindX11.cmake" "root-source/cmake/modules/"
 
-    # CMAKE_PLATFORM_FLAGS+=(-DOPENGL_opengl_LIBRARY="...")
-    # CMAKE_PLATFORM_FLAGS+=(-DOPENGL_glx_LIBRARY="...")
-    # CMAKE_PLATFORM_FLAGS+=(-DOPENGL_INCLUDE_DIR="...")
+    # Hide symbols from LLVM/clang to avoid conflicts with other libraries
+    for lib_name in $(ls $PREFIX/lib | grep -E 'lib(LLVM|clang).*\.a'); do
+        export CXXFLAGS="${CXXFLAGS} -Wl,--exclude-libs,${lib_name}"
+    done
+    echo "CXXFLAGS is now '${CXXFLAGS}'"
 else
     CMAKE_PLATFORM_FLAGS+=("-Dcocoa=ON")
     CMAKE_PLATFORM_FLAGS+=("-DCLANG_RESOURCE_DIR_VERSION='5.0.0'")
@@ -67,11 +69,6 @@ cd build-dir
 # Remove -std=c++XX from build ${CXXFLAGS}
 CXXFLAGS=$(echo "${CXXFLAGS}" | sed -E 's@-std=c\+\+[^ ]+@@g')
 export CXXFLAGS
-
-# Hide symbols from LLVM/clang to avoid conflicts with other libraries
-for lib_name in $(ls $PREFIX/lib | grep -E 'lib(LLVM|clang).*\.a'); do
-    export CXXFLAGS="${CXXFLAGS} -Wl,--exclude-libs,${lib_name}"
-done
 
 # The cross-linux toolchain breaks find_file relative to the current file
 # Patch up with sed
