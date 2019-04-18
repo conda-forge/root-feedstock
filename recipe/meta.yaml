@@ -9,20 +9,27 @@ package:
   version: {{ version }}
 
 source:
+{%- if "ROOT_JENKINS_GIT_REV" in os.environ %}
+  git_url: {{ os.environ.get("ROOT_JENKINS_GIT_URL", "https://github.com/root-project/root.git") }}
+  git_rev: {{ os.environ["ROOT_JENKINS_GIT_REV"] }}
+{%- else %}
   url: https://github.com/root-project/root/archive/v{{ version|replace(".","-") }}.tar.gz
   sha256: {{ hash }}
+{%- endif %}
   folder: root-source
   patches:
-    - patches/root-x.xx.xx_cling-runtime-sysroot.patch
+{%- if "ROOT_JENKINS_GIT_REV" not in os.environ %}
     - patches/root-6.18.00_root_config_cxxstd_flags.patch
     - patches/root-6.16.02_allow_setting_clang_version.patch  # [osx]
     - patches/root-6.16.02_not_test_cxx11_clang_4.patch  # [osx]
+{%- endif %}
+    - patches/root-x.xx.xx_cling-runtime-sysroot.patch
     - patches/root-x.xx.xx_python_mac_os.patch  # [osx]
     - patches/root-x.xx.xx-copy-abspath-headers.patch  # [osx]
     - patches/root-x.xx.xx-osx-remove-hardcoded-sysroot.patch  # [osx]
 
 build:
-  number: 8
+  number: 9
   skip: True  # [win]
   features:
   run_exports:
@@ -37,10 +44,17 @@ requirements:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     - {{ compiler('fortran') }}
-    - {{ cdt('mesa-libgl-devel') }}  # [linux]
     - cmake
     - git
     - pkg-config
+    - sed
+    # Required for OpenGL support
+    # See https://conda-forge.org/docs/maintainer/knowledge_base.html?highlight=cdt#libgl
+    - {{ cdt('mesa-libgl-devel') }}  # [linux]
+    - {{ cdt('mesa-dri-drivers') }}  # [linux]
+    - {{ cdt('libselinux') }}  # [linux]
+    - {{ cdt('libxdamage') }}  # [linux]
+    - {{ cdt('libxxf86vm') }}  # [linux]
   host:
     - libblas
     - libcblas
@@ -54,9 +68,10 @@ requirements:
     - davix
     - fftw
     - freetype
-    - giflib
-    - gsl
     - gdk-pixbuf
+    - giflib
+    - glew
+    - gsl
     - krb5  # [osx]
     - libglu  # [linux]
     - libpng
@@ -82,6 +97,7 @@ requirements:
     - xorg-libxau  # [linux]
     - xorg-libxcursor  # [linux]
     - xorg-libxext  # [linux]
+    - xorg-libxfixes  # [linux]
     - xorg-libxft  # [linux]
     - xorg-libxpm  # [linux]
     - xrootd
@@ -97,9 +113,10 @@ requirements:
     - davix
     - fftw
     - freetype
-    - giflib
-    - gsl
     - gdk-pixbuf
+    - giflib
+    - glew
+    - gsl
     - krb5  # [osx]
     - libglu  # [linux]
     - libpng
@@ -157,6 +174,11 @@ test:
     - thisroot.sh
     - thisroot.csh
     - thisroot.fish
+    # Test if OpenGL is working
+    - root -b -l -q -x -e 'gStyle->SetCanvasPreferGL(kTRUE); c = new TCanvas(); if (!c->UseGL()) { throw std::runtime_error("OpenGL does not appear to be working"); }'
+    # This test will fail due to lack of graphics support but try it anyway
+    # It should exit with "TEveException: TEveManager::Create ROOT is running in batch mode."
+    - root -b -l -q -x "${ROOTSYS}/tutorials/eve/geom_lhcb.C" || true
 
 about:
   home: https://root.cern/
