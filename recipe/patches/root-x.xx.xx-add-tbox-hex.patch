@@ -1,0 +1,331 @@
+From 5a6dd4f2d64bd0e7f565811464e070d751b0f771 Mon Sep 17 00:00:00 2001
+From: Matevz Tadel <mtadel@ucsd.edu>
+Date: Wed, 14 Nov 2018 23:42:03 -0800
+Subject: [PATCH] Support new Hexagon type in TEveBoxSet + 2 bufixes
+
+1. Add support for hexagont box-type (BHex_t) in TEveBoxSet. See
+tutorials/eve/boxset.C, new function boxset_hex().
+
+2. Bugfix in TEveBoxSet -- box set did not work with TEnv setting of
+`OpenGL.UseDisplayLists 0`.
+
+3. Memory leak fix in TEveGeoShapeProjected -- TBuffer3D member fBuff was
+not freed in destructor.
+---
+ graf3d/eve/inc/TEveBoxSet.h     |  7 ++++-
+ graf3d/eve/inc/TEveGeoShape.h   |  2 +-
+ graf3d/eve/src/TEveBoxSet.cxx   | 39 +++++++++++++++++++++++
+ graf3d/eve/src/TEveBoxSetGL.cxx | 56 ++++++++++++++++++++++++++++-----
+ graf3d/eve/src/TEveGeoShape.cxx |  8 +++++
+ graf3d/eve/src/TEveQuadSet.cxx  |  2 +-
+ tutorials/eve/boxset.C          | 33 +++++++++++++++++++
+ 7 files changed, 136 insertions(+), 11 deletions(-)
+
+diff --git a/graf3d/eve/inc/TEveBoxSet.h b/graf3d/eve/inc/TEveBoxSet.h
+index 358432c6163..06c42a9b3cb 100644
+--- a/graf3d/eve/inc/TEveBoxSet.h
++++ b/graf3d/eve/inc/TEveBoxSet.h
+@@ -32,7 +32,8 @@ class TEveBoxSet: public TEveDigitSet
+       kBT_AABox,           // axis-aligned box: specify (x,y,z) and (w, h, d)
+       kBT_AABoxFixedDim,   // axis-aligned box w/ fixed dimensions: specify (x,y,z)
+       kBT_Cone,
+-      kBT_EllipticCone
++      kBT_EllipticCone,
++      kBT_Hex
+    };
+ 
+    struct BFreeBox_t       : public DigitBase_t { Float_t fVertices[8][3]; };
+@@ -47,6 +48,8 @@ class TEveBoxSet: public TEveDigitSet
+ 
+    struct BEllipticCone_t  : public BCone_t     { Float_t fR2, fAngle; };
+ 
++   struct BHex_t           : public DigitBase_t { TEveVector fPos; Float_t fR, fAngle, fDepth; };
++
+ protected:
+    EBoxType_e        fBoxType;      // Type of rendered box.
+ 
+@@ -74,6 +77,8 @@ class TEveBoxSet: public TEveDigitSet
+    void AddCone(const TEveVector& pos, const TEveVector& dir, Float_t r);
+    void AddEllipticCone(const TEveVector& pos, const TEveVector& dir, Float_t r, Float_t r2, Float_t angle=0);
+ 
++   void AddHex(const TEveVector& pos, Float_t r, Float_t angle, Float_t depth);
++
+    virtual void ComputeBBox();
+    // virtual void Paint(Option_t* option = "");
+ 
+diff --git a/graf3d/eve/inc/TEveGeoShape.h b/graf3d/eve/inc/TEveGeoShape.h
+index f126182f9e9..c734a85423c 100644
+--- a/graf3d/eve/inc/TEveGeoShape.h
++++ b/graf3d/eve/inc/TEveGeoShape.h
+@@ -85,7 +85,7 @@ class TEveGeoShapeProjected : public TEveShape,
+ 
+ public:
+    TEveGeoShapeProjected();
+-   virtual ~TEveGeoShapeProjected() {}
++   virtual ~TEveGeoShapeProjected();
+ 
+    virtual void SetProjection(TEveProjectionManager* proj, TEveProjectable* model);
+    virtual void UpdateProjection();
+diff --git a/graf3d/eve/src/TEveBoxSet.cxx b/graf3d/eve/src/TEveBoxSet.cxx
+index 779bc7bd806..e0b0a92bac1 100644
+--- a/graf3d/eve/src/TEveBoxSet.cxx
++++ b/graf3d/eve/src/TEveBoxSet.cxx
+@@ -75,6 +75,7 @@ Int_t TEveBoxSet::SizeofAtom(TEveBoxSet::EBoxType_e bt)
+       case kBT_AABoxFixedDim:        return sizeof(BAABoxFixedDim_t);
+       case kBT_Cone:                 return sizeof(BCone_t);
+       case kBT_EllipticCone:         return sizeof(BEllipticCone_t);
++      case kBT_Hex:                  return sizeof(BHex_t);
+       default:                       throw(eH + "unexpected atom type.");
+    }
+    return 0;
+@@ -190,6 +191,25 @@ void TEveBoxSet::AddEllipticCone(const TEveVector& pos, const TEveVector& dir,
+    cone->fAngle = angle;
+ }
+ 
++////////////////////////////////////////////////////////////////////////////////
++/// Create a hexagonal prism with center of one hexagon at pos, radius of
++/// hexagon vertices r, rotation angle angle (in degrees), and length along z
++/// of depth. To be used for box-type kBT_Hex.
++
++void TEveBoxSet::AddHex(const TEveVector& pos, Float_t r, Float_t angle, Float_t depth)
++{
++   static const TEveException eH("TEveBoxSet::AddEllipticCone ");
++
++   if (fBoxType != kBT_Hex)
++      throw(eH + "expect hex box-type.");
++
++   BHex_t* hex = (BHex_t*) NewDigit();
++   hex->fPos   = pos;
++   hex->fR     = r;
++   hex->fAngle = angle;
++   hex->fDepth = depth;
++}
++
+ ////////////////////////////////////////////////////////////////////////////////
+ /// Fill bounding-box information of the base-class TAttBBox (virtual method).
+ /// If member 'TEveFrameBox* fFrame' is set, frame's corners are used as bbox.
+@@ -249,6 +269,7 @@ void TEveBoxSet::ComputeBBox()
+          }
+          break;
+       }
++
+       case kBT_Cone:
+       {
+          Float_t mag2=0, mag2Max=0, rMax=0;
+@@ -264,6 +285,7 @@ void TEveBoxSet::ComputeBBox()
+          fBBox[1] += off;fBBox[3] += off;fBBox[5] += off;
+          break;
+       }
++
+       case kBT_EllipticCone:
+       {
+          Float_t mag2=0, mag2Max=0, rMax=0;
+@@ -280,6 +302,23 @@ void TEveBoxSet::ComputeBBox()
+          fBBox[1] += off;fBBox[3] += off;fBBox[5] += off;
+          break;
+       }
++
++      case kBT_Hex:
++      {
++         while (bi.next()) {
++            BHex_t& h = * (BHex_t*) bi();
++            BBoxCheckPoint(h.fPos.fX - h.fR, h.fPos.fY - h.fR, h.fPos.fZ);
++            BBoxCheckPoint(h.fPos.fX + h.fR, h.fPos.fY - h.fR, h.fPos.fZ);
++            BBoxCheckPoint(h.fPos.fX + h.fR, h.fPos.fY + h.fR, h.fPos.fZ);
++            BBoxCheckPoint(h.fPos.fX - h.fR, h.fPos.fY + h.fR, h.fPos.fZ);
++            BBoxCheckPoint(h.fPos.fX - h.fR, h.fPos.fY - h.fR, h.fPos.fZ + h.fDepth);
++            BBoxCheckPoint(h.fPos.fX + h.fR, h.fPos.fY - h.fR, h.fPos.fZ + h.fDepth);
++            BBoxCheckPoint(h.fPos.fX + h.fR, h.fPos.fY + h.fR, h.fPos.fZ + h.fDepth);
++            BBoxCheckPoint(h.fPos.fX - h.fR, h.fPos.fY + h.fR, h.fPos.fZ + h.fDepth);
++         }
++         break;
++      }
++
+       default:
+       {
+          throw(eH + "unsupported box-type.");
+diff --git a/graf3d/eve/src/TEveBoxSetGL.cxx b/graf3d/eve/src/TEveBoxSetGL.cxx
+index d61e3bc85b6..74aa4640204 100644
+--- a/graf3d/eve/src/TEveBoxSetGL.cxx
++++ b/graf3d/eve/src/TEveBoxSetGL.cxx
+@@ -168,7 +168,8 @@ void TEveBoxSetGL::MakeDisplayList() const
+    if (fM->fBoxType == TEveBoxSet::kBT_AABox         ||
+        fM->fBoxType == TEveBoxSet::kBT_AABoxFixedDim ||
+        fM->fBoxType == TEveBoxSet::kBT_Cone          ||
+-       fM->fBoxType == TEveBoxSet::kBT_EllipticCone)
++       fM->fBoxType == TEveBoxSet::kBT_EllipticCone  ||
++       fM->fBoxType == TEveBoxSet::kBT_Hex)
+    {
+       if (fBoxDL == 0)
+          fBoxDL = glGenLists(1);
+@@ -186,7 +187,7 @@ void TEveBoxSetGL::MakeDisplayList() const
+          RenderBoxStdNorm(p);
+          glEnd();
+       }
+-      else
++      else if (fM->fBoxType < TEveBoxSet::kBT_Hex)
+       {
+          static TGLQuadric quad;
+          Int_t nt = 15; // number of corners
+@@ -200,8 +201,25 @@ void TEveBoxSetGL::MakeDisplayList() const
+             glPopMatrix();
+          }
+       }
++      else // Hexagons
++      {
++         static TGLQuadric quad;
++         Int_t nt = 6; // number of corners
++         gluCylinder(quad.Get(), 1, 1, 1, nt, 1);
++
++         gluQuadricOrientation(quad.Get(), GLU_INSIDE);
++         gluDisk(quad.Get(), 0, 1, nt, 1);
++         gluQuadricOrientation(quad.Get(), GLU_OUTSIDE);
++
++         glPushMatrix();
++         glTranslatef(0, 0, 1);
++         gluDisk(quad.Get(), 0, 1, nt, 1);
++         glPopMatrix();
++      }
+ 
+       glEndList();
++
++      TGLUtil::CheckError("TEveBoxSetGL::MakeDisplayList");
+    }
+ }
+ 
+@@ -211,8 +229,6 @@ void TEveBoxSetGL::MakeDisplayList() const
+ 
+ Bool_t TEveBoxSetGL::ShouldDLCache(const TGLRnrCtx& rnrCtx) const
+ {
+-   MakeDisplayList();
+-
+    return TEveDigitSetGL::ShouldDLCache(rnrCtx);
+ }
+ 
+@@ -409,9 +425,34 @@ void TEveBoxSetGL::RenderBoxes(TGLRnrCtx& rnrCtx) const
+          break;
+       }
+ 
++      case TEveBoxSet::kBT_Hex:
++      {
++         using namespace TMath;
++
++         glEnable(GL_NORMALIZE);
++         while (bi.next())
++         {
++            TEveBoxSet::BHex_t& h = * (TEveBoxSet::BHex_t*) bi();
++            if (SetupColor(h))
++            {
++               if (rnrCtx.SecSelection()) glLoadName(bi.index());
++               glPushMatrix();
++               glTranslatef(h.fPos.fX, h.fPos.fY, h.fPos.fZ);
++               glRotatef(h.fAngle, 0, 0, 1);
++               glScalef (h.fR, h.fR, h.fDepth);
++               glCallList(fBoxDL);
++               if (fM->fAntiFlick)
++                  AntiFlick(0.0f, 0.0f, 0.5f);
++               glPopMatrix();
++            }
++            if (boxSkip) { Int_t s = boxSkip; while (s--) bi.next(); }
++         }
++         break;
++      }
++
+       default:
+       {
+-         throw(eH + "unsupported box-type.");
++         throw eH + "unsupported box-type.";
+       }
+ 
+    } // end switch box-type
+@@ -430,6 +471,8 @@ void TEveBoxSetGL::DirectDraw(TGLRnrCtx& rnrCtx) const
+ 
+    if (mB.fPlex.Size() > 0)
+    {
++      MakeDisplayList();
++
+       if (! mB.fSingleColor && ! mB.fValueIsColor && mB.fPalette == 0)
+       {
+          mB.AssertPalette();
+@@ -467,8 +510,5 @@ void TEveBoxSetGL::DirectDraw(TGLRnrCtx& rnrCtx) const
+ 
+ void TEveBoxSetGL::Render(TGLRnrCtx& rnrCtx)
+ {
+-   MakeDisplayList();
+    DirectDraw(rnrCtx);
+-   glDeleteLists(fBoxDL, 1);
+-   fBoxDL = 0;
+ }
+diff --git a/graf3d/eve/src/TEveGeoShape.cxx b/graf3d/eve/src/TEveGeoShape.cxx
+index 8a7b93c2a0b..812b0bcaa89 100644
+--- a/graf3d/eve/src/TEveGeoShape.cxx
++++ b/graf3d/eve/src/TEveGeoShape.cxx
+@@ -467,6 +467,14 @@ TEveGeoShapeProjected::TEveGeoShapeProjected() :
+ {
+ }
+ 
++////////////////////////////////////////////////////////////////////////////////
++/// Destructor.
++
++TEveGeoShapeProjected::~TEveGeoShapeProjected()
++{
++   delete fBuff;
++}
++
+ ////////////////////////////////////////////////////////////////////////////////
+ /// This should never be called as this class is only used for 3D
+ /// projections.
+diff --git a/graf3d/eve/src/TEveQuadSet.cxx b/graf3d/eve/src/TEveQuadSet.cxx
+index 71ec827ca87..82bca631481 100644
+--- a/graf3d/eve/src/TEveQuadSet.cxx
++++ b/graf3d/eve/src/TEveQuadSet.cxx
+@@ -241,7 +241,7 @@ void TEveQuadSet::AddHexagon(Float_t a, Float_t b, Float_t c, Float_t r)
+          break;
+       }
+       default:
+-         throw(eH + "expect line quad-type.");
++         throw eH + "expects hexagon quad-type.";
+    }
+ }
+ 
+diff --git a/tutorials/eve/boxset.C b/tutorials/eve/boxset.C
+index 5d372bab038..104e6fea6f8 100644
+--- a/tutorials/eve/boxset.C
++++ b/tutorials/eve/boxset.C
+@@ -155,3 +155,36 @@ TEveBoxSet* boxset_freebox(Int_t num=100, Bool_t registerSet=kTRUE)
+ 
+    return q;
+ }
++
++TEveBoxSet* boxset_hex(Float_t x=0, Float_t y=0, Float_t z=0,
++                       Int_t num=100, Bool_t registerSet=kTRUE)
++{
++   TEveManager::Create();
++
++   TRandom r(0);
++
++   auto q = new TEveBoxSet("BoxSet");
++   q->Reset(TEveBoxSet::kBT_Hex, kTRUE, 64);
++
++   for (Int_t i=0; i<num; ++i) {
++      q->AddHex(TEveVector(r.Uniform(-10, 10), r.Uniform(-10, 10), r.Uniform(-10, 10)),
++                r.Uniform(0.2, 1), r.Uniform(0, 60), r.Uniform(0.2, 5));
++      q->DigitColor(r.Uniform(20, 255), r.Uniform(20, 255),
++                    r.Uniform(20, 255), r.Uniform(20, 255));
++   }
++   q->RefitPlex();
++
++   q->SetPickable(true);
++   q->SetAlwaysSecSelect(true);
++
++   TEveTrans& t = q->RefMainTrans();
++   t.SetPos(x, y, z);
++
++   if (registerSet)
++   {
++      gEve->AddElement(q);
++      gEve->Redraw3D(kTRUE);
++   }
++
++   return q;
++}
