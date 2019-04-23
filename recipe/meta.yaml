@@ -22,12 +22,13 @@ source:
     - patches/root-6.18.00_root_config_cxxstd_flags.patch
     - patches/root-6.16.02_allow_setting_clang_version.patch  # [osx]
     - patches/root-6.16.02_not_test_cxx11_clang_4.patch  # [osx]
+    # Support new Hexagon type in TEveBoxSet + 2 bufixes for CMS Fireworks
+    - patches/root-6.18.00-add-tbox-hex.patch
 {%- endif %}
     - patches/root-x.xx.xx_cling-runtime-sysroot.patch
     - patches/root-x.xx.xx_python_mac_os.patch  # [osx]
     - patches/root-x.xx.xx-copy-abspath-headers.patch  # [osx]
     - patches/root-x.xx.xx-osx-remove-hardcoded-sysroot.patch  # [osx]
-    - patches/root-x.xx.xx-add-tbox-hex.patch
 
 build:
   number: 10
