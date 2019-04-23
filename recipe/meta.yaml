@@ -29,7 +29,7 @@ source:
     - patches/root-x.xx.xx-osx-remove-hardcoded-sysroot.patch  # [osx]
 
 build:
-  number: 10
+  number: 11
   skip: True  # [win]
   features:
   run_exports:
