@@ -67,7 +67,7 @@ requirements:
     - cfitsio
     - clangdev={{ clang_version }}
     - clang_variant * cling_{{ clang_patches_version }}
-    - davix ==0.6.7
+    - davix >=0.7.2
     - fftw
     - freetype
     - gdk-pixbuf
@@ -114,29 +114,20 @@ requirements:
     # - clang_variant * cling_{{ version }}
     - davix
     - fftw
-    - freetype
     - gdk-pixbuf
     - giflib
     - glew
-    - gsl
-    - krb5  # [osx]
     - libglu  # [linux]
-    - libpng
     - librsvg
-    - libtiff
-    - libxml2
     - lz4
-    - lz4-c
     # - mysql
     - metakernel
     - notebook
-    - openssl
     - pcre
     # - postgresql
     - pythia8
     - python
     - qt
-    - sqlite
     - tbb
     - tbb-devel
     - vdt
@@ -147,8 +138,6 @@ requirements:
     - xorg-libxft  # [linux]
     - xorg-libxpm  # [linux]
     - xrootd
-    - xz
-    - zlib
   run_constrained:
     # Items listed here conflict with ROOT
     # FIXME Add support in ROOT for building with an external cling
