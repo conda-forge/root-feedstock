@@ -49,7 +49,7 @@ macos_min_version:
 numpy:
 - '1.9'
 openssl:
-- 1.0.2
+- 1.1.1a
 pin_run_as_build:
   freetype:
     max_pin: x
@@ -87,7 +87,7 @@ pin_run_as_build:
 python:
 - '3.6'
 qt:
-- '5.6'
+- '5.9'
 sqlite:
 - '3'
 xz:
