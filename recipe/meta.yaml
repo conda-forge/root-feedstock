@@ -31,7 +31,7 @@ source:
     - patches/root-x.xx.xx-osx-remove-hardcoded-sysroot.patch  # [osx]
 
 build:
-  number: 12
+  number: 13
   skip: True  # [win]
   features:
   run_exports:
@@ -105,6 +105,9 @@ requirements:
     - xrootd
     - xz
     - zlib
+    # FIXME: The generated allDict.cxx.pch is dependent on versin of the C++ headers used
+    # As it is shipped in the macOS binaries we have to use the same one as in the compilers package
+    - libcxx =4  # [osx]
   run:
     - compilers
     - {{ pin_compatible('numpy') }}
@@ -138,6 +141,8 @@ requirements:
     - xorg-libxft  # [linux]
     - xorg-libxpm  # [linux]
     - xrootd
+    # FIXME: See comment at end of host requirements
+    - libcxx =4  # [osx]
   run_constrained:
     # Items listed here conflict with ROOT
     # FIXME Add support in ROOT for building with an external cling
