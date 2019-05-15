@@ -33,7 +33,10 @@ General
 
 The ROOT package will prepare the required compilers (see below). Everything in Conda is symlinked into
 `$CONDA_PREFIX` if you build things by hand; tools like CMake should find it automatically. The `thisroot.*`
-scripts should not be used. Graphics, `rootbrowse`, etc. all should work.
+scripts should not be used. Graphics, `rootbrowse`, etc. all should work. OpenGL is enabled.
+
+There is also a `root_base` package, with minimal dependecies, that libraries should dependend on this to avoid
+having a runtime dependency on the `compilers` package. In most cases users should use the `root` package directly.
 
 Linux
 -----
@@ -142,6 +145,9 @@ Current release info
 | Name | Downloads | Version | Platforms |
 | --- | --- | --- | --- |
 | [![Conda Recipe](https://img.shields.io/badge/recipe-root-green.svg)](https://anaconda.org/conda-forge/root) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/root.svg)](https://anaconda.org/conda-forge/root) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/root.svg)](https://anaconda.org/conda-forge/root) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/root.svg)](https://anaconda.org/conda-forge/root) |
+| [![Conda Recipe](https://img.shields.io/badge/recipe-root--binaries-green.svg)](https://anaconda.org/conda-forge/root-binaries) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/root-binaries.svg)](https://anaconda.org/conda-forge/root-binaries) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/root-binaries.svg)](https://anaconda.org/conda-forge/root-binaries) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/root-binaries.svg)](https://anaconda.org/conda-forge/root-binaries) |
+| [![Conda Recipe](https://img.shields.io/badge/recipe-root--dependencies-green.svg)](https://anaconda.org/conda-forge/root-dependencies) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/root-dependencies.svg)](https://anaconda.org/conda-forge/root-dependencies) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/root-dependencies.svg)](https://anaconda.org/conda-forge/root-dependencies) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/root-dependencies.svg)](https://anaconda.org/conda-forge/root-dependencies) |
+| [![Conda Recipe](https://img.shields.io/badge/recipe-root_base-green.svg)](https://anaconda.org/conda-forge/root_base) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/root_base.svg)](https://anaconda.org/conda-forge/root_base) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/root_base.svg)](https://anaconda.org/conda-forge/root_base) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/root_base.svg)](https://anaconda.org/conda-forge/root_base) |
 
 Installing root
 ===============
@@ -152,10 +158,10 @@ Installing `root` from the `conda-forge` channel can be achieved by adding `cond
 conda config --add channels conda-forge
 ```
 
-Once the `conda-forge` channel has been enabled, `root` can be installed with:
+Once the `conda-forge` channel has been enabled, `root, root-binaries, root-dependencies, root_base` can be installed with:
 
 ```
-conda install root
+conda install root root-binaries root-dependencies root_base
 ```
 
 It is possible to list all of the versions of `root` available on your platform with:
