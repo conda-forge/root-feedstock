@@ -1,6 +1,6 @@
 {% set name = "root" %}
-{% set version = "6.16.00" %}
-{% set hash = "c8415df5a0ec1619df5da0a2a36d79a47f1cf5927ee66cb5f045b39bb250c79a" %}
+{% set version = "6-19-01" %}
+{% set hash = "8187338d81a1b3d278b9c5137d6a3893e6455c0255b04ea1b4cb2a3a24b83925" %}
 {% set clang_version = "5.0.0" %}
 {% set clang_patches_version = "6.16.00" %}
 
@@ -31,7 +31,7 @@ source:
     - patches/root-x.xx.xx-osx-remove-hardcoded-sysroot.patch  # [osx]
 
 build:
-  number: 13
+  number: 0
   skip: True  # [win]
   features:
   run_exports:
