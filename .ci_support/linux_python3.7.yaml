@@ -1,3 +1,5 @@
+CONDA_BUILD_SYSROOT:
+- /opt/MacOSX10.10.sdk
 c_compiler:
 - gcc
 c_compiler_version:
@@ -25,7 +27,7 @@ giflib:
 glew:
 - 2.0.0
 gsl:
-- '2.4'
+- '2.5'
 libblas:
 - 3.8 *netlib
 libcblas:
@@ -41,7 +43,7 @@ libxml2:
 lz4_c:
 - 1.8.3
 numpy:
-- '1.9'
+- '1.14'
 openssl:
 - 1.1.1a
 pin_run_as_build:
@@ -50,8 +52,6 @@ pin_run_as_build:
   gdk_pixbuf:
     max_pin: x.x.x
   glew:
-    max_pin: x.x
-  gsl:
     max_pin: x.x
   libpng:
     max_pin: x.x
