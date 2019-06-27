@@ -20,6 +20,7 @@ source:
   patches:
     - patches/root-x.xx.xx_cling-runtime-sysroot.patch
     - patches/root-x.xx.xx-fix-root-generate-dictionary.patch
+    - patches/0001-Hack-to-set-CMAKE_CXX_FLAGS-correctly.patch  # [osx]
     - patches/root-x.xx.xx_python_mac_os.patch  # [osx]
     - patches/root-x.xx.xx-copy-abspath-headers.patch  # [osx]
     - patches/root-x.xx.xx-osx-remove-hardcoded-sysroot.patch  # [osx]
