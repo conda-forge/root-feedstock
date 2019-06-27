@@ -1,7 +1,7 @@
 From 5e465fbbe8462b08afc6d6da5291b693c52c36cb Mon Sep 17 00:00:00 2001
 From: Chris Burr <chrisburr@users.noreply.github.com>
 Date: Thu, 27 Jun 2019 08:56:26 +0200
-Subject: [PATCH] Add NO_CMAKE_FIND_ROOT_PATH to ROOT_GENERATE_DICTIONARY
+Subject: [PATCH] Add CMAKE_FIND_ROOT_PATH_BOTH to ROOT_GENERATE_DICTIONARY
 
 ---
  cmake/modules/RootNewMacros.cmake | 2 +-
@@ -16,7 +16,7 @@ index 0780ea5a5a9..30ba4d4de5e 100644
          set(headerFile ${fp})
        else()
 -        find_file(headerFile ${fp} HINTS ${incdirs} NO_DEFAULT_PATH NO_SYSTEM_ENVIRONMENT_PATH)
-+        find_file(headerFile ${fp} HINTS ${incdirs} NO_DEFAULT_PATH NO_SYSTEM_ENVIRONMENT_PATH NO_CMAKE_FIND_ROOT_PATH)
++        find_file(headerFile ${fp} HINTS ${incdirs} NO_DEFAULT_PATH NO_SYSTEM_ENVIRONMENT_PATH CMAKE_FIND_ROOT_PATH_BOTH)
        endif()
        if(NOT headerFile)
          message(FATAL_ERROR "Cannot find header ${fp} to generate dictionary ${dictionary} for. Did you forget to set the INCLUDE_DIRECTORIES property for the current directory?")
