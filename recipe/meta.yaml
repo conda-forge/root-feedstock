@@ -1,6 +1,6 @@
 {% set name = "root" %}
-{% set version = "6.16.00" %}
-{% set hash = "c8415df5a0ec1619df5da0a2a36d79a47f1cf5927ee66cb5f045b39bb250c79a" %}
+{% set version = "6.18.00" %}
+{% set hash = "ee11687172a5d692a082ebfbeea4e0d5fb2f65db88968c0327d10793561c2c1b" %}
 {% set clang_version = "5.0.0" %}
 {% set clang_patches_version = "6.16.00" %}
 
@@ -18,14 +18,9 @@ source:
 {%- endif %}
   folder: root-source
   patches:
-{%- if "ROOT_JENKINS_GIT_REV" not in os.environ %}
-    - patches/root-6.18.00_root_config_cxxstd_flags.patch
-    - patches/root-6.16.02_allow_setting_clang_version.patch  # [osx]
-    - patches/root-6.16.02_not_test_cxx11_clang_4.patch  # [osx]
-    # Support new Hexagon type in TEveBoxSet + 2 bufixes for CMS Fireworks
-    - patches/root-6.18.00-add-tbox-hex.patch
-{%- endif %}
     - patches/root-x.xx.xx_cling-runtime-sysroot.patch
+    - patches/root-x.xx.xx-fix-root-generate-dictionary.patch
+    - patches/0001-Hack-to-set-CMAKE_CXX_FLAGS-correctly.patch  # [osx]
     - patches/root-x.xx.xx_python_mac_os.patch  # [osx]
     - patches/root-x.xx.xx-copy-abspath-headers.patch  # [osx]
     - patches/root-x.xx.xx-osx-remove-hardcoded-sysroot.patch  # [osx]
@@ -73,6 +68,7 @@ requirements:
     - gdk-pixbuf
     - giflib
     - glew
+    - graphviz
     - gsl
     - krb5  # [osx]
     - libglu  # [linux]
@@ -104,7 +100,6 @@ requirements:
     - xorg-libxpm  # [linux]
     - xrootd
     - xz
-    - zlib
     # FIXME: The generated allDict.cxx.pch is dependent on versin of the C++ headers used
     # As it is shipped in the macOS binaries we have to use the same one as in the compilers package
     - libcxx =4  # [osx]
@@ -120,6 +115,7 @@ requirements:
     - gdk-pixbuf
     - giflib
     - glew
+    - graphviz
     - libglu  # [linux]
     - librsvg
     - lz4

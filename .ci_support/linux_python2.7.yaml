@@ -26,6 +26,8 @@ giflib:
 - 5.1.7
 glew:
 - 2.0.0
+graphviz:
+- 2.38.0
 gsl:
 - '2.5'
 libblas:
@@ -53,6 +55,8 @@ pin_run_as_build:
     max_pin: x.x.x
   glew:
     max_pin: x.x
+  graphviz:
+    max_pin: x
   libpng:
     max_pin: x.x
   librsvg:
@@ -74,8 +78,6 @@ pin_run_as_build:
     max_pin: x
   xz:
     max_pin: x.x
-  zlib:
-    max_pin: x.x
 python:
 - '2.7'
 qt:
@@ -84,5 +86,3 @@ sqlite:
 - '3'
 xz:
 - '5.2'
-zlib:
-- '1.2'

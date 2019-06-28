@@ -1,16 +1,6 @@
 #!/bin/bash
 set -e
 
-# Fixed in 6.16.02
-# Fix for missing libraries. CMake > 3.10 doesn't need LIBXML2_INCLUDE_DIR
-sed -i -e 's@include_directories(${LIBXML2_INCLUDE_DIR})@include_directories(${LIBXML2_INCLUDE_DIR} ${LIBXML2_INCLUDE_DIRS})@g' \
-    root-source/io/xmlparser/CMakeLists.txt
-
-# Fixed in 6.16.02
-# Fix ROOT includes on case-insensitive file systems
-sed -i -e 's@<ROOT/RConfig.h>@"ROOT/RConfig.h"@g' \
-    root-source/core/base/inc/RConfig.h
-
 # Remove the library path muddling that `root` tries to do
 sed -i -e 's@SetLibraryPath();@@g' \
     root-source/rootx/src/rootx.cxx
@@ -20,11 +10,6 @@ sed -i -e 's@SetLibraryPath();@@g' \
 OLDVERSIONMACOS='${MACOSX_VERSION}'
 sed -i -e "s@${OLDVERSIONMACOS}@${MACOSX_DEPLOYMENT_TARGET}@g" \
     root-source/cmake/modules/SetUpMacOS.cmake
-
-# This is part of CMake, and is manually removed for a better link
-# May not be needed, but nice to do
-# Is in a current PR to ROOT: #3397
-rm root-source/cmake/modules/FindGSL.cmake
 
 declare -a CMAKE_PLATFORM_FLAGS
 if [ "$(uname)" == "Linux" ]; then
@@ -99,12 +84,11 @@ cmake -LAH \
     -Dbuiltin_davix=OFF \
     -Dbuiltin_llvm=OFF \
     -Dbuiltin_afterimage=OFF \
+    -Dbuiltin_zlib=ON \
     -Drpath=ON \
-    -Dcxx11=OFF \
-    -Dcxx14=OFF \
-    -Dcxx17=ON \
+    -DCMAKE_CXX_STANDARD=17 \
     -Dminuit2=ON \
-    -Dgviz=OFF \
+    -Dgviz=ON \
     -Droofit=ON \
     -Dtbb=ON \
     -Dcastor=OFF \
