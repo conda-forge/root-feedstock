@@ -18,15 +18,15 @@ source:
 {%- endif %}
   folder: root-source
   patches:
+    - patches/root-6.18.02-dont-use-cmake-cxx-standard.patch
+    - patches/root-6.18.02-force-search-of-build-related-files.patch
     - patches/root-x.xx.xx_cling-runtime-sysroot.patch
-    - patches/root-x.xx.xx-fix-root-generate-dictionary.patch
-    - patches/0001-Hack-to-set-CMAKE_CXX_FLAGS-correctly.patch  # [osx]
     - patches/root-x.xx.xx_python_mac_os.patch  # [osx]
     - patches/root-x.xx.xx-copy-abspath-headers.patch  # [osx]
     - patches/root-x.xx.xx-osx-remove-hardcoded-sysroot.patch  # [osx]
 
 build:
-  number: 14
+  number: 15
   skip: True  # [win]
   features:
   run_exports:
