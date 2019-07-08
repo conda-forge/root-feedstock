@@ -125,7 +125,11 @@ ln -s "${PREFIX}/lib/JupyROOT/" "${SP_DIR}/"
 
 test "$(ls "${PREFIX}"/lib/libPy* | wc -l) = 2"
 ln -s "${PREFIX}/lib/libPyROOT.so" "${SP_DIR}/"
+ln -s "${PREFIX}/lib/libPyROOT_rdict.pcm" "${SP_DIR}/"
+ln -s "${PREFIX}/lib/libPyROOT.rootmap" "${SP_DIR}/"
 ln -s "${PREFIX}/lib/libPyMVA.so" "${SP_DIR}/"
+ln -s "${PREFIX}/lib/libPyMVA_rdict.pcm" "${SP_DIR}/"
+ln -s "${PREFIX}/lib/libPyMVA.rootmap" "${SP_DIR}/"
 ln -s "${PREFIX}/lib/libJupyROOT.so" "${SP_DIR}/"
 
 if [ "$(uname)" == "Linux" ]; then
