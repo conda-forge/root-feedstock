@@ -4,6 +4,8 @@ c_compiler:
 - gcc
 c_compiler_version:
 - '7'
+cfitsio:
+- '3.470'
 channel_sources:
 - conda-forge,defaults
 channel_targets:
