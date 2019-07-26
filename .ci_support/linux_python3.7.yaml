@@ -29,7 +29,7 @@ giflib:
 glew:
 - 2.0.0
 graphviz:
-- 2.38.0
+- '2.40'
 gsl:
 - '2.5'
 libblas:
@@ -39,9 +39,9 @@ libcblas:
 libpng:
 - 1.6.35
 librsvg:
-- 2.44.3
+- '2'
 libtiff:
-- 4.0.9
+- 4.0.10
 libxml2:
 - '2.9'
 lz4_c:
@@ -62,7 +62,7 @@ pin_run_as_build:
   libpng:
     max_pin: x.x
   librsvg:
-    max_pin: x.x
+    max_pin: x
   libtiff:
     max_pin: x
   libxml2:
