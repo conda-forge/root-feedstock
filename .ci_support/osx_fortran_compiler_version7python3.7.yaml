@@ -1,5 +1,3 @@
-CONDA_BUILD_SYSROOT:
-- /opt/MacOSX10.10.sdk
 MACOSX_DEPLOYMENT_TARGET:
 - '10.9'
 c_compiler:
@@ -19,7 +17,7 @@ cxx_compiler_version:
 fortran_compiler:
 - gfortran
 fortran_compiler_version:
-- '4'
+- '7'
 freetype:
 - 2.9.1
 gdk_pixbuf:
@@ -29,7 +27,7 @@ giflib:
 glew:
 - 2.0.0
 graphviz:
-- 2.38.0
+- '2.40'
 gsl:
 - '2.5'
 krb5:
@@ -39,11 +37,11 @@ libblas:
 libcblas:
 - 3.8 *netlib
 libpng:
-- 1.6.35
+- '1.6'
 librsvg:
-- 2.44.3
+- '2'
 libtiff:
-- 4.0.9
+- 4.0.10
 libxml2:
 - '2.9'
 lz4_c:
@@ -70,7 +68,7 @@ pin_run_as_build:
   libpng:
     max_pin: x.x
   librsvg:
-    max_pin: x.x
+    max_pin: x
   libtiff:
     max_pin: x
   libxml2:
@@ -91,7 +89,7 @@ pin_run_as_build:
 python:
 - '3.7'
 qt:
-- '5.9'
+- '5.12'
 sqlite:
 - '3'
 xz:
