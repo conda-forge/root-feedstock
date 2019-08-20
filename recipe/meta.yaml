@@ -40,7 +40,7 @@ requirements:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     - {{ compiler('fortran') }}
-    - cmake !=3.15.0,!=3.15.1
+    - cmake
     - git
     - pkg-config
     - sed
