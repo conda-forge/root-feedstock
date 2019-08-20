@@ -10,14 +10,23 @@ jobs:
   strategy:
     maxParallel: 8
     matrix:
-      osx_python2.7:
-        CONFIG: osx_python2.7
+      osx_fortran_compiler_version4python2.7:
+        CONFIG: osx_fortran_compiler_version4python2.7
         UPLOAD_PACKAGES: True
-      osx_python3.6:
-        CONFIG: osx_python3.6
+      osx_fortran_compiler_version4python3.6:
+        CONFIG: osx_fortran_compiler_version4python3.6
         UPLOAD_PACKAGES: True
-      osx_python3.7:
-        CONFIG: osx_python3.7
+      osx_fortran_compiler_version4python3.7:
+        CONFIG: osx_fortran_compiler_version4python3.7
+        UPLOAD_PACKAGES: True
+      osx_fortran_compiler_version7python2.7:
+        CONFIG: osx_fortran_compiler_version7python2.7
+        UPLOAD_PACKAGES: True
+      osx_fortran_compiler_version7python3.6:
+        CONFIG: osx_fortran_compiler_version7python3.6
+        UPLOAD_PACKAGES: True
+      osx_fortran_compiler_version7python3.7:
+        CONFIG: osx_fortran_compiler_version7python3.7
         UPLOAD_PACKAGES: True
 
   steps:

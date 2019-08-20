@@ -35,7 +35,7 @@ libblas:
 libcblas:
 - 3.8 *netlib
 libpng:
-- 1.6.35
+- '1.6'
 librsvg:
 - '2'
 libtiff:

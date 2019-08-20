@@ -17,7 +17,7 @@ cxx_compiler_version:
 fortran_compiler:
 - gfortran
 fortran_compiler_version:
-- '4'
+- '7'
 freetype:
 - 2.9.1
 gdk_pixbuf:
@@ -37,7 +37,7 @@ libblas:
 libcblas:
 - 3.8 *netlib
 libpng:
-- 1.6.35
+- '1.6'
 librsvg:
 - '2'
 libtiff:
@@ -87,7 +87,7 @@ pin_run_as_build:
   xz:
     max_pin: x.x
 python:
-- '3.6'
+- '2.7'
 qt:
 - '5.12'
 sqlite:
