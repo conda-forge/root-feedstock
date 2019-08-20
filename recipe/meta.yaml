@@ -26,9 +26,8 @@ source:
     - patches/root-x.xx.xx-osx-remove-hardcoded-sysroot.patch  # [osx]
 
 build:
-  number: 17
+  number: 18
   skip: True  # [win]
-  features:
   run_exports:
     # https://abi-laboratory.pro/?view=timeline&l=root
     - {{ pin_subpackage('root', max_pin='x.x.x') }}
