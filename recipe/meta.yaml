@@ -1,6 +1,6 @@
 {% set name = "root" %}
-{% set version = "6.18.00" %}
-{% set hash = "ee11687172a5d692a082ebfbeea4e0d5fb2f65db88968c0327d10793561c2c1b" %}
+{% set version = "6.18.04" %}
+{% set hash = "82421a5f0486a2c66170300285dce49a961e3459cb5290f6fa579ef617dc8b0a" %}
 {% set clang_version = "5.0.0" %}
 {% set clang_patches_version = "6.16.00" %}
 
@@ -18,15 +18,15 @@ source:
 {%- endif %}
   folder: root-source
   patches:
-    - patches/root-6.18.02-dont-use-cmake-cxx-standard.patch
-    - patches/root-6.18.02-force-search-of-build-related-files.patch
+    - patches/root-6.20.00-dont-use-cmake-cxx-standard.patch
+    - patches/root-6.20.00-force-search-of-build-related-files.patch
     - patches/root-x.xx.xx_cling-runtime-sysroot.patch
     - patches/root-x.xx.xx_python_mac_os.patch  # [osx]
     - patches/root-x.xx.xx-copy-abspath-headers.patch  # [osx]
     - patches/root-x.xx.xx-osx-remove-hardcoded-sysroot.patch  # [osx]
 
 build:
-  number: 18
+  number: 0
   skip: True  # [win]
   run_exports:
     # https://abi-laboratory.pro/?view=timeline&l=root
@@ -59,7 +59,7 @@ requirements:
     - {{ compiler('fortran') }}  # [linux]
     - afterimage
     - cfitsio
-    - clangdev={{ clang_version }}
+    - clangdev ={{ clang_version }}
     - clang_variant * cling_{{ clang_patches_version }}
     - davix >=0.7.2
     - fftw
@@ -75,7 +75,7 @@ requirements:
     - librsvg
     - libtiff
     - libxml2
-    - llvmdev==5
+    - llvmdev ==5
     - lz4
     - lz4-c
     # - mysql
