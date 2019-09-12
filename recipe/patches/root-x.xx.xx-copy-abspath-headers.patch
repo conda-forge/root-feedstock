@@ -1,22 +1,35 @@
+From f9370fa80db2ccdbf0adfd29b0b42c718ff49bac Mon Sep 17 00:00:00 2001
+From: Chris Burr <christopher.burr@cern.ch>
+Date: Thu, 12 Sep 2019 11:47:09 +0200
+Subject: [PATCH] Remove header copying
+
+---
+ core/clingutils/CMakeLists.txt | 12 ------------
+ 1 file changed, 12 deletions(-)
+
 diff --git a/core/clingutils/CMakeLists.txt b/core/clingutils/CMakeLists.txt
-index 293b5d7dbc..388a8c3556 100644
+index 00230ebf53..3e991b1bed 100644
 --- a/core/clingutils/CMakeLists.txt
 +++ b/core/clingutils/CMakeLists.txt
-@@ -119,17 +119,6 @@ foreach(file  multimap  multiset)
+@@ -122,18 +122,6 @@ foreach(file  multimap  multiset)
    install(FILES ${CMAKE_SOURCE_DIR}/interpreter/cling/include/cling/cint/${file} DESTINATION ${CMAKE_INSTALL_SYSCONFDIR}/cling/cint)
  endforeach()
-
+ 
 -# These headers do not have complete include guards on all platforms we
 -# support. This means that the PCH cannot provide their representation at
 -# runtime and clang will hit disk, triggering a possible incompatibility
 -# of that file in build-time versus run-time (different length etc).
 -# Capture their build-time version here, and inject it into runtime.
 -foreach(file wchar.h bits/stat.h bits/time.h)
--  if(EXISTS /usr/include/${file})
--    list(APPEND copy_commands COMMAND ${CMAKE_COMMAND} -E copy /usr/include/${file} ${CMAKE_BINARY_DIR}/etc/cling/lib/clang/${CLANG_RESOURCE_DIR_VERSION}/include/${file})
+-  if(EXISTS ${DEFAULT_SYSROOT}/usr/include/${file})
+-    list(APPEND copy_commands COMMAND ${CMAKE_COMMAND} -E copy ${DEFAULT_SYSROOT}/usr/include/${file}
+-      ${CMAKE_BINARY_DIR}/etc/cling/lib/clang/${CLANG_RESOURCE_DIR_VERSION}/include/${file})
 -  endif()
 -endforeach()
 -
  set(stamp_file ${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/LLVMRES.stamp)
  if(MSVC)
    add_custom_command(OUTPUT ${stamp_file}
+-- 
+2.21.0
+
