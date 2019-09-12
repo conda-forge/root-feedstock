@@ -59,7 +59,7 @@ requirements:
     - {{ compiler('fortran') }}  # [linux]
     - afterimage
     - cfitsio
-    - clangdev={{ clang_version }}
+    - clangdev ={{ clang_version }}
     - clang_variant * cling_{{ clang_patches_version }}
     - davix >=0.7.2
     - fftw
@@ -75,7 +75,7 @@ requirements:
     - librsvg
     - libtiff
     - libxml2
-    - llvmdev==5
+    - llvmdev ==5
     - lz4
     - lz4-c
     # - mysql
