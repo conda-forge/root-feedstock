@@ -34,12 +34,6 @@ if [ "$(uname)" == "Linux" ]; then
     echo "CXXFLAGS is now '${CXXFLAGS}'"
 else
     CMAKE_PLATFORM_FLAGS+=("-Dcocoa=ON")
-    CMAKE_PLATFORM_FLAGS+=("-DCLANG_RESOURCE_DIR_VERSION='5.0.0'")
-
-    # Print out and possibly fix SDKROOT (Might help Azure)
-    echo "SDKROOT is: '${SDKROOT}'"
-    echo "CONDA_BUILD_SYSROOT is: '${CONDA_BUILD_SYSROOT}'"
-    export SDKROOT="${CONDA_BUILD_SYSROOT}"
 
     # This is a patch for the macOS needing to be unlinked
     # Not solved in ROOT yet.
