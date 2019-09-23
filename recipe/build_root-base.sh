@@ -101,6 +101,7 @@ cmake -LAH \
     -Dpythia8=ON \
     -Dtesting=ON \
     -Droottest=OFF \
+    -Dccache=OFF \
     ../root-source
 
 make -j${CPU_COUNT}
@@ -132,18 +133,12 @@ ln -s "${PREFIX}/lib/libPyMVA_rdict.pcm" "${SP_DIR}/"
 ln -s "${PREFIX}/lib/libPyMVA.rootmap" "${SP_DIR}/"
 ln -s "${PREFIX}/lib/libJupyROOT.so" "${SP_DIR}/"
 
-if [ "$(uname)" == "Linux" ]; then
-    # Remove the PCH as we will regenerate it in the post install hook
-    rm "${PREFIX}/etc/allDict.cxx.pch"
-else
-    # On macOS we can't reliably generate the PCH at install time instead
-    # regenerate the PCH so it contains runtime paths rather than the build paths
-    (cd "${PREFIX}" &&
-     ROOTIGNOREPREFIX=1 python \
-         "${PREFIX}/etc/dictpch/makepch.py" \
-         "${PREFIX}/etc/allDict.cxx.pch" \
-         -I"${PREFIX}/include")
-fi
+# Generate the PCH
+(cd "${PREFIX}" &&
+ ROOTIGNOREPREFIX=1 python \
+     "${PREFIX}/etc/dictpch/makepch.py" \
+     "${PREFIX}/etc/allDict.cxx.pch" \
+     -I"${PREFIX}/include")
 
 # Remove thisroot.*
 test "$(ls "${PREFIX}"/bin/thisroot.* | wc -l) = 3"
