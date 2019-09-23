@@ -34,6 +34,7 @@ if [ "$(uname)" == "Linux" ]; then
     echo "CXXFLAGS is now '${CXXFLAGS}'"
 else
     CMAKE_PLATFORM_FLAGS+=("-Dcocoa=ON")
+    CMAKE_PLATFORM_FLAGS+=("-DCLANG_RESOURCE_DIR_VERSION='5.0.0'")
 
     # This is a patch for the macOS needing to be unlinked
     # Not solved in ROOT yet.
