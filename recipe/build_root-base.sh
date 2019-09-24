@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -ex
 
 # Remove the library path muddling that `root` tries to do
 sed -i -e 's@SetLibraryPath();@@g' \
@@ -28,13 +28,17 @@ if [ "$(uname)" == "Linux" ]; then
     cp "${RECIPE_DIR}/FindX11.cmake" "root-source/cmake/modules/"
 
     # Hide symbols from LLVM/clang to avoid conflicts with other libraries
-    for lib_name in $(ls $PREFIX/lib | grep -E 'lib(LLVM|clang).*\.a'); do
+    for lib_name in $(echo "$PREFIX/lib"/* | grep -E 'lib(LLVM|clang).*\.a'); do
         export CXXFLAGS="${CXXFLAGS} -Wl,--exclude-libs,${lib_name}"
     done
     echo "CXXFLAGS is now '${CXXFLAGS}'"
 else
     CMAKE_PLATFORM_FLAGS+=("-Dcocoa=ON")
     CMAKE_PLATFORM_FLAGS+=("-DCLANG_RESOURCE_DIR_VERSION='5.0.0'")
+
+    # HACK: Fix LLVM headers for Clang 8's C++17 mode
+    sed -i.bak -E 's#std::pointer_to_unary_function<(const )?Value \\*, (const )?BasicBlock \\*>#\\1BasicBlock *(*)(\\2Value *)#g' \
+        root-source/interpreter/llvm/src/include/llvm/IR/Instructions.h
 
     # This is a patch for the macOS needing to be unlinked
     # Not solved in ROOT yet.
@@ -159,3 +163,8 @@ mkdir -p "${PREFIX}/etc/conda/deactivate.d"
 cp "${RECIPE_DIR}/deactivate.sh" "${PREFIX}/etc/conda/deactivate.d/deactivate-root.sh"
 cp "${RECIPE_DIR}/deactivate.csh" "${PREFIX}/etc/conda/deactivate.d/deactivate-root.csh"
 cp "${RECIPE_DIR}/deactivate.fish" "${PREFIX}/etc/conda/deactivate.d/deactivate-root.fish"
+
+# Revert the HACK
+if [ "$(uname)" != "Linux" ]; then
+    mv ../root-source/interpreter/llvm/src/include/llvm/IR/Instructions.h.bak ../root-source/interpreter/llvm/src/include/llvm/IR/Instructions.h
+fi
