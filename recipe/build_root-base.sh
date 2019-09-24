@@ -170,5 +170,5 @@ cp "${RECIPE_DIR}/deactivate.fish" "${PREFIX}/etc/conda/deactivate.d/deactivate-
 
 # Revert the HACK
 if [ "$(uname)" != "Linux" ]; then
-    mv ../root-source/interpreter/llvm/src/include/llvm/IR/Instructions.h.bak ../root-source/interpreter/llvm/src/include/llvm/IR/Instructions.h
+    mv "${PREFIX}/include/llvm/IR/Instructions.h.bak" "${PREFIX}/include/llvm/IR/Instructions.h"
 fi
