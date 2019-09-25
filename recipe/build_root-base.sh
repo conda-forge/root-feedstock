@@ -37,10 +37,8 @@ else
     CMAKE_PLATFORM_FLAGS+=("-DCLANG_RESOURCE_DIR_VERSION='5.0.0'")
 
     # HACK: Fix LLVM headers for Clang 8's C++17 mode
-    cat "${PREFIX}/include/llvm/IR/Instructions.h"
     sed -i.bak -E 's#std::pointer_to_unary_function<(const )?Value \*, (const )?BasicBlock \*>#\1BasicBlock *(*)(\2Value *)#g' \
         "${PREFIX}/include/llvm/IR/Instructions.h"
-    git diff --no-index "${PREFIX}/include/llvm/IR/Instructions.h.bak" "${PREFIX}/include/llvm/IR/Instructions.h"
 
     # This is a patch for the macOS needing to be unlinked
     # Not solved in ROOT yet.
