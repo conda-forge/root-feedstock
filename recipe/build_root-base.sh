@@ -28,8 +28,6 @@ if [ "$(uname)" == "Linux" ]; then
     cp "${RECIPE_DIR}/FindX11.cmake" "root-source/cmake/modules/"
 
     # Hide symbols from LLVM/clang to avoid conflicts with other libraries
-    echo "$PREFIX/lib"/*
-    ls $PREFIX/lib
     for lib_name in $(ls $PREFIX/lib | grep -E 'lib(LLVM|clang).*\.a'); do
         export CXXFLAGS="${CXXFLAGS} -Wl,--exclude-libs,${lib_name}"
     done
@@ -40,7 +38,7 @@ else
 
     # HACK: Fix LLVM headers for Clang 8's C++17 mode
     cat "${PREFIX}/include/llvm/IR/Instructions.h"
-    sed -i.bak -E 's#std::pointer_to_unary_function<(const )?Value \\*, (const )?BasicBlock \\*>#\\1BasicBlock *(*)(\\2Value *)#g' \
+    sed -i.bak -E 's#std::pointer_to_unary_function<(const )?Value \*, (const )?BasicBlock \*>#\1BasicBlock *(*)(\2Value *)#g' \
         "${PREFIX}/include/llvm/IR/Instructions.h"
     git diff --no-index "${PREFIX}/include/llvm/IR/Instructions.h.bak" "${PREFIX}/include/llvm/IR/Instructions.h"
 
