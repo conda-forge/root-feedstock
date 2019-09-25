@@ -131,13 +131,14 @@ outputs:
   - name: root-dependencies
     build:
       number: {{ build_number }}
-      string: py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ build_number }}
       skip: True  # [win]
       script: echo "Minimal build script is required for conda to set RECIPE_DIR"
       run_exports:
         # https://abi-laboratory.pro/?view=timeline&l=root
         - {{ pin_subpackage('root-dependencies', max_pin='x.x.x') }}
     requirements:
+      # Include the build dependencies to ensure the build string is correct
+      build: {{- build_dependencies()|replace("\n  ", "\n        ") }}
       # Include the host dependencies so we pick up any pinning and run_exports
       host: {{- host_dependencies()|replace("\n  ", "\n        ") }}
       run:
@@ -169,7 +170,6 @@ outputs:
     build:
       number: {{ build_number }}
       skip: True  # [win]
-      string: py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ build_number }}
       script:
         - set -euxo pipefail
         - find ${PREFIX}/bin -type f -maxdepth 1 > ${SRC_DIR}/initial-filelist.txt
@@ -262,6 +262,8 @@ outputs:
         - ls
         - echo "Minimal build script is required for conda to set RECIPE_DIR"
     requirements:
+      # Include the build dependencies to ensure the build string is correct
+      build: {{- build_dependencies()|replace("\n  ", "\n        ") }}
       host:
         - python
       run:
