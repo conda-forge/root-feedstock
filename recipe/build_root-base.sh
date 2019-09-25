@@ -11,8 +11,6 @@ OLDVERSIONMACOS='${MACOSX_VERSION}'
 sed -i -e "s@${OLDVERSIONMACOS}@${MACOSX_DEPLOYMENT_TARGET}@g" \
     root-source/cmake/modules/SetUpMacOS.cmake
 
-env
-
 declare -a CMAKE_PLATFORM_FLAGS
 if [ "$(uname)" == "Linux" ]; then
     CMAKE_PLATFORM_FLAGS+=("-DCMAKE_AR=${GCC_AR}")
@@ -30,7 +28,9 @@ if [ "$(uname)" == "Linux" ]; then
     cp "${RECIPE_DIR}/FindX11.cmake" "root-source/cmake/modules/"
 
     # Hide symbols from LLVM/clang to avoid conflicts with other libraries
-    for lib_name in $(echo "$PREFIX/lib"/* | grep -E 'lib(LLVM|clang).*\.a'); do
+    echo "$PREFIX/lib"/*
+    ls $PREFIX/lib
+    for lib_name in $(ls $PREFIX/lib | grep -E 'lib(LLVM|clang).*\.a'); do
         export CXXFLAGS="${CXXFLAGS} -Wl,--exclude-libs,${lib_name}"
     done
     echo "CXXFLAGS is now '${CXXFLAGS}'"
@@ -39,8 +39,10 @@ else
     CMAKE_PLATFORM_FLAGS+=("-DCLANG_RESOURCE_DIR_VERSION='5.0.0'")
 
     # HACK: Fix LLVM headers for Clang 8's C++17 mode
+    cat "${PREFIX}/include/llvm/IR/Instructions.h"
     sed -i.bak -E 's#std::pointer_to_unary_function<(const )?Value \\*, (const )?BasicBlock \\*>#\\1BasicBlock *(*)(\\2Value *)#g' \
         "${PREFIX}/include/llvm/IR/Instructions.h"
+    git diff --no-index "${PREFIX}/include/llvm/IR/Instructions.h.bak" "${PREFIX}/include/llvm/IR/Instructions.h"
 
     # This is a patch for the macOS needing to be unlinked
     # Not solved in ROOT yet.
@@ -48,8 +50,6 @@ else
     sed -i -e "s@// load any dependent libraries@if(moduleBasename.Contains(\"PyROOT\") || moduleBasename.Contains(\"PyMVA\")) gSystem->Load(\"${PYLIBNAME}\");@g" \
         root-source/core/base/src/TSystem.cxx
 fi
-
-env
 
 mkdir -p build-dir
 cd build-dir
