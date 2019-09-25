@@ -25,6 +25,12 @@ on. Here are a few things to try:
 
 See the post [here](https://iscinumpy.gitlab.io/post/root-conda/) for more information about using this Conda package.
 
+Caveats
+=======
+
+General
+-------
+
 The ROOT package will prepare the required compilers (see below). Everything in Conda is symlinked into
 `$CONDA_PREFIX` if you build things by hand; tools like CMake should find it automatically. The `thisroot.*`
 scripts should not be used. Graphics, `rootbrowse`, etc. all should work. OpenGL is enabled.
