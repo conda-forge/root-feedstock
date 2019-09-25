@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -ex
 
 # Remove the library path muddling that `root` tries to do
 sed -i -e 's@SetLibraryPath();@@g' \
@@ -36,10 +36,9 @@ else
     CMAKE_PLATFORM_FLAGS+=("-Dcocoa=ON")
     CMAKE_PLATFORM_FLAGS+=("-DCLANG_RESOURCE_DIR_VERSION='5.0.0'")
 
-    # Print out and possibly fix SDKROOT (Might help Azure)
-    echo "SDKROOT is: '${SDKROOT}'"
-    echo "CONDA_BUILD_SYSROOT is: '${CONDA_BUILD_SYSROOT}'"
-    export SDKROOT="${CONDA_BUILD_SYSROOT}"
+    # HACK: Fix LLVM headers for Clang 8's C++17 mode
+    sed -i.bak -E 's#std::pointer_to_unary_function<(const )?Value \*, (const )?BasicBlock \*>#\1BasicBlock *(*)(\2Value *)#g' \
+        "${PREFIX}/include/llvm/IR/Instructions.h"
 
     # This is a patch for the macOS needing to be unlinked
     # Not solved in ROOT yet.
@@ -101,6 +100,7 @@ cmake -LAH \
     -Dpythia8=ON \
     -Dtesting=ON \
     -Droottest=OFF \
+    -Dccache=OFF \
     ../root-source
 
 make -j${CPU_COUNT}
@@ -132,18 +132,12 @@ ln -s "${PREFIX}/lib/libPyMVA_rdict.pcm" "${SP_DIR}/"
 ln -s "${PREFIX}/lib/libPyMVA.rootmap" "${SP_DIR}/"
 ln -s "${PREFIX}/lib/libJupyROOT.so" "${SP_DIR}/"
 
-if [ "$(uname)" == "Linux" ]; then
-    # Remove the PCH as we will regenerate it in the post install hook
-    rm "${PREFIX}/etc/allDict.cxx.pch"
-else
-    # On macOS we can't reliably generate the PCH at install time instead
-    # regenerate the PCH so it contains runtime paths rather than the build paths
-    (cd "${PREFIX}" &&
-     ROOTIGNOREPREFIX=1 python \
-         "${PREFIX}/etc/dictpch/makepch.py" \
-         "${PREFIX}/etc/allDict.cxx.pch" \
-         -I"${PREFIX}/include")
-fi
+# Generate the PCH
+(cd "${PREFIX}" &&
+ ROOTIGNOREPREFIX=1 python \
+     "${PREFIX}/etc/dictpch/makepch.py" \
+     "${PREFIX}/etc/allDict.cxx.pch" \
+     -I"${PREFIX}/include")
 
 # Remove thisroot.*
 test "$(ls "${PREFIX}"/bin/thisroot.* | wc -l) = 3"
@@ -169,3 +163,8 @@ mkdir -p "${PREFIX}/etc/conda/deactivate.d"
 cp "${RECIPE_DIR}/deactivate.sh" "${PREFIX}/etc/conda/deactivate.d/deactivate-root.sh"
 cp "${RECIPE_DIR}/deactivate.csh" "${PREFIX}/etc/conda/deactivate.d/deactivate-root.csh"
 cp "${RECIPE_DIR}/deactivate.fish" "${PREFIX}/etc/conda/deactivate.d/deactivate-root.fish"
+
+# Revert the HACK
+if [ "$(uname)" != "Linux" ]; then
+    mv "${PREFIX}/include/llvm/IR/Instructions.h.bak" "${PREFIX}/include/llvm/IR/Instructions.h"
+fi

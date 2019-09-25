@@ -33,33 +33,12 @@ General
 
 The ROOT package will prepare the required compilers (see below). Everything in Conda is symlinked into
 `$CONDA_PREFIX` if you build things by hand; tools like CMake should find it automatically. The `thisroot.*`
-scripts should not be used. Graphics, `rootbrowse`, etc. all should work.
+scripts should not be used. Graphics, `rootbrowse`, etc. all should work. OpenGL is enabled.
 
-Linux
------
-
-On Linux, there really aren't any special caveats, just a few general to Conda itself, and the compilers package.
-When ROOT is in the active environment, `g++` and `$CXX` are the conda compilers, GCC 7.3.
+There is also a `root_base` package, with minimal dependecies, that libraries should dependend on this to avoid
+having a runtime dependency on the `compilers` package. In most cases users should use the `root` package directly.
 
 ROOT was built with and will report `-std=c++17` from `root-config`.
-
-
-macOS
------
-
-The caveats on macOS are a bit larger, but have the same reason for existing as on Linux. When ROOT is in the
-active environment, `clang++` and `$CXX` will be the Conda compilers; but those compilers are Clang 4.0 and the
-macOS 10.9 SDK.  You must install the macOS 10.9 SDK, [as mentioned in the conda
-documentation](https://conda.io/projects/conda-build/en/latest/source/compiler-tools.html#macos-sdk), if you want
-to build anything.  And, while normal ROOT and PyROOT are fine, commands like `root MyFile.C+` actively build
-things, so this is probably something many users will want to do. Once the macOS is downloaded and extracted on
-your system, you should set `CONDA_BUILD_SYSROOT` to point to the SDK root location, such as
-`/opt/MacOSX10.9.sdk`. This will not be necessary once ROOT moves to using LLVM 8.
-
-ROOT does not link to Python directly in order to properly support PyROOT from Python, but has been patched to
-provide the correct behavior to allow PyROOT to also be used from ROOT's C++ command line.
-
-ROOT was built with and will report `-std=c++1z` from `root-config`.
 
 
 Current build status
@@ -168,6 +147,9 @@ Current release info
 | Name | Downloads | Version | Platforms |
 | --- | --- | --- | --- |
 | [![Conda Recipe](https://img.shields.io/badge/recipe-root-green.svg)](https://anaconda.org/conda-forge/root) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/root.svg)](https://anaconda.org/conda-forge/root) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/root.svg)](https://anaconda.org/conda-forge/root) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/root.svg)](https://anaconda.org/conda-forge/root) |
+| [![Conda Recipe](https://img.shields.io/badge/recipe-root--binaries-green.svg)](https://anaconda.org/conda-forge/root-binaries) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/root-binaries.svg)](https://anaconda.org/conda-forge/root-binaries) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/root-binaries.svg)](https://anaconda.org/conda-forge/root-binaries) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/root-binaries.svg)](https://anaconda.org/conda-forge/root-binaries) |
+| [![Conda Recipe](https://img.shields.io/badge/recipe-root--dependencies-green.svg)](https://anaconda.org/conda-forge/root-dependencies) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/root-dependencies.svg)](https://anaconda.org/conda-forge/root-dependencies) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/root-dependencies.svg)](https://anaconda.org/conda-forge/root-dependencies) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/root-dependencies.svg)](https://anaconda.org/conda-forge/root-dependencies) |
+| [![Conda Recipe](https://img.shields.io/badge/recipe-root_base-green.svg)](https://anaconda.org/conda-forge/root_base) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/root_base.svg)](https://anaconda.org/conda-forge/root_base) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/root_base.svg)](https://anaconda.org/conda-forge/root_base) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/root_base.svg)](https://anaconda.org/conda-forge/root_base) |
 
 Installing root
 ===============
@@ -178,10 +160,10 @@ Installing `root` from the `conda-forge` channel can be achieved by adding `cond
 conda config --add channels conda-forge
 ```
 
-Once the `conda-forge` channel has been enabled, `root` can be installed with:
+Once the `conda-forge` channel has been enabled, `root, root-binaries, root-dependencies, root_base` can be installed with:
 
 ```
-conda install root
+conda install root root-binaries root-dependencies root_base
 ```
 
 It is possible to list all of the versions of `root` available on your platform with:
