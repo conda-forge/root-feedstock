@@ -99,7 +99,7 @@
 {% endmacro -%}
 
 package:
-  name: root_project
+  name: root
   version: {{ version }}
 
 source:
@@ -125,7 +125,6 @@ build:
 # Required for conda to generate the correct build matrix
 requirements:
   build: {{- build_dependencies()|replace("\n  ", "\n    ") }}
-    - {{ compiler('fortran') }}
   host: {{- host_dependencies()|replace("\n  ", "\n    ") }}
 
 outputs:
@@ -141,8 +140,6 @@ outputs:
     requirements:
       # Include the build dependencies to ensure the build string is correct
       build: {{- build_dependencies()|replace("\n  ", "\n        ") }}
-        # Add dummy dependencies on fortran and python to ensure they're included in the build string hash
-        - {{ compiler('fortran') }}
       # Include the host dependencies so we pick up any pinning and run_exports
       host: {{- host_dependencies()|replace("\n  ", "\n        ") }}
       run:
@@ -219,8 +216,6 @@ outputs:
         # - xz
     requirements:
       build: {{- build_dependencies()|replace("\n  ", "\n        ") }}
-        # Add dummy dependencies on fortran and python to ensure they're included in the build string hash
-        - {{ compiler('fortran') }}
       host: {{- host_dependencies()|replace("\n  ", "\n        ") }}
       run:
         # FIXME: Required to ensure a consistent etc/allDict.cxx.pch
@@ -249,8 +244,6 @@ outputs:
         - ls ${PREFIX}/bin/
     requirements:
       build: {{- build_dependencies()|replace("\n  ", "\n        ") }}
-        # Add dummy dependencies on fortran and python to ensure they're included in the build string hash
-        - {{ compiler('fortran') }}
       host: {{- host_dependencies()|replace("\n  ", "\n        ") }}
         - {{ pin_subpackage('root_base', exact=True) }}
       run:
@@ -275,8 +268,6 @@ outputs:
     requirements:
       # Include the build dependencies to ensure the build string is correct
       build: {{- build_dependencies()|replace("\n  ", "\n        ") }}
-        # Add dummy dependencies on fortran and python to ensure they're included in the build string hash
-        - {{ compiler('fortran') }}
       host:
         - python
       run:
