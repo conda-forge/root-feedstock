@@ -7,9 +7,53 @@
 
 # WARNING: This is not a good example of a how a conda forge recipe should look
 
-# Macros MUST come before "package:" else the outputs fail to render
-# Indention necessary due to textual inclusion
-.build_deps: &build_deps
+{% macro test_commands() %}
+        - root -l -b -q -x
+        - root -l -b -q -x test.cpp
+        # When testing with -e, explicitly set the return code to zero
+        - root -b -l -q -x -e '2+3; 0'
+        - root -b -l -q -x -e 'gSystem->LoadAllLibraries(); 0'
+        - echo ${CONDA_BUILD_SYSROOT}  # [osx]
+        # # There should be no hard coded references to the SDK
+        # Check the thisroot scripts work
+        - thisroot.sh
+        - thisroot.csh
+        - thisroot.fish
+        # Test if OpenGL is working
+        - root -b -l -q -x -e 'gStyle->SetCanvasPreferGL(kTRUE); c = new TCanvas(); if (!c->UseGL()) { throw std::runtime_error("OpenGL does not appear to be working"); }'
+        # This test will fail due to lack of graphics support but try it anyway
+        # It should exit with "TEveException: TEveManager::Create ROOT is running in batch mode."
+        - root -b -l -q -x "${ROOTSYS}/tutorials/eve/geom_lhcb.C" || true
+        # This tutorial uses davix to access a ROOT file over HTTP
+        - root -b -l -q -x "${ROOTSYS}/tutorials/tree/run_h1analysis.C"
+{% endmacro -%}
+
+package:
+  name: root
+  version: {{ version }}
+
+source:
+{%- if "ROOT_JENKINS_GIT_REV" in os.environ %}
+  git_url: {{ os.environ.get("ROOT_JENKINS_GIT_URL", "https://github.com/root-project/root.git") }}
+  git_rev: {{ os.environ["ROOT_JENKINS_GIT_REV"] }}
+{%- else %}
+  url: https://github.com/root-project/root/archive/v{{ version | replace(".","-") }}.tar.gz
+  sha256: {{ hash }}
+{%- endif %}
+  folder: root-source
+  patches:
+    - patches/root-6.20.00-force-search-of-build-related-files.patch
+    - patches/root-x.xx.xx_cling-runtime-sysroot.patch
+    - patches/root-x.xx.xx_python_mac_os.patch  # [osx]
+    - patches/root-x.xx.xx-copy-abspath-headers.patch  # [osx]
+    - patches/root-x.xx.xx-osx-remove-hardcoded-sysroot.patch  # [osx]
+
+build:
+  number: {{ build_number }}
+  skip: True  # [win]
+
+# Required for conda to generate the correct build matrix
+requirements:
   build:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
@@ -26,8 +70,6 @@
     - {{ cdt('libselinux') }}  # [linux]
     - {{ cdt('libxdamage') }}  # [linux]
     - {{ cdt('libxxf86vm') }}  # [linux]
-
-.host_deps: &host_deps
   host:
     - libblas
     - libcblas
@@ -78,56 +120,6 @@
     # FIXME: The generated allDict.cxx.pch is dependent on version of the C++ headers used
     - {{ pin_compatible('libcxx', min_pin='x', max_pin='x') }}
 
-{% macro test_commands() %}
-        - root -l -b -q -x
-        - root -l -b -q -x test.cpp
-        # When testing with -e, explicitly set the return code to zero
-        - root -b -l -q -x -e '2+3; 0'
-        - root -b -l -q -x -e 'gSystem->LoadAllLibraries(); 0'
-        - echo ${CONDA_BUILD_SYSROOT}  # [osx]
-        # # There should be no hard coded references to the SDK
-        # Check the thisroot scripts work
-        - thisroot.sh
-        - thisroot.csh
-        - thisroot.fish
-        # Test if OpenGL is working
-        - root -b -l -q -x -e 'gStyle->SetCanvasPreferGL(kTRUE); c = new TCanvas(); if (!c->UseGL()) { throw std::runtime_error("OpenGL does not appear to be working"); }'
-        # This test will fail due to lack of graphics support but try it anyway
-        # It should exit with "TEveException: TEveManager::Create ROOT is running in batch mode."
-        - root -b -l -q -x "${ROOTSYS}/tutorials/eve/geom_lhcb.C" || true
-        # This tutorial uses davix to access a ROOT file over HTTP
-        - root -b -l -q -x "${ROOTSYS}/tutorials/tree/run_h1analysis.C"
-{% endmacro -%}
-
-package:
-  name: root
-  version: {{ version }}
-
-source:
-{%- if "ROOT_JENKINS_GIT_REV" in os.environ %}
-  git_url: {{ os.environ.get("ROOT_JENKINS_GIT_URL", "https://github.com/root-project/root.git") }}
-  git_rev: {{ os.environ["ROOT_JENKINS_GIT_REV"] }}
-{%- else %}
-  url: https://github.com/root-project/root/archive/v{{ version | replace(".","-") }}.tar.gz
-  sha256: {{ hash }}
-{%- endif %}
-  folder: root-source
-  patches:
-    - patches/root-6.20.00-force-search-of-build-related-files.patch
-    - patches/root-x.xx.xx_cling-runtime-sysroot.patch
-    - patches/root-x.xx.xx_python_mac_os.patch  # [osx]
-    - patches/root-x.xx.xx-copy-abspath-headers.patch  # [osx]
-    - patches/root-x.xx.xx-osx-remove-hardcoded-sysroot.patch  # [osx]
-
-build:
-  number: {{ build_number }}
-  skip: True  # [win]
-
-# Required for conda to generate the correct build matrix
-requirements:
-  <<: *build_deps
-  <<: *host_deps
-
 outputs:
   - name: root-dependencies
     build:
@@ -140,9 +132,72 @@ outputs:
         - {{ pin_subpackage('root-dependencies', max_pin='x.x.x') }}
     requirements:
       # Include the build dependencies to ensure the build string is correct
-      <<: *build_deps
+      build:
+        - {{ compiler('c') }}
+        - {{ compiler('cxx') }}
+        - {{ compiler('fortran') }}
+        - cmake >=3.9.0
+        - git
+        - pkg-config
+        - sed
+        - make
+        # Required for OpenGL support
+        # See https://conda-forge.org/docs/maintainer/knowledge_base.html?highlight=cdt#libgl
+        - {{ cdt('mesa-libgl-devel') }}  # [linux]
+        - {{ cdt('mesa-dri-drivers') }}  # [linux]
+        - {{ cdt('libselinux') }}  # [linux]
+        - {{ cdt('libxdamage') }}  # [linux]
+        - {{ cdt('libxxf86vm') }}  # [linux]
       # Include the host dependencies so we pick up any pinning and run_exports
-      <<: *host_deps
+      host:
+        - libblas
+        - libcblas
+        - {{ compiler('c') }}  # [linux]
+        - {{ compiler('cxx') }}  # [linux]
+        - {{ compiler('fortran') }}  # [linux]
+        - numpy >=1.11
+        - afterimage
+        - cfitsio >=3.280
+        - clangdev ={{ clang_version }}
+        - clang_variant * cling_{{ clang_patches_version }}
+        - davix >=0.7.2
+        - fftw >=3.3.8
+        - freetype >=2.6.1
+        - gdk-pixbuf >=2.36.9
+        - giflib >=5.1.2
+        - glew >=2.0.0
+        - graphviz >=2.38.0
+        - gsl >=1.10
+        - krb5 >=1.16  # [osx]
+        - libglu  # [linux]
+        - libpng >=1.6
+        - librsvg >=2.44
+        - libtiff >=4.0
+        - libxml2 >=2.9
+        - llvmdev ==5
+        - lz4-c >=1.8
+        # - mysql
+        - openssl
+        - pcre >=8.39
+        # - postgresql
+        - pythia8 >=8.240
+        - python
+        - qt
+        - sqlite >=3.20
+        - tbb >=2019.8
+        - tbb-devel >=2019.8
+        - vdt >=0.4.3
+        - xorg-libx11  # [linux]
+        - xorg-libxau  # [linux]
+        - xorg-libxcursor  # [linux]
+        - xorg-libxext  # [linux]
+        - xorg-libxfixes  # [linux]
+        - xorg-libxft  # [linux]
+        - xorg-libxpm  # [linux]
+        - xrootd >=4.10.0
+        - xz >=5.2
+        # FIXME: The generated allDict.cxx.pch is dependent on version of the C++ headers used
+        - {{ pin_compatible('libcxx', min_pin='x', max_pin='x') }}
       run:
         - {{ pin_compatible('numpy') }}
         - cfitsio >=3.280
@@ -216,8 +271,71 @@ outputs:
         # - xrootd
         # - xz
     requirements:
-      <<: *build_deps
-      <<: *host_deps
+      build:
+        - {{ compiler('c') }}
+        - {{ compiler('cxx') }}
+        - {{ compiler('fortran') }}
+        - cmake >=3.9.0
+        - git
+        - pkg-config
+        - sed
+        - make
+        # Required for OpenGL support
+        # See https://conda-forge.org/docs/maintainer/knowledge_base.html?highlight=cdt#libgl
+        - {{ cdt('mesa-libgl-devel') }}  # [linux]
+        - {{ cdt('mesa-dri-drivers') }}  # [linux]
+        - {{ cdt('libselinux') }}  # [linux]
+        - {{ cdt('libxdamage') }}  # [linux]
+        - {{ cdt('libxxf86vm') }}  # [linux]
+      host:
+        - libblas
+        - libcblas
+        - {{ compiler('c') }}  # [linux]
+        - {{ compiler('cxx') }}  # [linux]
+        - {{ compiler('fortran') }}  # [linux]
+        - numpy >=1.11
+        - afterimage
+        - cfitsio >=3.280
+        - clangdev ={{ clang_version }}
+        - clang_variant * cling_{{ clang_patches_version }}
+        - davix >=0.7.2
+        - fftw >=3.3.8
+        - freetype >=2.6.1
+        - gdk-pixbuf >=2.36.9
+        - giflib >=5.1.2
+        - glew >=2.0.0
+        - graphviz >=2.38.0
+        - gsl >=1.10
+        - krb5 >=1.16  # [osx]
+        - libglu  # [linux]
+        - libpng >=1.6
+        - librsvg >=2.44
+        - libtiff >=4.0
+        - libxml2 >=2.9
+        - llvmdev ==5
+        - lz4-c >=1.8
+        # - mysql
+        - openssl
+        - pcre >=8.39
+        # - postgresql
+        - pythia8 >=8.240
+        - python
+        - qt
+        - sqlite >=3.20
+        - tbb >=2019.8
+        - tbb-devel >=2019.8
+        - vdt >=0.4.3
+        - xorg-libx11  # [linux]
+        - xorg-libxau  # [linux]
+        - xorg-libxcursor  # [linux]
+        - xorg-libxext  # [linux]
+        - xorg-libxfixes  # [linux]
+        - xorg-libxft  # [linux]
+        - xorg-libxpm  # [linux]
+        - xrootd >=4.10.0
+        - xz >=5.2
+        # FIXME: The generated allDict.cxx.pch is dependent on version of the C++ headers used
+        - {{ pin_compatible('libcxx', min_pin='x', max_pin='x') }}
       run:
         # FIXME: Required to ensure a consistent etc/allDict.cxx.pch
         - {{ pin_compatible('libcxx', min_pin='x', max_pin='x') }}
@@ -244,9 +362,23 @@ outputs:
         - cp -rp ${SRC_DIR}/root-binaries/* ${PREFIX}/bin/
         - ls ${PREFIX}/bin/
     requirements:
-      <<: *build_deps
+      build:
+        - {{ compiler('c') }}
+        - {{ compiler('cxx') }}
+        - {{ compiler('fortran') }}
+        - cmake >=3.9.0
+        - git
+        - pkg-config
+        - sed
+        - make
+        # Required for OpenGL support
+        # See https://conda-forge.org/docs/maintainer/knowledge_base.html?highlight=cdt#libgl
+        - {{ cdt('mesa-libgl-devel') }}  # [linux]
+        - {{ cdt('mesa-dri-drivers') }}  # [linux]
+        - {{ cdt('libselinux') }}  # [linux]
+        - {{ cdt('libxdamage') }}  # [linux]
+        - {{ cdt('libxxf86vm') }}  # [linux]
       # Have to copy the host dependencies in order to be able to also install root_base
-      # <<: *host_deps
       host:
         - libblas
         - libcblas
@@ -318,7 +450,22 @@ outputs:
         - echo "Minimal build script is required for conda to set RECIPE_DIR"
     requirements:
       # Include the build dependencies and python to ensure the build string is correct
-      <<: *build_deps
+      build:
+        - {{ compiler('c') }}
+        - {{ compiler('cxx') }}
+        - {{ compiler('fortran') }}
+        - cmake >=3.9.0
+        - git
+        - pkg-config
+        - sed
+        - make
+        # Required for OpenGL support
+        # See https://conda-forge.org/docs/maintainer/knowledge_base.html?highlight=cdt#libgl
+        - {{ cdt('mesa-libgl-devel') }}  # [linux]
+        - {{ cdt('mesa-dri-drivers') }}  # [linux]
+        - {{ cdt('libselinux') }}  # [linux]
+        - {{ cdt('libxdamage') }}  # [linux]
+        - {{ cdt('libxxf86vm') }}  # [linux]
       host:
         - python
       run:
