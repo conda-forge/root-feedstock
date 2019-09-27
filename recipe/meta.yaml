@@ -9,74 +9,74 @@
 
 # Macros MUST come before "package:" else the outputs fail to render
 # Indention necessary due to textual inclusion
-{% macro build_dependencies() %}
-        - {{ compiler('c') }}
-        - {{ compiler('cxx') }}
-        - {{ compiler('fortran') }}
-        - cmake >=3.9.0
-        - git
-        - pkg-config
-        - sed
-        - make
-        # Required for OpenGL support
-        # See https://conda-forge.org/docs/maintainer/knowledge_base.html?highlight=cdt#libgl
-        - {{ cdt('mesa-libgl-devel') }}  # [linux]
-        - {{ cdt('mesa-dri-drivers') }}  # [linux]
-        - {{ cdt('libselinux') }}  # [linux]
-        - {{ cdt('libxdamage') }}  # [linux]
-        - {{ cdt('libxxf86vm') }}  # [linux]
-{% endmacro -%}
+.build_deps: &build_deps
+  build:
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
+    - {{ compiler('fortran') }}
+    - cmake >=3.9.0
+    - git
+    - pkg-config
+    - sed
+    - make
+    # Required for OpenGL support
+    # See https://conda-forge.org/docs/maintainer/knowledge_base.html?highlight=cdt#libgl
+    - {{ cdt('mesa-libgl-devel') }}  # [linux]
+    - {{ cdt('mesa-dri-drivers') }}  # [linux]
+    - {{ cdt('libselinux') }}  # [linux]
+    - {{ cdt('libxdamage') }}  # [linux]
+    - {{ cdt('libxxf86vm') }}  # [linux]
 
-{% macro host_dependencies() %}
-        - libblas
-        - libcblas
-        - {{ compiler('c') }}  # [linux]
-        - {{ compiler('cxx') }}  # [linux]
-        - {{ compiler('fortran') }}  # [linux]
-        - numpy >=1.11
-        - afterimage
-        - cfitsio >=3.280
-        - clangdev ={{ clang_version }}
-        - clang_variant * cling_{{ clang_patches_version }}
-        - davix >=0.7.2
-        - fftw >=3.3.8
-        - freetype >=2.6.1
-        - gdk-pixbuf >=2.36.9
-        - giflib >=5.1.2
-        - glew >=2.0.0
-        - graphviz >=2.38.0
-        - gsl >=1.10
-        - krb5 >=1.16  # [osx]
-        - libglu  # [linux]
-        - libpng >=1.6
-        - librsvg >=2.44
-        - libtiff >=4.0
-        - libxml2 >=2.9
-        - llvmdev ==5
-        - lz4-c >=1.8
-        # - mysql
-        - openssl
-        - pcre >=8.39
-        # - postgresql
-        - pythia8 >=8.240
-        - python
-        - qt
-        - sqlite >=3.20
-        - tbb >=2019.8
-        - tbb-devel >=2019.8
-        - vdt >=0.4.3
-        - xorg-libx11  # [linux]
-        - xorg-libxau  # [linux]
-        - xorg-libxcursor  # [linux]
-        - xorg-libxext  # [linux]
-        - xorg-libxfixes  # [linux]
-        - xorg-libxft  # [linux]
-        - xorg-libxpm  # [linux]
-        - xrootd >=4.10.0
-        - xz >=5.2
-        # FIXME: The generated allDict.cxx.pch is dependent on version of the C++ headers used
-        - {{ pin_compatible('libcxx', min_pin='x', max_pin='x') }}
-{% endmacro -%}
+.host_deps: &host_deps
+  host:
+    - libblas
+    - libcblas
+    - {{ compiler('c') }}  # [linux]
+    - {{ compiler('cxx') }}  # [linux]
+    - {{ compiler('fortran') }}  # [linux]
+    - numpy >=1.11
+    - afterimage
+    - cfitsio >=3.280
+    - clangdev ={{ clang_version }}
+    - clang_variant * cling_{{ clang_patches_version }}
+    - davix >=0.7.2
+    - fftw >=3.3.8
+    - freetype >=2.6.1
+    - gdk-pixbuf >=2.36.9
+    - giflib >=5.1.2
+    - glew >=2.0.0
+    - graphviz >=2.38.0
+    - gsl >=1.10
+    - krb5 >=1.16  # [osx]
+    - libglu  # [linux]
+    - libpng >=1.6
+    - librsvg >=2.44
+    - libtiff >=4.0
+    - libxml2 >=2.9
+    - llvmdev ==5
+    - lz4-c >=1.8
+    # - mysql
+    - openssl
+    - pcre >=8.39
+    # - postgresql
+    - pythia8 >=8.240
+    - python
+    - qt
+    - sqlite >=3.20
+    - tbb >=2019.8
+    - tbb-devel >=2019.8
+    - vdt >=0.4.3
+    - xorg-libx11  # [linux]
+    - xorg-libxau  # [linux]
+    - xorg-libxcursor  # [linux]
+    - xorg-libxext  # [linux]
+    - xorg-libxfixes  # [linux]
+    - xorg-libxft  # [linux]
+    - xorg-libxpm  # [linux]
+    - xrootd >=4.10.0
+    - xz >=5.2
+    # FIXME: The generated allDict.cxx.pch is dependent on version of the C++ headers used
+    - {{ pin_compatible('libcxx', min_pin='x', max_pin='x') }}
 
 {% macro test_commands() %}
         - root -l -b -q -x
@@ -125,14 +125,13 @@ build:
 
 # Required for conda to generate the correct build matrix
 requirements:
-  build: {{- build_dependencies() }}
-  host: {{- host_dependencies() }}
+  <<: *build_deps
+  <<: *host_deps
 
 outputs:
   - name: root-dependencies
     build:
       number: {{ build_number }}
-      string: py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ build_number }}
       skip: True  # [win]
       script: echo "Minimal build script is required for conda to set RECIPE_DIR"
       run_exports:
@@ -140,9 +139,9 @@ outputs:
         - {{ pin_subpackage('root-dependencies', max_pin='x.x.x') }}
     requirements:
       # Include the build dependencies to ensure the build string is correct
-      build: {{- build_dependencies() }}
+      <<: *build_deps
       # Include the host dependencies so we pick up any pinning and run_exports
-      host: {{- host_dependencies() }}
+      <<: *host_deps
       run:
         - {{ pin_compatible('numpy') }}
         - cfitsio >=3.280
@@ -171,7 +170,6 @@ outputs:
   - name: root_base
     build:
       number: {{ build_number }}
-      string: py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ build_number }}
       skip: True  # [win]
       script:
         - set -euxo pipefail
@@ -216,8 +214,8 @@ outputs:
         # - xrootd
         # - xz
     requirements:
-      build: {{- build_dependencies() }}
-      host: {{- host_dependencies() }}
+      <<: *build_deps
+      <<: *host_deps
       run:
         # FIXME: Required to ensure a consistent etc/allDict.cxx.pch
         - {{ pin_compatible('libcxx', min_pin='x', max_pin='x') }}
@@ -233,7 +231,6 @@ outputs:
   - name: root-binaries
     build:
       number: {{ build_number }}
-      string: py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ build_number }}
       skip: True  # [win]
       script:
         - set -euxo pipefail
@@ -244,9 +241,8 @@ outputs:
         - cp -rp ${SRC_DIR}/root-binaries/* ${PREFIX}/bin/
         - ls ${PREFIX}/bin/
     requirements:
-      build: {{- build_dependencies() }}
-      host: {{- host_dependencies() }}
-        - {{ pin_subpackage('root_base', exact=True) }}
+      <<: *build_deps
+      <<: *host_deps
       run:
         - {{ pin_subpackage('root_base', exact=True) }}
     test:
@@ -259,7 +255,6 @@ outputs:
   - name: root
     build:
       number: {{ build_number }}
-      string: py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ build_number }}
       skip: True  # [win]
       script:
         - set -euxo pipefail
@@ -268,7 +263,7 @@ outputs:
         - echo "Minimal build script is required for conda to set RECIPE_DIR"
     requirements:
       # Include the build dependencies to ensure the build string is correct
-      build: {{- build_dependencies() }}
+      <<: *build_deps
       host:
         - python
       run:
