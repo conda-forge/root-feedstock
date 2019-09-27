@@ -132,6 +132,7 @@ outputs:
   - name: root-dependencies
     build:
       number: {{ build_number }}
+      string: py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ build_number }}
       skip: True  # [win]
       script: echo "Minimal build script is required for conda to set RECIPE_DIR"
       run_exports:
@@ -170,6 +171,7 @@ outputs:
   - name: root_base
     build:
       number: {{ build_number }}
+      string: py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ build_number }}
       skip: True  # [win]
       script:
         - set -euxo pipefail
@@ -231,6 +233,7 @@ outputs:
   - name: root-binaries
     build:
       number: {{ build_number }}
+      string: py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ build_number }}
       skip: True  # [win]
       script:
         - set -euxo pipefail
@@ -242,7 +245,58 @@ outputs:
         - ls ${PREFIX}/bin/
     requirements:
       <<: *build_deps
-      <<: *host_deps
+      # Have to copy the host dependencies in order to be able to also install root_base
+      # <<: *host_deps
+      host:
+        - libblas
+        - libcblas
+        - {{ compiler('c') }}  # [linux]
+        - {{ compiler('cxx') }}  # [linux]
+        - {{ compiler('fortran') }}  # [linux]
+        - numpy >=1.11
+        - afterimage
+        - cfitsio >=3.280
+        - clangdev ={{ clang_version }}
+        - clang_variant * cling_{{ clang_patches_version }}
+        - davix >=0.7.2
+        - fftw >=3.3.8
+        - freetype >=2.6.1
+        - gdk-pixbuf >=2.36.9
+        - giflib >=5.1.2
+        - glew >=2.0.0
+        - graphviz >=2.38.0
+        - gsl >=1.10
+        - krb5 >=1.16  # [osx]
+        - libglu  # [linux]
+        - libpng >=1.6
+        - librsvg >=2.44
+        - libtiff >=4.0
+        - libxml2 >=2.9
+        - llvmdev ==5
+        - lz4-c >=1.8
+        # - mysql
+        - openssl
+        - pcre >=8.39
+        # - postgresql
+        - pythia8 >=8.240
+        - python
+        - qt
+        - sqlite >=3.20
+        - tbb >=2019.8
+        - tbb-devel >=2019.8
+        - vdt >=0.4.3
+        - xorg-libx11  # [linux]
+        - xorg-libxau  # [linux]
+        - xorg-libxcursor  # [linux]
+        - xorg-libxext  # [linux]
+        - xorg-libxfixes  # [linux]
+        - xorg-libxft  # [linux]
+        - xorg-libxpm  # [linux]
+        - xrootd >=4.10.0
+        - xz >=5.2
+        # FIXME: The generated allDict.cxx.pch is dependent on version of the C++ headers used
+        - {{ pin_compatible('libcxx', min_pin='x', max_pin='x') }}
+        - {{ pin_subpackage('root_base', exact=True) }}
       run:
         - {{ pin_subpackage('root_base', exact=True) }}
     test:
@@ -255,6 +309,7 @@ outputs:
   - name: root
     build:
       number: {{ build_number }}
+      string: py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ build_number }}
       skip: True  # [win]
       script:
         - set -euxo pipefail
@@ -262,7 +317,7 @@ outputs:
         - ls
         - echo "Minimal build script is required for conda to set RECIPE_DIR"
     requirements:
-      # Include the build dependencies to ensure the build string is correct
+      # Include the build dependencies and python to ensure the build string is correct
       <<: *build_deps
       host:
         - python
