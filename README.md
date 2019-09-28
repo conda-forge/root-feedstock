@@ -25,18 +25,12 @@ on. Here are a few things to try:
 
 See the post [here](https://iscinumpy.gitlab.io/post/root-conda/) for more information about using this Conda package.
 
-Caveats
-=======
-
-General
--------
-
-The ROOT package will prepare the required compilers (see below). Everything in Conda is symlinked into
+The ROOT package will prepare the required compilers. Everything in Conda is symlinked into
 `$CONDA_PREFIX` if you build things by hand; tools like CMake should find it automatically. The `thisroot.*`
-scripts should not be used. Graphics, `rootbrowse`, etc. all should work. OpenGL is enabled.
+scripts should not be used and are not provided. Graphics, `rootbrowse`, etc. all should work. OpenGL is enabled.
 
-There is also a `root_base` package, with minimal dependecies, that libraries should dependend on this to avoid
-having a runtime dependency on the `compilers` package. In most cases users should use the `root` package directly.
+There is also a `root_base` package, with minimal dependecies, that libraries should depend on this to avoid
+having a runtime dependency on the `compilers` package. `root-dependencies` and `root-binaries` are also available. In most cases users should use the `root` package directly, since it adds both of these, along with compilers, Jupyter, and a few other things to facilitate using ROOT or PyROOT.
 
 ROOT was built with and will report `-std=c++17` from `root-config`.
 
