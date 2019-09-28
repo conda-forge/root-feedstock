@@ -51,6 +51,7 @@ source:
 build:
   number: {{ build_number }}
   skip: True  # [win]
+  string: py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ build_number }}
 
 # Required for conda to generate the correct build matrix
 requirements:
