@@ -85,7 +85,7 @@ cmake -LAH \
     -Dbuiltin_afterimage=OFF \
     -Dbuiltin_zlib=ON \
     -Drpath=ON \
-    -DCMAKE_CXX_STANDARD=17 \
+    -DCMAKE_CXX_STANDARD=14 \
     -Dminuit2=ON \
     -Dgviz=ON \
     -Droofit=ON \
