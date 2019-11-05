@@ -45,6 +45,16 @@ else
     PYLIBNAME=$(python -c 'import sysconfig; print("libpython" + sysconfig.get_config_var("VERSION") + (sysconfig.get_config_var("ABIFLAGS") or sysconfig.get_config_var("abiflags") or ""))')
     sed -i -e "s@// load any dependent libraries@if(moduleBasename.Contains(\"PyROOT\") || moduleBasename.Contains(\"PyMVA\")) gSystem->Load(\"${PYLIBNAME}\");@g" \
         root-source/core/base/src/TSystem.cxx
+
+    export CFLAGS="${CFLAGS//-isystem /-I}"
+    export CPPFLAGS="${CPPFLAGS//-isystem /-I}"
+    export CXXFLAGS="${CXXFLAGS//-isystem /-I}"
+    export DEBUG_CFLAGS="${DEBUG_CFLAGS//-isystem /-I}"
+    export DEBUG_CXXFLAGS="${DEBUG_CXXFLAGS//-isystem /-I}"
+    export DEBUG_FFLAGS="${DEBUG_FFLAGS//-isystem /-I}"
+    export DEBUG_FORTRANFLAGS="${DEBUG_FORTRANFLAGS//-isystem /-I}"
+    export FFLAGS="${FFLAGS//-isystem /-I}"
+    export FORTRANFLAGS="${FORTRANFLAGS//-isystem /-I}"
 fi
 
 mkdir -p build-dir
