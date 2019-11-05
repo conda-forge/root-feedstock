@@ -1,0 +1,4 @@
+bump_number: 0
+exclude: [c_compiler, vc, cxx_compiler]
+kind: version
+migration_number: 1
