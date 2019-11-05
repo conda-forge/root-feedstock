@@ -10,23 +10,14 @@ jobs:
   strategy:
     maxParallel: 8
     matrix:
-      osx_fortran_compiler_version4python2.7:
-        CONFIG: osx_fortran_compiler_version4python2.7
+      osx_python2.7:
+        CONFIG: osx_python2.7
         UPLOAD_PACKAGES: True
-      osx_fortran_compiler_version4python3.6:
-        CONFIG: osx_fortran_compiler_version4python3.6
+      osx_python3.6:
+        CONFIG: osx_python3.6
         UPLOAD_PACKAGES: True
-      osx_fortran_compiler_version4python3.7:
-        CONFIG: osx_fortran_compiler_version4python3.7
-        UPLOAD_PACKAGES: True
-      osx_fortran_compiler_version7python2.7:
-        CONFIG: osx_fortran_compiler_version7python2.7
-        UPLOAD_PACKAGES: True
-      osx_fortran_compiler_version7python3.6:
-        CONFIG: osx_fortran_compiler_version7python3.6
-        UPLOAD_PACKAGES: True
-      osx_fortran_compiler_version7python3.7:
-        CONFIG: osx_fortran_compiler_version7python3.7
+      osx_python3.7:
+        CONFIG: osx_python3.7
         UPLOAD_PACKAGES: True
 
   steps:
@@ -85,7 +76,7 @@ jobs:
       source activate base
       export GIT_BRANCH=$BUILD_SOURCEBRANCHNAME
       upload_package ./ ./recipe ./.ci_support/${CONFIG}.yaml
-    displayName: Upload recipe
+    displayName: Upload package
     env:
       BINSTAR_TOKEN: $(BINSTAR_TOKEN)
     condition: not(eq(variables['UPLOAD_PACKAGES'], 'False'))
