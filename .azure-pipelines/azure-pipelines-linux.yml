@@ -10,36 +10,20 @@ jobs:
   strategy:
     maxParallel: 8
     matrix:
-      linux_cxx_compiler14python2.7:
-        CONFIG: linux_cxx_compiler14python2.7
+      linux_python2.7:
+        CONFIG: linux_python2.7
         UPLOAD_PACKAGES: True
         DOCKER_IMAGE: condaforge/linux-anvil-comp7
-      linux_cxx_compiler14python3.6:
-        CONFIG: linux_cxx_compiler14python3.6
+      linux_python3.6:
+        CONFIG: linux_python3.6
         UPLOAD_PACKAGES: True
         DOCKER_IMAGE: condaforge/linux-anvil-comp7
-      linux_cxx_compiler14python3.7:
-        CONFIG: linux_cxx_compiler14python3.7
+      linux_python3.7:
+        CONFIG: linux_python3.7
         UPLOAD_PACKAGES: True
         DOCKER_IMAGE: condaforge/linux-anvil-comp7
-      linux_cxx_compiler14python3.8:
-        CONFIG: linux_cxx_compiler14python3.8
-        UPLOAD_PACKAGES: True
-        DOCKER_IMAGE: condaforge/linux-anvil-comp7
-      linux_cxx_compilergxxpython2.7:
-        CONFIG: linux_cxx_compilergxxpython2.7
-        UPLOAD_PACKAGES: True
-        DOCKER_IMAGE: condaforge/linux-anvil-comp7
-      linux_cxx_compilergxxpython3.6:
-        CONFIG: linux_cxx_compilergxxpython3.6
-        UPLOAD_PACKAGES: True
-        DOCKER_IMAGE: condaforge/linux-anvil-comp7
-      linux_cxx_compilergxxpython3.7:
-        CONFIG: linux_cxx_compilergxxpython3.7
-        UPLOAD_PACKAGES: True
-        DOCKER_IMAGE: condaforge/linux-anvil-comp7
-      linux_cxx_compilergxxpython3.8:
-        CONFIG: linux_cxx_compilergxxpython3.8
+      linux_python3.8:
+        CONFIG: linux_python3.8
         UPLOAD_PACKAGES: True
         DOCKER_IMAGE: condaforge/linux-anvil-comp7
   steps:
