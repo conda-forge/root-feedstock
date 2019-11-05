@@ -1,0 +1,52 @@
+MACOSX_DEPLOYMENT_TARGET:
+- '10.9'
+c_compiler:
+- clang
+c_compiler_version:
+- '9'
+channel_sources:
+- conda-forge,defaults
+channel_targets:
+- conda-forge main
+cxx_compiler:
+- clangxx
+cxx_compiler_version:
+- '9'
+fortran_compiler:
+- gfortran
+fortran_compiler_version:
+- '7'
+giflib:
+- 5.1.7
+gsl:
+- '2.5'
+krb5:
+- '1.16'
+libblas:
+- 3.8 *netlib
+libcblas:
+- 3.8 *netlib
+macos_machine:
+- x86_64-apple-darwin13.4.0
+macos_min_version:
+- '10.9'
+openssl:
+- 1.1.1a
+pin_run_as_build:
+  krb5:
+    max_pin: x.x
+  openssl:
+    max_pin: x.x.x
+  python:
+    min_pin: x.x
+    max_pin: x.x
+  qt:
+    max_pin: x.x
+  sqlite:
+    max_pin: x
+python:
+- '3.7'
+qt:
+- '5.12'
+sqlite:
+- '3'
