@@ -46,15 +46,15 @@ else
     sed -i -e "s@// load any dependent libraries@if(moduleBasename.Contains(\"PyROOT\") || moduleBasename.Contains(\"PyMVA\")) gSystem->Load(\"${PYLIBNAME}\");@g" \
         root-source/core/base/src/TSystem.cxx
 
-    export CFLAGS="${CFLAGS//-isystem /-I}"
-    export CPPFLAGS="${CPPFLAGS//-isystem /-I}"
-    export CXXFLAGS="${CXXFLAGS//-isystem /-I}"
-    export DEBUG_CFLAGS="${DEBUG_CFLAGS//-isystem /-I}"
-    export DEBUG_CXXFLAGS="${DEBUG_CXXFLAGS//-isystem /-I}"
-    export DEBUG_FFLAGS="${DEBUG_FFLAGS//-isystem /-I}"
-    export DEBUG_FORTRANFLAGS="${DEBUG_FORTRANFLAGS//-isystem /-I}"
-    export FFLAGS="${FFLAGS//-isystem /-I}"
-    export FORTRANFLAGS="${FORTRANFLAGS//-isystem /-I}"
+    export CFLAGS="${CFLAGS//-isystem * /}"
+    export CPPFLAGS="${CPPFLAGS//-isystem * /}"
+    export CXXFLAGS=e
+    export DEBUG_CFLAGS="${DEBUG_CFLAGS//-isystem * /}"
+    export DEBUG_CXXFLAGS="${DEBUG_CXXFLAGS//-isystem * /}"
+    export DEBUG_FFLAGS="${DEBUG_FFLAGS//-isystem * /}"
+    export DEBUG_FORTRANFLAGS="${DEBUG_FORTRANFLAGS//-isystem * /}"
+    export FFLAGS="${FFLAGS//-isystem * /}"
+    export FORTRANFLAGS="${FORTRANFLAGS//-isystem * /}"
 fi
 
 mkdir -p build-dir
