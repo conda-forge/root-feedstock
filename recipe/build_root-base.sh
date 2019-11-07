@@ -48,7 +48,7 @@ else
 
     export CFLAGS="${CFLAGS//-isystem /-isystem=}"
     export CPPFLAGS="${CPPFLAGS//-isystem /-isystem=}"
-    export CXXFLAGS=e
+    export CXXFLAGS="${CXXFLAGS//-isystem /-isystem=}"
     export DEBUG_CFLAGS="${DEBUG_CFLAGS//-isystem /-isystem=}"
     export DEBUG_CXXFLAGS="${DEBUG_CXXFLAGS//-isystem /-isystem=}"
     export DEBUG_FFLAGS="${DEBUG_FFLAGS//-isystem /-isystem=}"
