@@ -114,6 +114,7 @@ requirements:
     - xz
     # FIXME: The generated allDict.cxx.pch is dependent on version of the C++ headers used
     - {{ pin_compatible('libcxx', min_pin='x', max_pin='x') }}
+    - xxhash
   run:
     - python
 
@@ -195,6 +196,7 @@ outputs:
         - xz
         # FIXME: The generated allDict.cxx.pch is dependent on version of the C++ headers used
         - {{ pin_compatible('libcxx', min_pin='x', max_pin='x') }}
+        - xxhash
       run:
         - {{ pin_compatible('numpy') }}
         - cfitsio
@@ -333,6 +335,7 @@ outputs:
         - xz
         # FIXME: The generated allDict.cxx.pch is dependent on version of the C++ headers used
         - {{ pin_compatible('libcxx', min_pin='x', max_pin='x') }}
+        - xxhash
       run:
         # FIXME: Required to ensure a consistent etc/allDict.cxx.pch
         - {{ pin_compatible('libcxx', min_pin='x', max_pin='x') }}
@@ -432,6 +435,7 @@ outputs:
         # FIXME: The generated allDict.cxx.pch is dependent on version of the C++ headers used
         - {{ pin_compatible('libcxx', min_pin='x', max_pin='x') }}
         - {{ pin_subpackage('root_base', exact=True) }}
+        - xxhash
       run:
         - {{ pin_subpackage('root_base', exact=True) }}
         - python
