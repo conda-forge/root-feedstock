@@ -111,6 +111,7 @@ cmake -LAH \
     -Dtesting=ON \
     -Droottest=OFF \
     -Dccache=OFF \
+    -Dbuiltin_ftgl=ON \
     ../root-source
 
 make -j${CPU_COUNT}
