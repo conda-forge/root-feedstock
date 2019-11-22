@@ -26,6 +26,8 @@ libblas:
 - 3.8 *netlib
 libcblas:
 - 3.8 *netlib
+numpy:
+- '1.14'
 openssl:
 - 1.1.1a
 pin_run_as_build:
