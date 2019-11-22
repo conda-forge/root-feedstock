@@ -77,7 +77,7 @@ requirements:
     - {{ compiler('c') }}  # [linux]
     - {{ compiler('cxx') }}  # [linux]
     - {{ compiler('fortran') }}  # [linux]
-    - numpy >=1.11
+    - numpy
     - afterimage
     - cfitsio >=3.280
     - clangdev ={{ clang_version }}
@@ -156,7 +156,7 @@ outputs:
         - {{ compiler('c') }}  # [linux]
         - {{ compiler('cxx') }}  # [linux]
         - {{ compiler('fortran') }}  # [linux]
-        - numpy >=1.11
+        - numpy
         - afterimage
         - cfitsio >=3.280
         - clangdev ={{ clang_version }}
@@ -294,7 +294,7 @@ outputs:
         - {{ compiler('c') }}  # [linux]
         - {{ compiler('cxx') }}  # [linux]
         - {{ compiler('fortran') }}  # [linux]
-        - numpy >=1.11
+        - numpy
         - afterimage
         - cfitsio >=3.280
         - clangdev ={{ clang_version }}
@@ -386,7 +386,7 @@ outputs:
         - {{ compiler('c') }}  # [linux]
         - {{ compiler('cxx') }}  # [linux]
         - {{ compiler('fortran') }}  # [linux]
-        - numpy >=1.11
+        - numpy
         - afterimage
         - cfitsio >=3.280
         - clangdev ={{ clang_version }}
