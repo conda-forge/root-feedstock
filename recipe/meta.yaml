@@ -1,6 +1,6 @@
 {% set name = "root" %}
 {% set version = "6.18.04" %}
-{% set build_number = 22 %}
+{% set build_number = 23 %}
 {% set hash = "82421a5f0486a2c66170300285dce49a961e3459cb5290f6fa579ef617dc8b0a" %}
 {% set clang_version = "5.0.0" %}
 {% set clang_patches_version = "6.18.00" %}
@@ -340,6 +340,10 @@ outputs:
       run:
         # FIXME: Required to ensure a consistent etc/allDict.cxx.pch
         - {{ pin_compatible('libcxx', min_pin='x', max_pin='x') }}
+        - python
+        - {{ compiler('c') }}
+        - {{ compiler('cxx') }}
+        - {{ compiler('fortran') }}
       run_constrained:
         # Items listed here conflict with ROOT
         # FIXME Add support in ROOT for building with an external cling
@@ -432,6 +436,7 @@ outputs:
         - {{ pin_subpackage('root_base', exact=True) }}
       run:
         - {{ pin_subpackage('root_base', exact=True) }}
+        - python
     test:
       files:
         - test.cpp
