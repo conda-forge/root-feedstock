@@ -1,6 +1,6 @@
 {% set name = "root" %}
 {% set version = "6.18.04" %}
-{% set build_number = 23 %}
+{% set build_number = 24 %}
 {% set hash = "82421a5f0486a2c66170300285dce49a961e3459cb5290f6fa579ef617dc8b0a" %}
 {% set clang_version = "5.0.0" %}
 {% set clang_patches_version = "6.18.00" %}
@@ -59,7 +59,7 @@ requirements:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     - {{ compiler('fortran') }}
-    - cmake >=3.9.0
+    - cmake
     - git
     - pkg-config
     - sed
@@ -79,36 +79,36 @@ requirements:
     - {{ compiler('fortran') }}  # [linux]
     - numpy
     - afterimage
-    - cfitsio >=3.280
+    - cfitsio
     - clangdev ={{ clang_version }}
     - clang_variant * cling_{{ clang_patches_version }}
-    - davix >=0.7.2
-    - fftw >=3.3.8
-    - freetype >=2.6.1
-    - gdk-pixbuf >=2.36.9
-    - giflib >=5.1.2
-    - glew >=2.0.0
-    - graphviz >=2.38.0
-    - gsl >=1.10
-    - krb5 >=1.16  # [osx]
+    - davix
+    - fftw
+    - freetype
+    - gdk-pixbuf
+    - giflib
+    - glew
+    - graphviz
+    - gsl
+    - krb5  # [osx]
     - libglu  # [linux]
-    - libpng >=1.6
-    - librsvg >=2.44
-    - libtiff >=4.0
-    - libxml2 >=2.9
+    - libpng
+    - librsvg
+    - libtiff
+    - libxml2
     - llvmdev ==5
-    - lz4-c >=1.8
+    - lz4-c
     # - mysql
     - openssl
-    - pcre >=8.39
+    - pcre
     # - postgresql
-    - pythia8 >=8.240
+    - pythia8
     - python
     - qt
-    - sqlite >=3.20
-    - tbb >=2019.8
-    - tbb-devel >=2019.8
-    - vdt >=0.4.3
+    - sqlite
+    - tbb
+    - tbb-devel
+    - vdt
     - xorg-libx11  # [linux]
     - xorg-libxau  # [linux]
     - xorg-libxcursor  # [linux]
@@ -116,8 +116,8 @@ requirements:
     - xorg-libxfixes  # [linux]
     - xorg-libxft  # [linux]
     - xorg-libxpm  # [linux]
-    - xrootd >=4.10.0
-    - xz >=5.2
+    - xrootd
+    - xz
     # FIXME: The generated allDict.cxx.pch is dependent on version of the C++ headers used
     - {{ pin_compatible('libcxx', min_pin='x', max_pin='x') }}
 
@@ -137,7 +137,7 @@ outputs:
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - {{ compiler('fortran') }}
-        - cmake >=3.9.0
+        - cmake
         - git
         - pkg-config
         - sed
@@ -158,36 +158,36 @@ outputs:
         - {{ compiler('fortran') }}  # [linux]
         - numpy
         - afterimage
-        - cfitsio >=3.280
+        - cfitsio
         - clangdev ={{ clang_version }}
         - clang_variant * cling_{{ clang_patches_version }}
-        - davix >=0.7.2
-        - fftw >=3.3.8
-        - freetype >=2.6.1
-        - gdk-pixbuf >=2.36.9
-        - giflib >=5.1.2
-        - glew >=2.0.0
-        - graphviz >=2.38.0
-        - gsl >=1.10
-        - krb5 >=1.16  # [osx]
+        - davix
+        - fftw
+        - freetype
+        - gdk-pixbuf
+        - giflib
+        - glew
+        - graphviz
+        - gsl
+        - krb5  # [osx]
         - libglu  # [linux]
-        - libpng >=1.6
-        - librsvg >=2.44
-        - libtiff >=4.0
-        - libxml2 >=2.9
+        - libpng
+        - librsvg
+        - libtiff
+        - libxml2
         - llvmdev ==5
-        - lz4-c >=1.8
+        - lz4-c
         # - mysql
         - openssl
-        - pcre >=8.39
+        - pcre
         # - postgresql
-        - pythia8 >=8.240
+        - pythia8
         - python
         - qt
-        - sqlite >=3.20
-        - tbb >=2019.8
-        - tbb-devel >=2019.8
-        - vdt >=0.4.3
+        - sqlite
+        - tbb
+        - tbb-devel
+        - vdt
         - xorg-libx11  # [linux]
         - xorg-libxau  # [linux]
         - xorg-libxcursor  # [linux]
@@ -195,22 +195,22 @@ outputs:
         - xorg-libxfixes  # [linux]
         - xorg-libxft  # [linux]
         - xorg-libxpm  # [linux]
-        - xrootd >=4.10.0
-        - xz >=5.2
+        - xrootd
+        - xz
         # FIXME: The generated allDict.cxx.pch is dependent on version of the C++ headers used
         - {{ pin_compatible('libcxx', min_pin='x', max_pin='x') }}
       run:
         - {{ pin_compatible('numpy') }}
-        - cfitsio >=3.280
-        - fftw >=3.3.8
-        - gdk-pixbuf >=2.36.9
-        - glew >=2.0.0
-        - graphviz >=2.38.0
+        - cfitsio
+        - fftw
+        - gdk-pixbuf
+        - glew
+        - graphviz
         - libglu  # [linux]
-        - librsvg >=2.44
-        - pythia8 >=8.240
+        - librsvg
+        - pythia8
         - python
-        - tbb-devel >=2019.8
+        - tbb-devel
         - xorg-libx11  # [linux]
         - xorg-libxau  # [linux]
         - xorg-libxcursor  # [linux]
@@ -276,7 +276,7 @@ outputs:
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - {{ compiler('fortran') }}
-        - cmake >=3.9.0
+        - cmake
         - git
         - pkg-config
         - sed
@@ -296,36 +296,36 @@ outputs:
         - {{ compiler('fortran') }}  # [linux]
         - numpy
         - afterimage
-        - cfitsio >=3.280
+        - cfitsio
         - clangdev ={{ clang_version }}
         - clang_variant * cling_{{ clang_patches_version }}
-        - davix >=0.7.2
-        - fftw >=3.3.8
-        - freetype >=2.6.1
-        - gdk-pixbuf >=2.36.9
-        - giflib >=5.1.2
-        - glew >=2.0.0
-        - graphviz >=2.38.0
-        - gsl >=1.10
-        - krb5 >=1.16  # [osx]
+        - davix
+        - fftw
+        - freetype
+        - gdk-pixbuf
+        - giflib
+        - glew
+        - graphviz
+        - gsl
+        - krb5  # [osx]
         - libglu  # [linux]
-        - libpng >=1.6
-        - librsvg >=2.44
-        - libtiff >=4.0
-        - libxml2 >=2.9
+        - libpng
+        - librsvg
+        - libtiff
+        - libxml2
         - llvmdev ==5
-        - lz4-c >=1.8
+        - lz4-c
         # - mysql
         - openssl
-        - pcre >=8.39
+        - pcre
         # - postgresql
-        - pythia8 >=8.240
+        - pythia8
         - python
         - qt
-        - sqlite >=3.20
-        - tbb >=2019.8
-        - tbb-devel >=2019.8
-        - vdt >=0.4.3
+        - sqlite
+        - tbb
+        - tbb-devel
+        - vdt
         - xorg-libx11  # [linux]
         - xorg-libxau  # [linux]
         - xorg-libxcursor  # [linux]
@@ -333,8 +333,8 @@ outputs:
         - xorg-libxfixes  # [linux]
         - xorg-libxft  # [linux]
         - xorg-libxpm  # [linux]
-        - xrootd >=4.10.0
-        - xz >=5.2
+        - xrootd
+        - xz
         # FIXME: The generated allDict.cxx.pch is dependent on version of the C++ headers used
         - {{ pin_compatible('libcxx', min_pin='x', max_pin='x') }}
       run:
@@ -371,7 +371,7 @@ outputs:
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - {{ compiler('fortran') }}
-        - cmake >=3.9.0
+        - cmake
         - git
         - pkg-config
         - sed
@@ -392,36 +392,36 @@ outputs:
         - {{ compiler('fortran') }}  # [linux]
         - numpy
         - afterimage
-        - cfitsio >=3.280
+        - cfitsio
         - clangdev ={{ clang_version }}
         - clang_variant * cling_{{ clang_patches_version }}
-        - davix >=0.7.2
-        - fftw >=3.3.8
-        - freetype >=2.6.1
-        - gdk-pixbuf >=2.36.9
-        - giflib >=5.1.2
-        - glew >=2.0.0
-        - graphviz >=2.38.0
-        - gsl >=1.10
-        - krb5 >=1.16  # [osx]
+        - davix
+        - fftw
+        - freetype
+        - gdk-pixbuf
+        - giflib
+        - glew
+        - graphviz
+        - gsl
+        - krb5  # [osx]
         - libglu  # [linux]
-        - libpng >=1.6
-        - librsvg >=2.44
-        - libtiff >=4.0
-        - libxml2 >=2.9
+        - libpng
+        - librsvg
+        - libtiff
+        - libxml2
         - llvmdev ==5
-        - lz4-c >=1.8
+        - lz4-c
         # - mysql
         - openssl
-        - pcre >=8.39
+        - pcre
         # - postgresql
-        - pythia8 >=8.240
+        - pythia8
         - python
         - qt
-        - sqlite >=3.20
-        - tbb >=2019.8
-        - tbb-devel >=2019.8
-        - vdt >=0.4.3
+        - sqlite
+        - tbb
+        - tbb-devel
+        - vdt
         - xorg-libx11  # [linux]
         - xorg-libxau  # [linux]
         - xorg-libxcursor  # [linux]
@@ -429,8 +429,8 @@ outputs:
         - xorg-libxfixes  # [linux]
         - xorg-libxft  # [linux]
         - xorg-libxpm  # [linux]
-        - xrootd >=4.10.0
-        - xz >=5.2
+        - xrootd
+        - xz
         # FIXME: The generated allDict.cxx.pch is dependent on version of the C++ headers used
         - {{ pin_compatible('libcxx', min_pin='x', max_pin='x') }}
         - {{ pin_subpackage('root_base', exact=True) }}
@@ -460,7 +460,7 @@ outputs:
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - {{ compiler('fortran') }}
-        - cmake >=3.9.0
+        - cmake
         - git
         - pkg-config
         - sed
