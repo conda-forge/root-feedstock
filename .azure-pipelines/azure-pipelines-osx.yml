@@ -44,7 +44,7 @@ jobs:
 
   - script: |
       source activate base
-      conda install -n base -c conda-forge --quiet --yes conda-forge-ci-setup=2 conda-build
+      conda install -n base -c conda-forge --quiet --yes conda-forge-ci-setup=2 conda-build=3.18.9
     displayName: 'Add conda-forge-ci-setup=2'
 
   - script: |
