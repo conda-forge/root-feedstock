@@ -111,6 +111,7 @@ cmake -LAH \
     -Dtesting=ON \
     -Droottest=OFF \
     -Dccache=OFF \
+    -Droot7=ON \
     ../root-source
 
 make -j${CPU_COUNT}
