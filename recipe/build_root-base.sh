@@ -114,6 +114,7 @@ cmake -LAH \
     -Dccache=OFF \
     -Droot7=ON \
     -Dbuiltin_ftgl=ON \
+    -Dbuiltin_gl2ps=ON \
     ../root-source
 
 make -j${CPU_COUNT}
