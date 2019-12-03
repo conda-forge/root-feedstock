@@ -438,6 +438,7 @@ outputs:
       run:
         - {{ pin_subpackage('root_base', exact=True) }}
         - python
+        - {{ pin_compatible('xxhash', max_pin='x.x.x') }}
     test:
       files:
         - test.cpp
