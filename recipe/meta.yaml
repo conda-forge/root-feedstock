@@ -3,7 +3,7 @@
 {% set build_number = 28 %}
 {% set hash = "82421a5f0486a2c66170300285dce49a961e3459cb5290f6fa579ef617dc8b0a" %}
 {% set clang_version = "5.0.0" %}
-{% set clang_patches_version = "v0.6" %}
+{% set clang_patches_version = "root_master" %}
 
 # WARNING: This is not a good example of a how a conda forge recipe should look
 
@@ -75,7 +75,7 @@ requirements:
     - afterimage
     - cfitsio
     - clangdev ={{ clang_version }}
-    - clang_variant * cling_{{ clang_patches_version }}
+    - clang_variant * {{ clang_patches_version }}
     - davix
     - fftw
     - freetype
@@ -157,7 +157,7 @@ outputs:
         - afterimage
         - cfitsio
         - clangdev ={{ clang_version }}
-        - clang_variant * cling_{{ clang_patches_version }}
+        - clang_variant * {{ clang_patches_version }}
         - davix
         - fftw
         - freetype
@@ -240,9 +240,6 @@ outputs:
       run_exports:
         # https://abi-laboratory.pro/?view=timeline&l=root
         - {{ pin_subpackage('root_base', max_pin='x.x.x') }}
-      ignore_prefix_files:
-        # FIXME: Figure out how to correct the paths in the PCH
-        - etc/allDict.cxx.pch
       # Taken from "conda render ./recipe/ -m .ci_support/osx_python3.7.yaml"
       # Sorted and commented run_exports that we want to keep
       # TODO: This will need updating occasionally
@@ -296,7 +293,7 @@ outputs:
         - afterimage
         - cfitsio
         - clangdev ={{ clang_version }}
-        - clang_variant * cling_{{ clang_patches_version }}
+        - clang_variant * {{ clang_patches_version }}
         - davix
         - fftw
         - freetype
@@ -395,7 +392,7 @@ outputs:
         # These not required as they're are statically linked in libCling. They also cannot
         # be installed in the same environment as root_base due to the compiler constraint
         # - clangdev ={{ clang_version }}
-        # - clang_variant * cling_{{ clang_patches_version }}
+        # - clang_variant * {{ clang_patches_version }}
         # - llvmdev ==5
         - davix
         - fftw
