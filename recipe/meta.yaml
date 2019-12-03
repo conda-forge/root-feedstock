@@ -217,6 +217,7 @@ outputs:
         - xorg-libxpm  # [linux]
         # FIXME: Required to ensure a consistent etc/allDict.cxx.pch
         - {{ pin_compatible('libcxx', min_pin='x', max_pin='x') }}
+        - {{ pin_compatible('xxhash', max_pin='x.x.x') }}
     test:
       commands:
         - echo "Testing is performed in the root_base and root outputs"
@@ -340,6 +341,7 @@ outputs:
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - {{ compiler('fortran') }}
+        - {{ pin_compatible('xxhash', max_pin='x.x.x') }}
       run_constrained:
         # Items listed here conflict with ROOT
         # FIXME Add support in ROOT for building with an external cling
