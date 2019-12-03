@@ -116,6 +116,8 @@ cmake -LAH \
     -Druntime_cxxmodules=ON \
     ../root-source
 
+eval echo $(curl https://gist.githubusercontent.com/chrisburr/82d39ba3f0cb7f50479a878523bdd5cb/raw/bc92a78f8bc379c98e1936a971e309ca2be9de45/link.txt) > core/clingutils/test/CMakeFiles/coreclingutilstestUnit.dir/link.txt
+
 make -j${CPU_COUNT}
 
 if [[ -n "${ROOT_RUN_GTESTS}" ]]; then
@@ -139,18 +141,9 @@ ln -s "${PREFIX}/lib/JupyROOT/" "${SP_DIR}/"
 test "$(ls "${PREFIX}"/lib/libPy* | wc -l) = 2"
 ln -s "${PREFIX}/lib/libPyROOT.so" "${SP_DIR}/"
 ln -s "${PREFIX}/lib/libPyROOT_rdict.pcm" "${SP_DIR}/"
-ln -s "${PREFIX}/lib/libPyROOT.rootmap" "${SP_DIR}/"
 ln -s "${PREFIX}/lib/libPyMVA.so" "${SP_DIR}/"
 ln -s "${PREFIX}/lib/libPyMVA_rdict.pcm" "${SP_DIR}/"
-ln -s "${PREFIX}/lib/libPyMVA.rootmap" "${SP_DIR}/"
 ln -s "${PREFIX}/lib/libJupyROOT.so" "${SP_DIR}/"
-
-# Generate the PCH
-(cd "${PREFIX}" &&
- ROOTIGNOREPREFIX=1 python \
-     "${PREFIX}/etc/dictpch/makepch.py" \
-     "${PREFIX}/etc/allDict.cxx.pch" \
-     -I"${PREFIX}/include")
 
 # Remove thisroot.*
 test "$(ls "${PREFIX}"/bin/thisroot.* | wc -l) = 3"
