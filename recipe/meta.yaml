@@ -1,6 +1,6 @@
 {% set name = "root" %}
 {% set version = "6.18.04" %}
-{% set build_number = 25 %}
+{% set build_number = 26 %}
 {% set hash = "82421a5f0486a2c66170300285dce49a961e3459cb5290f6fa579ef617dc8b0a" %}
 {% set clang_version = "5.0.0" %}
 {% set clang_patches_version = "6.18.00" %}
@@ -120,6 +120,8 @@ requirements:
     - xz
     # FIXME: The generated allDict.cxx.pch is dependent on version of the C++ headers used
     - {{ pin_compatible('libcxx', min_pin='x', max_pin='x') }}
+  run:
+    - python
 
 outputs:
   - name: root-dependencies
