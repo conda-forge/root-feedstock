@@ -35,6 +35,7 @@ if [ "$(uname)" == "Linux" ]; then
 else
     CMAKE_PLATFORM_FLAGS+=("-Dcocoa=ON")
     CMAKE_PLATFORM_FLAGS+=("-DCLANG_RESOURCE_DIR_VERSION='5.0.0'")
+    CMAKE_PLATFORM_FLAGS+=("-DBLA_PREFER_PKGCONFIG=ON")
 
     # HACK: Fix LLVM headers for Clang 8's C++17 mode
     sed -i.bak -E 's#std::pointer_to_unary_function<(const )?Value \*, (const )?BasicBlock \*>#\1BasicBlock *(*)(\2Value *)#g' \
