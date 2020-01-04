@@ -1,9 +1,9 @@
 {% set name = "root" %}
-{% set version = "6.18.04" %}
-{% set build_number = 25 %}
+{% set version = "6.19.00" %}
+{% set build_number = 0 %}
 {% set hash = "82421a5f0486a2c66170300285dce49a961e3459cb5290f6fa579ef617dc8b0a" %}
 {% set clang_version = "5.0.0" %}
-{% set clang_patches_version = "root_master" %}
+{% set clang_patches_version = "root_20191220" %}
 
 # WARNING: This is not a good example of a how a conda forge recipe should look
 
@@ -82,6 +82,7 @@ requirements:
     - gdk-pixbuf
     - giflib
     - glew
+    - gl2ps
     - graphviz
     - gsl
     - krb5  # [osx]
@@ -162,6 +163,7 @@ outputs:
         - gdk-pixbuf
         - giflib
         - glew
+        - gl2ps
         - graphviz
         - gsl
         - krb5  # [osx]
@@ -201,6 +203,7 @@ outputs:
         - fftw
         - gdk-pixbuf
         - glew
+        - gl2ps
         - graphviz
         - libglu  # [linux]
         - librsvg
@@ -246,6 +249,7 @@ outputs:
         # - afterimage
         # - davix
         # - freetype
+        - gl2ps
         - giflib
         - gsl
         - krb5
@@ -299,6 +303,7 @@ outputs:
         - gdk-pixbuf
         - giflib
         - glew
+        - gl2ps
         - graphviz
         - gsl
         - krb5  # [osx]
@@ -400,6 +405,7 @@ outputs:
         - gdk-pixbuf
         - giflib
         - glew
+        - gl2ps
         - graphviz
         - gsl
         - krb5  # [osx]
