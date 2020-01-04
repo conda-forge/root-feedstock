@@ -5,7 +5,7 @@ c_compiler_version:
 cfitsio:
 - '3.470'
 channel_sources:
-- chrisburr/label/root-master,conda-forge,defaults
+- conda-forge,defaults
 channel_targets:
 - conda-forge main
 cxx_compiler:
