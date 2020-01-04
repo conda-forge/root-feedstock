@@ -18,6 +18,7 @@ if [ "$(uname)" == "Linux" ]; then
     CMAKE_PLATFORM_FLAGS+=("-DDEFAULT_SYSROOT=${PREFIX}/${HOST}/sysroot")
     CMAKE_PLATFORM_FLAGS+=("-Dx11=ON")
     CMAKE_PLATFORM_FLAGS+=("-DRT_LIBRARY=${PREFIX}/${HOST}/sysroot/usr/lib/librt.so")
+    CMAKE_PLATFORM_FLAGS+=("-Druntime_cxxmodules=ON")
 
     # Fix up CMake for using conda's sysroot
     # See https://docs.conda.io/projects/conda-build/en/latest/resources/compiler-tools.html?highlight=cmake#an-aside-on-cmake-and-sysroots
@@ -36,6 +37,7 @@ else
     CMAKE_PLATFORM_FLAGS+=("-Dcocoa=ON")
     CMAKE_PLATFORM_FLAGS+=("-DCLANG_RESOURCE_DIR_VERSION='5.0.0'")
     CMAKE_PLATFORM_FLAGS+=("-DBLA_PREFER_PKGCONFIG=ON")
+    CMAKE_PLATFORM_FLAGS+=("-Druntime_cxxmodules=OFF")
 
     # HACK: Fix LLVM headers for Clang 8's C++17 mode
     sed -i.bak -E 's#std::pointer_to_unary_function<(const )?Value \*, (const )?BasicBlock \*>#\1BasicBlock *(*)(\2Value *)#g' \
@@ -88,13 +90,14 @@ cmake -LAH \
     -Dgnuinstall=OFF \
     -Dshared=ON \
     -Dsoversion=ON \
-    -Dbuiltin_clang=OFF \
-    -Dbuiltin_glew=OFF \
-    -Dbuiltin_xrootd=OFF \
-    -Dbuiltin_davix=OFF \
-    -Dbuiltin_llvm=OFF \
     -Dbuiltin_afterimage=OFF \
-    -Dbuiltin_zlib=ON \
+    -Dbuiltin_clang=OFF \
+    -Dbuiltin_davix=OFF \
+    -Dbuiltin_ftgl=OFF \
+    -Dbuiltin_glew=OFF \
+    -Dbuiltin_llvm=OFF \
+    -Dbuiltin_xrootd=OFF \
+    -Dbuiltin_zlib=OFF \
     -Drpath=ON \
     -DCMAKE_CXX_STANDARD=17 \
     -Dminuit2=ON \
@@ -115,10 +118,11 @@ cmake -LAH \
     -Droot7=ON \
     -Dbuiltin_ftgl=ON \
     -Dbuiltin_gl2ps=ON \
-    -Druntime_cxxmodules=ON \
     ../root-source
 
-eval echo $(curl https://gist.githubusercontent.com/chrisburr/82d39ba3f0cb7f50479a878523bdd5cb/raw/bc92a78f8bc379c98e1936a971e309ca2be9de45/link.txt) > core/clingutils/test/CMakeFiles/coreclingutilstestUnit.dir/link.txt
+if [ "$(uname)" == "Linux" ]; then
+    eval echo $(curl https://gist.githubusercontent.com/chrisburr/82d39ba3f0cb7f50479a878523bdd5cb/raw/bc92a78f8bc379c98e1936a971e309ca2be9de45/link.txt) > core/clingutils/test/CMakeFiles/coreclingutilstestUnit.dir/link.txt
+fi
 
 make -j${CPU_COUNT}
 
