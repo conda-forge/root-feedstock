@@ -1,32 +1,11 @@
 {% set name = "root" %}
 {% set version = "6.18.04" %}
-{% set build_number = 27 %}
+{% set build_number = 26 %}
 {% set hash = "82421a5f0486a2c66170300285dce49a961e3459cb5290f6fa579ef617dc8b0a" %}
 {% set clang_version = "5.0.0" %}
 {% set clang_patches_version = "6.18.00" %}
 
 # WARNING: This is not a good example of a how a conda forge recipe should look
-
-{% macro test_commands() %}
-        - root -l -b -q -x
-        - root -l -b -q -x test.cpp
-        # When testing with -e, explicitly set the return code to zero
-        - root -b -l -q -x -e '2+3; 0'
-        - root -b -l -q -x -e 'gSystem->LoadAllLibraries(); 0'
-        - echo ${CONDA_BUILD_SYSROOT}  # [osx]
-        # # There should be no hard coded references to the SDK
-        # Check the thisroot scripts work
-        - thisroot.sh
-        - thisroot.csh
-        - thisroot.fish
-        # Test if OpenGL is working
-        - root -b -l -q -x -e 'gStyle->SetCanvasPreferGL(kTRUE); c = new TCanvas(); if (!c->UseGL()) { throw std::runtime_error("OpenGL does not appear to be working"); }'
-        # This test will fail due to lack of graphics support but try it anyway
-        # It should exit with "TEveException: TEveManager::Create ROOT is running in batch mode."
-        - root -b -l -q -x "${ROOTSYS}/tutorials/eve/geom_lhcb.C" || true
-        # This tutorial uses davix to access a ROOT file over HTTP
-        - root -b -l -q -x "${ROOTSYS}/tutorials/tree/run_h1analysis.C"
-{% endmacro -%}
 
 package:
   name: root
@@ -221,9 +200,6 @@ outputs:
         - xorg-libxpm  # [linux]
         # FIXME: Required to ensure a consistent etc/allDict.cxx.pch
         - {{ pin_compatible('libcxx', min_pin='x', max_pin='x') }}
-    test:
-      commands:
-        - echo "Testing is performed in the root_base and root outputs"
 
   # An underscore is required here to ensure it is built after root-dependencies (required for testing)
   - name: root_base
@@ -343,9 +319,6 @@ outputs:
         # FIXME Add support in ROOT for building with an external cling
         - cling 9999
         - root5 9999
-    test:
-      commands:
-        - echo "Tested in other outputs"
 
   - name: root-binaries
     build:
@@ -427,12 +400,6 @@ outputs:
       run:
         - {{ pin_subpackage('root_base', exact=True) }}
         - python
-    test:
-      files:
-        - test.cpp
-      requires:
-        - root-dependencies {{ version }} *_{{ build_number }}
-      commands: {{- test_commands() }}
 
   - name: root
     build:
@@ -469,18 +436,6 @@ outputs:
         - {{ pin_subpackage('root_base', exact=True) }}
         - {{ pin_subpackage('root-binaries', exact=True) }}
         - {{ pin_subpackage('root-dependencies', exact=True) }}
-    test:
-      files:
-        - test.cpp
-      requires:
-        - ipython
-      imports:
-        - ROOT
-        - JupyROOT
-      commands: {{- test_commands()  }}
-        - ipython -c 'import JsMVA'
-        # This command only works if the compilers are available
-        - root -l -b -q -x test.cpp++
 
 about:
   home: https://root.cern/
