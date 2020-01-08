@@ -240,7 +240,6 @@ about:
   home: https://root.cern/
   license: LGPL-2.1
   license_family: LGPL
-  license_file: root-source/LICENSE
   doc_url: https://root.cern/documentation
   dev_url: https://github.com/root-project/root/
   summary: |
