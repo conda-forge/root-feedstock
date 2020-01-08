@@ -71,6 +71,7 @@ outputs:
         - {{ pin_subpackage('root_base', max_pin='x.x.x') }}
     requirements:
       host:
+        - python
         - libblas
         - libcblas
         - {{ compiler('c') }}  # [linux]
@@ -86,28 +87,6 @@ outputs:
         - freetype
         - gdk-pixbuf
         - giflib
-        - glew
-        - graphviz
-        - gsl
-        - krb5  # [osx]
-        - libglu  # [linux]
-        - libpng
-        - librsvg
-        - libtiff
-        - libxml2
-        - llvmdev ==5
-        - lz4-c
-        # - mysql
-        - openssl
-        - pcre
-        # - postgresql
-        - pythia8
-        - python
-        - qt
-        - sqlite
-        - tbb
-        - tbb-devel
-        - vdt
       run:
         - python
 
