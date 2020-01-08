@@ -69,52 +69,7 @@ outputs:
       run_exports:
         # https://abi-laboratory.pro/?view=timeline&l=root
         - {{ pin_subpackage('root_base', max_pin='x.x.x') }}
-      ignore_prefix_files:
-        # FIXME: Figure out how to correct the paths in the PCH
-        - etc/allDict.cxx.pch
-      # Taken from "conda render ./recipe/ -m .ci_support/osx_python3.7.yaml"
-      # Sorted and commented run_exports that we want to keep
-      # TODO: This will need updating occasionally
-      ignore_run_exports:
-        # - afterimage
-        # - davix
-        # - freetype
-        - giflib
-        - gsl
-        - krb5
-        # - libblas
-        # - libcblas
-        # - libcxx
-        # - libgfortran
-        # - libpng
-        # - libtiff
-        # - libxml2
-        # - lz4-c
-        # - openssl
-        # - pcre
-        - qt
-        - sqlite
-        # - tbb
-        # - vdt
-        # - xrootd
-        # - xz
     requirements:
-      build:
-        - {{ compiler('c') }}
-        - {{ compiler('cxx') }}
-        - {{ compiler('fortran') }}
-        - cmake
-        - git
-        - pkg-config
-        - sed
-        - make
-        # Required for OpenGL support
-        # See https://conda-forge.org/docs/maintainer/knowledge_base.html?highlight=cdt#libgl
-        - {{ cdt('mesa-libgl-devel') }}  # [linux]
-        - {{ cdt('mesa-dri-drivers') }}  # [linux]
-        - {{ cdt('libselinux') }}  # [linux]
-        - {{ cdt('libxdamage') }}  # [linux]
-        - {{ cdt('libxxf86vm') }}  # [linux]
       host:
         - libblas
         - libcblas
@@ -153,29 +108,8 @@ outputs:
         - tbb
         - tbb-devel
         - vdt
-        - xorg-libx11  # [linux]
-        - xorg-libxau  # [linux]
-        - xorg-libxcursor  # [linux]
-        - xorg-libxext  # [linux]
-        - xorg-libxfixes  # [linux]
-        - xorg-libxft  # [linux]
-        - xorg-libxpm  # [linux]
-        - xrootd
-        - xz
-        # FIXME: The generated allDict.cxx.pch is dependent on version of the C++ headers used
-        - {{ pin_compatible('libcxx', min_pin='x', max_pin='x') }}
       run:
-        # FIXME: Required to ensure a consistent etc/allDict.cxx.pch
-        - {{ pin_compatible('libcxx', min_pin='x', max_pin='x') }}
         - python
-        - {{ compiler('c') }}
-        - {{ compiler('cxx') }}
-        - {{ compiler('fortran') }}
-      run_constrained:
-        # Items listed here conflict with ROOT
-        # FIXME Add support in ROOT for building with an external cling
-        - cling 9999
-        - root5 9999
 
   - name: root-binaries
     build:
