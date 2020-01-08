@@ -90,15 +90,7 @@ outputs:
       string: py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ build_number }}
       skip: True  # [win]
       script:
-        - set -euxo pipefail
-        - find ${PREFIX}/bin -type f -maxdepth 1 > ${SRC_DIR}/initial-filelist.txt
-        - cp -rp ${PREFIX}/bin ${SRC_DIR}/initial-bin-dir
-        # Copy the new files in ${PREFIX}/bin to a dedicated directory
         - ${RECIPE_DIR}/build_root-base.sh
-        - mkdir ${SRC_DIR}/root-binaries/
-        - |
-          find ${PREFIX}/bin -type f -maxdepth 1 -exec \
-            bash -c 'fn={}; if grep --quiet "^$fn\$" "${SRC_DIR}/initial-filelist.txt"; then echo "Skipping $fn"; else echo "Found new file $fn"; mv "$fn" "${SRC_DIR}/root-binaries/"; fi' \;
       run_exports:
         # https://abi-laboratory.pro/?view=timeline&l=root
         - {{ pin_subpackage('root_base', max_pin='x.x.x') }}
@@ -155,13 +147,7 @@ outputs:
       string: py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ build_number }}
       skip: True  # [win]
       script:
-        - set -euxo pipefail
-        # Copy the executables back into ${PREFIX}/bin
-        # This is done to avoid users getting broken binaries from root_base
-        - mkdir -p ${PREFIX}/bin
-        - ls ${PREFIX}/bin/
-        - cp -rp ${SRC_DIR}/root-binaries/* ${PREFIX}/bin/
-        - ls ${PREFIX}/bin/
+        - touch $PREFIX/debugging2
     requirements:
       build:
         - {{ compiler('c') }}
@@ -191,10 +177,7 @@ outputs:
       string: py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ build_number }}
       skip: True  # [win]
       script:
-        - set -euxo pipefail
-        - pwd
-        - ls
-        - echo "Minimal build script is required for conda to set RECIPE_DIR"
+        - touch $PREFIX/debugging3
     requirements:
       # Include the build dependencies and python to ensure the build string is correct
       build:
