@@ -1,32 +1,18 @@
-{% set name = "root" %}
 {% set version = "6.18.04" %}
 {% set build_number = 26 %}
-{% set hash = "82421a5f0486a2c66170300285dce49a961e3459cb5290f6fa579ef617dc8b0a" %}
-{% set clang_version = "5.0.0" %}
-{% set clang_patches_version = "6.18.00" %}
-
-# WARNING: This is not a good example of a how a conda forge recipe should look
-
 package:
   name: root
   version: {{ version }}
 
 build:
-  number: {{ build_number }}
   skip: True  # [win]
-  string: py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ build_number }}
 
 outputs:
   - name: root_base
     build:
-      number: {{ build_number }}
-      string: py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ build_number }}
       skip: True  # [win]
       script:
         - ${RECIPE_DIR}/build_root-base.sh
-      run_exports:
-        # https://abi-laboratory.pro/?view=timeline&l=root
-        - {{ pin_subpackage('root_base', max_pin='x.x.x') }}
     requirements:
       host:
         - python
