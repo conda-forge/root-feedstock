@@ -72,9 +72,6 @@ outputs:
     requirements:
       host:
         - python
-        - libblas
-        - libcblas
-        - numpy
         - afterimage
         - giflib
       run:
