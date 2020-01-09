@@ -116,6 +116,7 @@ requirements:
     # FIXME: The generated allDict.cxx.pch is dependent on version of the C++ headers used
     - {{ pin_compatible('libcxx', min_pin='x', max_pin='x') }}
     - xxhash
+    - zlib
   run:
     - python
 
@@ -199,6 +200,7 @@ outputs:
         # FIXME: The generated allDict.cxx.pch is dependent on version of the C++ headers used
         - {{ pin_compatible('libcxx', min_pin='x', max_pin='x') }}
         - xxhash
+        - zlib
       run:
         - {{ pin_compatible('numpy') }}
         - cfitsio
@@ -245,8 +247,9 @@ outputs:
         # https://abi-laboratory.pro/?view=timeline&l=root
         - {{ pin_subpackage('root_base', max_pin='x.x.x') }}
       ignore_prefix_files:
-        # Needed until macOS supports runtime_cxxmodules=ON
+        # Needs to be different until macOS supports runtime_cxxmodules=ON
         - etc/allDict.cxx.pch  # [osx]
+        - lib/*.pcm  # [linux]
       # Taken from "conda render ./recipe/ -m .ci_support/osx_python3.7.yaml"
       # Sorted and commented run_exports that we want to keep
       # TODO: This will need updating occasionally
@@ -342,6 +345,7 @@ outputs:
         # FIXME: The generated allDict.cxx.pch is dependent on version of the C++ headers used
         - {{ pin_compatible('libcxx', min_pin='x', max_pin='x') }}
         - xxhash
+        - zlib
       run:
         # FIXME: Required to ensure a consistent etc/allDict.cxx.pch
         - {{ pin_compatible('libcxx', min_pin='x', max_pin='x') }}
@@ -444,6 +448,7 @@ outputs:
         - {{ pin_compatible('libcxx', min_pin='x', max_pin='x') }}
         - {{ pin_subpackage('root_base', exact=True) }}
         - xxhash
+        - zlib
       run:
         - {{ pin_subpackage('root_base', exact=True) }}
         - python
