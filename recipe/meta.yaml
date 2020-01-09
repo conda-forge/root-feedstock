@@ -72,7 +72,7 @@ outputs:
     requirements:
       host:
         - python
-        - giflib
+        - afterimage
       run:
         - python
 
