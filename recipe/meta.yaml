@@ -72,6 +72,7 @@ outputs:
     requirements:
       host:
         - python
+        - giflib
       run:
         - python
 
