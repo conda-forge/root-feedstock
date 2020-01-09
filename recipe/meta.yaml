@@ -44,15 +44,6 @@ outputs:
         - {{ pin_subpackage('root-dependencies', max_pin='x.x.x') }}
     requirements:
       # Include the build dependencies to ensure the build string is correct
-      build:
-        - {{ compiler('c') }}
-        - {{ compiler('cxx') }}
-        - {{ compiler('fortran') }}
-        - cmake
-        - git
-        - pkg-config
-        - sed
-        - make
       host:
         - python
       run:
@@ -75,56 +66,6 @@ outputs:
         - afterimage
       run:
         - python
-
-  - name: root-binaries
-    build:
-      number: {{ build_number }}
-      string: py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ build_number }}
-      skip: True  # [win]
-      script:
-        - touch $PREFIX/debugging2
-    requirements:
-      build:
-        - {{ compiler('c') }}
-        - {{ compiler('cxx') }}
-        - {{ compiler('fortran') }}
-        - cmake
-        - git
-        - pkg-config
-        - sed
-        - make
-      host:
-        - python
-        - {{ pin_subpackage('root_base', exact=True) }}
-      run:
-        - {{ pin_subpackage('root_base', exact=True) }}
-        - python
-
-  - name: root
-    build:
-      number: {{ build_number }}
-      string: py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ build_number }}
-      skip: True  # [win]
-      script:
-        - touch $PREFIX/debugging3
-    requirements:
-      # Include the build dependencies and python to ensure the build string is correct
-      build:
-        - {{ compiler('c') }}
-        - {{ compiler('cxx') }}
-        - {{ compiler('fortran') }}
-        - cmake
-        - git
-        - pkg-config
-        - sed
-        - make
-      host:
-        - python
-      run:
-        - python
-        - {{ pin_subpackage('root_base', exact=True) }}
-        - {{ pin_subpackage('root-binaries', exact=True) }}
-        - {{ pin_subpackage('root-dependencies', exact=True) }}
 
 about:
   home: https://root.cern/
