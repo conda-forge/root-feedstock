@@ -92,7 +92,7 @@ cmake -LAH \
     -Dbuiltin_afterimage=OFF \
     -Dbuiltin_clang=OFF \
     -Dbuiltin_davix=OFF \
-    -Dbuiltin_ftgl=OFF \
+    -Dbuiltin_ftgl=ON \
     -Dbuiltin_glew=OFF \
     -Dbuiltin_llvm=OFF \
     -Dbuiltin_xrootd=OFF \

@@ -33,14 +33,22 @@ package:
   version: {{ version }}
 
 source:
-  git_url: {{ os.environ.get("ROOT_JENKINS_GIT_URL", "https://github.com/root-project/root.git") }}
-  git_rev: master
+  # git_url: {{ os.environ.get("ROOT_JENKINS_GIT_URL", "https://github.com/root-project/root.git") }}
+  # git_rev: master
+  git_url: https://github.com/chrisburr/root.git
+  # git_rev: patch-10
+  git_rev: find-package-clang
+  # git_url: https://github.com/Axel-Naumann/root.git
+  # git_rev: install-rpath-rootlibdir
+  # git_url: https://github.com/oshadura/root.git
+  # git_rev: fix-core-clingutils
   folder: root-source
   patches:
     - patches/root-x.xx.xx_cling-runtime-sysroot.patch
     - patches/root-x.xx.xx_python_mac_os.patch  # [osx]
     - patches/root-x.xx.xx-copy-abspath-headers.patch  # [osx]
     - patches/root-x.xx.xx-osx-remove-hardcoded-sysroot.patch  # [osx]
+    - patches/0001-Revert-Exp-PyROOT-Remove-directory-wrongly-created-i.patch
 
 build:
   number: {{ build_number }}
