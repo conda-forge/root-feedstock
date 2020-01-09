@@ -117,10 +117,6 @@ cmake -LAH \
     -Dbuiltin_gl2ps=ON \
     ../root-source
 
-if [ "$(uname)" == "Linux" ]; then
-    eval echo $(curl https://gist.githubusercontent.com/chrisburr/82d39ba3f0cb7f50479a878523bdd5cb/raw/bc92a78f8bc379c98e1936a971e309ca2be9de45/link.txt) > core/clingutils/test/CMakeFiles/coreclingutilstestUnit.dir/link.txt
-fi
-
 make -j${CPU_COUNT}
 
 if [[ -n "${ROOT_RUN_GTESTS}" ]]; then
