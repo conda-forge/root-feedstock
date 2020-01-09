@@ -11,45 +11,12 @@ package:
   name: root
   version: {{ version }}
 
-source:
-{%- if "ROOT_JENKINS_GIT_REV" in os.environ %}
-  git_url: {{ os.environ.get("ROOT_JENKINS_GIT_URL", "https://github.com/root-project/root.git") }}
-  git_rev: {{ os.environ["ROOT_JENKINS_GIT_REV"] }}
-{%- else %}
-  url: https://github.com/root-project/root/archive/v{{ version | replace(".","-") }}.tar.gz
-  sha256: {{ hash }}
-{%- endif %}
-  folder: root-source
-  patches:
-    - patches/root-6.20.00-force-search-of-build-related-files.patch
-    - patches/root-x.xx.xx_cling-runtime-sysroot.patch
-    - patches/root-x.xx.xx_python_mac_os.patch  # [osx]
-    - patches/root-x.xx.xx-copy-abspath-headers.patch  # [osx]
-    - patches/root-x.xx.xx-osx-remove-hardcoded-sysroot.patch  # [osx]
-
 build:
   number: {{ build_number }}
   skip: True  # [win]
   string: py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ build_number }}
 
 outputs:
-  - name: root-dependencies
-    build:
-      number: {{ build_number }}
-      string: py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ build_number }}
-      skip: True  # [win]
-      script: echo "Minimal build script is required for conda to set RECIPE_DIR"
-      run_exports:
-        # https://abi-laboratory.pro/?view=timeline&l=root
-        - {{ pin_subpackage('root-dependencies', max_pin='x.x.x') }}
-    requirements:
-      # Include the build dependencies to ensure the build string is correct
-      host:
-        - python
-      run:
-        - python
-
-  # An underscore is required here to ensure it is built after root-dependencies (required for testing)
   - name: root_base
     build:
       number: {{ build_number }}
@@ -66,43 +33,3 @@ outputs:
         - afterimage
       run:
         - python
-
-about:
-  home: https://root.cern/
-  license: LGPL-2.1
-  license_family: LGPL
-  doc_url: https://root.cern/documentation
-  dev_url: https://github.com/root-project/root/
-  summary: |
-      ROOT is a modular scientific software toolkit. It provides all the functionalities needed to deal with big data
-      processing, statistical analysis, visualisation and storage. It is mainly written in C++ but integrated with other
-      languages such as Python and R.
-  description: |
-      Almost everything in ROOT should be supported in this Conda package; ROOT was built with lots of options turned
-      on. Here are a few things to try:
-
-      * `root`: you can start up a session and see the splash screen; Control-D to exit.
-      * `python` followed by `import ROOT` will load PyROOT.
-      * `root --notebook` will start a notebook server with a ROOT kernel choice.
-      * `rootbrowse` will open a TBrowser session so you can look through files.
-      * `root -l -q $ROOTSYS/tutorials/dataframe/df013_InspectAnalysis.C` will run a DataFrame example with an animated plot.
-      * `root -b -q -l -n -e "std::cout << TROOT::GetTutorialDir() << std::endl;"` will print the tutorial dir.
-      * `root -b -l -q -e 'std::cout << (float) TPython::Eval("1+1") << endl;'` will run Python from C++ ROOT.
-
-      See the post [here](https://iscinumpy.gitlab.io/post/root-conda/) for more information about using this Conda package.
-
-      The ROOT package will prepare the required compilers. Everything in Conda is symlinked into
-      `$CONDA_PREFIX` if you build things by hand; tools like CMake should find it automatically. The `thisroot.*`
-      scripts should not be used and are not provided. Graphics, `rootbrowse`, etc. all should work. OpenGL is enabled.
-
-      There is also a `root_base` package, with minimal dependecies, that libraries should depend on this to avoid
-      having a runtime dependency on the `compilers` package. `root-dependencies` and `root-binaries` are also available. In most cases users should use the `root` package directly, since it adds both of these, along with compilers, Jupyter, and a few other things to facilitate using ROOT or PyROOT.
-
-      ROOT was built with and will report `-std=c++17` from `root-config`.
-
-extra:
-  recipe-maintainers:
-    - chrisburr
-    - henryiii
-    - bluehood
-    - egpbos
