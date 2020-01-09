@@ -72,8 +72,6 @@ outputs:
     requirements:
       host:
         - python
-        - afterimage
-        - giflib
       run:
         - python
 
