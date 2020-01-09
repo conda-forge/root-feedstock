@@ -1,0 +1,26 @@
+From b3348a4772b1cb7efff024f1ef29c936b31f69a7 Mon Sep 17 00:00:00 2001
+From: Chris Burr <christopher.burr@cern.ch>
+Date: Thu, 9 Jan 2020 22:41:29 +0100
+Subject: [PATCH] Revert "[Exp PyROOT] Remove directory wrongly created in
+ installation directory"
+
+This reverts commit 1d2e767696c337901de53813284390cb683ff82a.
+---
+ CMakeLists.txt | 4 ----
+ 1 file changed, 4 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 8476d4f9d1..8448255fe2 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -586,7 +586,3 @@ ROOT_SHOW_ENABLED_OPTIONS()
+
+ #---Packaging-------------------------------------------------------------------------------------
+ include(RootCPack)
+-
+-# Exp PyROOT: remove empty directory wrongly created
+-# Keep until we figure why it happens
+-install(CODE "execute_process(COMMAND bash -c \"rm -rf ${CMAKE_INSTALL_PREFIX}/lib/python*\")")
+--
+2.21.0
+
