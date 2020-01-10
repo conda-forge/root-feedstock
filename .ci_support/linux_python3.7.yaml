@@ -86,6 +86,8 @@ pin_run_as_build:
     max_pin: x
   xz:
     max_pin: x.x
+  zlib:
+    max_pin: x.x
 python:
 - '3.7'
 qt:
@@ -96,3 +98,5 @@ xrootd:
 - 4.11.0
 xz:
 - '5.2'
+zlib:
+- '1.2'
