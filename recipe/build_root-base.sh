@@ -94,6 +94,7 @@ cmake -LAH \
     -Dbuiltin_clang=OFF \
     -Dbuiltin_davix=OFF \
     -Dbuiltin_ftgl=ON \
+    -Dbuiltin_gl2ps=OFF \
     -Dbuiltin_glew=OFF \
     -Dbuiltin_llvm=OFF \
     -Dbuiltin_xrootd=OFF \
@@ -116,8 +117,6 @@ cmake -LAH \
     -Droottest=OFF \
     -Dccache=OFF \
     -Droot7=ON \
-    -Dbuiltin_ftgl=ON \
-    -Dbuiltin_gl2ps=ON \
     ../root-source
 
 make -j${CPU_COUNT}
