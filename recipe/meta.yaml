@@ -87,6 +87,7 @@ requirements:
     - davix
     - fftw
     - freetype
+    - ftgl
     - gdk-pixbuf
     - giflib
     - glew
@@ -171,6 +172,7 @@ outputs:
         - davix
         - fftw
         - freetype
+        - ftgl
         - gdk-pixbuf
         - giflib
         - glew
@@ -265,6 +267,7 @@ outputs:
         # - afterimage
         # - davix
         # - freetype
+        - ftgl
         - gl2ps
         - giflib
         - gsl
@@ -316,6 +319,7 @@ outputs:
         - davix
         - fftw
         - freetype
+        - ftgl
         - gdk-pixbuf
         - giflib
         - glew
@@ -419,6 +423,7 @@ outputs:
         - davix
         - fftw
         - freetype
+        - ftgl
         - gdk-pixbuf
         - giflib
         - glew
