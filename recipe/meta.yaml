@@ -1,7 +1,7 @@
 {% set name = "root" %}
-{% set version = "6.18.04" %}
-{% set build_number = 26 %}
-{% set hash = "82421a5f0486a2c66170300285dce49a961e3459cb5290f6fa579ef617dc8b0a" %}
+{% set version = "6-19-02" %}
+{% set build_number = 0 %}
+{% set hash = "cf7cba76f52ed7370fdbc66d8d3354e8b10ef0949cc9ddc27e1ee01f02ba873c" %}
 {% set clang_version = "5.0.0" %}
 {% set clang_patches_version = "6.18.00" %}
 
