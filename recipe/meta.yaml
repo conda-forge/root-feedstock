@@ -44,6 +44,7 @@ source:
     # Should be added to 6.20
     - patches/tmp-4750.patch
     - patches/tmp-4757.patch
+    - patches/tmp-prefered-python.patch
 
 build:
   number: {{ build_number }}

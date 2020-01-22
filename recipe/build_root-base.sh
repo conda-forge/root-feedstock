@@ -1,10 +1,6 @@
 #!/bin/bash
 set -ex
 
-# Remove the library path muddling that `root` tries to do
-sed -i -e 's@SetLibraryPath();@@g' \
-    root-source/rootx/src/rootx.cxx
-
 # Manually set the deployment_target
 # May not be very important but nice to do
 OLDVERSIONMACOS='${MACOSX_VERSION}'
