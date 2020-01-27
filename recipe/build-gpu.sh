@@ -5,8 +5,8 @@ export MAKEFLAGS="-j${CPU_COUNT}"
 export GOOFIT_DEVICE=CUDA
 export GOOFIT_ARCH=OFF
 
-export CFLAGS="${CFLAGS} -I/usr/include"
-export CXXFLAGS="${CXXFLAGS} -I/usr/include"
+# export CFLAGS="${CFLAGS} -I/usr/include"
+# export CXXFLAGS="${CXXFLAGS} -I/usr/include"
 
 rm pyproject.toml || echo "Already removed pyproject file"
 $PYTHON -m pip install --no-deps --ignore-installed -v .
