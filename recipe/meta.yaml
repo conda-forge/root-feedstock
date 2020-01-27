@@ -4,6 +4,7 @@
 {% set goofit_proc_version = "1.0.0" %}
 {% set goofit_proc_type = "cpu" %}  # [not linux]
 {% set goofit_proc_type = "cpu" if cuda_compiler_version == "None" else "gpu" %}  # [linux]
+{% set goofit_cuda_supported = ["None", "9.2", "10.0"] %}
 
 package:
   name: goofit-split
@@ -17,7 +18,10 @@ source:
   
 build:
   skip: true  # [win]
-  skip: true  # [linux and not (cuda_compiler_version == "None" or cuda_compiler_version == "9.2" or cuda_compiler_version == "10.0")]
+  {% if cuda_compiler_version|default("None") in goofit_cuda_supported %}
+  {% else %}
+  skip: true
+  {% endif %}
   number: 0
 
 outputs:
