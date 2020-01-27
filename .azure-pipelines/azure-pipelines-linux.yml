@@ -26,38 +26,6 @@ jobs:
         CONFIG: linux_cuda_compiler_version10.0python3.8
         UPLOAD_PACKAGES: True
         DOCKER_IMAGE: condaforge/linux-anvil-cuda:10.0
-      linux_cuda_compiler_version10.1python2.7:
-        CONFIG: linux_cuda_compiler_version10.1python2.7
-        UPLOAD_PACKAGES: True
-        DOCKER_IMAGE: condaforge/linux-anvil-cuda:10.1
-      linux_cuda_compiler_version10.1python3.6:
-        CONFIG: linux_cuda_compiler_version10.1python3.6
-        UPLOAD_PACKAGES: True
-        DOCKER_IMAGE: condaforge/linux-anvil-cuda:10.1
-      linux_cuda_compiler_version10.1python3.7:
-        CONFIG: linux_cuda_compiler_version10.1python3.7
-        UPLOAD_PACKAGES: True
-        DOCKER_IMAGE: condaforge/linux-anvil-cuda:10.1
-      linux_cuda_compiler_version10.1python3.8:
-        CONFIG: linux_cuda_compiler_version10.1python3.8
-        UPLOAD_PACKAGES: True
-        DOCKER_IMAGE: condaforge/linux-anvil-cuda:10.1
-      linux_cuda_compiler_version10.2python2.7:
-        CONFIG: linux_cuda_compiler_version10.2python2.7
-        UPLOAD_PACKAGES: True
-        DOCKER_IMAGE: condaforge/linux-anvil-cuda:10.2
-      linux_cuda_compiler_version10.2python3.6:
-        CONFIG: linux_cuda_compiler_version10.2python3.6
-        UPLOAD_PACKAGES: True
-        DOCKER_IMAGE: condaforge/linux-anvil-cuda:10.2
-      linux_cuda_compiler_version10.2python3.7:
-        CONFIG: linux_cuda_compiler_version10.2python3.7
-        UPLOAD_PACKAGES: True
-        DOCKER_IMAGE: condaforge/linux-anvil-cuda:10.2
-      linux_cuda_compiler_version10.2python3.8:
-        CONFIG: linux_cuda_compiler_version10.2python3.8
-        UPLOAD_PACKAGES: True
-        DOCKER_IMAGE: condaforge/linux-anvil-cuda:10.2
       linux_cuda_compiler_version9.2python2.7:
         CONFIG: linux_cuda_compiler_version9.2python2.7
         UPLOAD_PACKAGES: True
