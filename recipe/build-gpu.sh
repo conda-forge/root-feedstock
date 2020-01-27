@@ -3,6 +3,7 @@ set -evx
 
 export MAKEFLAGS="-j${CPU_COUNT}"
 export GOOFIT_DEVICE=CUDA
+export GOOFIT_ARCH=OFF
 
 export CFLAGS="${CFLAGS} -I/usr/include"
 export CXXFLAGS="${CXXFLAGS} -I/usr/include"
