@@ -70,13 +70,14 @@ outputs:
 
     test:
       requires:
-        - pytest
+        - pytest  # [not linux or cuda_compiler_version == "None"]
       source_files:
-        - python/tests/test_exp.py
+        - python/tests/test_exp.py  # [not linux or cuda_compiler_version == "None"]
       imports:
-        - goofit
+        - goofit  # [not linux or cuda_compiler_version == "None"]
       commands:
-        - $PYTHON -m pytest python/tests/test_exp.py
+        - $PYTHON -m pytest python/tests/test_exp.py  # [not linux or cuda_compiler_version == "None"]
+        - $PYTHON -c "import sys, pkgutil; sys.exit(pkgutil.find_loader('goofit') is None)"
 
 about:
   home: https://github.com/GooFit/GooFit
