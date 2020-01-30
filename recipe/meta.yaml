@@ -41,10 +41,6 @@ source:
     - patches/root-x.xx.xx_python_mac_os.patch  # [osx]
     - patches/root-x.xx.xx-copy-abspath-headers.patch  # [osx]
     - patches/root-x.xx.xx-osx-remove-hardcoded-sysroot.patch  # [osx]
-    # Should be added to 6.20
-    # - patches/tmp-4750.patch
-    # - patches/tmp-4757.patch
-    # - patches/tmp-prefered-python.patch
 
 build:
   number: {{ build_number }}
