@@ -34,7 +34,7 @@ package:
 source:
   # git_url: {{ os.environ.get("ROOT_JENKINS_GIT_URL", "https://github.com/root-project/root.git") }}
   # git_rev: v6-20-00-patches
-  url: https://github.com/root-project/root/archive/v{{ version.replace('.', '-') }}.tar.gz
+  url: https://github.com/root-project/root/archive/v{{ version.replace('.', '-').ljust(7, '0') }}.tar.gz
   sha256: 632a63f427555087f091c2f1a6a249a7b9932deba89f0193c316b179ddc454c6
   folder: root-source
   patches:
