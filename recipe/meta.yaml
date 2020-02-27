@@ -1,9 +1,8 @@
 {% set name = "root" %}
-{% set version = "6.18.04" %}
-{% set build_number = 28 %}
-{% set hash = "82421a5f0486a2c66170300285dce49a961e3459cb5290f6fa579ef617dc8b0a" %}
+{% set version = "6.20.0" %}
+{% set build_number = 0 %}
 {% set clang_version = "5.0.0" %}
-{% set clang_patches_version = "6.18.00" %}
+{% set clang_patches_version = "root_20191220" %}
 
 # WARNING: This is not a good example of a how a conda forge recipe should look
 
@@ -33,16 +32,12 @@ package:
   version: {{ version }}
 
 source:
-{%- if "ROOT_JENKINS_GIT_REV" in os.environ %}
-  git_url: {{ os.environ.get("ROOT_JENKINS_GIT_URL", "https://github.com/root-project/root.git") }}
-  git_rev: {{ os.environ["ROOT_JENKINS_GIT_REV"] }}
-{%- else %}
-  url: https://github.com/root-project/root/archive/v{{ version | replace(".","-") }}.tar.gz
-  sha256: {{ hash }}
-{%- endif %}
+  # git_url: {{ os.environ.get("ROOT_JENKINS_GIT_URL", "https://github.com/root-project/root.git") }}
+  # git_rev: v6-20-00-patches
+  url: https://github.com/root-project/root/archive/v{{ version.replace('.', '-').ljust(7, '0') }}.tar.gz
+  sha256: 632a63f427555087f091c2f1a6a249a7b9932deba89f0193c316b179ddc454c6
   folder: root-source
   patches:
-    - patches/root-6.20.00-force-search-of-build-related-files.patch
     - patches/root-x.xx.xx_cling-runtime-sysroot.patch
     - patches/root-x.xx.xx_python_mac_os.patch  # [osx]
     - patches/root-x.xx.xx-copy-abspath-headers.patch  # [osx]
@@ -81,13 +76,15 @@ requirements:
     - afterimage
     - cfitsio
     - clangdev ={{ clang_version }}
-    - clang_variant * cling_{{ clang_patches_version }}
+    - clang_variant * {{ clang_patches_version }}
     - davix
     - fftw
     - freetype
+    - ftgl
     - gdk-pixbuf
     - giflib
     - glew
+    - gl2ps
     - graphviz
     - gsl
     - krb5  # [osx]
@@ -120,6 +117,8 @@ requirements:
     - xz
     # FIXME: The generated allDict.cxx.pch is dependent on version of the C++ headers used
     - {{ pin_compatible('libcxx', min_pin='x', max_pin='x') }}
+    - xxhash
+    - zlib
   run:
     - python
 
@@ -162,13 +161,15 @@ outputs:
         - afterimage
         - cfitsio
         - clangdev ={{ clang_version }}
-        - clang_variant * cling_{{ clang_patches_version }}
+        - clang_variant * {{ clang_patches_version }}
         - davix
         - fftw
         - freetype
+        - ftgl
         - gdk-pixbuf
         - giflib
         - glew
+        - gl2ps
         - graphviz
         - gsl
         - krb5  # [osx]
@@ -201,12 +202,15 @@ outputs:
         - xz
         # FIXME: The generated allDict.cxx.pch is dependent on version of the C++ headers used
         - {{ pin_compatible('libcxx', min_pin='x', max_pin='x') }}
+        - xxhash
+        - zlib
       run:
         - {{ pin_compatible('numpy') }}
         - cfitsio
         - fftw
         - gdk-pixbuf
         - glew
+        - gl2ps
         - graphviz
         - libglu  # [linux]
         - librsvg
@@ -221,6 +225,7 @@ outputs:
         - xorg-libxpm  # [linux]
         # FIXME: Required to ensure a consistent etc/allDict.cxx.pch
         - {{ pin_compatible('libcxx', min_pin='x', max_pin='x') }}
+        - {{ pin_compatible('xxhash', max_pin='x.x.x') }}
     test:
       commands:
         - echo "Testing is performed in the root_base and root outputs"
@@ -245,8 +250,9 @@ outputs:
         # https://abi-laboratory.pro/?view=timeline&l=root
         - {{ pin_subpackage('root_base', max_pin='x.x.x') }}
       ignore_prefix_files:
-        # FIXME: Figure out how to correct the paths in the PCH
-        - etc/allDict.cxx.pch
+        # Needs to be different until macOS supports runtime_cxxmodules=ON
+        - etc/allDict.cxx.pch  # [osx]
+        - lib/*.pcm  # [linux]
       # Taken from "conda render ./recipe/ -m .ci_support/osx_python3.7.yaml"
       # Sorted and commented run_exports that we want to keep
       # TODO: This will need updating occasionally
@@ -254,6 +260,8 @@ outputs:
         # - afterimage
         # - davix
         # - freetype
+        - ftgl
+        - gl2ps
         - giflib
         - gsl
         - krb5
@@ -300,13 +308,15 @@ outputs:
         - afterimage
         - cfitsio
         - clangdev ={{ clang_version }}
-        - clang_variant * cling_{{ clang_patches_version }}
+        - clang_variant * {{ clang_patches_version }}
         - davix
         - fftw
         - freetype
+        - ftgl
         - gdk-pixbuf
         - giflib
         - glew
+        - gl2ps
         - graphviz
         - gsl
         - krb5  # [osx]
@@ -339,6 +349,8 @@ outputs:
         - xz
         # FIXME: The generated allDict.cxx.pch is dependent on version of the C++ headers used
         - {{ pin_compatible('libcxx', min_pin='x', max_pin='x') }}
+        - xxhash
+        - zlib
       run:
         # FIXME: Required to ensure a consistent etc/allDict.cxx.pch
         - {{ pin_compatible('libcxx', min_pin='x', max_pin='x') }}
@@ -346,6 +358,7 @@ outputs:
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - {{ compiler('fortran') }}
+        - {{ pin_compatible('xxhash', max_pin='x.x.x') }}
       run_constrained:
         # Items listed here conflict with ROOT
         # FIXME Add support in ROOT for building with an external cling
@@ -398,14 +411,16 @@ outputs:
         # These not required as they're are statically linked in libCling. They also cannot
         # be installed in the same environment as root_base due to the compiler constraint
         # - clangdev ={{ clang_version }}
-        # - clang_variant * cling_{{ clang_patches_version }}
+        # - clang_variant * {{ clang_patches_version }}
         # - llvmdev ==5
         - davix
         - fftw
         - freetype
+        - ftgl
         - gdk-pixbuf
         - giflib
         - glew
+        - gl2ps
         - graphviz
         - gsl
         - krb5  # [osx]
@@ -438,9 +453,12 @@ outputs:
         # FIXME: The generated allDict.cxx.pch is dependent on version of the C++ headers used
         - {{ pin_compatible('libcxx', min_pin='x', max_pin='x') }}
         - {{ pin_subpackage('root_base', exact=True) }}
+        - xxhash
+        - zlib
       run:
         - {{ pin_subpackage('root_base', exact=True) }}
         - python
+        - {{ pin_compatible('xxhash', max_pin='x.x.x') }}
     test:
       files:
         - test.cpp
