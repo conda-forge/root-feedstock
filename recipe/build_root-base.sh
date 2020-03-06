@@ -130,6 +130,7 @@ ln -s "${PREFIX}/lib/ROOT.py" "${SP_DIR}/"
 ln -s "${PREFIX}/lib/_pythonization.py" "${SP_DIR}/"
 ln -s "${PREFIX}/lib/cmdLineUtils.py" "${SP_DIR}/"
 ln -s "${PREFIX}/lib/cppyy.py" "${SP_DIR}/"
+ln -s "${PREFIX}/lib/_rdf_utils.py" "${SP_DIR}/"
 
 test "$(ls "${PREFIX}"/lib/*/__init__.py | wc -l) = 2"
 ln -s "${PREFIX}/lib/JsMVA/" "${SP_DIR}/"

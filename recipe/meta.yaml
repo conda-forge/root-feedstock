@@ -1,6 +1,6 @@
 {% set name = "root" %}
 {% set version = "6.20.0" %}
-{% set build_number = 0 %}
+{% set build_number = 1 %}
 {% set clang_version = "5.0.0" %}
 {% set clang_patches_version = "root_20191220" %}
 
@@ -25,6 +25,7 @@
         - root -b -l -q -x "${ROOTSYS}/tutorials/eve/geom_lhcb.C" || true
         # This tutorial uses davix to access a ROOT file over HTTP
         - root -b -l -q -x "${ROOTSYS}/tutorials/tree/run_h1analysis.C"
+        - python -c "import ROOT; ROOT.ROOT.EnableImplicitMT(); rdf = ROOT.RDataFrame('DecayTree', 'root://eospublic.cern.ch//eos/opendata/lhcb/AntimatterMatters2017/data/B2HHH_MagnetUp.root'); print(rdf.Cache('H1_PX').AsNumpy())"
 {% endmacro -%}
 
 package:
