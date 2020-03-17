@@ -1,6 +1,6 @@
 {% set name = "root" %}
-{% set version = "6.20.0" %}
-{% set build_number = 1 %}
+{% set version = "6.20.2" %}
+{% set build_number = 0 %}
 {% set clang_version = "5.0.0" %}
 {% set clang_patches_version = "root_20191220" %}
 
@@ -35,8 +35,8 @@ package:
 source:
   # git_url: {{ os.environ.get("ROOT_JENKINS_GIT_URL", "https://github.com/root-project/root.git") }}
   # git_rev: v6-20-00-patches
-  url: https://github.com/root-project/root/archive/v{{ version.replace('.', '-').ljust(7, '0') }}.tar.gz
-  sha256: 632a63f427555087f091c2f1a6a249a7b9932deba89f0193c316b179ddc454c6
+  url: https://github.com/root-project/root/archive/v{{ '-'.join(version.split('.')[:-1] + [version.split('.')[-1].rjust(2, '0')]) }}.tar.gz
+  sha256: 2b452054f09a1088a21f9dc6362e2d07cf59e99ae3275d6b09b3fb5502835899
   folder: root-source
   patches:
     - patches/root-x.xx.xx_cling-runtime-sysroot.patch
