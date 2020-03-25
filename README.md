@@ -209,8 +209,8 @@ In order to produce a uniquely identifiable distribution:
 Feedstock Maintainers
 =====================
 
-* [@bluehood](https://github.com/bluehood/)
 * [@chrisburr](https://github.com/chrisburr/)
 * [@egpbos](https://github.com/egpbos/)
+* [@eguiraud](https://github.com/eguiraud/)
 * [@henryiii](https://github.com/henryiii/)
 
