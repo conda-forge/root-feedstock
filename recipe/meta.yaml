@@ -1,6 +1,6 @@
 {% set name = "root" %}
 {% set version = "6.20.2" %}
-{% set build_number = 0 %}
+{% set build_number = 1 %}
 {% set clang_version = "5.0.0" %}
 {% set clang_patches_version = "root_20191220" %}
 
@@ -365,6 +365,9 @@ outputs:
         # FIXME Add support in ROOT for building with an external cling
         - cling 9999
         - root5 9999
+        - {{ pin_subpackage('root-binaries', exact=True) }}
+        - {{ pin_subpackage('root-dependencies', exact=True) }}
+        - {{ pin_subpackage('root', exact=True) }}
     test:
       commands:
         - echo "Tested in other outputs"
@@ -520,7 +523,7 @@ outputs:
 
 about:
   home: https://root.cern/
-  license: LGPL-2.1
+  license: LGPL-2.1-only
   license_family: LGPL
   license_file: root-source/LICENSE
   doc_url: https://root.cern/documentation
@@ -556,5 +559,5 @@ extra:
   recipe-maintainers:
     - chrisburr
     - henryiii
-    - bluehood
+    - eguiraud
     - egpbos
