@@ -523,7 +523,7 @@ outputs:
 
 about:
   home: https://root.cern/
-  license: LGPL-2.1
+  license: LGPL-2.1-only
   license_family: LGPL
   license_file: root-source/LICENSE
   doc_url: https://root.cern/documentation
