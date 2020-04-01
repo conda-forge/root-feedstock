@@ -365,9 +365,6 @@ outputs:
         # FIXME Add support in ROOT for building with an external cling
         - cling 9999
         - root5 9999
-        - {{ pin_subpackage('root-binaries', exact=True) }}
-        - {{ pin_subpackage('root-dependencies', exact=True) }}
-        - {{ pin_subpackage('root', exact=True) }}
     test:
       commands:
         - echo "Tested in other outputs"
