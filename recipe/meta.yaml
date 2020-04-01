@@ -1,6 +1,6 @@
 {% set name = "root" %}
-{% set version = "6.20.2" %}
-{% set build_number = 1 %}
+{% set version = "6.20.4" %}
+{% set build_number = 0 %}
 {% set clang_version = "5.0.0" %}
 {% set clang_patches_version = "root_20191220" %}
 
@@ -36,7 +36,7 @@ source:
   # git_url: {{ os.environ.get("ROOT_JENKINS_GIT_URL", "https://github.com/root-project/root.git") }}
   # git_rev: v6-20-00-patches
   url: https://github.com/root-project/root/archive/v{{ '-'.join(version.split('.')[:-1] + [version.split('.')[-1].rjust(2, '0')]) }}.tar.gz
-  sha256: 2b452054f09a1088a21f9dc6362e2d07cf59e99ae3275d6b09b3fb5502835899
+  sha256: 788b0673fd67c70455a2dae769e3e6c75a113079c7ca47196aaee52fbab44843
   folder: root-source
   patches:
     - patches/root-x.xx.xx_cling-runtime-sysroot.patch
@@ -365,9 +365,6 @@ outputs:
         # FIXME Add support in ROOT for building with an external cling
         - cling 9999
         - root5 9999
-        - {{ pin_subpackage('root-binaries', exact=True) }}
-        - {{ pin_subpackage('root-dependencies', exact=True) }}
-        - {{ pin_subpackage('root', exact=True) }}
     test:
       commands:
         - echo "Tested in other outputs"
