@@ -27,13 +27,13 @@ gdk_pixbuf:
 giflib:
 - '5.2'
 glew:
-- 2.1.0
+- '2.1'
 graphviz:
 - '2.40'
 gsl:
 - '2.6'
 krb5:
-- '1.16'
+- 1.17.1
 libblas:
 - 3.8 *netlib
 libcblas:
