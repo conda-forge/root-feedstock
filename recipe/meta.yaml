@@ -1,6 +1,6 @@
 {% set name = "root" %}
 {% set version = "6.20.4" %}
-{% set build_number = 1 %}
+{% set build_number = 2 %}
 {% set clang_version = "5.0.0" %}
 {% set clang_patches_version = "root_20191220" %}
 
@@ -120,6 +120,7 @@ requirements:
     - {{ pin_compatible('libcxx', min_pin='x', max_pin='x') }}
     - xxhash
     - zlib
+    - zstd
   run:
     - python
 
@@ -205,6 +206,7 @@ outputs:
         - {{ pin_compatible('libcxx', min_pin='x', max_pin='x') }}
         - xxhash
         - zlib
+        - zstd
       run:
         - {{ pin_compatible('numpy') }}
         - cfitsio
@@ -352,6 +354,7 @@ outputs:
         - {{ pin_compatible('libcxx', min_pin='x', max_pin='x') }}
         - xxhash
         - zlib
+        - zstd
       run:
         # FIXME: Required to ensure a consistent etc/allDict.cxx.pch
         - {{ pin_compatible('libcxx', min_pin='x', max_pin='x') }}
@@ -456,6 +459,7 @@ outputs:
         - {{ pin_subpackage('root_base', exact=True) }}
         - xxhash
         - zlib
+        - zstd
       run:
         - {{ pin_subpackage('root_base', exact=True) }}
         - python
