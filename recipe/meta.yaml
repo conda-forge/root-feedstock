@@ -131,9 +131,6 @@ outputs:
       string: py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ build_number }}
       skip: True  # [win]
       script: echo "Minimal build script is required for conda to set RECIPE_DIR"
-      run_exports:
-        # https://abi-laboratory.pro/?view=timeline&l=root
-        - {{ pin_subpackage('root-dependencies', max_pin='x.x.x') }}
     requirements:
       # Include the build dependencies to ensure the build string is correct
       build:
@@ -251,7 +248,7 @@ outputs:
             bash -c 'fn={}; if grep --quiet "^$fn\$" "${SRC_DIR}/initial-filelist.txt"; then echo "Skipping $fn"; else echo "Found new file $fn"; mv "$fn" "${SRC_DIR}/root-binaries/"; fi' \;
       run_exports:
         # https://abi-laboratory.pro/?view=timeline&l=root
-        - {{ pin_subpackage('root_base', max_pin='x.x.x') }}
+        - {{ pin_subpackage('root_base', max_pin='x.x') }}
       ignore_prefix_files:
         # Needs to be different until macOS supports runtime_cxxmodules=ON
         - etc/allDict.cxx.pch  # [osx]
