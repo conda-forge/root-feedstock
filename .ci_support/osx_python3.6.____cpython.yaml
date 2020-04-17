@@ -27,7 +27,7 @@ gdk_pixbuf:
 giflib:
 - '5.2'
 glew:
-- 2.1.0
+- '2.1'
 graphviz:
 - '2.40'
 gsl:
@@ -92,6 +92,8 @@ pin_run_as_build:
     max_pin: x.x
   zlib:
     max_pin: x.x
+  zstd:
+    max_pin: x.x.x
 python:
 - 3.6.* *_cpython
 qt:
@@ -104,3 +106,5 @@ xz:
 - '5.2'
 zlib:
 - '1.2'
+zstd:
+- 1.4.4
