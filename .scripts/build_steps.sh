@@ -19,7 +19,7 @@ conda-build:
 
 CONDARC
 
-conda install --yes --quiet conda-forge-ci-setup=2 conda-build=3.17.8 -c conda-forge
+conda install --yes --quiet conda-forge-ci-setup=2 conda-build -c conda-forge
 
 # set up the condarc
 setup_conda_rc "${FEEDSTOCK_ROOT}" "${RECIPE_ROOT}" "${CONFIG_FILE}"
@@ -37,11 +37,19 @@ source run_conda_forge_build_setup
 # make the build number clobber
 make_build_number "${FEEDSTOCK_ROOT}" "${RECIPE_ROOT}" "${CONFIG_FILE}"
 
-conda build "${RECIPE_ROOT}" -m "${CI_SUPPORT}/${CONFIG}.yaml" \
-    --clobber-file "${CI_SUPPORT}/clobber_${CONFIG}.yaml"
+set -x
+if conda build "${RECIPE_ROOT}" -m "${CI_SUPPORT}/${CONFIG}.yaml" \
+    --clobber-file "${CI_SUPPORT}/clobber_${CONFIG}.yaml"; then
+    ls -R  /home/conda/feedstock_root/build_artifacts/
+    for fn in /home/conda/feedstock_root/build_artifacts/*/root_base-6.20.4-*.tar.bz2; do
+        mkdir "$(basename fn)"
+        (cd "$(basename fn)" && tar -xvf "$fn" && cat info/index.json)
+    done
+    exit 42
+else
+    if [[ "${UPLOAD_PACKAGES}" != "False" ]]; then
+        upload_package "${FEEDSTOCK_ROOT}" "${RECIPE_ROOT}" "${CONFIG_FILE}"
+    fi
 
-if [[ "${UPLOAD_PACKAGES}" != "False" ]]; then
-    upload_package "${FEEDSTOCK_ROOT}" "${RECIPE_ROOT}" "${CONFIG_FILE}"
+    touch "${FEEDSTOCK_ROOT}/build_artifacts/conda-forge-build-done-${CONFIG}"
 fi
-
-touch "${FEEDSTOCK_ROOT}/build_artifacts/conda-forge-build-done-${CONFIG}"
