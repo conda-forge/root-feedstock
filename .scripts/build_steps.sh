@@ -40,16 +40,16 @@ make_build_number "${FEEDSTOCK_ROOT}" "${RECIPE_ROOT}" "${CONFIG_FILE}"
 set -x
 if conda build "${RECIPE_ROOT}" -m "${CI_SUPPORT}/${CONFIG}.yaml" \
     --clobber-file "${CI_SUPPORT}/clobber_${CONFIG}.yaml"; then
+    if [[ "${UPLOAD_PACKAGES}" != "False" ]]; then
+        upload_package "${FEEDSTOCK_ROOT}" "${RECIPE_ROOT}" "${CONFIG_FILE}"
+    fi
+
+    touch "${FEEDSTOCK_ROOT}/build_artifacts/conda-forge-build-done-${CONFIG}"
+else
     ls -R  /home/conda/feedstock_root/build_artifacts/
     for fn in /home/conda/feedstock_root/build_artifacts/*/root_base-6.20.4-*.tar.bz2; do
         mkdir "$(basename fn)"
         (cd "$(basename fn)" && tar -xvf "$fn" && cat info/index.json)
     done
     exit 42
-else
-    if [[ "${UPLOAD_PACKAGES}" != "False" ]]; then
-        upload_package "${FEEDSTOCK_ROOT}" "${RECIPE_ROOT}" "${CONFIG_FILE}"
-    fi
-
-    touch "${FEEDSTOCK_ROOT}/build_artifacts/conda-forge-build-done-${CONFIG}"
 fi
