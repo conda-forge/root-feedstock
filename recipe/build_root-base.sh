@@ -172,8 +172,5 @@ if [ "$(uname)" != "Linux" ]; then
 fi
 
 # Clean up to minimise disk usage
-pwd
-ls
-ls ..
 cd ..
 rm -rf build-dir
