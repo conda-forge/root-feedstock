@@ -1,6 +1,6 @@
 {% set name = "root" %}
 {% set version = "6.20.4" %}
-{% set build_number = 1 %}
+{% set build_number = 3 %}
 {% set clang_version = "5.0.0" %}
 {% set clang_patches_version = "root_20191220" %}
 
@@ -120,6 +120,7 @@ requirements:
     - {{ pin_compatible('libcxx', min_pin='x', max_pin='x') }}
     - xxhash
     - zlib
+    - zstd
   run:
     - python
 
@@ -130,9 +131,6 @@ outputs:
       string: py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ build_number }}
       skip: True  # [win]
       script: echo "Minimal build script is required for conda to set RECIPE_DIR"
-      run_exports:
-        # https://abi-laboratory.pro/?view=timeline&l=root
-        - {{ pin_subpackage('root-dependencies', max_pin='x.x.x') }}
     requirements:
       # Include the build dependencies to ensure the build string is correct
       build:
@@ -205,6 +203,7 @@ outputs:
         - {{ pin_compatible('libcxx', min_pin='x', max_pin='x') }}
         - xxhash
         - zlib
+        - zstd
       run:
         - {{ pin_compatible('numpy') }}
         - cfitsio
@@ -249,7 +248,7 @@ outputs:
             bash -c 'fn={}; if grep --quiet "^$fn\$" "${SRC_DIR}/initial-filelist.txt"; then echo "Skipping $fn"; else echo "Found new file $fn"; mv "$fn" "${SRC_DIR}/root-binaries/"; fi' \;
       run_exports:
         # https://abi-laboratory.pro/?view=timeline&l=root
-        - {{ pin_subpackage('root_base', max_pin='x.x.x') }}
+        - {{ pin_subpackage('root_base', max_pin='x.x') }}
       ignore_prefix_files:
         # Needs to be different until macOS supports runtime_cxxmodules=ON
         - etc/allDict.cxx.pch  # [osx]
@@ -352,6 +351,7 @@ outputs:
         - {{ pin_compatible('libcxx', min_pin='x', max_pin='x') }}
         - xxhash
         - zlib
+        - zstd
       run:
         # FIXME: Required to ensure a consistent etc/allDict.cxx.pch
         - {{ pin_compatible('libcxx', min_pin='x', max_pin='x') }}
@@ -456,6 +456,7 @@ outputs:
         - {{ pin_subpackage('root_base', exact=True) }}
         - xxhash
         - zlib
+        - zstd
       run:
         - {{ pin_subpackage('root_base', exact=True) }}
         - python
