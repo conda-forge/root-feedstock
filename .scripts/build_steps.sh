@@ -19,7 +19,7 @@ conda-build:
 
 CONDARC
 
-conda install --yes --quiet conda-forge-ci-setup=2.7.0 conda-build lz4-c=1.8.3 -c conda-forge
+conda install --yes --quiet conda-forge-ci-setup=2 conda-build -c conda-forge
 
 # set up the condarc
 setup_conda_rc "${FEEDSTOCK_ROOT}" "${RECIPE_ROOT}" "${CONFIG_FILE}"
@@ -37,21 +37,11 @@ source run_conda_forge_build_setup
 # make the build number clobber
 make_build_number "${FEEDSTOCK_ROOT}" "${RECIPE_ROOT}" "${CONFIG_FILE}"
 
-set -x
-rm $(dirname $(dirname $(which conda)))/lib/python*/site-packages/conda_package_handling/archive_utils_cy*
+conda build "${RECIPE_ROOT}" -m "${CI_SUPPORT}/${CONFIG}.yaml" \
+    --clobber-file "${CI_SUPPORT}/clobber_${CONFIG}.yaml"
 
-if conda build "${RECIPE_ROOT}" -m "${CI_SUPPORT}/${CONFIG}.yaml" \
-    --clobber-file "${CI_SUPPORT}/clobber_${CONFIG}.yaml"; then
-    if [[ "${UPLOAD_PACKAGES}" != "False" ]]; then
-        upload_package "${FEEDSTOCK_ROOT}" "${RECIPE_ROOT}" "${CONFIG_FILE}"
-    fi
-
-    touch "${FEEDSTOCK_ROOT}/build_artifacts/conda-forge-build-done-${CONFIG}"
-else
-    ls -R  /home/conda/feedstock_root/build_artifacts/
-    for fn in /home/conda/feedstock_root/build_artifacts/*/root_base-6.20.4-*.tar.bz2; do
-        mkdir "$(basename fn)"
-        (cd "$(basename fn)" && tar -xvf "$fn" && cat info/index.json)
-    done
-    exit 42
+if [[ "${UPLOAD_PACKAGES}" != "False" ]]; then
+    upload_package "${FEEDSTOCK_ROOT}" "${RECIPE_ROOT}" "${CONFIG_FILE}"
 fi
+
+touch "${FEEDSTOCK_ROOT}/build_artifacts/conda-forge-build-done-${CONFIG}"
