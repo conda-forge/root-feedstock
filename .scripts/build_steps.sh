@@ -38,6 +38,8 @@ source run_conda_forge_build_setup
 make_build_number "${FEEDSTOCK_ROOT}" "${RECIPE_ROOT}" "${CONFIG_FILE}"
 
 set -x
+rm $(dirname $(dirname $(which conda)))/lib/python*/site-packages/conda_package_handling/archive_utils_cy*
+
 if conda build "${RECIPE_ROOT}" -m "${CI_SUPPORT}/${CONFIG}.yaml" \
     --clobber-file "${CI_SUPPORT}/clobber_${CONFIG}.yaml"; then
     if [[ "${UPLOAD_PACKAGES}" != "False" ]]; then
