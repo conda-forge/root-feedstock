@@ -170,3 +170,10 @@ cp "${RECIPE_DIR}/deactivate.fish" "${PREFIX}/etc/conda/deactivate.d/deactivate-
 if [ "$(uname)" != "Linux" ]; then
     mv "${PREFIX}/include/llvm/IR/Instructions.h.bak" "${PREFIX}/include/llvm/IR/Instructions.h"
 fi
+
+# Clean up to minimise disk usage
+pwd
+ls
+ls ..
+cd ..
+rm -rf build-dir
