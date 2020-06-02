@@ -14,7 +14,6 @@ if [ "$(uname)" == "Linux" ]; then
     CMAKE_PLATFORM_FLAGS+=("-DDEFAULT_SYSROOT=${PREFIX}/${HOST}/sysroot")
     CMAKE_PLATFORM_FLAGS+=("-Dx11=ON")
     CMAKE_PLATFORM_FLAGS+=("-DRT_LIBRARY=${PREFIX}/${HOST}/sysroot/usr/lib/librt.so")
-    CMAKE_PLATFORM_FLAGS+=("-Druntime_cxxmodules=ON")
 
     # Fix up CMake for using conda's sysroot
     # See https://docs.conda.io/projects/conda-build/en/latest/resources/compiler-tools.html?highlight=cmake#an-aside-on-cmake-and-sysroots
@@ -33,7 +32,6 @@ else
     CMAKE_PLATFORM_FLAGS+=("-Dcocoa=ON")
     CMAKE_PLATFORM_FLAGS+=("-DCLANG_RESOURCE_DIR_VERSION='5.0.0'")
     CMAKE_PLATFORM_FLAGS+=("-DBLA_PREFER_PKGCONFIG=ON")
-    CMAKE_PLATFORM_FLAGS+=("-Druntime_cxxmodules=OFF")
 
     # HACK: Fix LLVM headers for Clang 8's C++17 mode
     sed -i.bak -E 's#std::pointer_to_unary_function<(const )?Value \*, (const )?BasicBlock \*>#\1BasicBlock *(*)(\2Value *)#g' \
@@ -123,23 +121,6 @@ if [[ -n "${ROOT_RUN_GTESTS}" ]]; then
 fi
 
 make install
-
-# Create symlinks so conda can find the Python bindings
-test "$(ls "${PREFIX}"/lib/*.py | wc -l) = 4"
-ln -s "${PREFIX}/lib/ROOT.py" "${SP_DIR}/"
-ln -s "${PREFIX}/lib/_pythonization.py" "${SP_DIR}/"
-ln -s "${PREFIX}/lib/cmdLineUtils.py" "${SP_DIR}/"
-ln -s "${PREFIX}/lib/cppyy.py" "${SP_DIR}/"
-ln -s "${PREFIX}/lib/_rdf_utils.py" "${SP_DIR}/"
-
-test "$(ls "${PREFIX}"/lib/*/__init__.py | wc -l) = 2"
-ln -s "${PREFIX}/lib/JsMVA/" "${SP_DIR}/"
-ln -s "${PREFIX}/lib/JupyROOT/" "${SP_DIR}/"
-
-test "$(ls "${PREFIX}"/lib/libPy* | wc -l) = 2"
-ln -s "${PREFIX}/lib/libPyROOT.so" "${SP_DIR}/"
-ln -s "${PREFIX}/lib/libPyMVA.so" "${SP_DIR}/"
-ln -s "${PREFIX}/lib/libJupyROOT.so" "${SP_DIR}/"
 
 # Remove thisroot.*
 test "$(ls "${PREFIX}"/bin/thisroot.* | wc -l) = 3"
