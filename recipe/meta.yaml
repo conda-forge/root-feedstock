@@ -26,6 +26,7 @@
         # This tutorial uses davix to access a ROOT file over HTTP
         - root -b -l -q -x "${ROOTSYS}/tutorials/tree/run_h1analysis.C"
         - python -c "import ROOT; ROOT.ROOT.EnableImplicitMT(); rdf = ROOT.RDataFrame('DecayTree', 'root://eospublic.cern.ch//eos/opendata/lhcb/AntimatterMatters2017/data/B2HHH_MagnetUp.root'); print(rdf.Cache('H1_PX').AsNumpy())"
+        - python test_pyroot.py
 {% endmacro -%}
 
 package:
@@ -36,11 +37,10 @@ source:
   # git_url: {{ os.environ.get("ROOT_JENKINS_GIT_URL", "https://github.com/root-project/root.git") }}
   # git_rev: v6-22-00-patches
   git_url: {{ os.environ.get("ROOT_JENKINS_GIT_URL", "https://github.com/chrisburr/root.git") }}
-  git_rev: patch-1
+  git_rev: conda_v6-22-00-patches
   folder: root-source
   patches:
     - patches/root-x.xx.xx_cling-runtime-sysroot.patch
-    - patches/root-x.xx.xx_python_mac_os.patch  # [osx]
     - patches/root-x.xx.xx-copy-abspath-headers.patch  # [osx]
     - patches/root-x.xx.xx-osx-remove-hardcoded-sysroot.patch  # [osx]
 
@@ -125,6 +125,8 @@ requirements:
     - zstd
   run:
     - python
+    - numba
+    - cffi
 
 outputs:
   - name: root-dependencies
@@ -246,7 +248,7 @@ outputs:
         - cp -rp ${PREFIX}/bin ${SRC_DIR}/initial-bin-dir
         # Copy the new files in ${PREFIX}/bin to a dedicated directory
 {%- for key, value in os.environ.items() %}
-  {%- if key.startswith("ROOT") %}
+  {%- if key.startswith("ROOT_") %}
         - export {{ key }}={{ value }}
   {%- endif %}
 {%- endfor %}
@@ -370,6 +372,9 @@ outputs:
         - {{ compiler('cxx') }}
         - {{ compiler('fortran') }}
         - {{ pin_compatible('xxhash', max_pin='x.x.x') }}
+        - {{ pin_compatible('numpy') }}
+        - numba
+        - cffi
       run_constrained:
         # Items listed here conflict with ROOT
         # FIXME Add support in ROOT for building with an external cling
@@ -473,9 +478,13 @@ outputs:
         - {{ pin_subpackage('root_base', exact=True) }}
         - python
         - {{ pin_compatible('xxhash', max_pin='x.x.x') }}
+        - {{ pin_compatible('numpy') }}
+        - numba
+        - cffi
     test:
       files:
         - test.cpp
+        - test_pyroot.py
       requires:
         - root-dependencies {{ version }} *_{{ build_number }}
       commands: {{ test_commands() }}
@@ -524,6 +533,7 @@ outputs:
     test:
       files:
         - test.cpp
+        - test_pyroot.py
       requires:
         - ipython
       imports:

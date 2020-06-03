@@ -62,17 +62,26 @@ CXXFLAGS=$(echo "${CXXFLAGS}" | sed -E 's@-std=c\+\+[^ ]+@@g')
 export CXXFLAGS
 
 # Enable ccache if requested
-if [ -n "${CCACHE_BASEDIR+x}" ]; then
+if [ -n "${ROOT_USE_CCACHE+x}" ]; then
     CCACHE_BASEDIR=$(readlink -f "${PREFIX}/..")
     export CCACHE_BASEDIR
     echo "Enabling ccache with CCACHE_BASEDIR=$CCACHE_BASEDIR"
     CMAKE_PLATFORM_FLAGS+=("-Dccache=ON")
+    # Increase the number of cores used
+    CPU_COUNT=$(nproc)
+    CPU_COUNT=$(( 2*CPU_COUNT ))
+    export CPU_COUNT
 fi
 
 # The cross-linux toolchain breaks find_file relative to the current file
 # Patch up with sed
 sed -i -E 's#(ROOT_TEST_DRIVER RootTestDriver.cmake PATHS \$\{THISDIR\} \$\{CMAKE_MODULE_PATH\} NO_DEFAULT_PATH)#\1 CMAKE_FIND_ROOT_PATH_BOTH#g' \
     ../root-source/cmake/modules/RootNewMacros.cmake
+
+if [ -n "${ROOT_RUN_GTESTS+x}" ]; then
+    # Required for the tests to work correctly
+    export LD_LIBRARY_PATH=$PREFIX/lib
+fi
 
 cmake -LAH \
     "${CMAKE_PLATFORM_FLAGS[@]}" \
@@ -120,14 +129,15 @@ cmake -LAH \
     -Droot7=ON \
     ../root-source
 
-make -j${CPU_COUNT}
+make "-j${CPU_COUNT}"
 
 if [ -n "${ROOT_RUN_GTESTS+x}" ]; then
     # Run gtests
-    ctest "-j${CPU_COUNT}" -T test --no-compress-output
+    ctest "-j${CPU_COUNT}" -T test --no-compress-output \
+        --exclude-regex '^(pyunittests-pyroot-numbadeclare|test-periodic-build|tutorial-pyroot-pyroot004_NumbaDeclare-py)$'
 fi
 
-make install
+make install "-j${CPU_COUNT}"
 
 # Remove thisroot.*
 test "$(ls "${PREFIX}"/bin/thisroot.* | wc -l) = 3"
@@ -148,7 +158,6 @@ ln -s "${PREFIX}/lib/cmdLineUtils.py" "${SP_DIR}/"
 ln -s "${PREFIX}/lib"/libJupyROOT*.so "${SP_DIR}/"
 ln -s "${PREFIX}/lib"/libROOTPythonizations*.so "${SP_DIR}/"
 ln -s "${PREFIX}/lib"/libcppyy*.so "${SP_DIR}/"
-ln -s "${PREFIX}/lib"/libcppyy_backend*.so "${SP_DIR}/"
 # Check PyROOT is roughly working
 python -c "import ROOT"
 
