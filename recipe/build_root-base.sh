@@ -24,7 +24,7 @@ if [ "$(uname)" == "Linux" ]; then
     cp "${RECIPE_DIR}/FindX11.cmake" "root-source/cmake/modules/"
 
     # Hide symbols from LLVM/clang to avoid conflicts with other libraries
-    for lib_name in $(ls $PREFIX/lib | grep -E 'lib(LLVM|clang).*\.a'); do
+    for lib_name in $(ls "${PREFIX}/lib" | grep -E 'lib(LLVM|clang).*\.a'); do
         export CXXFLAGS="${CXXFLAGS} -Wl,--exclude-libs,${lib_name}"
     done
     echo "CXXFLAGS is now '${CXXFLAGS}'"
@@ -60,6 +60,14 @@ cd build-dir
 # Remove -std=c++XX from build ${CXXFLAGS}
 CXXFLAGS=$(echo "${CXXFLAGS}" | sed -E 's@-std=c\+\+[^ ]+@@g')
 export CXXFLAGS
+
+# Enable ccache if requested
+if [ -n "${CCACHE_BASEDIR+x}" ]; then
+    CCACHE_BASEDIR=$(readlink -f "${PREFIX}/..")
+    export CCACHE_BASEDIR
+    echo "Enabling ccache with CCACHE_BASEDIR=$CCACHE_BASEDIR"
+    CMAKE_PLATFORM_FLAGS+=("-Dccache=ON")
+fi
 
 # The cross-linux toolchain breaks find_file relative to the current file
 # Patch up with sed
@@ -109,15 +117,14 @@ cmake -LAH \
     -Dpythia8=ON \
     -Dtesting=ON \
     -Droottest=OFF \
-    -Dccache=OFF \
     -Droot7=ON \
     ../root-source
 
 make -j${CPU_COUNT}
 
-if [[ -n "${ROOT_RUN_GTESTS}" ]]; then
+if [ -n "${ROOT_RUN_GTESTS+x}" ]; then
     # Run gtests
-    ctest -j${CPU_COUNT} -T test --no-compress-output
+    ctest "-j${CPU_COUNT}" -T test --no-compress-output
 fi
 
 make install
@@ -129,6 +136,21 @@ for suffix in sh csh fish; do
     cp "${RECIPE_DIR}/thisroot" "${PREFIX}/bin/thisroot.${suffix}"
     chmod +x "${PREFIX}/bin/thisroot.${suffix}"
 done
+
+# Symlink the python components in to the site packages directory
+mkdir -p "${SP_DIR}"
+ln -s "${PREFIX}/lib/JupyROOT/" "${SP_DIR}/"
+ln -s "${PREFIX}/lib/ROOT/" "${SP_DIR}/"
+ln -s "${PREFIX}/lib/cppyy/" "${SP_DIR}/"
+ln -s "${PREFIX}/lib/cppyy_backend/" "${SP_DIR}/"
+ln -s "${PREFIX}/lib/JsMVA/" "${SP_DIR}/"
+ln -s "${PREFIX}/lib/cmdLineUtils.py" "${SP_DIR}/"
+ln -s "${PREFIX}/lib"/libJupyROOT*.so "${SP_DIR}/"
+ln -s "${PREFIX}/lib"/libROOTPythonizations*.so "${SP_DIR}/"
+ln -s "${PREFIX}/lib"/libcppyy*.so "${SP_DIR}/"
+ln -s "${PREFIX}/lib"/libcppyy_backend*.so "${SP_DIR}/"
+# Check PyROOT is roughly working
+python -c "import ROOT"
 
 # Add the kernel for normal Jupyter
 mkdir -p "${PREFIX}/share/jupyter/kernels/"

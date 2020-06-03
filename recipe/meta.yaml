@@ -52,6 +52,9 @@ build:
 # Required for conda to generate the correct build matrix
 requirements:
   build:
+{%- if "ROOT_USE_CCACHE" in os.environ %}
+    - ccache
+{%- endif %}
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     - {{ compiler('fortran') }}
@@ -133,6 +136,9 @@ outputs:
     requirements:
       # Include the build dependencies to ensure the build string is correct
       build:
+{%- if "ROOT_USE_CCACHE" in os.environ %}
+        - ccache
+{%- endif %}
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - {{ compiler('fortran') }}
@@ -239,6 +245,11 @@ outputs:
         - find ${PREFIX}/bin -type f -maxdepth 1 > ${SRC_DIR}/initial-filelist.txt
         - cp -rp ${PREFIX}/bin ${SRC_DIR}/initial-bin-dir
         # Copy the new files in ${PREFIX}/bin to a dedicated directory
+{%- for key, value in os.environ.items() %}
+  {%- if key.startswith("ROOT") %}
+        - export {{ key }}={{ value }}
+  {%- endif %}
+{%- endfor %}
         - ${RECIPE_DIR}/build_root-base.sh
         - mkdir ${SRC_DIR}/root-binaries/
         - |
@@ -280,6 +291,9 @@ outputs:
         # - xz
     requirements:
       build:
+{%- if "ROOT_USE_CCACHE" in os.environ %}
+        - ccache
+{%- endif %}
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - {{ compiler('fortran') }}
@@ -380,6 +394,9 @@ outputs:
         - ls ${PREFIX}/bin/
     requirements:
       build:
+{%- if "ROOT_USE_CCACHE" in os.environ %}
+        - ccache
+{%- endif %}
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - {{ compiler('fortran') }}
@@ -476,6 +493,9 @@ outputs:
     requirements:
       # Include the build dependencies and python to ensure the build string is correct
       build:
+{%- if "ROOT_USE_CCACHE" in os.environ %}
+        - ccache
+{%- endif %}
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - {{ compiler('fortran') }}
