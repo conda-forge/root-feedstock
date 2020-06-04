@@ -2,7 +2,7 @@
 {% set version = "6.22.0a0" %}
 {% set build_number = 3 %}
 {% set clang_version = "5.0.0" %}
-{% set clang_patches_version = "root_20191220" %}
+{% set clang_patches_version = "root_20200518" %}
 
 # WARNING: This is not a good example of a how a conda forge recipe should look
 
