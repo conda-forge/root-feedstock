@@ -36,12 +36,6 @@ else
     # HACK: Fix LLVM headers for Clang 8's C++17 mode
     sed -i.bak -E 's#std::pointer_to_unary_function<(const )?Value \*, (const )?BasicBlock \*>#\1BasicBlock *(*)(\2Value *)#g' \
         "${PREFIX}/include/llvm/IR/Instructions.h"
-
-    # This is a patch for the macOS needing to be unlinked
-    # Not solved in ROOT yet.
-    PYLIBNAME=$(python -c 'import sysconfig; print("libpython" + sysconfig.get_config_var("VERSION") + (sysconfig.get_config_var("ABIFLAGS") or sysconfig.get_config_var("abiflags") or ""))')
-    sed -i -e "s@// load any dependent libraries@if(moduleBasename.Contains(\"PyROOT\") || moduleBasename.Contains(\"PyMVA\")) gSystem->Load(\"${PYLIBNAME}\");@g" \
-        root-source/core/base/src/TSystem.cxx
 fi
 
 export CFLAGS="${CFLAGS//-isystem /-I}"
