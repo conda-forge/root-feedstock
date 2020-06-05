@@ -36,6 +36,14 @@ else
     # HACK: Fix LLVM headers for Clang 8's C++17 mode
     sed -i.bak -E 's#std::pointer_to_unary_function<(const )?Value \*, (const )?BasicBlock \*>#\1BasicBlock *(*)(\2Value *)#g' \
         "${PREFIX}/include/llvm/IR/Instructions.h"
+
+    # HACK: Hack the macOS SDK to make rootcling find the correct ncurses
+    if [[ -f  "$CONDA_BUILD_SYSROOT/usr/include/module.modulemap.bak" ]]; then
+        echo "ERROR: Looks like the macOS SDK hack has already been applied"
+        exit 1
+    else
+        sed -i.bak "s@\"ncurses.h\"@\"${PREFIX}/include/ncurses.h\"@g" "${CONDA_BUILD_SYSROOT}/usr/include/module.modulemap"
+    fi
 fi
 
 export CFLAGS="${CFLAGS//-isystem /-I}"
@@ -57,7 +65,7 @@ export CXXFLAGS
 
 # Enable ccache if requested
 if [ -n "${ROOT_USE_CCACHE+x}" ]; then
-    CCACHE_BASEDIR=$(readlink -f "${PREFIX}/..")
+    CCACHE_BASEDIR=$(cd "${PWD}/.."; pwd)
     export CCACHE_BASEDIR
     echo "Enabling ccache with CCACHE_BASEDIR=$CCACHE_BASEDIR"
     CMAKE_PLATFORM_FLAGS+=("-Dccache=ON")
