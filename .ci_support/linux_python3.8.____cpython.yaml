@@ -80,8 +80,6 @@ pin_run_as_build:
   python:
     min_pin: x.x
     max_pin: x.x
-  qt:
-    max_pin: x.x
   sqlite:
     max_pin: x
   xz:
@@ -92,8 +90,6 @@ pin_run_as_build:
     max_pin: x.x.x
 python:
 - 3.8.* *_cpython
-qt:
-- '5.12'
 sqlite:
 - '3'
 xrootd:
