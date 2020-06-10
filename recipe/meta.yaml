@@ -1,6 +1,6 @@
 {% set name = "root" %}
 {% set version = "6.20.6" %}
-{% set build_number = 3 %}
+{% set build_number = 0 %}
 {% set clang_version = "5.0.0" %}
 {% set clang_patches_version = "root_20191220" %}
 
@@ -461,7 +461,7 @@ outputs:
         - test.cpp
       requires:
         - root-dependencies {{ version }} *_{{ build_number }}
-      commands: {{- test_commands() }}
+      commands: {{ test_commands() }}
 
   - name: root
     build:
@@ -509,7 +509,7 @@ outputs:
       imports:
         - ROOT
         - JupyROOT
-      commands: {{- test_commands()  }}
+      commands: {{ test_commands() }}
         - ipython -c 'import JsMVA'
         # This command only works if the compilers are available
         - root -l -b -q -x test.cpp++
