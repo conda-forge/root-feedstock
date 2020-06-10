@@ -1,5 +1,5 @@
 {% set name = "root" %}
-{% set version = "6.20.4" %}
+{% set version = "6.20.6" %}
 {% set build_number = 3 %}
 {% set clang_version = "5.0.0" %}
 {% set clang_patches_version = "root_20191220" %}
@@ -36,7 +36,7 @@ source:
   # git_url: {{ os.environ.get("ROOT_JENKINS_GIT_URL", "https://github.com/root-project/root.git") }}
   # git_rev: v6-20-00-patches
   url: https://github.com/root-project/root/archive/v{{ '-'.join(version.split('.')[:-1] + [version.split('.')[-1].rjust(2, '0')]) }}.tar.gz
-  sha256: 788b0673fd67c70455a2dae769e3e6c75a113079c7ca47196aaee52fbab44843
+  sha256: 3f7ac6fa07072a0b3fd81815f8993d790465a56254e9bf68243bf15a743f53a0
   folder: root-source
   patches:
     - patches/root-x.xx.xx_cling-runtime-sysroot.patch
@@ -102,7 +102,6 @@ requirements:
     # - postgresql
     - pythia8
     - python
-    - qt
     - sqlite
     - tbb
     - tbb-devel
@@ -185,7 +184,6 @@ outputs:
         # - postgresql
         - pythia8
         - python
-        - qt
         - sqlite
         - tbb
         - tbb-devel
@@ -275,7 +273,6 @@ outputs:
         # - lz4-c
         # - openssl
         # - pcre
-        - qt
         - sqlite
         # - tbb
         # - vdt
@@ -333,7 +330,6 @@ outputs:
         # - postgresql
         - pythia8
         - python
-        - qt
         - sqlite
         - tbb
         - tbb-devel
@@ -437,7 +433,6 @@ outputs:
         # - postgresql
         - pythia8
         - python
-        - qt
         - sqlite
         - tbb
         - tbb-devel
