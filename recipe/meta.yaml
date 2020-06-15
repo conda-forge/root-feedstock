@@ -43,6 +43,9 @@ source:
     - patches/root-x.xx.xx_cling-runtime-sysroot.patch
     - patches/root-x.xx.xx-copy-abspath-headers.patch  # [osx]
     - patches/root-x.xx.xx-osx-remove-hardcoded-sysroot.patch  # [osx]
+    # https://sft.its.cern.ch/jira/browse/ROOT-10812
+    - 0001-Patch-clad-build-for-use-with-external-clang.patch
+    - 0002-Fix-DynamicLibraryManagerSymbol-for-external-LLVM.patch
 
 build:
   number: {{ build_number }}
