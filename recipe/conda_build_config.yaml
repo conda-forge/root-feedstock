@@ -1,4 +1,2 @@
-channel_sources:
-- chrisburr,conda-forge,defaults
 MACOSX_DEPLOYMENT_TARGET:  # [osx]
   - 10.13                  # [osx]
