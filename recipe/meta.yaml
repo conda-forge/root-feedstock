@@ -1,8 +1,8 @@
 {% set name = "root" %}
-{% set version = "6.20.6" %}
+{% set version = "6.22.0" %}
 {% set build_number = 0 %}
 {% set clang_version = "5.0.0" %}
-{% set clang_patches_version = "root_20191220" %}
+{% set clang_patches_version = "root_20200518" %}
 
 # WARNING: This is not a good example of a how a conda forge recipe should look
 
@@ -26,6 +26,7 @@
         # This tutorial uses davix to access a ROOT file over HTTP
         - root -b -l -q -x "${ROOTSYS}/tutorials/tree/run_h1analysis.C"
         - python -c "import ROOT; ROOT.ROOT.EnableImplicitMT(); rdf = ROOT.RDataFrame('DecayTree', 'root://eospublic.cern.ch//eos/opendata/lhcb/AntimatterMatters2017/data/B2HHH_MagnetUp.root'); print(rdf.Cache('H1_PX').AsNumpy())"
+        - python test_pyroot.py
 {% endmacro -%}
 
 package:
@@ -34,15 +35,17 @@ package:
 
 source:
   # git_url: {{ os.environ.get("ROOT_JENKINS_GIT_URL", "https://github.com/root-project/root.git") }}
-  # git_rev: v6-20-00-patches
+  # git_rev: v6-22-00-patches
   url: https://github.com/root-project/root/archive/v{{ '-'.join(version.split('.')[:-1] + [version.split('.')[-1].rjust(2, '0')]) }}.tar.gz
-  sha256: 3f7ac6fa07072a0b3fd81815f8993d790465a56254e9bf68243bf15a743f53a0
+  sha256: 658b7ae68cc0de3c6027e7342c206cdcd02ef1f1660cf96ae2a84f5b6bbb95db
   folder: root-source
   patches:
     - patches/root-x.xx.xx_cling-runtime-sysroot.patch
-    - patches/root-x.xx.xx_python_mac_os.patch  # [osx]
     - patches/root-x.xx.xx-copy-abspath-headers.patch  # [osx]
     - patches/root-x.xx.xx-osx-remove-hardcoded-sysroot.patch  # [osx]
+    # https://sft.its.cern.ch/jira/browse/ROOT-10812
+    - patches/0001-Patch-clad-build-for-use-with-external-clang.patch
+    - patches/0002-Fix-DynamicLibraryManagerSymbol-for-external-LLVM.patch
 
 build:
   number: {{ build_number }}
@@ -52,6 +55,9 @@ build:
 # Required for conda to generate the correct build matrix
 requirements:
   build:
+{%- if "ROOT_USE_CCACHE" in os.environ %}
+    - ccache
+{%- endif %}
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     - {{ compiler('fortran') }}
@@ -88,7 +94,6 @@ requirements:
     - gl2ps
     - graphviz
     - gsl
-    - krb5  # [osx]
     - libglu  # [linux]
     - libpng
     - librsvg
@@ -122,6 +127,10 @@ requirements:
     - zstd
   run:
     - python
+    - numba
+    - cffi
+  run_constrained:
+    - __osx >={{ MACOSX_DEPLOYMENT_TARGET|default("10.9") }}  # [osx]
 
 outputs:
   - name: root-dependencies
@@ -133,6 +142,9 @@ outputs:
     requirements:
       # Include the build dependencies to ensure the build string is correct
       build:
+{%- if "ROOT_USE_CCACHE" in os.environ %}
+        - ccache
+{%- endif %}
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - {{ compiler('fortran') }}
@@ -170,7 +182,6 @@ outputs:
         - gl2ps
         - graphviz
         - gsl
-        - krb5  # [osx]
         - libglu  # [linux]
         - libpng
         - librsvg
@@ -224,6 +235,8 @@ outputs:
         # FIXME: Required to ensure a consistent etc/allDict.cxx.pch
         - {{ pin_compatible('libcxx', min_pin='x', max_pin='x') }}
         - {{ pin_compatible('xxhash', max_pin='x.x.x') }}
+      run_constrained:
+        - __osx >={{ MACOSX_DEPLOYMENT_TARGET|default("10.9") }}  # [osx]
     test:
       commands:
         - echo "Testing is performed in the root_base and root outputs"
@@ -239,6 +252,11 @@ outputs:
         - find ${PREFIX}/bin -type f -maxdepth 1 > ${SRC_DIR}/initial-filelist.txt
         - cp -rp ${PREFIX}/bin ${SRC_DIR}/initial-bin-dir
         # Copy the new files in ${PREFIX}/bin to a dedicated directory
+{%- for key, value in os.environ.items() %}
+  {%- if key.startswith("ROOT_") %}
+        - export {{ key }}={{ value }}
+  {%- endif %}
+{%- endfor %}
         - ${RECIPE_DIR}/build_root-base.sh
         - mkdir ${SRC_DIR}/root-binaries/
         - |
@@ -248,9 +266,7 @@ outputs:
         # https://abi-laboratory.pro/?view=timeline&l=root
         - {{ pin_subpackage('root_base', max_pin='x.x') }}
       ignore_prefix_files:
-        # Needs to be different until macOS supports runtime_cxxmodules=ON
-        - etc/allDict.cxx.pch  # [osx]
-        - lib/*.pcm  # [linux]
+        - lib/*.pcm
       # Taken from "conda render ./recipe/ -m .ci_support/osx_python3.7.yaml"
       # Sorted and commented run_exports that we want to keep
       # TODO: This will need updating occasionally
@@ -280,6 +296,9 @@ outputs:
         # - xz
     requirements:
       build:
+{%- if "ROOT_USE_CCACHE" in os.environ %}
+        - ccache
+{%- endif %}
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - {{ compiler('fortran') }}
@@ -316,7 +335,6 @@ outputs:
         - gl2ps
         - graphviz
         - gsl
-        - krb5  # [osx]
         - libglu  # [linux]
         - libpng
         - librsvg
@@ -356,11 +374,15 @@ outputs:
         - {{ compiler('cxx') }}
         - {{ compiler('fortran') }}
         - {{ pin_compatible('xxhash', max_pin='x.x.x') }}
+        - {{ pin_compatible('numpy') }}
+        - numba
+        - cffi
       run_constrained:
         # Items listed here conflict with ROOT
         # FIXME Add support in ROOT for building with an external cling
         - cling 9999
         - root5 9999
+        - __osx >={{ MACOSX_DEPLOYMENT_TARGET|default("10.9") }}  # [osx]
     test:
       commands:
         - echo "Tested in other outputs"
@@ -380,6 +402,9 @@ outputs:
         - ls ${PREFIX}/bin/
     requirements:
       build:
+{%- if "ROOT_USE_CCACHE" in os.environ %}
+        - ccache
+{%- endif %}
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - {{ compiler('fortran') }}
@@ -420,7 +445,6 @@ outputs:
         - gl2ps
         - graphviz
         - gsl
-        - krb5  # [osx]
         - libglu  # [linux]
         - libpng
         - librsvg
@@ -456,9 +480,15 @@ outputs:
         - {{ pin_subpackage('root_base', exact=True) }}
         - python
         - {{ pin_compatible('xxhash', max_pin='x.x.x') }}
+        - {{ pin_compatible('numpy') }}
+        - numba
+        - cffi
+      run_constrained:
+        - __osx >={{ MACOSX_DEPLOYMENT_TARGET|default("10.9") }}  # [osx]
     test:
       files:
         - test.cpp
+        - test_pyroot.py
       requires:
         - root-dependencies {{ version }} *_{{ build_number }}
       commands: {{ test_commands() }}
@@ -476,6 +506,9 @@ outputs:
     requirements:
       # Include the build dependencies and python to ensure the build string is correct
       build:
+{%- if "ROOT_USE_CCACHE" in os.environ %}
+        - ccache
+{%- endif %}
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - {{ compiler('fortran') }}
@@ -501,9 +534,12 @@ outputs:
         - {{ pin_subpackage('root_base', exact=True) }}
         - {{ pin_subpackage('root-binaries', exact=True) }}
         - {{ pin_subpackage('root-dependencies', exact=True) }}
+      run_constrained:
+        - __osx >={{ MACOSX_DEPLOYMENT_TARGET|default("10.9") }}  # [osx]
     test:
       files:
         - test.cpp
+        - test_pyroot.py
       requires:
         - ipython
       imports:

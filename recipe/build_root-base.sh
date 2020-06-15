@@ -14,7 +14,6 @@ if [ "$(uname)" == "Linux" ]; then
     CMAKE_PLATFORM_FLAGS+=("-DDEFAULT_SYSROOT=${PREFIX}/${HOST}/sysroot")
     CMAKE_PLATFORM_FLAGS+=("-Dx11=ON")
     CMAKE_PLATFORM_FLAGS+=("-DRT_LIBRARY=${PREFIX}/${HOST}/sysroot/usr/lib/librt.so")
-    CMAKE_PLATFORM_FLAGS+=("-Druntime_cxxmodules=ON")
 
     # Fix up CMake for using conda's sysroot
     # See https://docs.conda.io/projects/conda-build/en/latest/resources/compiler-tools.html?highlight=cmake#an-aside-on-cmake-and-sysroots
@@ -25,7 +24,7 @@ if [ "$(uname)" == "Linux" ]; then
     cp "${RECIPE_DIR}/FindX11.cmake" "root-source/cmake/modules/"
 
     # Hide symbols from LLVM/clang to avoid conflicts with other libraries
-    for lib_name in $(ls $PREFIX/lib | grep -E 'lib(LLVM|clang).*\.a'); do
+    for lib_name in $(ls "${PREFIX}/lib" | grep -E 'lib(LLVM|clang).*\.a'); do
         export CXXFLAGS="${CXXFLAGS} -Wl,--exclude-libs,${lib_name}"
     done
     echo "CXXFLAGS is now '${CXXFLAGS}'"
@@ -33,17 +32,18 @@ else
     CMAKE_PLATFORM_FLAGS+=("-Dcocoa=ON")
     CMAKE_PLATFORM_FLAGS+=("-DCLANG_RESOURCE_DIR_VERSION='5.0.0'")
     CMAKE_PLATFORM_FLAGS+=("-DBLA_PREFER_PKGCONFIG=ON")
-    CMAKE_PLATFORM_FLAGS+=("-Druntime_cxxmodules=OFF")
 
     # HACK: Fix LLVM headers for Clang 8's C++17 mode
     sed -i.bak -E 's#std::pointer_to_unary_function<(const )?Value \*, (const )?BasicBlock \*>#\1BasicBlock *(*)(\2Value *)#g' \
         "${PREFIX}/include/llvm/IR/Instructions.h"
 
-    # This is a patch for the macOS needing to be unlinked
-    # Not solved in ROOT yet.
-    PYLIBNAME=$(python -c 'import sysconfig; print("libpython" + sysconfig.get_config_var("VERSION") + (sysconfig.get_config_var("ABIFLAGS") or sysconfig.get_config_var("abiflags") or ""))')
-    sed -i -e "s@// load any dependent libraries@if(moduleBasename.Contains(\"PyROOT\") || moduleBasename.Contains(\"PyMVA\")) gSystem->Load(\"${PYLIBNAME}\");@g" \
-        root-source/core/base/src/TSystem.cxx
+    # HACK: Hack the macOS SDK to make rootcling find the correct ncurses
+    if [[ -f  "$CONDA_BUILD_SYSROOT/usr/include/module.modulemap.bak" ]]; then
+        echo "ERROR: Looks like the macOS SDK hack has already been applied"
+        exit 1
+    else
+        sed -i.bak "s@\"ncurses.h\"@\"${PREFIX}/include/ncurses.h\"@g" "${CONDA_BUILD_SYSROOT}/usr/include/module.modulemap"
+    fi
 fi
 
 export CFLAGS="${CFLAGS//-isystem /-I}"
@@ -63,10 +63,27 @@ cd build-dir
 CXXFLAGS=$(echo "${CXXFLAGS}" | sed -E 's@-std=c\+\+[^ ]+@@g')
 export CXXFLAGS
 
+# Enable ccache if requested
+if [ -n "${ROOT_USE_CCACHE+x}" ]; then
+    CCACHE_BASEDIR=$(cd "${PWD}/.."; pwd)
+    export CCACHE_BASEDIR
+    echo "Enabling ccache with CCACHE_BASEDIR=$CCACHE_BASEDIR"
+    CMAKE_PLATFORM_FLAGS+=("-Dccache=ON")
+    # Increase the number of cores used
+    CPU_COUNT=$(nproc)
+    CPU_COUNT=$(( 2*CPU_COUNT ))
+    export CPU_COUNT
+fi
+
 # The cross-linux toolchain breaks find_file relative to the current file
 # Patch up with sed
 sed -i -E 's#(ROOT_TEST_DRIVER RootTestDriver.cmake PATHS \$\{THISDIR\} \$\{CMAKE_MODULE_PATH\} NO_DEFAULT_PATH)#\1 CMAKE_FIND_ROOT_PATH_BOTH#g' \
     ../root-source/cmake/modules/RootNewMacros.cmake
+
+if [ -n "${ROOT_RUN_GTESTS+x}" ]; then
+    # Required for the tests to work correctly
+    export LD_LIBRARY_PATH=$PREFIX/lib
+fi
 
 cmake -LAH \
     "${CMAKE_PLATFORM_FLAGS[@]}" \
@@ -111,35 +128,18 @@ cmake -LAH \
     -Dpythia8=ON \
     -Dtesting=ON \
     -Droottest=OFF \
-    -Dccache=OFF \
     -Droot7=ON \
     ../root-source
 
-make -j${CPU_COUNT}
+make "-j${CPU_COUNT}"
 
-if [[ -n "${ROOT_RUN_GTESTS}" ]]; then
+if [ -n "${ROOT_RUN_GTESTS+x}" ]; then
     # Run gtests
-    ctest -j${CPU_COUNT} -T test --no-compress-output
+    ctest "-j${CPU_COUNT}" -T test --no-compress-output \
+        --exclude-regex '^(pyunittests-pyroot-numbadeclare|test-periodic-build|tutorial-pyroot-pyroot004_NumbaDeclare-py)$'
 fi
 
-make install
-
-# Create symlinks so conda can find the Python bindings
-test "$(ls "${PREFIX}"/lib/*.py | wc -l) = 4"
-ln -s "${PREFIX}/lib/ROOT.py" "${SP_DIR}/"
-ln -s "${PREFIX}/lib/_pythonization.py" "${SP_DIR}/"
-ln -s "${PREFIX}/lib/cmdLineUtils.py" "${SP_DIR}/"
-ln -s "${PREFIX}/lib/cppyy.py" "${SP_DIR}/"
-ln -s "${PREFIX}/lib/_rdf_utils.py" "${SP_DIR}/"
-
-test "$(ls "${PREFIX}"/lib/*/__init__.py | wc -l) = 2"
-ln -s "${PREFIX}/lib/JsMVA/" "${SP_DIR}/"
-ln -s "${PREFIX}/lib/JupyROOT/" "${SP_DIR}/"
-
-test "$(ls "${PREFIX}"/lib/libPy* | wc -l) = 2"
-ln -s "${PREFIX}/lib/libPyROOT.so" "${SP_DIR}/"
-ln -s "${PREFIX}/lib/libPyMVA.so" "${SP_DIR}/"
-ln -s "${PREFIX}/lib/libJupyROOT.so" "${SP_DIR}/"
+make install "-j${CPU_COUNT}"
 
 # Remove thisroot.*
 test "$(ls "${PREFIX}"/bin/thisroot.* | wc -l) = 3"
@@ -148,6 +148,20 @@ for suffix in sh csh fish; do
     cp "${RECIPE_DIR}/thisroot" "${PREFIX}/bin/thisroot.${suffix}"
     chmod +x "${PREFIX}/bin/thisroot.${suffix}"
 done
+
+# Symlink the python components in to the site packages directory
+mkdir -p "${SP_DIR}"
+ln -s "${PREFIX}/lib/JupyROOT/" "${SP_DIR}/"
+ln -s "${PREFIX}/lib/ROOT/" "${SP_DIR}/"
+ln -s "${PREFIX}/lib/cppyy/" "${SP_DIR}/"
+ln -s "${PREFIX}/lib/cppyy_backend/" "${SP_DIR}/"
+ln -s "${PREFIX}/lib/JsMVA/" "${SP_DIR}/"
+ln -s "${PREFIX}/lib/cmdLineUtils.py" "${SP_DIR}/"
+ln -s "${PREFIX}/lib"/libJupyROOT*.so "${SP_DIR}/"
+ln -s "${PREFIX}/lib"/libROOTPythonizations*.so "${SP_DIR}/"
+ln -s "${PREFIX}/lib"/libcppyy*.so "${SP_DIR}/"
+# Check PyROOT is roughly working
+python -c "import ROOT"
 
 # Add the kernel for normal Jupyter
 mkdir -p "${PREFIX}/share/jupyter/kernels/"
