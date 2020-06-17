@@ -93,11 +93,11 @@ pin_run_as_build:
   zstd:
     max_pin: x.x.x
 python:
-- 3.6.* *_cpython
+- 2.7.* *_cpython
 sqlite:
 - '3'
 xrootd:
-- '4.12'
+- '4.11'
 xz:
 - '5.2'
 zlib:
