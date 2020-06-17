@@ -1,2 +1,4 @@
 MACOSX_DEPLOYMENT_TARGET:  # [osx]
   - 10.13                  # [osx]
+python:
+  - 2.7.* *_cpython  # [not (aarch64 or ppc64le or win)]]
