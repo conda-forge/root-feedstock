@@ -214,5 +214,3 @@ Feedstock Maintainers
 * [@eguiraud](https://github.com/eguiraud/)
 * [@henryiii](https://github.com/henryiii/)
 
-<!-- dummy commit to enable rerendering -->
-
