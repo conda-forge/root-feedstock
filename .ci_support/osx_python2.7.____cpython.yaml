@@ -97,7 +97,7 @@ python:
 sqlite:
 - '3'
 xrootd:
-- '4.11'
+- '4.12'
 xz:
 - '5.2'
 zlib:
