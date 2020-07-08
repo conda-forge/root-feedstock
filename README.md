@@ -5,7 +5,7 @@ Home: https://root.cern/
 
 Package license: LGPL-2.1-only
 
-Feedstock license: BSD 3-Clause
+Feedstock license: BSD-3-Clause
 
 Summary: ROOT is a modular scientific software toolkit. It provides all the functionalities needed to deal with big data
 processing, statistical analysis, visualisation and storage. It is mainly written in C++ but integrated with other
@@ -213,3 +213,4 @@ Feedstock Maintainers
 * [@egpbos](https://github.com/egpbos/)
 * [@eguiraud](https://github.com/eguiraud/)
 * [@henryiii](https://github.com/henryiii/)
+
