@@ -1,6 +1,6 @@
 {% set name = "root" %}
 {% set version = "6.22.0" %}
-{% set build_number = 1 %}
+{% set build_number = 2 %}
 {% set clang_version = "5.0.0" %}
 {% set clang_patches_version = "root_20200518" %}
 
@@ -46,6 +46,7 @@ source:
     # https://sft.its.cern.ch/jira/browse/ROOT-10812
     - patches/0001-Patch-clad-build-for-use-with-external-clang.patch
     - patches/0002-Fix-DynamicLibraryManagerSymbol-for-external-LLVM.patch
+    - patches/root-6.20.0-install-pyroot-headers.patch
 
 build:
   number: {{ build_number }}
