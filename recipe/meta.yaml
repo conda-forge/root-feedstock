@@ -1,8 +1,17 @@
 {% set name = "root" %}
 {% set version = "6.22.0" %}
-{% set build_number = 2 %}
+{% set build_number = 3 %}
 {% set clang_version = "5.0.0" %}
 {% set clang_patches_version = "root_20200518" %}
+
+{%- if "ROOT_CONDA_GIT_REV" in os.environ %}
+  {% set clang_patches_version = "root_" + os.environ["ROOT_CONDA_GIT_REV"] %}
+{%- endif %}
+
+{%- if "ROOT_CONDA_BUILD_NUMBER" in os.environ %}
+   {%- set version = "6.23.0" %}
+   {%- set build_number = os.environ["ROOT_CONDA_BUILD_NUMBER"] %}
+{%- endif %}
 
 # WARNING: This is not a good example of a how a conda forge recipe should look
 
@@ -34,10 +43,13 @@ package:
   version: {{ version }}
 
 source:
-  # git_url: {{ os.environ.get("ROOT_JENKINS_GIT_URL", "https://github.com/root-project/root.git") }}
-  # git_rev: v6-22-00-patches
+{%- if "ROOT_CONDA_GIT_REV" in os.environ %}
+  git_url: {{ os.environ.get("ROOT_CONDA_GIT_URL", "https://github.com/root-project/root.git") }}
+  git_rev: {{ os.environ["ROOT_CONDA_GIT_REV"] }}
+{%- else %}
   url: https://github.com/root-project/root/archive/v{{ '-'.join(version.split('.')[:-1] + [version.split('.')[-1].rjust(2, '0')]) }}.tar.gz
   sha256: 658b7ae68cc0de3c6027e7342c206cdcd02ef1f1660cf96ae2a84f5b6bbb95db
+{%- endif %}
   folder: root-source
   patches:
     - patches/root-x.xx.xx_cling-runtime-sysroot.patch
@@ -56,7 +68,7 @@ build:
 # Required for conda to generate the correct build matrix
 requirements:
   build:
-{%- if "ROOT_USE_CCACHE" in os.environ %}
+{%- if "ROOT_CONDA_USE_CCACHE" in os.environ %}
     - ccache
 {%- endif %}
     - {{ compiler('c') }}
@@ -143,7 +155,7 @@ outputs:
     requirements:
       # Include the build dependencies to ensure the build string is correct
       build:
-{%- if "ROOT_USE_CCACHE" in os.environ %}
+{%- if "ROOT_CONDA_USE_CCACHE" in os.environ %}
         - ccache
 {%- endif %}
         - {{ compiler('c') }}
@@ -254,7 +266,7 @@ outputs:
         - cp -rp ${PREFIX}/bin ${SRC_DIR}/initial-bin-dir
         # Copy the new files in ${PREFIX}/bin to a dedicated directory
 {%- for key, value in os.environ.items() %}
-  {%- if key.startswith("ROOT_") %}
+  {%- if key.startswith("ROOT_CONDA_") %}
         - export {{ key }}={{ value }}
   {%- endif %}
 {%- endfor %}
@@ -297,7 +309,7 @@ outputs:
         # - xz
     requirements:
       build:
-{%- if "ROOT_USE_CCACHE" in os.environ %}
+{%- if "ROOT_CONDA_USE_CCACHE" in os.environ %}
         - ccache
 {%- endif %}
         - {{ compiler('c') }}
@@ -378,6 +390,7 @@ outputs:
         - {{ pin_compatible('numpy') }}
         - numba
         - cffi
+        - sysroot_linux-64  # [linux]
       run_constrained:
         # Items listed here conflict with ROOT
         # FIXME Add support in ROOT for building with an external cling
@@ -403,7 +416,7 @@ outputs:
         - ls ${PREFIX}/bin/
     requirements:
       build:
-{%- if "ROOT_USE_CCACHE" in os.environ %}
+{%- if "ROOT_CONDA_USE_CCACHE" in os.environ %}
         - ccache
 {%- endif %}
         - {{ compiler('c') }}
@@ -507,7 +520,7 @@ outputs:
     requirements:
       # Include the build dependencies and python to ensure the build string is correct
       build:
-{%- if "ROOT_USE_CCACHE" in os.environ %}
+{%- if "ROOT_CONDA_USE_CCACHE" in os.environ %}
         - ccache
 {%- endif %}
         - {{ compiler('c') }}
