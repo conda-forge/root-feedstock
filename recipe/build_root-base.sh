@@ -65,15 +65,12 @@ CXXFLAGS=$(echo "${CXXFLAGS}" | sed -E 's@-std=c\+\+[^ ]+@@g')
 export CXXFLAGS
 
 # Enable ccache if requested
-if [ -n "${ROOT_USE_CCACHE+x}" ]; then
+if [ -n "${ROOT_CONDA_USE_CCACHE+x}" ]; then
+    export CCACHE_DIR=${HOME}/feedstock_root/ccache/
     CCACHE_BASEDIR=$(cd "${PWD}/.."; pwd)
     export CCACHE_BASEDIR
     echo "Enabling ccache with CCACHE_BASEDIR=$CCACHE_BASEDIR"
     CMAKE_PLATFORM_FLAGS+=("-Dccache=ON")
-    # Increase the number of cores used
-    CPU_COUNT=$(nproc)
-    CPU_COUNT=$(( 2*CPU_COUNT ))
-    export CPU_COUNT
 fi
 
 # The cross-linux toolchain breaks find_file relative to the current file
@@ -81,7 +78,7 @@ fi
 sed -i -E 's#(ROOT_TEST_DRIVER RootTestDriver.cmake PATHS \$\{THISDIR\} \$\{CMAKE_MODULE_PATH\} NO_DEFAULT_PATH)#\1 CMAKE_FIND_ROOT_PATH_BOTH#g' \
     ../root-source/cmake/modules/RootNewMacros.cmake
 
-if [ -n "${ROOT_RUN_GTESTS+x}" ]; then
+if [ -n "${ROOT_CONDA_RUN_GTESTS+x}" ]; then
     # Required for the tests to work correctly
     export LD_LIBRARY_PATH=$PREFIX/lib
 fi
@@ -134,10 +131,13 @@ cmake -LAH \
 
 make "-j${CPU_COUNT}"
 
-if [ -n "${ROOT_RUN_GTESTS+x}" ]; then
-    # Run gtests
+if [ -n "${ROOT_CONDA_RUN_GTESTS+x}" ]; then
+    # Run gtests, never fail as Jenkins will check the test results instead
     ctest "-j${CPU_COUNT}" -T test --no-compress-output \
-        --exclude-regex '^(pyunittests-pyroot-numbadeclare|test-periodic-build|tutorial-pyroot-pyroot004_NumbaDeclare-py)$'
+        --exclude-regex '^(pyunittests-pyroot-numbadeclare|test-periodic-build|tutorial-pyroot-pyroot004_NumbaDeclare-py)$' \
+        || true
+    rm -rf "${HOME}/feedstock_root/Testing"
+    cp -rp "Testing" "${HOME}/feedstock_root/"
 fi
 
 make install "-j${CPU_COUNT}"
