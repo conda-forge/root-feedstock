@@ -1,7 +1,9 @@
+MACOSX_DEPLOYMENT_TARGET:
+- '10.13'
 c_compiler:
-- gcc
+- clang
 c_compiler_version:
-- '7'
+- '10'
 cfitsio:
 - '3.470'
 channel_sources:
@@ -9,11 +11,9 @@ channel_sources:
 channel_targets:
 - conda-forge main
 cxx_compiler:
-- gxx
+- clangxx
 cxx_compiler_version:
-- '7'
-docker_image:
-- condaforge/linux-anvil-comp7
+- '10'
 fftw:
 - '3'
 fortran_compiler:
@@ -48,8 +48,12 @@ libxml2:
 - '2.9'
 lz4_c:
 - 1.9.2
+macos_machine:
+- x86_64-apple-darwin13.4.0
+macos_min_version:
+- '10.9'
 numpy:
-- '1.14'
+- '1.16'
 openssl:
 - 1.1.1
 pin_run_as_build:
@@ -86,12 +90,12 @@ pin_run_as_build:
     max_pin: x.x
   zlib:
     max_pin: x.x
-  zstd:
-    max_pin: x.x.x
 python:
 - 3.8.* *_cpython
 sqlite:
 - '3'
+target_platform:
+- osx-64
 xrootd:
 - '4.12'
 xz:
@@ -99,4 +103,4 @@ xz:
 zlib:
 - '1.2'
 zstd:
-- 1.4.4
+- '1.4'
