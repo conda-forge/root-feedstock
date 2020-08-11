@@ -59,6 +59,7 @@ source:
     - patches/0001-Patch-clad-build-for-use-with-external-clang.patch
     - patches/0002-Fix-DynamicLibraryManagerSymbol-for-external-LLVM.patch
     - patches/root-6.20.0-install-pyroot-headers.patch
+    - patches/jupyroot.patch
 
 build:
   number: {{ build_number }}
