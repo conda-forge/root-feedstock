@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import sys
 import ROOT
-
+import JupyROOT
 
 @ROOT.Numba.Declare(["float"], "float")
 def fn(x):
