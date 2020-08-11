@@ -145,6 +145,21 @@ requirements:
   run_constrained:
     - __osx >={{ MACOSX_DEPLOYMENT_TARGET|default("10.9") }}  # [osx]
 
+
+test:
+  files:
+    - test.cpp
+    - test_pyroot.py
+  requires:
+    - ipython
+  imports:
+    - ROOT
+    - JupyROOT
+  commands: {{ test_commands() }}
+        - ipython -c 'import JsMVA'
+        # This command only works if the compilers are available
+        - root -l -b -q -x test.cpp++
+
 outputs:
   - name: root-dependencies
     build:
