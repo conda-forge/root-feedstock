@@ -169,6 +169,8 @@ mkdir -p "${PREFIX}/share/jupyter/kernels/"
 cp -r "${PREFIX}/etc/notebook/kernels/root" "${PREFIX}/share/jupyter/kernels/"
 # Create the config file for root --notebook
 echo "c.NotebookApp.extra_static_paths.append('${PREFIX}/js')" > "${PREFIX}/etc/notebook/jupyter_notebook_config.py"
+# Create the config file for normal jupyter (lab|notebook)
+echo "c.NotebookApp.extra_static_paths.append('${PREFIX}/js')" > "${PREFIX}/etc/jupyter/jupyter_notebook_config.py"
 
 # Add the post activate/deactivate scripts
 mkdir -p "${PREFIX}/etc/conda/activate.d"
