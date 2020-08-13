@@ -2,7 +2,6 @@
 import sys
 import ROOT
 
-
 @ROOT.Numba.Declare(["float"], "float")
 def fn(x):
     return x**2
