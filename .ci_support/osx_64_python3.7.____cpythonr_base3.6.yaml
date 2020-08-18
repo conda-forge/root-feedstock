@@ -84,6 +84,9 @@ pin_run_as_build:
   python:
     min_pin: x.x
     max_pin: x.x
+  r-base:
+    min_pin: x.x
+    max_pin: x.x
   sqlite:
     max_pin: x
   xz:
@@ -91,7 +94,9 @@ pin_run_as_build:
   zlib:
     max_pin: x.x
 python:
-- 3.6.* *_cpython
+- 3.7.* *_cpython
+r_base:
+- '3.6'
 sqlite:
 - '3'
 target_platform:
