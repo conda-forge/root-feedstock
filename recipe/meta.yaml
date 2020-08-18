@@ -1,6 +1,6 @@
 {% set name = "root" %}
 {% set version = "6.22.2" %}
-{% set build_number = 0 %}
+{% set build_number = 1 %}
 {% set clang_version = "5.0.0" %}
 {% set clang_patches_version = "root_20200518" %}
 
