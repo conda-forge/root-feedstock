@@ -1,6 +1,6 @@
 {% set name = "root" %}
 {% set version = "6.22.2" %}
-{% set build_number = 0 %}
+{% set build_number = 1 %}
 {% set clang_version = "5.0.0" %}
 {% set clang_patches_version = "root_20200518" %}
 
@@ -116,6 +116,9 @@ requirements:
     # - postgresql
     - pythia8
     - python
+    - r-base
+    - r-rcpp
+    - r-rinside
     - sqlite
     - tbb
     - tbb-devel
@@ -136,6 +139,9 @@ requirements:
     - zstd
   run:
     - python
+    - r-base
+    - r-rcpp
+    - r-rinside
     - numba
     - cffi
   run_constrained:
@@ -219,6 +225,9 @@ outputs:
         # - postgresql
         - pythia8
         - python
+        - r-base
+        - r-rcpp
+        - r-rinside
         - sqlite
         - tbb
         - tbb-devel
@@ -249,6 +258,9 @@ outputs:
         - librsvg
         - pythia8
         - python
+        - r-base
+        - r-rcpp
+        - r-rinside
         - tbb-devel
         - xorg-libx11  # [linux]
         - xorg-libxau  # [linux]
@@ -372,6 +384,9 @@ outputs:
         # - postgresql
         - pythia8
         - python
+        - r-base
+        - r-rcpp
+        - r-rinside
         - sqlite
         - tbb
         - tbb-devel
@@ -394,6 +409,9 @@ outputs:
         # FIXME: Required to ensure a consistent etc/allDict.cxx.pch
         - {{ pin_compatible('libcxx', min_pin='x', max_pin='x') }}
         - python
+        - r-base
+        - r-rcpp
+        - r-rinside
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - {{ compiler('fortran') }}
@@ -482,6 +500,9 @@ outputs:
         # - postgresql
         - pythia8
         - python
+        - r-base
+        - r-rcpp
+        - r-rinside
         - sqlite
         - tbb
         - tbb-devel
@@ -504,6 +525,9 @@ outputs:
       run:
         - {{ pin_subpackage('root_base', exact=True) }}
         - python
+        - r-base
+        - r-rcpp
+        - r-rinside
         - {{ pin_compatible('xxhash', max_pin='x.x.x') }}
         - {{ pin_compatible('numpy') }}
         - numba
@@ -551,8 +575,14 @@ outputs:
         - {{ cdt('libxxf86vm') }}  # [linux]
       host:
         - python
+        - r-base
+        - r-rcpp
+        - r-rinside
       run:
         - python
+        - r-base
+        - r-rcpp
+        - r-rinside
         - compilers  # This package is hostile to how conda-build manages compilers
         - metakernel
         - notebook

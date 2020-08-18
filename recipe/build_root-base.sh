@@ -127,6 +127,7 @@ cmake -LAH \
     -Dtesting=ON \
     -Droottest=OFF \
     -Droot7=ON \
+    -Dr=ON \
     ../root-source
 
 make "-j${CPU_COUNT}"
