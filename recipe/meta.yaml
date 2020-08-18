@@ -1,6 +1,6 @@
 {% set name = "root" %}
-{% set version = "6.22.0" %}
-{% set build_number = 4 %}
+{% set version = "6.22.2" %}
+{% set build_number = 0 %}
 {% set clang_version = "5.0.0" %}
 {% set clang_patches_version = "root_20200518" %}
 
@@ -48,18 +48,13 @@ source:
   git_rev: {{ os.environ["ROOT_CONDA_GIT_REV"] }}
 {%- else %}
   url: https://github.com/root-project/root/archive/v{{ '-'.join(version.split('.')[:-1] + [version.split('.')[-1].rjust(2, '0')]) }}.tar.gz
-  sha256: 658b7ae68cc0de3c6027e7342c206cdcd02ef1f1660cf96ae2a84f5b6bbb95db
+  sha256: c5ee299f15f57c204992e5ded5241b142807528d32cd1e77447e464af08a2233
 {%- endif %}
   folder: root-source
   patches:
     - patches/root-x.xx.xx_cling-runtime-sysroot.patch
     - patches/root-x.xx.xx-copy-abspath-headers.patch  # [osx]
     - patches/root-x.xx.xx-osx-remove-hardcoded-sysroot.patch  # [osx]
-    # https://sft.its.cern.ch/jira/browse/ROOT-10812
-    - patches/0001-Patch-clad-build-for-use-with-external-clang.patch
-    - patches/0002-Fix-DynamicLibraryManagerSymbol-for-external-LLVM.patch
-    - patches/root-6.20.0-install-pyroot-headers.patch
-    - patches/jupyroot.patch
 
 build:
   number: {{ build_number }}
