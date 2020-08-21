@@ -93,7 +93,7 @@ sqlite:
 target_platform:
 - linux-64
 xrootd:
-- '4.12'
+- '5'
 xz:
 - '5.2'
 zlib:
