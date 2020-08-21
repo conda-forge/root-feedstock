@@ -1,0 +1,306 @@
+From df6e803ac2e3c0075bc0a97732f78621aa5dd5a5 Mon Sep 17 00:00:00 2001
+From: vepadulano <v.e.padulano@gmail.com>
+Date: Wed, 12 Aug 2020 16:14:43 +0200
+Subject: [PATCH 1/4] Add INSTALL_RPATH to xrootd build and post install script
+ to correct it after installation
+
+---
+ cmake/modules/SearchInstalledSoftware.cmake | 11 ++++++++
+ cmake/modules/XROOTDApplePostInstall.cmake  | 29 +++++++++++++++++++++
+ 2 files changed, 40 insertions(+)
+ create mode 100644 cmake/modules/XROOTDApplePostInstall.cmake
+
+diff --git a/cmake/modules/SearchInstalledSoftware.cmake b/cmake/modules/SearchInstalledSoftware.cmake
+index 79e5709ba25..f7630af5bea 100644
+--- a/cmake/modules/SearchInstalledSoftware.cmake
++++ b/cmake/modules/SearchInstalledSoftware.cmake
+@@ -905,6 +905,7 @@ if(builtin_xrootd)
+                -DCMAKE_OSX_DEPLOYMENT_TARGET=${CMAKE_OSX_DEPLOYMENT_TARGET}
+                -DENABLE_PYTHON=OFF
+                -DENABLE_CEPH=OFF
++               -DCMAKE_INSTALL_RPATH:STRING=${XROOTD_ROOTDIR}/${XROOTD_LIBDIR}
+     INSTALL_COMMAND ${CMAKE_COMMAND} --build . --target install
+             COMMAND ${CMAKE_COMMAND} -E copy_directory <INSTALL_DIR>/include/xrootd <INSTALL_DIR>/include
+     LOG_DOWNLOAD 1 LOG_CONFIGURE 1 LOG_BUILD 1 LOG_INSTALL 1
+@@ -917,6 +918,16 @@ if(builtin_xrootd)
+   set(XROOTD_CFLAGS "-DROOTXRDVERS=${XROOTD_VERSIONNUM}")
+   install(DIRECTORY ${XROOTD_ROOTDIR}/${XROOTD_LIBDIR}/ DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT libraries FILES_MATCHING PATTERN "libXrd*")
+   install(DIRECTORY ${XROOTD_ROOTDIR}/include/xrootd/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} COMPONENT headers)
++  if(APPLE)
++    # XRootD libraries on mac need the LC_RPATH variable set. The build process already takes care of setting
++    #   * BUILD_RPATH = build/XROOTD-prefix/../src
++    #   * INSTALL_RPATH = build/lib
++    # Since the install directory for the builtin_xrootd target corresponds to the build directory of the main project.
++    # Use a post install script to change the LC_RPATH variable of the libraries in the ROOT install folder.
++    install(SCRIPT ${CMAKE_CURRENT_LIST_DIR}/XROOTDApplePostInstall.cmake
++            CODE "xrootd_libs_change_rpath(${XROOTD_ROOTDIR}/${XROOTD_LIBDIR} ${CMAKE_INSTALL_FULL_LIBDIR})"
++    )
++  endif()
+   set(XROOTD_TARGET XROOTD)
+   set(xrootd ON CACHE BOOL "Enabled because builtin_xrootd requested (${xrootd_description})" FORCE)
+ endif()
+diff --git a/cmake/modules/XROOTDApplePostInstall.cmake b/cmake/modules/XROOTDApplePostInstall.cmake
+new file mode 100644
+index 00000000000..7ea3e49528c
+--- /dev/null
++++ b/cmake/modules/XROOTDApplePostInstall.cmake
+@@ -0,0 +1,29 @@
++# Post install routine needed to change the LC_RPATH variable of the XRootD
++# libraries on macOS after installation. The function changes the value from
++# ${build_libdir} to ${install_libdir} with the `install_name_tool` executable.
++# On successive reiterations of the `cmake --install` command,
++# `install_name_tool` would error out since LC_RPATH would be already set to 
++# ${install_libdir}. Since that is what we want in the end, we redirect the
++# errors to /dev/null.
++
++function(xrootd_libs_change_rpath build_libdir install_libdir)
++
++  file(GLOB XROOTD_ALL_LIBRARIES
++    "${install_libdir}/libXrd*"
++  )
++
++  find_program(INSTALL_NAME_TOOL install_name_tool)
++
++  if(INSTALL_NAME_TOOL)
++    message(STATUS "Found tool ${INSTALL_NAME_TOOL}")
++    message(STATUS "Adjusting LC_RPATH variable of XRootD libraries in ${install_libdir}")
++
++    foreach(XRD_LIB_PATH ${XROOTD_ALL_LIBRARIES})
++      execute_process(COMMAND 
++        bash -c "${INSTALL_NAME_TOOL} -rpath ${build_libdir} ${install_libdir} ${XRD_LIB_PATH} 2> /dev/null || true"
++      )
++    endforeach()
++
++  endif()
++
++endfunction()
+\ No newline at end of file
+
+From 740f4f6fc86512a8c0e42dad89fa7feb06d8bf62 Mon Sep 17 00:00:00 2001
+From: vepadulano <v.e.padulano@gmail.com>
+Date: Thu, 13 Aug 2020 16:19:52 +0200
+Subject: [PATCH 2/4] List needed libraries and use ERROR_QUIET
+
+---
+ cmake/modules/XROOTDApplePostInstall.cmake | 34 +++++++++++++++-------
+ 1 file changed, 24 insertions(+), 10 deletions(-)
+
+diff --git a/cmake/modules/XROOTDApplePostInstall.cmake b/cmake/modules/XROOTDApplePostInstall.cmake
+index 7ea3e49528c..a110b639b93 100644
+--- a/cmake/modules/XROOTDApplePostInstall.cmake
++++ b/cmake/modules/XROOTDApplePostInstall.cmake
+@@ -2,14 +2,27 @@
+ # libraries on macOS after installation. The function changes the value from
+ # ${build_libdir} to ${install_libdir} with the `install_name_tool` executable.
+ # On successive reiterations of the `cmake --install` command,
+-# `install_name_tool` would error out since LC_RPATH would be already set to 
+-# ${install_libdir}. Since that is what we want in the end, we redirect the
+-# errors to /dev/null.
++# `install_name_tool` would error out since LC_RPATH would be already set to
++# ${install_libdir}. Since that is what we want in the end, we discard these
++# errors.
+ 
+ function(xrootd_libs_change_rpath build_libdir install_libdir)
+ 
+-  file(GLOB XROOTD_ALL_LIBRARIES
+-    "${install_libdir}/libXrd*"
++  set(XROOTD_ALL_LIBRARIES libXrdAppUtils.dylib libXrdBlacklistDecision-4.so
++                           libXrdBwm-4.so libXrdCksCalczcrc32-4.so
++                           libXrdCl.dylib libXrdClProxyPlugin-4.so
++                           libXrdClient.dylib libXrdCmsRedirectLocal-4.so
++                           libXrdCrypto.dylib libXrdCryptoLite.dylib
++                           libXrdFfs.dylib libXrdFileCache-4.so
++                           libXrdN2No2p-4.so libXrdOssSIgpfsT-4.so
++                           libXrdPosix.dylib libXrdPosixPreload.dylib
++                           libXrdPss-4.so libXrdSec-4.so libXrdSecProt-4.so
++                           libXrdSeckrb5-4.so libXrdSecpwd-4.so
++                           libXrdSecsss-4.so libXrdSecunix-4.so
++                           libXrdServer.dylib libXrdSsi-4.so
++                           libXrdSsiLib.dylib libXrdSsiLog-4.so
++                           libXrdSsiShMap.dylib libXrdThrottle-4.so
++                           libXrdUtils.dylib libXrdXml.dylib libXrdXrootd-4.so
+   )
+ 
+   find_program(INSTALL_NAME_TOOL install_name_tool)
+@@ -18,12 +31,13 @@ function(xrootd_libs_change_rpath build_libdir install_libdir)
+     message(STATUS "Found tool ${INSTALL_NAME_TOOL}")
+     message(STATUS "Adjusting LC_RPATH variable of XRootD libraries in ${install_libdir}")
+ 
+-    foreach(XRD_LIB_PATH ${XROOTD_ALL_LIBRARIES})
+-      execute_process(COMMAND 
+-        bash -c "${INSTALL_NAME_TOOL} -rpath ${build_libdir} ${install_libdir} ${XRD_LIB_PATH} 2> /dev/null || true"
++    foreach(XRD_LIB_PATH IN LISTS XROOTD_ALL_LIBRARIES)
++      execute_process(COMMAND ${INSTALL_NAME_TOOL} -rpath 
++                              ${build_libdir} ${install_libdir} 
++                              ${install_libdir}/${XRD_LIB_PATH}
++                      ERROR_QUIET
+       )
+     endforeach()
+-
+   endif()
+ 
+-endfunction()
+\ No newline at end of file
++endfunction()
+
+From 81b5bdff4df86fd57a88868e733d5fb23f7a1a77 Mon Sep 17 00:00:00 2001
+From: vepadulano <v.e.padulano@gmail.com>
+Date: Fri, 14 Aug 2020 09:49:22 +0200
+Subject: [PATCH 3/4] GLOBbing is fine, WARNING if install_name_tool not found
+
+---
+ cmake/modules/XROOTDApplePostInstall.cmake | 21 ++++-----------------
+ 1 file changed, 4 insertions(+), 17 deletions(-)
+
+diff --git a/cmake/modules/XROOTDApplePostInstall.cmake b/cmake/modules/XROOTDApplePostInstall.cmake
+index a110b639b93..424715f629d 100644
+--- a/cmake/modules/XROOTDApplePostInstall.cmake
++++ b/cmake/modules/XROOTDApplePostInstall.cmake
+@@ -8,22 +8,7 @@
+ 
+ function(xrootd_libs_change_rpath build_libdir install_libdir)
+ 
+-  set(XROOTD_ALL_LIBRARIES libXrdAppUtils.dylib libXrdBlacklistDecision-4.so
+-                           libXrdBwm-4.so libXrdCksCalczcrc32-4.so
+-                           libXrdCl.dylib libXrdClProxyPlugin-4.so
+-                           libXrdClient.dylib libXrdCmsRedirectLocal-4.so
+-                           libXrdCrypto.dylib libXrdCryptoLite.dylib
+-                           libXrdFfs.dylib libXrdFileCache-4.so
+-                           libXrdN2No2p-4.so libXrdOssSIgpfsT-4.so
+-                           libXrdPosix.dylib libXrdPosixPreload.dylib
+-                           libXrdPss-4.so libXrdSec-4.so libXrdSecProt-4.so
+-                           libXrdSeckrb5-4.so libXrdSecpwd-4.so
+-                           libXrdSecsss-4.so libXrdSecunix-4.so
+-                           libXrdServer.dylib libXrdSsi-4.so
+-                           libXrdSsiLib.dylib libXrdSsiLog-4.so
+-                           libXrdSsiShMap.dylib libXrdThrottle-4.so
+-                           libXrdUtils.dylib libXrdXml.dylib libXrdXrootd-4.so
+-  )
++  file(GLOB XROOTD_ALL_LIBRARIES "${install_libdir}/libXrd*")
+ 
+   find_program(INSTALL_NAME_TOOL install_name_tool)
+ 
+@@ -31,13 +16,15 @@ function(xrootd_libs_change_rpath build_libdir install_libdir)
+     message(STATUS "Found tool ${INSTALL_NAME_TOOL}")
+     message(STATUS "Adjusting LC_RPATH variable of XRootD libraries in ${install_libdir}")
+ 
+-    foreach(XRD_LIB_PATH IN LISTS XROOTD_ALL_LIBRARIES)
++    foreach(XRD_LIB_PATH ${XROOTD_ALL_LIBRARIES})
+       execute_process(COMMAND ${INSTALL_NAME_TOOL} -rpath 
+                               ${build_libdir} ${install_libdir} 
+                               ${install_libdir}/${XRD_LIB_PATH}
+                       ERROR_QUIET
+       )
+     endforeach()
++  else()
++    message(WARNING "install_name_tool was not found. LC_RPATH variable will not be modified.")
+   endif()
+ 
+ endfunction()
+
+From b8356021c5685de7818efe59de4761781f1f9a8d Mon Sep 17 00:00:00 2001
+From: Mattias Ellert <mattias.ellert@physics.uu.se>
+Date: Tue, 14 Jul 2020 08:10:00 +0200
+Subject: [PATCH 4/4] Compatibility with xrootd 5.
+
+The old client library libXrdClient is removed.
+Also XrdSysDNS is removed.
+
+Do not build the legacy XProofD file server and client (already
+disabled by default - give error if someone enables it while building
+with xrootd 5).
+
+Do not build the old libNetx.
+
+Build the new libNetNG without XrdSysDNS, use XrdNetAddr instead.
+---
+ cmake/modules/SearchInstalledSoftware.cmake | 15 +++++++++++++++
+ net/CMakeLists.txt                          |  2 +-
+ net/netxng/src/TNetXNGSystem.cxx            | 18 +++++++++++++++++-
+ 3 files changed, 33 insertions(+), 2 deletions(-)
+
+diff --git a/cmake/modules/SearchInstalledSoftware.cmake b/cmake/modules/SearchInstalledSoftware.cmake
+index f7630af5bea..78fef8179ba 100644
+--- a/cmake/modules/SearchInstalledSoftware.cmake
++++ b/cmake/modules/SearchInstalledSoftware.cmake
+@@ -936,6 +936,21 @@ if(xrootd AND XROOTD_VERSIONNUM VERSION_GREATER 300030005)
+ else()
+   set(netxng OFF)
+ endif()
++if(xrootd AND XROOTD_VERSIONNUM VERSION_LESS 500000000)
++  set(netx ON)
++else()
++  set(netx OFF)
++endif()
++if(xrootd AND XROOTD_VERSIONNUM VERSION_GREATER_EQUAL 500000000)
++  if(xproofd)
++    if(fail-on-missing)
++      message(FATAL_ERROR "XROOTD is version 5 or greater. The legacy xproofd servers can not be built with this version. Use -Dxproofd:BOOL=OFF to disable.")
++    else()
++      message(STATUS "XROOTD is version 5 or greater. The legacy xproofd servers can not be built with this version. Disabling 'xproofd' option.")
++      set(xproofd OFF CACHE BOOL "Disabled because xrootd version is 5 or greater" FORCE)
++    endif()
++  endif()
++endif()
+ 
+ #---Alien support----------------------------------------------------------------
+ if(alien)
+diff --git a/net/CMakeLists.txt b/net/CMakeLists.txt
+index 953d9c5d6f6..676eb636727 100644
+--- a/net/CMakeLists.txt
++++ b/net/CMakeLists.txt
+@@ -11,7 +11,7 @@ if(NOT WIN32 AND ssl)
+   add_subdirectory(rpdutils)
+ endif()
+ 
+-if(xrootd)
++if(netx)
+   add_subdirectory(netx)
+ endif()
+ 
+diff --git a/net/netxng/src/TNetXNGSystem.cxx b/net/netxng/src/TNetXNGSystem.cxx
+index 6599aa2c2fb..d30a12554f4 100644
+--- a/net/netxng/src/TNetXNGSystem.cxx
++++ b/net/netxng/src/TNetXNGSystem.cxx
+@@ -27,7 +27,12 @@
+ #include "TVirtualMutex.h"
+ #include <XrdCl/XrdClFileSystem.hh>
+ #include <XrdCl/XrdClXRootDResponses.hh>
++#include <XrdVersion.hh>
++#if XrdVNUMBER >= 40000
++#include <XrdNet/XrdNetAddr.hh>
++#else
+ #include <XrdSys/XrdSysDNS.hh>
++#endif
+ 
+ 
+ ////////////////////////////////////////////////////////////////////////////////
+@@ -352,6 +357,16 @@ Int_t TNetXNGSystem::Locate(const char *path, TString &endurl)
+    TNamed *hn = 0;
+    if (fgAddrFQDN.GetSize() <= 0 ||
+        !(hn = dynamic_cast<TNamed *>(fgAddrFQDN.FindObject(loc)))) {
++#if XrdVNUMBER >= 40000
++      XrdNetAddr netaddr;
++      netaddr.Set(loc.Data());
++      const char* name = netaddr.Name();
++      if (name) {
++         hn = new TNamed(loc.Data(), name);
++      } else {
++         hn = new TNamed(loc, loc);
++      }
++#else
+       char *addr[1] = {0}, *name[1] = {0};
+       int naddr = XrdSysDNS::getAddrName(loc.Data(), 1, addr, name);
+       if (naddr == 1) {
+@@ -359,9 +374,10 @@ Int_t TNetXNGSystem::Locate(const char *path, TString &endurl)
+       } else {
+          hn = new TNamed(loc, loc);
+       }
+-      fgAddrFQDN.Add(hn);
+       free(addr[0]);
+       free(name[0]);
++#endif
++      fgAddrFQDN.Add(hn);
+       if (gDebug > 0)
+          Info("Locate","caching host name: %s", hn->GetTitle());
+    }

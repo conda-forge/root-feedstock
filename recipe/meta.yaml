@@ -55,6 +55,7 @@ source:
     - patches/root-x.xx.xx_cling-runtime-sysroot.patch
     - patches/root-x.xx.xx-copy-abspath-headers.patch  # [osx]
     - patches/root-x.xx.xx-osx-remove-hardcoded-sysroot.patch  # [osx]
+    - patches/6226.patch
 
 build:
   number: {{ build_number }}
