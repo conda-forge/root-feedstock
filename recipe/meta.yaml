@@ -59,7 +59,7 @@ source:
 
 build:
   number: {{ build_number }}
-  skip: True  # [win]
+  skip: True  # [win or ppc64le]
   string: py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ build_number }}
 
 # Required for conda to generate the correct build matrix
@@ -162,7 +162,7 @@ outputs:
     build:
       number: {{ build_number }}
       string: py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ build_number }}
-      skip: True  # [win]
+      skip: True  # [win or ppc64le]
       script: echo "Minimal build script is required for conda to set RECIPE_DIR"
     requirements:
       # Include the build dependencies to ensure the build string is correct
@@ -269,7 +269,7 @@ outputs:
     build:
       number: {{ build_number }}
       string: py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ build_number }}
-      skip: True  # [win]
+      skip: True  # [win or ppc64le]
       script:
         - set -euxo pipefail
         - find ${PREFIX}/bin -type f -maxdepth 1 > ${SRC_DIR}/initial-filelist.txt
@@ -413,7 +413,7 @@ outputs:
     build:
       number: {{ build_number }}
       string: py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ build_number }}
-      skip: True  # [win]
+      skip: True  # [win or ppc64le]
       script:
         - set -euxo pipefail
         # Copy the executables back into ${PREFIX}/bin
@@ -519,7 +519,7 @@ outputs:
     build:
       number: {{ build_number }}
       string: py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ build_number }}
-      skip: True  # [win]
+      skip: True  # [win or ppc64le]
       script:
         - set -euxo pipefail
         - pwd
