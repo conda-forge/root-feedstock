@@ -70,7 +70,6 @@ requirements:
 {%- endif %}
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
-    - {{ compiler('fortran') }}
     - cmake
     - git
     - pkg-config
@@ -88,7 +87,6 @@ requirements:
     - libcblas
     - {{ compiler('c') }}  # [linux]
     - {{ compiler('cxx') }}  # [linux]
-    - {{ compiler('fortran') }}  # [linux]
     - numpy
     - afterimage
     - cfitsio
@@ -172,7 +170,6 @@ outputs:
 {%- endif %}
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
-        - {{ compiler('fortran') }}
         - cmake
         - git
         - pkg-config
@@ -191,7 +188,6 @@ outputs:
         - libcblas
         - {{ compiler('c') }}  # [linux]
         - {{ compiler('cxx') }}  # [linux]
-        - {{ compiler('fortran') }}  # [linux]
         - numpy
         - afterimage
         - cfitsio
@@ -307,7 +303,6 @@ outputs:
         # - libblas
         # - libcblas
         # - libcxx
-        # - libgfortran
         # - libpng
         # - libtiff
         # - libxml2
@@ -326,7 +321,6 @@ outputs:
 {%- endif %}
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
-        - {{ compiler('fortran') }}
         - cmake
         - git
         - pkg-config
@@ -344,7 +338,6 @@ outputs:
         - libcblas
         - {{ compiler('c') }}  # [linux]
         - {{ compiler('cxx') }}  # [linux]
-        - {{ compiler('fortran') }}  # [linux]
         - numpy
         - afterimage
         - cfitsio
@@ -397,7 +390,6 @@ outputs:
         - python
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
-        - {{ compiler('fortran') }}
         - {{ pin_compatible('xxhash', max_pin='x.x.x') }}
         - {{ pin_compatible('numpy') }}
         - numba
@@ -433,7 +425,6 @@ outputs:
 {%- endif %}
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
-        - {{ compiler('fortran') }}
         - cmake
         - git
         - pkg-config
@@ -452,7 +443,6 @@ outputs:
         - libcblas
         - {{ compiler('c') }}  # [linux]
         - {{ compiler('cxx') }}  # [linux]
-        - {{ compiler('fortran') }}  # [linux]
         - numpy
         - afterimage
         - cfitsio
@@ -537,7 +527,6 @@ outputs:
 {%- endif %}
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
-        - {{ compiler('fortran') }}
         - cmake
         - git
         - pkg-config
