@@ -16,10 +16,6 @@ cxx_compiler_version:
 - '10'
 fftw:
 - '3'
-fortran_compiler:
-- gfortran
-fortran_compiler_version:
-- '7'
 freetype:
 - 2.9.1
 gdk_pixbuf:
@@ -33,7 +29,7 @@ graphviz:
 gsl:
 - '2.6'
 krb5:
-- '1.16'
+- 1.17.1
 libblas:
 - 3.8 *netlib
 libcblas:
@@ -50,8 +46,6 @@ lz4_c:
 - 1.9.2
 macos_machine:
 - x86_64-apple-darwin13.4.0
-macos_min_version:
-- '10.9'
 numpy:
 - '1.16'
 openssl:
@@ -100,6 +94,11 @@ xrootd:
 - '5'
 xz:
 - '5.2'
+zip_keys:
+- - c_compiler_version
+  - cxx_compiler_version
+- - python
+  - numpy
 zlib:
 - '1.2'
 zstd:
