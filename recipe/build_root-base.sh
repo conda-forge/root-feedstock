@@ -16,10 +16,6 @@ if [ "$(uname)" == "Linux" ]; then
     CMAKE_PLATFORM_FLAGS+=("-Dx11=ON")
     CMAKE_PLATFORM_FLAGS+=("-DRT_LIBRARY=${INSTALL_SYSROOT}/usr/lib/librt.so")
 
-    # Fix up CMake for using conda's sysroot
-    # See https://docs.conda.io/projects/conda-build/en/latest/resources/compiler-tools.html?highlight=cmake#an-aside-on-cmake-and-sysroots
-    CMAKE_PLATFORM_FLAGS+=("-DCMAKE_TOOLCHAIN_FILE=${RECIPE_DIR}/cross-linux.cmake")
-
     # Fix finding X11 with CMake, copied from below with minor modifications
     # https://github.com/Kitware/CMake/blob/e59e17c1c7059b7d0f02d6b12bc3094a2afee778/Modules/FindX11.cmake
     cp "${RECIPE_DIR}/FindX11.cmake" "root-source/cmake/modules/"
