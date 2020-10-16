@@ -96,7 +96,7 @@ requirements:
     - fftw
     - freetype
     - ftgl
-    - gdk-pixbuf 2.38.2
+    - gdk-pixbuf
     - giflib
     - glew
     - gl2ps
@@ -199,7 +199,7 @@ outputs:
         - fftw
         - freetype
         - ftgl
-        - gdk-pixbuf 2.38.2
+        - gdk-pixbuf
         - giflib
         - glew
         - gl2ps
@@ -240,7 +240,7 @@ outputs:
         - {{ pin_compatible('numpy') }}
         - cfitsio
         - fftw
-        - gdk-pixbuf 2.38.2
+        - gdk-pixbuf
         - glew
         - gl2ps
         - graphviz
@@ -349,7 +349,7 @@ outputs:
         - fftw
         - freetype
         - ftgl
-        - gdk-pixbuf 2.38.2
+        - gdk-pixbuf
         - giflib
         - glew
         - gl2ps
@@ -459,7 +459,7 @@ outputs:
         - fftw
         - freetype
         - ftgl
-        - gdk-pixbuf 2.38.2
+        - gdk-pixbuf
         - giflib
         - glew
         - gl2ps
