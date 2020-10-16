@@ -95,6 +95,7 @@ cmake -LAH \
     -DCLING_BUILD_PLUGINS=OFF \
     -DPYTHON_EXECUTABLE="${PYTHON}" \
     -DTBB_ROOT_DIR="${PREFIX}" \
+    -DCMAKE_HOST_SYSTEM_PROCESSOR="$(uname -m)" \
     -Dexplicitlink=ON \
     -Dexceptions=ON \
     -Dfail-on-missing=ON \
