@@ -1,8 +1,7 @@
 # this one is important
 set(CMAKE_SYSTEM_NAME Linux)
 set(CMAKE_PLATFORM Linux)
-# FIXME: This should detect the arch instead
-set(CMAKE_SYSTEM_PROCESSOR x86_64)
+set(CMAKE_SYSTEM_PROCESSOR ${CMAKE_HOST_SYSTEM_PROCESSOR})
 #this one not so much
 set(CMAKE_SYSTEM_VERSION 1)
 
