@@ -289,7 +289,9 @@ outputs:
         # https://abi-laboratory.pro/?view=timeline&l=root
         - {{ pin_subpackage('root_base', max_pin='x.x') }}
       ignore_prefix_files:
-        - lib/*.pcm
+        - lib/*.pcm            # [not aarch64]
+        # https://github.com/root-project/root/blob/975be1e7647098ee8db5333f0769fb12287d0f75/cmake/modules/RootBuildOptions.cmake#L328-L332
+        - etc/allDict.cxx.pch  # [aarch64]
       # Taken from "conda render ./recipe/ -m .ci_support/osx_python3.7.yaml"
       # Sorted and commented run_exports that we want to keep
       # TODO: This will need updating occasionally
