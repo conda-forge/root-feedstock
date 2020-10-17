@@ -330,6 +330,7 @@ outputs:
         - pkg-config
         - sed
         - make
+        - python
         # Required for OpenGL support
         # See https://conda-forge.org/docs/maintainer/knowledge_base.html?highlight=cdt#libgl
         - {{ cdt('mesa-libgl-devel') }}  # [linux]

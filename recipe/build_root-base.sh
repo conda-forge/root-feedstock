@@ -9,7 +9,7 @@ sed -i -e "s@${OLDVERSIONMACOS}@${MACOSX_DEPLOYMENT_TARGET}@g" \
 
 declare -a CMAKE_PLATFORM_FLAGS
 if [ "$(uname)" == "Linux" ]; then
-    INSTALL_SYSROOT=$(python -c "import os; rel = os.path.relpath('$CONDA_BUILD_SYSROOT', '$CONDA_PREFIX'); assert not rel.startswith('.'); print(os.path.join('$PREFIX', rel))")
+    INSTALL_SYSROOT=$($BUILD_PREFIX/python -c "import os; rel = os.path.relpath('$CONDA_BUILD_SYSROOT', '$CONDA_PREFIX'); assert not rel.startswith('.'); print(os.path.join('$PREFIX', rel))")
     CMAKE_PLATFORM_FLAGS+=("-DCMAKE_AR=${GCC_AR}")
     CMAKE_PLATFORM_FLAGS+=("-DCLANG_DEFAULT_LINKER=${LD_GOLD}")
     CMAKE_PLATFORM_FLAGS+=("-DDEFAULT_SYSROOT=${INSTALL_SYSROOT}")
@@ -69,6 +69,15 @@ if [ -n "${ROOT_CONDA_USE_CCACHE+x}" ]; then
     CMAKE_PLATFORM_FLAGS+=("-Dccache=ON")
 fi
 
+if [ "$(uname -m)" == "aarch64" ]; then
+    CMAKE_PLATFORM_FLAGS+=("-DDCMAKE_CROSSCOMPILING=ON")
+    CMAKE_PLATFORM_FLAGS+=("-DCMAKE_SYSTEM_PROCESSOR=aarch64")
+    CMAKE_PLATFORM_FLAGS+=("-DCMAKE_RANLIB=$RANLIB")
+    CMAKE_PLATFORM_FLAGS+=("-DCMAKE_CXX_COMPILER_RANLIB=$RANLIB")
+    CMAKE_PLATFORM_FLAGS+=("-DCMAKE_AR=$AR")
+    CMAKE_PLATFORM_FLAGS+=("-DCMAKE_CXX_COMPILER_AR=$AR")
+fi
+
 # The cross-linux toolchain breaks find_file relative to the current file
 # Patch up with sed
 sed -i -E 's#(ROOT_TEST_DRIVER RootTestDriver.cmake PATHS \$\{THISDIR\} \$\{CMAKE_MODULE_PATH\} NO_DEFAULT_PATH)#\1 CMAKE_FIND_ROOT_PATH_BOTH#g' \
@@ -89,7 +98,7 @@ cmake -LAH \
     -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON \
     -DCMAKE_INSTALL_RPATH_USE_LINK_PATH=ON \
     -DCLING_BUILD_PLUGINS=OFF \
-    -DPYTHON_EXECUTABLE="${PYTHON}" \
+    -DPYTHON_EXECUTABLE="${BUILD_DIR}/bin/python" \
     -DTBB_ROOT_DIR="${PREFIX}" \
     -Dexplicitlink=ON \
     -Dexceptions=ON \
@@ -158,7 +167,7 @@ ln -s "${PREFIX}/lib"/libJupyROOT*.so "${SP_DIR}/"
 ln -s "${PREFIX}/lib"/libROOTPythonizations*.so "${SP_DIR}/"
 ln -s "${PREFIX}/lib"/libcppyy*.so "${SP_DIR}/"
 # Check PyROOT is roughly working
-python -c "import ROOT"
+# python -c "import ROOT"
 
 # Add the kernel for normal Jupyter
 mkdir -p "${PREFIX}/share/jupyter/kernels/"
