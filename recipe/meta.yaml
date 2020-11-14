@@ -1,6 +1,6 @@
 {% set name = "root" %}
-{% set version = "6.22.2" %}
-{% set build_number = 1 %}
+{% set version = "6.22.4" %}
+{% set build_number = 0 %}
 {% set clang_version = "5.0.0" %}
 {% set clang_patches_version = "root_20200518" %}
 
@@ -48,14 +48,13 @@ source:
   git_rev: {{ os.environ["ROOT_CONDA_GIT_REV"] }}
 {%- else %}
   url: https://github.com/root-project/root/archive/v{{ '-'.join(version.split('.')[:-1] + [version.split('.')[-1].rjust(2, '0')]) }}.tar.gz
-  sha256: c5ee299f15f57c204992e5ded5241b142807528d32cd1e77447e464af08a2233
+  sha256: ed13d392e5a31fcda0582c800a2966310540fac511ee36a8134505d921150d6a
 {%- endif %}
   folder: root-source
   patches:
     - patches/root-x.xx.xx_cling-runtime-sysroot.patch
     - patches/root-x.xx.xx-copy-abspath-headers.patch  # [osx]
     - patches/root-x.xx.xx-osx-remove-hardcoded-sysroot.patch  # [osx]
-    - patches/6226.patch
 
 build:
   number: {{ build_number }}
