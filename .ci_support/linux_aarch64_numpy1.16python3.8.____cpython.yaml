@@ -19,13 +19,13 @@ cxx_compiler:
 cxx_compiler_version:
 - '7'
 docker_image:
-- condaforge/linux-anvil-aarch64
+- quay.io/condaforge/linux-anvil-aarch64
 fftw:
 - '3'
 freetype:
-- 2.9.1
+- '2'
 gdk_pixbuf:
-- 2.36.12
+- '2'
 giflib:
 - '5.2'
 glew:
@@ -59,8 +59,6 @@ pin_run_as_build:
     max_pin: x
   freetype:
     max_pin: x
-  gdk_pixbuf:
-    max_pin: x.x.x
   glew:
     max_pin: x.x
   graphviz:
