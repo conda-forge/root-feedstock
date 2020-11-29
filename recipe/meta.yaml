@@ -1,5 +1,5 @@
 {% set name = "root" %}
-{% set version = "6.22.4" %}
+{% set version = "6.22.6" %}
 {% set build_number = 0 %}
 {% set clang_version = "5.0.0" %}
 {% set clang_patches_version = "root_20200518" %}
@@ -48,7 +48,7 @@ source:
   git_rev: {{ os.environ["ROOT_CONDA_GIT_REV"] }}
 {%- else %}
   url: https://github.com/root-project/root/archive/v{{ '-'.join(version.split('.')[:-1] + [version.split('.')[-1].rjust(2, '0')]) }}.tar.gz
-  sha256: ed13d392e5a31fcda0582c800a2966310540fac511ee36a8134505d921150d6a
+  sha256: 81fe6403a3cf51bb1c411f240d9c233473a833e5738b3abf68ed55d0d27ce1cd
 {%- endif %}
   folder: root-source
   patches:
