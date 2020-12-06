@@ -3,7 +3,7 @@ BUILD:
 c_compiler:
 - gcc
 c_compiler_version:
-- '7'
+- '9'
 cdt_arch:
 - aarch64
 cdt_name:
@@ -17,15 +17,15 @@ channel_targets:
 cxx_compiler:
 - gxx
 cxx_compiler_version:
-- '7'
+- '9'
 docker_image:
-- condaforge/linux-anvil-aarch64
+- quay.io/condaforge/linux-anvil-aarch64
 fftw:
 - '3'
 freetype:
-- 2.9.1
+- '2'
 gdk_pixbuf:
-- 2.36.12
+- '2'
 giflib:
 - '5.2'
 glew:
@@ -59,8 +59,6 @@ pin_run_as_build:
     max_pin: x
   freetype:
     max_pin: x
-  gdk_pixbuf:
-    max_pin: x.x.x
   glew:
     max_pin: x.x
   graphviz:
