@@ -13,8 +13,11 @@ if [[ "${target_platform}" == "osx-arm64" ]]; then
     CONDA_SUBDIR=${target_platform} conda create --prefix "${SRC_DIR}/clang_env" --yes \
         "llvmdev=5.0.0" "clangdev=5.0.0" "clang_variant * root_20201127"
     Clang_DIR=${SRC_DIR}/clang_env
+    # graphviz has not been built yet for arm64
+    CMAKE_PLATFORM_FLAGS+=("-Dgviz=OFF")
 else
     Clang_DIR=${PREFIX}
+    CMAKE_PLATFORM_FLAGS+=("-Dgviz=ON")
 fi
 
 if [ "$(uname)" == "Linux" ]; then
@@ -112,6 +115,7 @@ cmake -LAH \
     -Dbuiltin_davix=OFF \
     -Dbuiltin_ftgl=OFF \
     -Dbuiltin_gl2ps=OFF \
+    -Dbuiltin_freetype=OFF \
     -Dbuiltin_glew=OFF \
     -Dbuiltin_llvm=OFF \
     -Dbuiltin_xrootd=OFF \
@@ -119,7 +123,6 @@ cmake -LAH \
     -Drpath=ON \
     -DCMAKE_CXX_STANDARD=17 \
     -Dminuit2=ON \
-    -Dgviz=ON \
     -Droofit=ON \
     -Dtbb=ON \
     -Dcastor=OFF \
@@ -168,7 +171,10 @@ ln -s "${PREFIX}/lib"/libJupyROOT*.so "${SP_DIR}/"
 ln -s "${PREFIX}/lib"/libROOTPythonizations*.so "${SP_DIR}/"
 ln -s "${PREFIX}/lib"/libcppyy*.so "${SP_DIR}/"
 # Check PyROOT is roughly working
-python -c "import ROOT"
+# Skip on osx-arm64 as the binaries haven't been signed yet
+if [[ "${target_platform}" != "osx-arm64" ]]; then
+    python -c "import ROOT"
+fi
 
 # Add the kernel for normal Jupyter
 mkdir -p "${PREFIX}/share/jupyter/kernels/"
