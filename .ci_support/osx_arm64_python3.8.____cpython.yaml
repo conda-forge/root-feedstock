@@ -1,5 +1,5 @@
 MACOSX_DEPLOYMENT_TARGET:
-- '10.13'
+- '11.0'
 c_compiler:
 - clang
 c_compiler_version:
@@ -28,6 +28,10 @@ gsl:
 - '2.6'
 krb5:
 - 1.17.1
+libblas:
+- 3.9 *netlib
+libcblas:
+- 3.9 *netlib
 libpng:
 - '1.6'
 librsvg:
