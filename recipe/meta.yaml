@@ -2,7 +2,7 @@
 {% set version = "6.22.6" %}
 {% set build_number = 0 %}
 {% set clang_version = "5.0.0" %}
-{% set clang_patches_version = "root_20200518" %}
+{% set clang_patches_version = "root_20201127" %}
 
 {%- if "ROOT_CONDA_GIT_REV" in os.environ %}
   {% set clang_patches_version = "root_" + os.environ["ROOT_CONDA_GIT_REV"] %}
@@ -90,8 +90,8 @@ requirements:
     - numpy
     - afterimage
     - cfitsio
-    - clangdev ={{ clang_version }}
-    - clang_variant * {{ clang_patches_version }}
+    - clangdev ={{ clang_version }}  # [build_platform != target_platform and not (osx and arm64)]
+    - clang_variant * {{ clang_patches_version }}  # [build_platform != target_platform and not (osx and arm64)]
     - davix
     - fftw
     - freetype
@@ -107,7 +107,7 @@ requirements:
     - librsvg
     - libtiff
     - libxml2
-    - llvmdev ==5
+    - llvmdev ==5  # [build_platform != target_platform and not (osx and arm64)]
     - lz4-c
     # - mysql
     - openssl
@@ -193,8 +193,8 @@ outputs:
         - numpy
         - afterimage
         - cfitsio
-        - clangdev ={{ clang_version }}
-        - clang_variant * {{ clang_patches_version }}
+        - clangdev ={{ clang_version }}  # [build_platform != target_platform and not (osx and arm64)]
+        - clang_variant * {{ clang_patches_version }}  # [build_platform != target_platform and not (osx and arm64)]
         - davix
         - fftw
         - freetype
@@ -210,7 +210,7 @@ outputs:
         - librsvg
         - libtiff
         - libxml2
-        - llvmdev ==5
+        - llvmdev ==5  # [build_platform != target_platform and not (osx and arm64)]
         - lz4-c
         # - mysql
         - openssl
@@ -345,8 +345,8 @@ outputs:
         - numpy
         - afterimage
         - cfitsio
-        - clangdev ={{ clang_version }}
-        - clang_variant * {{ clang_patches_version }}
+        - clangdev ={{ clang_version }}  # [build_platform != target_platform and not (osx and arm64)]
+        - clang_variant * {{ clang_patches_version }}  # [build_platform != target_platform and not (osx and arm64)]
         - davix
         - fftw
         - freetype
@@ -362,7 +362,7 @@ outputs:
         - librsvg
         - libtiff
         - libxml2
-        - llvmdev ==5
+        - llvmdev ==5  # [build_platform != target_platform and not (osx and arm64)]
         - lz4-c
         # - mysql
         - openssl
