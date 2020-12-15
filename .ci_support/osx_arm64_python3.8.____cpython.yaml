@@ -1,7 +1,5 @@
 MACOSX_DEPLOYMENT_TARGET:
-- '10.13'
-MACOSX_SDK_VERSION:
-- '10.13'
+- '11.0'
 c_compiler:
 - clang
 c_compiler_version:
@@ -9,7 +7,7 @@ c_compiler_version:
 cfitsio:
 - '3.470'
 channel_sources:
-- conda-forge,defaults
+- conda-forge/label/rust_dev,conda-forge
 channel_targets:
 - conda-forge main
 cxx_compiler:
@@ -26,16 +24,14 @@ giflib:
 - '5.2'
 glew:
 - '2.1'
-graphviz:
-- '2.40'
 gsl:
 - '2.6'
 krb5:
 - 1.17.1
 libblas:
-- 3.8 *netlib
+- 3.9 *netlib
 libcblas:
-- 3.8 *netlib
+- 3.9 *netlib
 libpng:
 - '1.6'
 librsvg:
@@ -47,9 +43,9 @@ libxml2:
 lz4_c:
 - 1.9.2
 macos_machine:
-- x86_64-apple-darwin13.4.0
+- arm64-apple-darwin20.0.0
 numpy:
-- '1.16'
+- '1.19'
 openssl:
 - 1.1.1
 pin_run_as_build:
@@ -59,8 +55,6 @@ pin_run_as_build:
     max_pin: x
   glew:
     max_pin: x.x
-  graphviz:
-    max_pin: x
   krb5:
     max_pin: x.x
   libpng:
@@ -89,7 +83,7 @@ python:
 sqlite:
 - '3'
 target_platform:
-- osx-64
+- osx-arm64
 xrootd:
 - '5'
 xz:

@@ -1,0 +1,39 @@
+From eb8fe8b58bf5a0ee7932094d150a3f6ed800a7cf Mon Sep 17 00:00:00 2001
+From: Chris Burr <christopher.burr@cern.ch>
+Date: Mon, 14 Dec 2020 19:34:00 +0100
+Subject: [PATCH] Patch for apple silicon
+
+---
+ cmake/modules/SearchInstalledSoftware.cmake | 2 +-
+ math/mathcore/src/mixmax.icc                | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/cmake/modules/SearchInstalledSoftware.cmake b/cmake/modules/SearchInstalledSoftware.cmake
+index bb1286b159..a4f23f9c90 100644
+--- a/cmake/modules/SearchInstalledSoftware.cmake
++++ b/cmake/modules/SearchInstalledSoftware.cmake
+@@ -35,7 +35,7 @@ endif()
+ if(cocoa)
+   if(APPLE)
+     set(x11 OFF CACHE BOOL "Disabled because cocoa requested (${x11_description})" FORCE)
+-    set(builtin_freetype ON CACHE BOOL "Enabled because needed for Cocoa graphics (${builtin_freetype_description})" FORCE)
++    set(builtin_freetype OFF CACHE BOOL "Enabled because needed for Cocoa graphics (${builtin_freetype_description})" FORCE)
+   else()
+     message(STATUS "Cocoa option can only be enabled on MacOSX platform")
+     set(cocoa OFF CACHE BOOL "Disabled because only available on MacOSX (${cocoa_description})" FORCE)
+diff --git a/math/mathcore/src/mixmax.icc b/math/mathcore/src/mixmax.icc
+index 9b9a51b453..97fbef1d1c 100644
+--- a/math/mathcore/src/mixmax.icc
++++ b/math/mathcore/src/mixmax.icc
+@@ -257,7 +257,7 @@ inline myuint fmodmulM61(myuint cum, myuint a, myuint b){
+ 
+ inline myuint fmodmulM61(myuint cum, myuint s, myuint a)
+ {
+-    register myuint o,ph,pl,ah,al;
++    myuint o,ph,pl,ah,al;
+     o=(s)*a;
+     ph = ((s)>>32);
+     pl = (s) & MASK32;
+-- 
+2.29.2
+
