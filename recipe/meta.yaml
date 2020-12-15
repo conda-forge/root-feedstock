@@ -91,8 +91,8 @@ requirements:
     - numpy
     - afterimage
     - cfitsio
-    - clangdev ={{ clang_version }}  # [build_platform != target_platform and not (osx and arm64)]
-    - clang_variant * {{ clang_patches_version }}  # [build_platform != target_platform and not (osx and arm64)]
+    - clangdev ={{ clang_version }}  # [not (osx and arm64)]
+    - clang_variant * {{ clang_patches_version }}  # [not (osx and arm64)]
     - davix
     - fftw
     - freetype
@@ -108,7 +108,7 @@ requirements:
     - librsvg
     - libtiff
     - libxml2
-    - llvmdev ==5  # [build_platform != target_platform and not (osx and arm64)]
+    - llvmdev ==5  # [not (osx and arm64)]
     - lz4-c
     # - mysql
     - openssl
@@ -194,8 +194,8 @@ outputs:
         - numpy
         - afterimage
         - cfitsio
-        - clangdev ={{ clang_version }}  # [build_platform != target_platform and not (osx and arm64)]
-        - clang_variant * {{ clang_patches_version }}  # [build_platform != target_platform and not (osx and arm64)]
+        - clangdev ={{ clang_version }}  # [not (osx and arm64)]
+        - clang_variant * {{ clang_patches_version }}  # [not (osx and arm64)]
         - davix
         - fftw
         - freetype
@@ -211,7 +211,7 @@ outputs:
         - librsvg
         - libtiff
         - libxml2
-        - llvmdev ==5  # [build_platform != target_platform and not (osx and arm64)]
+        - llvmdev ==5  # [not (osx and arm64)]
         - lz4-c
         # - mysql
         - openssl
@@ -346,8 +346,8 @@ outputs:
         - numpy
         - afterimage
         - cfitsio
-        - clangdev ={{ clang_version }}  # [build_platform != target_platform and not (osx and arm64)]
-        - clang_variant * {{ clang_patches_version }}  # [build_platform != target_platform and not (osx and arm64)]
+        - clangdev ={{ clang_version }}  # [not (osx and arm64)]
+        - clang_variant * {{ clang_patches_version }}  # [not (osx and arm64)]
         - davix
         - fftw
         - freetype
@@ -363,7 +363,7 @@ outputs:
         - librsvg
         - libtiff
         - libxml2
-        - llvmdev ==5  # [build_platform != target_platform and not (osx and arm64)]
+        - llvmdev ==5  # [not (osx and arm64)]
         - lz4-c
         # - mysql
         - openssl
