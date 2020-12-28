@@ -49,7 +49,7 @@ lz4_c:
 numpy:
 - '1.16'
 openssl:
-- 1.1.1
+- 1.1.1*
 pin_run_as_build:
   fftw:
     max_pin: x
