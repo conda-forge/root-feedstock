@@ -93,8 +93,6 @@ requirements:
     - numpy
     - afterimage
     - cfitsio
-    - clangdev ={{ clang_version }}  # [not (osx and arm64)]
-    - clang_variant * {{ clang_patches_version }}  # [not (osx and arm64)]
     - davix
     - fftw
     - freetype
@@ -110,7 +108,6 @@ requirements:
     - librsvg
     - libtiff
     - libxml2
-    - llvmdev =={{ clang_version }}  # [not (osx and arm64)]
     - lz4-c
     # - mysql
     - openssl
@@ -196,8 +193,6 @@ outputs:
         - numpy
         - afterimage
         - cfitsio
-        - clangdev ={{ clang_version }}  # [not (osx and arm64)]
-        - clang_variant * {{ clang_patches_version }}  # [not (osx and arm64)]
         - davix
         - fftw
         - freetype
@@ -213,7 +208,6 @@ outputs:
         - librsvg
         - libtiff
         - libxml2
-        - llvmdev =={{ clang_version }}  # [not (osx and arm64)]
         - lz4-c
         # - mysql
         - openssl
@@ -348,8 +342,6 @@ outputs:
         - numpy
         - afterimage
         - cfitsio
-        - clangdev ={{ clang_version }}  # [not (osx and arm64)]
-        - clang_variant * {{ clang_patches_version }}  # [not (osx and arm64)]
         - davix
         - fftw
         - freetype
@@ -365,7 +357,6 @@ outputs:
         - librsvg
         - libtiff
         - libxml2
-        - llvmdev =={{ clang_version }}  # [not (osx and arm64)]
         - lz4-c
         # - mysql
         - openssl
@@ -457,9 +448,7 @@ outputs:
         - cfitsio
         # These not required as they're are statically linked in libCling. They also cannot
         # be installed in the same environment as root_base due to the compiler constraint
-        # - clangdev ={{ clang_version }}
         # - clang_variant * {{ clang_patches_version }}
-        # - llvmdev ==5
         - davix
         - fftw
         - freetype

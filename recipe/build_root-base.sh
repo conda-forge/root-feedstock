@@ -39,7 +39,6 @@ if [ "$(uname)" == "Linux" ]; then
     echo "CXXFLAGS is now '${CXXFLAGS}'"
 else
     CMAKE_PLATFORM_FLAGS+=("-Dcocoa=ON")
-    CMAKE_PLATFORM_FLAGS+=("-DCLANG_RESOURCE_DIR_VERSION='5.0.0'")
     CMAKE_PLATFORM_FLAGS+=("-DBLA_PREFER_PKGCONFIG=ON")
 
     # HACK: Fix LLVM headers for Clang 8's C++17 mode
@@ -111,13 +110,13 @@ cmake -LAH \
     -Dshared=ON \
     -Dsoversion=ON \
     -Dbuiltin_afterimage=OFF \
-    -Dbuiltin_clang=OFF \
+    -Dbuiltin_clang=ON \
     -Dbuiltin_davix=OFF \
     -Dbuiltin_ftgl=OFF \
     -Dbuiltin_gl2ps=OFF \
     -Dbuiltin_freetype=OFF \
     -Dbuiltin_glew=OFF \
-    -Dbuiltin_llvm=OFF \
+    -Dbuiltin_llvm=ON \
     -Dbuiltin_xrootd=OFF \
     -Dbuiltin_zlib=OFF \
     -Drpath=ON \
@@ -149,7 +148,10 @@ if [ -n "${ROOT_CONDA_RUN_GTESTS+x}" ]; then
     cp -rp "Testing" "${HOME}/feedstock_root/"
 fi
 
-make install "-j${CPU_COUNT}"
+cd ../..
+cp -rp $PWD $PWD.bak
+cd -
+make install
 
 # Remove thisroot.*
 test "$(ls "${PREFIX}"/bin/thisroot.* | wc -l) = 3"
