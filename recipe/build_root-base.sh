@@ -110,13 +110,13 @@ cmake -LAH \
     -Dshared=ON \
     -Dsoversion=ON \
     -Dbuiltin_afterimage=OFF \
-    -Dbuiltin_clang=ON \
+    -Dbuiltin_clang=OFF \
     -Dbuiltin_davix=OFF \
     -Dbuiltin_ftgl=OFF \
     -Dbuiltin_gl2ps=OFF \
     -Dbuiltin_freetype=OFF \
     -Dbuiltin_glew=OFF \
-    -Dbuiltin_llvm=ON \
+    -Dbuiltin_llvm=OFF \
     -Dbuiltin_xrootd=OFF \
     -Dbuiltin_zlib=OFF \
     -Drpath=ON \
