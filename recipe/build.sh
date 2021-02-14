@@ -112,7 +112,7 @@ cmake -LAH \
     -Dbuiltin_afterimage=OFF \
     -Dbuiltin_llvm=OFF \
     -Dbuiltin_clang=OFF \
-    -Dbuiltin_cling=ON \
+    -Dbuiltin_cling=OFF \
     -Dbuiltin_nlohmannjson=OFF \
     -Dbuiltin_davix=OFF \
     -Dbuiltin_ftgl=OFF \
