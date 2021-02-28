@@ -66,6 +66,9 @@ build:
 # Required for conda to generate the correct build matrix
 requirements:
   build:
+    - python                                 # [build_platform != target_platform]
+    - cross-python_{{ target_platform }}     # [build_platform != target_platform]
+    - numpy                                  # [build_platform != target_platform]
 {%- if "ROOT_CONDA_USE_CCACHE" in os.environ %}
     - ccache
 {%- endif %}
