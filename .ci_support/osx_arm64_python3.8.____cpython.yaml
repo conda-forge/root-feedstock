@@ -84,6 +84,10 @@ sqlite:
 - '3'
 target_platform:
 - osx-arm64
+tbb:
+- '2020'
+tbb_devel:
+- '2020'
 xrootd:
 - '5'
 xz:
