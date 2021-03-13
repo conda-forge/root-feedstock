@@ -1,21 +1,19 @@
+MACOSX_DEPLOYMENT_TARGET:
+- '11.0'
 c_compiler:
-- gcc
+- clang
 c_compiler_version:
-- '9'
-cdt_name:
-- cos6
+- '11'
 cfitsio:
 - '3.470'
 channel_sources:
-- conda-forge,defaults
+- conda-forge/label/rust_dev,conda-forge
 channel_targets:
 - conda-forge main
 cxx_compiler:
-- gxx
+- clangxx
 cxx_compiler_version:
-- '9'
-docker_image:
-- quay.io/condaforge/linux-anvil-comp7
+- '11'
 fftw:
 - '3'
 freetype:
@@ -26,28 +24,27 @@ giflib:
 - '5.2'
 glew:
 - '2.1'
-graphviz:
-- '2.40'
 gsl:
 - '2.6'
-krb5:
-- 1.17.1
 libblas:
-- 3.8 *netlib
+- 3.9 *netlib
 libcblas:
-- 3.8 *netlib
+- 3.9 *netlib
 libpng:
 - '1.6'
 librsvg:
 - '2'
 libtiff:
-- 4.1.0
+- '4'
 libxml2:
 - '2.9'
 lz4_c:
-- 1.9.2
+- 1.9.3
+macos_machine:
+- arm64-apple-darwin20.0.0
 numpy:
-- '1.16'
+- '1.19'
+- '1.19'
 openssl:
 - 1.1.1
 pin_run_as_build:
@@ -56,10 +53,6 @@ pin_run_as_build:
   freetype:
     max_pin: x
   glew:
-    max_pin: x.x
-  graphviz:
-    max_pin: x
-  krb5:
     max_pin: x.x
   libpng:
     max_pin: x.x
@@ -83,11 +76,16 @@ pin_run_as_build:
   zlib:
     max_pin: x.x
 python:
-- 3.7.* *_cpython
+- 3.8.* *_cpython
+- 3.9.* *_cpython
 sqlite:
 - '3'
 target_platform:
-- linux-64
+- osx-arm64
+tbb:
+- '2020'
+tbb_devel:
+- '2020'
 xrootd:
 - '5'
 xz:

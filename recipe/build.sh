@@ -109,6 +109,8 @@ cmake -LAH \
     -Dgnuinstall=OFF \
     -Dshared=ON \
     -Dsoversion=ON \
+    -Dpyroot=OFF \
+    -Dtmva-pymva=OFF \
     -Dbuiltin_afterimage=OFF \
     -Dbuiltin_llvm=OFF \
     -Dbuiltin_clang=OFF \
@@ -134,9 +136,10 @@ cmake -LAH \
     -Dpgsql=OFF \
     -Dpythia6=OFF \
     -Dpythia8=ON \
-    -Dtesting=ON \
+    -Dtesting=OFF \
     -Droottest=OFF \
     -Droot7=ON \
+    -Dimt=OFF -Dclad=OFF \
     ../root-source
 
 make "-j${CPU_COUNT}"
@@ -154,7 +157,7 @@ fi
 # # TODO: Remove
 # cp -rp $PWD $PWD.bak
 # cd -
-make install
+# make install
 
 # # Remove thisroot.*
 # test "$(ls "${PREFIX}"/bin/thisroot.* | wc -l) = 3"

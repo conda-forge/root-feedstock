@@ -34,8 +34,6 @@ graphviz:
 - '2.40'
 gsl:
 - '2.6'
-krb5:
-- 1.17.1
 libblas:
 - 3.8 *netlib
 libcblas:
@@ -45,13 +43,16 @@ libpng:
 librsvg:
 - '2'
 libtiff:
-- 4.1.0
+- '4'
 libxml2:
 - '2.9'
 lz4_c:
-- 1.9.2
+- 1.9.3
 numpy:
 - '1.16'
+- '1.16'
+- '1.16'
+- '1.19'
 openssl:
 - 1.1.1
 pin_run_as_build:
@@ -63,8 +64,6 @@ pin_run_as_build:
     max_pin: x.x
   graphviz:
     max_pin: x
-  krb5:
-    max_pin: x.x
   libpng:
     max_pin: x.x
   librsvg:
@@ -87,11 +86,18 @@ pin_run_as_build:
   zlib:
     max_pin: x.x
 python:
+- 3.6.* *_cpython
+- 3.7.* *_cpython
 - 3.8.* *_cpython
+- 3.9.* *_cpython
 sqlite:
 - '3'
 target_platform:
 - linux-aarch64
+tbb:
+- '2020'
+tbb_devel:
+- '2020'
 xrootd:
 - '5'
 xz:

@@ -1,7 +1,7 @@
 {% set name = "root" %}
 {% set version = "6.23.0" %}
 {% set build_number = 0 %}
-{% set clang_version = "9.0.1 *master*" %}
+{% set clang_version = "9.0.1" %}
 {% set clang_patches_version = "cling_master" %}
 
 {%- if "ROOT_CONDA_GIT_REV" in os.environ %}
@@ -18,21 +18,22 @@ package:
   version: {{ version }}
 
 source:
-{%- if "ROOT_CONDA_GIT_REV" in os.environ %}
-  git_url: {{ os.environ.get("ROOT_CONDA_GIT_URL", "https://github.com/root-project/root.git") }}
-  git_rev: {{ os.environ["ROOT_CONDA_GIT_REV"] }}
-{%- else %}
+# {%- if "ROOT_CONDA_GIT_REV" in os.environ %}
+#   git_url: {{ os.environ.get("ROOT_CONDA_GIT_URL", "https://github.com/root-project/root.git") }}
+#   git_rev: {{ os.environ["ROOT_CONDA_GIT_REV"] }}
+# {%- else %}
   git_url: https://github.com/root-project/root.git
   git_rev: master
   # url: https://github.com/root-project/root/archive/v{{ '-'.join(version.split('.')[:-1] + [version.split('.')[-1].rjust(2, '0')]) }}.tar.gz
   # sha256: 81fe6403a3cf51bb1c411f240d9c233473a833e5738b3abf68ed55d0d27ce1cd
-{%- endif %}
+# {%- endif %}
   folder: root-source
   patches:
     - patches/root-x.xx.xx_cling-runtime-sysroot.patch
     - patches/root-x.xx.xx-copy-abspath-headers.patch  # [osx]
     - patches/root-x.xx.xx-osx-remove-hardcoded-sysroot.patch  # [osx]
-    - patches/0001-Use-find_package-for-llvm-clang.patch
+    - patches/0001-Hacks.patch
+    - 0001-Add-missing-libs.patch
 
 build:
   number: {{ build_number }}
@@ -68,10 +69,12 @@ requirements:
     - libcblas
     - {{ compiler('c') }}  # [linux]
     - {{ compiler('cxx') }}  # [linux]
-    - numpy
     - afterimage
     - cfitsio
     - clangdev ={{ clang_version }}  # [not (osx and arm64)]
+    - cling
+    # FIXME: Clad should use build strings
+    - clad =*=hd7828ce_0
     - davix
     - fftw
     - freetype
@@ -97,10 +100,10 @@ requirements:
     - pcre
     # - postgresql
     - pythia8
-    - python
     - sqlite
-    - tbb
-    - tbb-devel
+    # FIXME: Rerender to get this in the pinnings
+    - tbb =2020
+    - tbb-devel =2020
     - vdt
     - xorg-libx11  # [linux]
     - xorg-libxau  # [linux]
@@ -119,28 +122,21 @@ requirements:
   run:
     # FIXME: Required to ensure a consistent etc/allDict.cxx.pch
     - {{ pin_compatible('libcxx', min_pin='x', max_pin='x') }}
-    - python
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     - {{ pin_compatible('xxhash', max_pin='x.x.x') }}
-    - {{ pin_compatible('numpy') }}
     - llvmdev =9
+    - cling
     - cffi
     - sysroot_linux-64  # [linux]
     - xorg-libx11  # [linux]
+    - xorg-libxext  # [linux]
+    - xorg-libxpm  # [linux]
+    - xorg-libxft  # [linux]
     - libglu  # [linux]
-    # Only for the full root package
-    - compilers  # This package is hostile to how conda-build manages compilers
-    - metakernel
-    - cling
-    - notebook
-    # Numba doesn't yet support Python 3.9
-    # https://github.com/conda-forge/numba-feedstock/pull/61#issuecomment-708913681
-    - numba  # [py<39 and not (osx and arm64)]
+    - graphviz
   run_constrained:
     # Items listed here conflict with ROOT
-    # FIXME Add support in ROOT for building with an external cling
-    - cling 9999
     - root5 9999
     - __osx >={{ MACOSX_DEPLOYMENT_TARGET|default("10.9") }}  # [osx]
 
@@ -179,20 +175,41 @@ test:
     # This command only works if the compilers are available
     - root -l -b -q -x test.cpp++
 
-# outputs:
-#   - name: root
-#     build:
-#       # string: py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ build_number }}
-#       # run_exports:
-#       #   # https://abi-laboratory.pro/?view=timeline&l=root
-#       #   - {{ pin_subpackage('root_base', max_pin='x.x') }}
-#       ignore_prefix_files:
-#         - lib/*.pcm            # [not aarch64]
-#         # https://github.com/root-project/root/blob/975be1e7647098ee8db5333f0769fb12287d0f75/cmake/modules/RootBuildOptions.cmake#L328-L332
-#         - etc/allDict.cxx.pch  # [aarch64]
-#       script:
-#         - cd build-dir
-#         - make install
+outputs:
+  - name: root
+    build:
+      number: {{ build_number }}
+      # string: py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ build_number }}
+      # run_exports:
+      #   # https://abi-laboratory.pro/?view=timeline&l=root
+      #   - {{ pin_subpackage('root_base', max_pin='x.x') }}
+      ignore_prefix_files:
+        - lib/*.pcm            # [not aarch64]
+        # https://github.com/root-project/root/blob/975be1e7647098ee8db5333f0769fb12287d0f75/cmake/modules/RootBuildOptions.cmake#L328-L332
+        - etc/allDict.cxx.pch  # [aarch64]
+      script:
+        - cd build-dir
+        - make install
+  - name: pyroot
+    build:
+      script:
+        - cd build-dir
+        - make install
+    requirements:
+      host:
+        - root ={{ version }}
+        - python
+        - numpy
+      run:
+        - root ={{ version }}
+        - compilers  # This package is hostile to how conda-build manages compilers
+        - metakernel
+        - notebook
+        - python
+        - {{ pin_compatible('numpy') }}
+        # # Numba doesn't yet support Python 3.9
+        # # https://github.com/conda-forge/numba-feedstock/pull/61#issuecomment-708913681
+        - numba  # [py<39 and not (osx and arm64)]
 
 about:
   home: https://root.cern/
