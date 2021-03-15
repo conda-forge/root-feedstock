@@ -269,6 +269,16 @@ outputs:
         - root -b -l -q -x "${PREFIX}/tutorials/eve/geom_lhcb.C" || true
         - root -b -l -q -x "${PREFIX}/tutorials/tree/run_h1analysis.C"
         - root -l -b -q -x test.cpp++
+  - name: root-nightly
+    build:
+      number: {{ build_number }}
+    requirements:
+      host:
+        - {{ pin_subpackage('root', exact=True) }}
+        - python
+      run:
+        - {{ pin_subpackage('root', exact=True) }}
+        - python
 
 about:
   home: https://root.cern/
