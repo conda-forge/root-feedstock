@@ -47,6 +47,8 @@ numpy:
 - '1.19'
 openssl:
 - 1.1.1
+pcre:
+- '8'
 pin_run_as_build:
   fftw:
     max_pin: x

@@ -1,6 +1,7 @@
 {% set name = "root" %}
 {% set version = "6.23.0" %}
 {% set build_number = 0 %}
+{% set build_number = datetime.datetime.utcnow().strftime('%H%M%S') %}
 {% set clang_version = "9.0.1" %}
 {% set clang_patches_version = "cling_master" %}
 
@@ -14,7 +15,7 @@
 {%- endif %}
 
 package:
-  name: root
+  name: root_base
   version: {{ version }}
 
 source:
@@ -34,6 +35,7 @@ source:
     - patches/root-x.xx.xx-osx-remove-hardcoded-sysroot.patch  # [osx]
     - patches/0001-Hacks.patch
     - 0001-Add-missing-libs.patch
+    - 0001-Support-standalone-pyroot.patch
 
 build:
   number: {{ build_number }}
@@ -101,9 +103,8 @@ requirements:
     # - postgresql
     - pythia8
     - sqlite
-    # FIXME: Rerender to get this in the pinnings
-    - tbb =2020
-    - tbb-devel =2020
+    - tbb
+    - tbb-devel
     - vdt
     - xorg-libx11  # [linux]
     - xorg-libxau  # [linux]
@@ -125,7 +126,6 @@ requirements:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     - {{ pin_compatible('xxhash', max_pin='x.x.x') }}
-    - llvmdev =9
     - cling
     - cffi
     - sysroot_linux-64  # [linux]
@@ -176,7 +176,7 @@ test:
     - root -l -b -q -x test.cpp++
 
 outputs:
-  - name: root
+  - name: root_base
     build:
       number: {{ build_number }}
       # string: py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ build_number }}
@@ -188,28 +188,87 @@ outputs:
         # https://github.com/root-project/root/blob/975be1e7647098ee8db5333f0769fb12287d0f75/cmake/modules/RootBuildOptions.cmake#L328-L332
         - etc/allDict.cxx.pch  # [aarch64]
       script:
+        - set -x
         - cd build-dir
         - make install
   - name: pyroot
     build:
+      number: {{ build_number }}
       script:
-        - cd build-dir
+        - set -x
+        - mkdir "pyroot-$PY_VER-build-dir"
+        - cd "pyroot-$PY_VER-build-dir"
+        - |
+          cmake \
+            ../root-source/bindings \
+            -Dlocalruntimedir=$PREFIX/lib \
+            -DPython3_EXECUTABLE=$PYTHON \
+            -DCMAKE_INSTALL_PYTHONDIR=$SP_DIR \
+            -DCMAKE_INSTALL_PREFIX=$PREFIX \
+            -DCMAKE_INSTALL_FULL_LIBDIR=$PREFIX/lib \
+            -DCMAKE_INSTALL_FULL_PYTHONDIR=$SP_DIR \
+            -DCMAKE_PREFIX_PATH=$PREFIX \
+            -DCMAKE_INSTALL_INCLUDEDIR=$PREFIX \
+            -Ddataframe=ON \
+            -Dstandalone_pyroot=ON
+        - make -j${CPU_COUNT}
         - make install
     requirements:
+      build:
+        - {{ compiler('c') }}
+        - {{ compiler('cxx') }}
+        - cmake
+        - make
       host:
-        - root ={{ version }}
+        - {{ pin_subpackage('root_base', exact=True) }}
         - python
         - numpy
+        - nlohmann_json
       run:
-        - root ={{ version }}
-        - compilers  # This package is hostile to how conda-build manages compilers
-        - metakernel
-        - notebook
+        - {{ pin_subpackage('root_base', exact=True) }}
         - python
         - {{ pin_compatible('numpy') }}
+    test:
+      files:
+        - test_pyroot.py
+      imports:
+        - ROOT
+      commands:
+        # - python test_pyroot.py  # [py<39 and not (osx and arm64)]
+  - name: root
+    build:
+      number: {{ build_number }}
+    requirements:
+      host:
+        - {{ pin_subpackage('root_base', exact=True) }}
+        - {{ pin_subpackage('pyroot', exact=True) }}
+        - python
+      run:
+        - {{ pin_subpackage('root_base', exact=True) }}
+        - {{ pin_subpackage('pyroot', exact=True) }}
+        - python
+        - compilers  # This package is hostile to how conda-build manages compilers
+        - metakernel
+        - ipython
+        - notebook
         # # Numba doesn't yet support Python 3.9
         # # https://github.com/conda-forge/numba-feedstock/pull/61#issuecomment-708913681
         - numba  # [py<39 and not (osx and arm64)]
+    test:
+      files:
+        - test.cpp
+        - test_pyroot.py
+      imports:
+        - ROOT
+        - JupyROOT
+      commands:
+        - ipython -c "import JsMVA"
+        # - python test_pyroot.py  # [py<39 and not (osx and arm64)]
+        - root -l -b -q -x test.cpp
+        - root -b -l -q -x -e 'gSystem->LoadAllLibraries(); 0'
+        - root -b -l -q -x "${PREFIX}/tutorials/eve/geom_lhcb.C" || true
+        - root -b -l -q -x "${PREFIX}/tutorials/tree/run_h1analysis.C"
+        - root -l -b -q -x test.cpp++
 
 about:
   home: https://root.cern/
@@ -241,7 +300,9 @@ about:
       scripts should not be used and are not provided. Graphics, `rootbrowse`, etc. all should work. OpenGL is enabled.
 
       There is also a `root_base` package, with minimal dependecies, that libraries should depend on this to avoid
-      having a runtime dependency on the `compilers` package. `root-dependencies` and `root-binaries` are also available. In most cases users should use the `root` package directly, since it adds both of these, along with compilers, Jupyter, and a few other things to facilitate using ROOT or PyROOT.
+      having a runtime dependency on the `compilers` package. `root-dependencies` and `root-binaries` are also available.
+      In most cases users should use the `root` package directly, since it adds both of these, along with compilers,
+      Jupyter, and a few other things to facilitate using ROOT or PyROOT.
 
       ROOT was built with and will report `-std=c++17` from `root-config`.
 

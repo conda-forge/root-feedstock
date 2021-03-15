@@ -7,7 +7,7 @@ cdt_name:
 cfitsio:
 - '3.470'
 channel_sources:
-- local,conda-forge,defaults
+- chrisburr/label/root-llvm9-2,conda-forge,defaults
 channel_targets:
 - conda-forge main
 cxx_compiler:
@@ -50,7 +50,9 @@ numpy:
 - '1.16'
 - '1.19'
 openssl:
-- 1.1.1
+- 1.1.1*
+pcre:
+- '8'
 pin_run_as_build:
   fftw:
     max_pin: x
