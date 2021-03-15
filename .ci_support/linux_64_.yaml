@@ -7,7 +7,7 @@ cdt_name:
 cfitsio:
 - '3.470'
 channel_sources:
-- conda-forge,defaults
+- chrisburr/label/root-llvm9-2,conda-forge,defaults
 channel_targets:
 - conda-forge main
 cxx_compiler:
