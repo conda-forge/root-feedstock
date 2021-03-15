@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import sys
+import numba
 import ROOT
 
 if sys.version_info >= (3, 9):

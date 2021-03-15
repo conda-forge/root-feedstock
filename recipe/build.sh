@@ -1,5 +1,5 @@
 #!/bin/bash
-set -ex
+set -x
 
 # Manually set the deployment_target
 # May not be very important but nice to do
@@ -39,7 +39,6 @@ if [ "$(uname)" == "Linux" ]; then
     echo "CXXFLAGS is now '${CXXFLAGS}'"
 else
     CMAKE_PLATFORM_FLAGS+=("-Dcocoa=ON")
-    CMAKE_PLATFORM_FLAGS+=("-DCLANG_RESOURCE_DIR_VERSION='5.0.0'")
     CMAKE_PLATFORM_FLAGS+=("-DBLA_PREFER_PKGCONFIG=ON")
 
     # HACK: Fix LLVM headers for Clang 8's C++17 mode
@@ -110,14 +109,18 @@ cmake -LAH \
     -Dgnuinstall=OFF \
     -Dshared=ON \
     -Dsoversion=ON \
+    -Dpyroot=OFF \
+    -Dtmva-pymva=OFF \
     -Dbuiltin_afterimage=OFF \
+    -Dbuiltin_llvm=OFF \
     -Dbuiltin_clang=OFF \
+    -Dbuiltin_cling=OFF \
+    -Dbuiltin_nlohmannjson=OFF \
     -Dbuiltin_davix=OFF \
     -Dbuiltin_ftgl=OFF \
     -Dbuiltin_gl2ps=OFF \
     -Dbuiltin_freetype=OFF \
     -Dbuiltin_glew=OFF \
-    -Dbuiltin_llvm=OFF \
     -Dbuiltin_xrootd=OFF \
     -Dbuiltin_zlib=OFF \
     -Drpath=ON \
@@ -133,9 +136,10 @@ cmake -LAH \
     -Dpgsql=OFF \
     -Dpythia6=OFF \
     -Dpythia8=ON \
-    -Dtesting=ON \
+    -Dtesting=OFF \
     -Droottest=OFF \
     -Droot7=ON \
+    -Dimt=OFF -Dclad=OFF \
     ../root-source
 
 make "-j${CPU_COUNT}"
@@ -149,56 +153,60 @@ if [ -n "${ROOT_CONDA_RUN_GTESTS+x}" ]; then
     cp -rp "Testing" "${HOME}/feedstock_root/"
 fi
 
-make install "-j${CPU_COUNT}"
+# cd ../..
+# # TODO: Remove
+# cp -rp $PWD $PWD.bak
+# cd -
+# make install
 
-# Remove thisroot.*
-test "$(ls "${PREFIX}"/bin/thisroot.* | wc -l) = 3"
-rm "${PREFIX}"/bin/thisroot.*
-for suffix in sh csh fish; do
-    cp "${RECIPE_DIR}/thisroot" "${PREFIX}/bin/thisroot.${suffix}"
-    chmod +x "${PREFIX}/bin/thisroot.${suffix}"
-done
+# # Remove thisroot.*
+# test "$(ls "${PREFIX}"/bin/thisroot.* | wc -l) = 3"
+# rm "${PREFIX}"/bin/thisroot.*
+# for suffix in sh csh fish; do
+#     cp "${RECIPE_DIR}/thisroot" "${PREFIX}/bin/thisroot.${suffix}"
+#     chmod +x "${PREFIX}/bin/thisroot.${suffix}"
+# done
 
-# Symlink the python components in to the site packages directory
-mkdir -p "${SP_DIR}"
-ln -s "${PREFIX}/lib/JupyROOT/" "${SP_DIR}/"
-ln -s "${PREFIX}/lib/ROOT/" "${SP_DIR}/"
-ln -s "${PREFIX}/lib/cppyy/" "${SP_DIR}/"
-ln -s "${PREFIX}/lib/cppyy_backend/" "${SP_DIR}/"
-ln -s "${PREFIX}/lib/JsMVA/" "${SP_DIR}/"
-ln -s "${PREFIX}/lib/cmdLineUtils.py" "${SP_DIR}/"
-ln -s "${PREFIX}/lib"/libJupyROOT*.so "${SP_DIR}/"
-ln -s "${PREFIX}/lib"/libROOTPythonizations*.so "${SP_DIR}/"
-ln -s "${PREFIX}/lib"/libcppyy*.so "${SP_DIR}/"
-# Check PyROOT is roughly working
-# Skip on osx-arm64 as the binaries haven't been signed yet
-if [[ "${target_platform}" != "osx-arm64" ]]; then
-    python -c "import ROOT"
-fi
+# # Symlink the python components in to the site packages directory
+# mkdir -p "${SP_DIR}"
+# ln -s "${PREFIX}/lib/JupyROOT/" "${SP_DIR}/"
+# ln -s "${PREFIX}/lib/ROOT/" "${SP_DIR}/"
+# ln -s "${PREFIX}/lib/cppyy/" "${SP_DIR}/"
+# ln -s "${PREFIX}/lib/cppyy_backend/" "${SP_DIR}/"
+# ln -s "${PREFIX}/lib/JsMVA/" "${SP_DIR}/"
+# ln -s "${PREFIX}/lib/cmdLineUtils.py" "${SP_DIR}/"
+# ln -s "${PREFIX}/lib"/libJupyROOT*.so "${SP_DIR}/"
+# ln -s "${PREFIX}/lib"/libROOTPythonizations*.so "${SP_DIR}/"
+# ln -s "${PREFIX}/lib"/libcppyy*.so "${SP_DIR}/"
+# # Check PyROOT is roughly working
+# # Skip on osx-arm64 as the binaries haven't been signed yet
+# if [[ "${target_platform}" != "osx-arm64" ]]; then
+#     python -c "import ROOT"
+# fi
 
-# Add the kernel for normal Jupyter
-mkdir -p "${PREFIX}/share/jupyter/kernels/"
-cp -r "${PREFIX}/etc/notebook/kernels/root" "${PREFIX}/share/jupyter/kernels/"
-# Create the config file for normal jupyter (lab|notebook)
-mkdir -p "${PREFIX}/etc/jupyter/"
-cp "${PREFIX}/etc/notebook/jupyter_notebook_config.py" "${PREFIX}/etc/jupyter/jupyter_notebook_config.py"
+# # Add the kernel for normal Jupyter
+# mkdir -p "${PREFIX}/share/jupyter/kernels/"
+# cp -r "${PREFIX}/etc/notebook/kernels/root" "${PREFIX}/share/jupyter/kernels/"
+# # Create the config file for normal jupyter (lab|notebook)
+# mkdir -p "${PREFIX}/etc/jupyter/"
+# cp "${PREFIX}/etc/notebook/jupyter_notebook_config.py" "${PREFIX}/etc/jupyter/jupyter_notebook_config.py"
 
-# Add the post activate/deactivate scripts
-mkdir -p "${PREFIX}/etc/conda/activate.d"
-cp "${RECIPE_DIR}/activate.sh" "${PREFIX}/etc/conda/activate.d/activate-root.sh"
-cp "${RECIPE_DIR}/activate.csh" "${PREFIX}/etc/conda/activate.d/activate-root.csh"
-cp "${RECIPE_DIR}/activate.fish" "${PREFIX}/etc/conda/activate.d/activate-root.fish"
+# # Add the post activate/deactivate scripts
+# mkdir -p "${PREFIX}/etc/conda/activate.d"
+# cp "${RECIPE_DIR}/activate.sh" "${PREFIX}/etc/conda/activate.d/activate-root.sh"
+# cp "${RECIPE_DIR}/activate.csh" "${PREFIX}/etc/conda/activate.d/activate-root.csh"
+# cp "${RECIPE_DIR}/activate.fish" "${PREFIX}/etc/conda/activate.d/activate-root.fish"
 
-mkdir -p "${PREFIX}/etc/conda/deactivate.d"
-cp "${RECIPE_DIR}/deactivate.sh" "${PREFIX}/etc/conda/deactivate.d/deactivate-root.sh"
-cp "${RECIPE_DIR}/deactivate.csh" "${PREFIX}/etc/conda/deactivate.d/deactivate-root.csh"
-cp "${RECIPE_DIR}/deactivate.fish" "${PREFIX}/etc/conda/deactivate.d/deactivate-root.fish"
+# mkdir -p "${PREFIX}/etc/conda/deactivate.d"
+# cp "${RECIPE_DIR}/deactivate.sh" "${PREFIX}/etc/conda/deactivate.d/deactivate-root.sh"
+# cp "${RECIPE_DIR}/deactivate.csh" "${PREFIX}/etc/conda/deactivate.d/deactivate-root.csh"
+# cp "${RECIPE_DIR}/deactivate.fish" "${PREFIX}/etc/conda/deactivate.d/deactivate-root.fish"
 
-# Revert the HACK
-if [ "$(uname)" != "Linux" ]; then
-    mv "${Clang_DIR}/include/llvm/IR/Instructions.h.bak" "${Clang_DIR}/include/llvm/IR/Instructions.h"
-fi
+# # Revert the HACK
+# if [ "$(uname)" != "Linux" ]; then
+#     mv "${Clang_DIR}/include/llvm/IR/Instructions.h.bak" "${Clang_DIR}/include/llvm/IR/Instructions.h"
+# fi
 
-# Clean up to minimise disk usage
-cd ..
-rm -rf build-dir
+# # Clean up to minimise disk usage
+# # cd ..
+# # rm -rf build-dir

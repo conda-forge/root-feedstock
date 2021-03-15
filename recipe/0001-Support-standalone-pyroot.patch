@@ -1,0 +1,50 @@
+From f1970e7d18251e2a2d4b15ab859d29f95ca95650 Mon Sep 17 00:00:00 2001
+From: Chris Burr <christopher.burr@cern.ch>
+Date: Sat, 13 Mar 2021 20:37:51 +0100
+Subject: [PATCH] Support standalone pyroot
+
+---
+ bindings/CMakeLists.txt | 20 +++++++++++++++++++-
+ 1 file changed, 19 insertions(+), 1 deletion(-)
+
+diff --git a/bindings/CMakeLists.txt b/bindings/CMakeLists.txt
+index 46989ba..aba5559 100644
+--- a/bindings/CMakeLists.txt
++++ b/bindings/CMakeLists.txt
+@@ -3,6 +3,24 @@
+ #
+ # For the licensing terms see $ROOTSYS/LICENSE.
+ # For the list of contributors see $ROOTSYS/README/CREDITS.
++if(standalone_pyroot)
++  project(PyROOTStandalone)
++  find_package(ROOT REQUIRED)
++  find_package(Python3 REQUIRED COMPONENTS Interpreter Development NumPy)
++  cmake_minimum_required(VERSION 3.19)
++  add_custom_target(move_headers ALL)
++
++  set(NUMPY_FOUND ${Python3_NumPy_FOUND})
++  set(NUMPY_INCLUDE_DIRS "${Python3_NumPy_INCLUDE_DIRS}" CACHE INTERNAL "" FORCE)
++
++  set(python_executables "${Python3_EXECUTABLE}")
++  set(python_version_strings "${Python3_VERSION}")
++  set(python_major_version_strings "${Python3_VERSION_MAJOR}")
++  set(python_under_version_strings "${Python3_VERSION_MAJOR}_${Python3_VERSION_MINOR}")
++  set(python_include_dirs "${Python3_INCLUDE_DIRS}")
++  set(python_libraries "${Python3_LIBRARIES}")
++  set(pyroot ON)
++endif()
+ 
+ if(pyroot)
+   if ((MSVC AND NOT CMAKE_INSTALL_BINDIR STREQUAL CMAKE_INSTALL_PYTHONDIR) OR
+@@ -22,7 +40,7 @@ if(pyroot)
+     math(EXPR how_many_pythons "${len} - 1")
+ 
+     add_subdirectory(pyroot)
+-    add_subdirectory(tpython)
++    # add_subdirectory(tpython)
+     add_subdirectory(jupyroot)
+     add_subdirectory(jsmva)
+     if(dataframe)
+-- 
+1.8.3.1
+

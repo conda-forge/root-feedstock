@@ -1,0 +1,39 @@
+From 9e685b362c045125a8a2c78f684653ede72fb286 Mon Sep 17 00:00:00 2001
+From: Chris Burr <christopher.burr@cern.ch>
+Date: Sat, 13 Mar 2021 11:17:09 +0100
+Subject: [PATCH] Add missing libs
+
+---
+ core/metacling/src/CMakeLists.txt | 2 +-
+ main/CMakeLists.txt               | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/core/metacling/src/CMakeLists.txt b/core/metacling/src/CMakeLists.txt
+index 245444a73a..dc0775661d 100644
+--- a/core/metacling/src/CMakeLists.txt
++++ b/core/metacling/src/CMakeLists.txt
+@@ -105,7 +105,7 @@ ROOT_LINKER_LIBRARY(Cling
+         $<TARGET_OBJECTS:ClingUtils>
+         $<TARGET_OBJECTS:Dictgen>
+         $<TARGET_OBJECTS:MetaCling>
+-        LIBRARIES ${CLING_LIBRARIES} ${LINK_LIBS} ${CLING_PLUGIN_LINK_LIBS})
++        LIBRARIES ${CLING_LIBRARIES} ${LINK_LIBS} ${CLING_PLUGIN_LINK_LIBS} LLVMAnalysis)
+ 
+ if(MSVC)
+   set_target_properties(Cling PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
+diff --git a/main/CMakeLists.txt b/main/CMakeLists.txt
+index d3e7d52430..7f7d3188d8 100644
+--- a/main/CMakeLists.txt
++++ b/main/CMakeLists.txt
+@@ -80,7 +80,7 @@ else()
+   set_source_files_properties(src/rootcling.cxx PROPERTIES COMPILE_FLAGS ${CLING_CXXFLAGS})
+ endif()
+ 
+-ROOT_EXECUTABLE(rootcling src/rootcling.cxx LIBRARIES RIO Cling Core)
++ROOT_EXECUTABLE(rootcling src/rootcling.cxx LIBRARIES RIO Cling Core LLVMSupport LLVMAnalysis)
+ 
+ # rootcling includes the ROOT complex header which would build the complex
+ # dictionary with modules. To make sure that rootcling_stage1 builds this
+-- 
+2.29.2
+
