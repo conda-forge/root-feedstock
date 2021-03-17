@@ -1,50 +1,141 @@
-From f1970e7d18251e2a2d4b15ab859d29f95ca95650 Mon Sep 17 00:00:00 2001
+From c0cd225e8e6bde399a0d5d2e53e0e15484f13fac Mon Sep 17 00:00:00 2001
 From: Chris Burr <christopher.burr@cern.ch>
-Date: Sat, 13 Mar 2021 20:37:51 +0100
+Date: Wed, 17 Mar 2021 21:30:19 +0100
 Subject: [PATCH] Support standalone pyroot
 
 ---
- bindings/CMakeLists.txt | 20 +++++++++++++++++++-
- 1 file changed, 19 insertions(+), 1 deletion(-)
+ bindings/CMakeLists.txt         | 28 ++++++++++++
+ bindings/tpython/CMakeLists.txt | 78 ++++++++++++++++++++++++---------
+ 2 files changed, 85 insertions(+), 21 deletions(-)
 
 diff --git a/bindings/CMakeLists.txt b/bindings/CMakeLists.txt
-index 46989ba..aba5559 100644
+index 46989ba7dd..dee20bd2a6 100644
 --- a/bindings/CMakeLists.txt
 +++ b/bindings/CMakeLists.txt
-@@ -3,6 +3,24 @@
+@@ -3,6 +3,34 @@
  #
  # For the licensing terms see $ROOTSYS/LICENSE.
  # For the list of contributors see $ROOTSYS/README/CREDITS.
 +if(standalone_pyroot)
-+  project(PyROOTStandalone)
-+  find_package(ROOT REQUIRED)
-+  find_package(Python3 REQUIRED COMPONENTS Interpreter Development NumPy)
++  project(PyROOTStandalone LANGUAGES CXX)
++
 +  cmake_minimum_required(VERSION 3.19)
++
++  find_package(ROOT REQUIRED)
++  find_package(Python REQUIRED COMPONENTS Interpreter Development NumPy)
++  set(NUMPY_FOUND ${Python_NumPy_FOUND})
++  set(NUMPY_INCLUDE_DIRS "${Python_NumPy_INCLUDE_DIRS}" CACHE INTERNAL "" FORCE)
++
++  set(CMAKE_INSTALL_PYTHONDIR "${Python_SITEARCH}")
++  include(${CMAKE_SOURCE_DIR}/../cmake/modules/RootInstallDirs.cmake)
++
 +  add_custom_target(move_headers ALL)
++  add_custom_target(copymodulemap)  # DEPENDS "${CMAKE_BINARY_DIR}/include/module.modulemap")
++  add_library(Core ALIAS ROOT::Core)
++  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
++  set(localruntimedir "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}")
++  set(python_executables "${Python_EXECUTABLE}")
++  set(python_version_strings "${Python_VERSION}")
++  set(python_major_version_strings "${Python_VERSION_MAJOR}")
++  set(python_under_version_strings "${Python_VERSION_MAJOR}_${Python_VERSION_MINOR}")
++  set(python_include_dirs "${Python_INCLUDE_DIRS}")
++  set(python_libraries "${Python_LIBRARIES}")
++  set(PYTHON_UNDER_VERSION_STRING_Development_Main "${Python_VERSION_MAJOR}_${Python_VERSION_MINOR}")
 +
-+  set(NUMPY_FOUND ${Python3_NumPy_FOUND})
-+  set(NUMPY_INCLUDE_DIRS "${Python3_NumPy_INCLUDE_DIRS}" CACHE INTERNAL "" FORCE)
-+
-+  set(python_executables "${Python3_EXECUTABLE}")
-+  set(python_version_strings "${Python3_VERSION}")
-+  set(python_major_version_strings "${Python3_VERSION_MAJOR}")
-+  set(python_under_version_strings "${Python3_VERSION_MAJOR}_${Python3_VERSION_MINOR}")
-+  set(python_include_dirs "${Python3_INCLUDE_DIRS}")
-+  set(python_libraries "${Python3_LIBRARIES}")
 +  set(pyroot ON)
 +endif()
  
  if(pyroot)
    if ((MSVC AND NOT CMAKE_INSTALL_BINDIR STREQUAL CMAKE_INSTALL_PYTHONDIR) OR
-@@ -22,7 +40,7 @@ if(pyroot)
-     math(EXPR how_many_pythons "${len} - 1")
+diff --git a/bindings/tpython/CMakeLists.txt b/bindings/tpython/CMakeLists.txt
+index 8544fec933..eccc6b7214 100644
+--- a/bindings/tpython/CMakeLists.txt
++++ b/bindings/tpython/CMakeLists.txt
+@@ -8,27 +8,63 @@
+ # CMakeLists.txt file for building TPython
+ ###########################################################
  
-     add_subdirectory(pyroot)
--    add_subdirectory(tpython)
-+    # add_subdirectory(tpython)
-     add_subdirectory(jupyroot)
-     add_subdirectory(jsmva)
-     if(dataframe)
+-ROOT_STANDARD_LIBRARY_PACKAGE(ROOTTPython
+-  HEADERS
+-    TPyArg.h
+-    TPyReturn.h
+-    TPython.h
+-  SOURCES
+-    src/TPyArg.cxx
+-    src/TPyClassGenerator.cxx
+-    src/TPyReturn.cxx
+-    src/TPython.cxx
+-  DICTIONARY_OPTIONS
+-    -writeEmptyRootPCM
+-  DEPENDENCIES
+-    Core
+-  LIBRARIES
+-    cppyy${PYTHON_UNDER_VERSION_STRING_Development_Main}
+-    # We link libTPython against Python libraries to compensate for the fact that libcppyy
+-    # is built with unresolved symbols. If we didn't do this, invoking TPython from C++
+-    # would not work.
+-    ${PYTHON_LIBRARIES_Development_Main}
+-)
++if(standalone_pyroot)
++    include_directories(${CMAKE_CURRENT_SOURCE_DIR}/inc)
++
++    ROOT_GENERATE_DICTIONARY(
++        G__ROOTTPython
++        TPyArg.h
++        TPyReturn.h
++        TPython.h
++        LINKDEF LinkDef.h
++    )
++    add_library(
++        ROOTTPython SHARED
++        src/TPyArg.cxx
++        src/TPyClassGenerator.cxx
++        src/TPyReturn.cxx
++        src/TPython.cxx
++        G__ROOTTPython.cxx
++    )
++    target_link_libraries(
++        ROOTTPython PUBLIC
++        ROOT::Core
++        cppyy${PYTHON_UNDER_VERSION_STRING_Development_Main}
++        ${PYTHON_LIBRARIES_Development_Main}
++    )
++    set_target_properties(
++        ROOTTPython PROPERTIES
++        PUBLIC_HEADER "inc/TPyArg.h;inc/TPyReturn.h;inc/TPython.h"
++    )
++    install(
++        TARGETS ROOTTPython
++        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT libraries
++        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT libraries
++        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT libraries
++    )
++else()
++    ROOT_STANDARD_LIBRARY_PACKAGE(ROOTTPython
++    HEADERS
++        TPyArg.h
++        TPyReturn.h
++        TPython.h
++    SOURCES
++        src/TPyArg.cxx
++        src/TPyClassGenerator.cxx
++        src/TPyReturn.cxx
++        src/TPython.cxx
++    DICTIONARY_OPTIONS
++        -writeEmptyRootPCM
++    DEPENDENCIES
++        Core
++    LIBRARIES
++        cppyy${PYTHON_UNDER_VERSION_STRING_Development_Main}
++        # We link libTPython against Python libraries to compensate for the fact that libcppyy
++        # is built with unresolved symbols. If we didn't do this, invoking TPython from C++
++        # would not work.
++        ${PYTHON_LIBRARIES_Development_Main}
++    )
++endif()
+ 
+ # Disables warnings originating from deprecated register keyword in Python
+ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" AND CMAKE_CXX_STANDARD GREATER_EQUAL 11)
 -- 
-1.8.3.1
+2.30.1
 

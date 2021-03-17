@@ -99,7 +99,6 @@ cmake -LAH \
     -DCMAKE_INSTALL_NAME_DIR="${PREFIX}/lib" \
     -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON \
     -DCMAKE_INSTALL_RPATH_USE_LINK_PATH=ON \
-    -DCLING_BUILD_PLUGINS=OFF \
     -DPYTHON_EXECUTABLE="${PYTHON}" \
     -DTBB_ROOT_DIR="${PREFIX}" \
     -DLLVM_CONFIG="${Clang_DIR}/bin/llvm-config" \
@@ -114,7 +113,9 @@ cmake -LAH \
     -Dbuiltin_afterimage=OFF \
     -Dbuiltin_llvm=OFF \
     -Dbuiltin_clang=OFF \
-    -Dbuiltin_cling=OFF \
+    -DCLING_BUILD_PLUGINS=ON \
+    -Dbuiltin_cling=ON \
+    -Dclad=ON \
     -Dbuiltin_nlohmannjson=OFF \
     -Dbuiltin_davix=OFF \
     -Dbuiltin_ftgl=OFF \
@@ -139,7 +140,7 @@ cmake -LAH \
     -Dtesting=OFF \
     -Droottest=OFF \
     -Droot7=ON \
-    -Dimt=OFF -Dclad=OFF \
+    -Dimt=ON \
     ../root-source
 
 make "-j${CPU_COUNT}"
