@@ -1,18 +1,18 @@
-From c0cd225e8e6bde399a0d5d2e53e0e15484f13fac Mon Sep 17 00:00:00 2001
+From ff8906c1eaf56ba4105ef32ee38e5f9e27417b41 Mon Sep 17 00:00:00 2001
 From: Chris Burr <christopher.burr@cern.ch>
 Date: Wed, 17 Mar 2021 21:30:19 +0100
 Subject: [PATCH] Support standalone pyroot
 
 ---
- bindings/CMakeLists.txt         | 28 ++++++++++++
+ bindings/CMakeLists.txt         | 37 ++++++++++++++++
  bindings/tpython/CMakeLists.txt | 78 ++++++++++++++++++++++++---------
- 2 files changed, 85 insertions(+), 21 deletions(-)
+ 2 files changed, 94 insertions(+), 21 deletions(-)
 
 diff --git a/bindings/CMakeLists.txt b/bindings/CMakeLists.txt
-index 46989ba7dd..dee20bd2a6 100644
+index 46989ba7dd..0d0a78dca2 100644
 --- a/bindings/CMakeLists.txt
 +++ b/bindings/CMakeLists.txt
-@@ -3,6 +3,34 @@
+@@ -3,6 +3,43 @@
  #
  # For the licensing terms see $ROOTSYS/LICENSE.
  # For the list of contributors see $ROOTSYS/README/CREDITS.
@@ -32,6 +32,7 @@ index 46989ba7dd..dee20bd2a6 100644
 +  add_custom_target(move_headers ALL)
 +  add_custom_target(copymodulemap)  # DEPENDS "${CMAKE_BINARY_DIR}/include/module.modulemap")
 +  add_library(Core ALIAS ROOT::Core)
++  add_library(Tree ALIAS ROOT::Tree)
 +  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 +  set(localruntimedir "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}")
 +  set(python_executables "${Python_EXECUTABLE}")
@@ -41,6 +42,14 @@ index 46989ba7dd..dee20bd2a6 100644
 +  set(python_include_dirs "${Python_INCLUDE_DIRS}")
 +  set(python_libraries "${Python_LIBRARIES}")
 +  set(PYTHON_UNDER_VERSION_STRING_Development_Main "${Python_VERSION_MAJOR}_${Python_VERSION_MINOR}")
++
++  set(CMAKE_SKIP_BUILD_RPATH FALSE)         # don't skip the full RPATH for the build tree
++  set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE) # use always the build RPATH for the build tree
++  set(CMAKE_MACOSX_RPATH TRUE)              # use RPATH for MacOSX
++  set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE) # point to directories outside the build tree to the install RPATH
++
++  set(CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_FULL_LIBDIR} CACHE INTERNAL "") # install LIBDIR
++  set(CMAKE_SKIP_INSTALL_RPATH FALSE)          # don't skip the full RPATH for the install tree
 +
 +  set(pyroot ON)
 +endif()

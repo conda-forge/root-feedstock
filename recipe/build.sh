@@ -215,27 +215,26 @@ CMAKE_PLATFORM_FLAGS+=("-Dvecgeom=OFF")
 CMAKE_PLATFORM_FLAGS+=("-Dvmc=OFF")
 CMAKE_PLATFORM_FLAGS+=("-Dxproofd=OFF")
 
-# Platform specific options
-CMAKE_PLATFORM_FLAGS+=("-Dx11=ON")
-CMAKE_PLATFORM_FLAGS+=("-Dcocoa=OFF")
-
 # Developer only options
 CMAKE_PLATFORM_FLAGS+=("-Dccache=OFF")
 CMAKE_PLATFORM_FLAGS+=("-Dcoverage=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Dcxxmodules=OFF")
 CMAKE_PLATFORM_FLAGS+=("-Ddev=OFF")
 CMAKE_PLATFORM_FLAGS+=("-Ddistcc=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Djemalloc=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Dlibcxx=OFF")
 CMAKE_PLATFORM_FLAGS+=("-Dmemory_termination=OFF")
 CMAKE_PLATFORM_FLAGS+=("-Dmemstat=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Dtcmalloc=OFF")
 CMAKE_PLATFORM_FLAGS+=("-Dtest_distrdf_pyspark=OFF")
-CMAKE_PLATFORM_FLAGS+=("-win_broken_tests=OFF")
-CMAKE_PLATFORM_FLAGS+=("-winrtdebug=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Dwin_broken_tests=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Dwinrtdebug=OFF")
 
-# cxxmodules 	Enable support for C++ modules 	OFF
-# jemalloc 	Use jemalloc memory allocator 	OFF
-# libcxx 	Build using libc++ 	OFF
+# Platform specific options
+CMAKE_PLATFORM_FLAGS+=("-Dx11=ON")
+CMAKE_PLATFORM_FLAGS+=("-Dcocoa=OFF")
+# Should be disabled for ARM?
 # runtime_cxxmodules 	Enable runtime support for C++ modules 	ON
-# tcmalloc 	Use tcmalloc memory allocator 	OFF
-
 
 # Configure the tests
 if [ -n "${ROOT_CONDA_RUN_GTESTS+x}" ]; then
