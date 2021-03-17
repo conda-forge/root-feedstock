@@ -1,0 +1,25 @@
+From 6c1eb8bc040b7a4cbb7af82ff868047d7f3ad32c Mon Sep 17 00:00:00 2001
+From: Vassil Vassilev <v.g.vassilev@gmail.com>
+Date: Sun, 5 Apr 2020 10:42:13 +0300
+Subject: [PATCH 2/4] Fix the compilation
+
+---
+ include/llvm/ExecutionEngine/Orc/LazyEmittingLayer.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/llvm/ExecutionEngine/Orc/LazyEmittingLayer.h b/include/llvm/ExecutionEngine/Orc/LazyEmittingLayer.h
+index 16202d89f86..3afdac3438b 100644
+--- a/include/llvm/ExecutionEngine/Orc/LazyEmittingLayer.h
++++ b/include/llvm/ExecutionEngine/Orc/LazyEmittingLayer.h
+@@ -220,7 +220,7 @@ public:
+   Error removeModule(VModuleKey K) {
+     auto I = ModuleMap.find(K);
+     assert(I != ModuleMap.end() && "VModuleKey K not valid here");
+-    auto EDM = std::move(I.second);
++    auto EDM = std::move(I->second);
+     ModuleMap.erase(I);
+     return EDM->removeModuleFromBaseLayer(BaseLayer);
+   }
+-- 
+2.29.2
+
