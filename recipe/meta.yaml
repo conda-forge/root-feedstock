@@ -202,7 +202,7 @@ outputs:
         - cd "pyroot-$PY_VER-build-dir"
         - |
           cmake \
-            ../root/bindings \
+            ../root-source/bindings \
             -DPython_EXECUTABLE=${PYTHON} \
             -DCMAKE_INSTALL_PREFIX=${PREFIX} \
             -Ddataframe=ON \

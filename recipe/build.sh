@@ -22,7 +22,7 @@ if [ "$(uname)" == "Linux" ]; then
     CMAKE_PLATFORM_FLAGS+=("-DCMAKE_AR=${GCC_AR}")
     CMAKE_PLATFORM_FLAGS+=("-DCLANG_DEFAULT_LINKER=${LD_GOLD}")
     CMAKE_PLATFORM_FLAGS+=("-DDEFAULT_SYSROOT=${INSTALL_SYSROOT}")
-    CMAKE_PLATFORM_FLAGS+=("-Dx11=ON")
+    # CMAKE_PLATFORM_FLAGS+=("-Dx11=ON")
     CMAKE_PLATFORM_FLAGS+=("-DRT_LIBRARY=${INSTALL_SYSROOT}/usr/lib/librt.so")
 
     # Fix finding X11 with CMake, copied from below with minor modifications
@@ -91,6 +91,7 @@ CMAKE_PLATFORM_FLAGS+=("-DCMAKE_INSTALL_PREFIX=${PREFIX}")
 # CMAKE_PLATFORM_FLAGS+=("-DCMAKE_INSTALL_RPATH=${PREFIX}/lib")
 CMAKE_PLATFORM_FLAGS+=("-DCMAKE_PREFIX_PATH=${PREFIX}")
 
+CMAKE_PLATFORM_FLAGS+=("-Dfail-on-missing=ON")
 CMAKE_PLATFORM_FLAGS+=("-Dgnuinstall=ON")
 CMAKE_PLATFORM_FLAGS+=("-Drpath=ON")
 CMAKE_PLATFORM_FLAGS+=("-Dshared=ON")
@@ -100,14 +101,30 @@ CMAKE_PLATFORM_FLAGS+=("-DTBB_ROOT_DIR=${PREFIX}")
 
 # Disable all of the builtins
 CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_afterimage=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_cfitsio=OFF")
 CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_davix=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_fftw3=OFF")
 CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_freetype=OFF")
 CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_ftgl=OFF")
 CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_gl2ps=OFF")
 CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_glew=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_gsl=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_lz4=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_lzma=OFF")
 CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_nlohmannjson=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_openssl=OFF")
+# TODO: Make external?
+CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_openui5=ON")
+CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_pcre=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_tbb=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_unuran=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_vc=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_vdt=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_veccore=OFF")
 CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_xrootd=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_xxhash=OFF")
 CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_zlib=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_zstd=OFF")
 
 # Configure LLVM/Clang/Cling
 CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_llvm=OFF")
@@ -126,27 +143,99 @@ cd -
 
 # Disable the Python bindings, we will build them in standalone mode
 CMAKE_PLATFORM_FLAGS+=("-DPYTHON_EXECUTABLE=${PYTHON}")
+CMAKE_PLATFORM_FLAGS+=("-Dpyroot_legacy=OFF")
 CMAKE_PLATFORM_FLAGS+=("-Dpyroot=OFF")
 CMAKE_PLATFORM_FLAGS+=("-Dtmva-pymva=OFF")
 
-# Enable/disable other specific features
-CMAKE_PLATFORM_FLAGS+=("-Dcastor=OFF")
+# Disable the R bindings, should be made standalong like PyROOT
+CMAKE_PLATFORM_FLAGS+=("-Dr=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Dtmva-rmva=OFF")
+
+# TMVA, the GPU part should be made standalone like PyROOT
+CMAKE_PLATFORM_FLAGS+=("-Dtmva=ON")
+CMAKE_PLATFORM_FLAGS+=("-Dtmva-cpu=ON")
+CMAKE_PLATFORM_FLAGS+=("-Dtmva-gpu=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Dcuda=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Dcudnn=OFF")
+
+# Enable other specific features
+CMAKE_PLATFORM_FLAGS+=("-Dasimage=ON")
+CMAKE_PLATFORM_FLAGS+=("-Ddataframe=ON")
+CMAKE_PLATFORM_FLAGS+=("-Ddavix=ON")
 CMAKE_PLATFORM_FLAGS+=("-Dexceptions=ON")
-CMAKE_PLATFORM_FLAGS+=("-Dexplicitlink=ON")
-CMAKE_PLATFORM_FLAGS+=("-Dfail-on-missing=ON")
-CMAKE_PLATFORM_FLAGS+=("-Dgfal=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Dfftw3=ON")
+CMAKE_PLATFORM_FLAGS+=("-Dfitsio=ON")
+CMAKE_PLATFORM_FLAGS+=("-Dgdml=ON")
 CMAKE_PLATFORM_FLAGS+=("-Dgviz=ON")
+CMAKE_PLATFORM_FLAGS+=("-Dhttp=ON")
 CMAKE_PLATFORM_FLAGS+=("-Dimt=ON")
+CMAKE_PLATFORM_FLAGS+=("-Dmathmore=ON")
 CMAKE_PLATFORM_FLAGS+=("-Dminuit2=ON")
-CMAKE_PLATFORM_FLAGS+=("-Dmysql=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Dmlp=ON")
 CMAKE_PLATFORM_FLAGS+=("-Dopengl=ON")
-CMAKE_PLATFORM_FLAGS+=("-Doracle=OFF")
-CMAKE_PLATFORM_FLAGS+=("-Dpgsql=OFF")
-CMAKE_PLATFORM_FLAGS+=("-Dpythia6=OFF")
 CMAKE_PLATFORM_FLAGS+=("-Dpythia8=ON")
 CMAKE_PLATFORM_FLAGS+=("-Droofit=ON")
 CMAKE_PLATFORM_FLAGS+=("-Droot7=ON")
+CMAKE_PLATFORM_FLAGS+=("-Dspectrum=ON")
+CMAKE_PLATFORM_FLAGS+=("-Dsqlite=ON")
+CMAKE_PLATFORM_FLAGS+=("-Dssl=ON")
 CMAKE_PLATFORM_FLAGS+=("-Dtbb=ON")
+CMAKE_PLATFORM_FLAGS+=("-Dvdt=ON")
+CMAKE_PLATFORM_FLAGS+=("-Dwebgui=ON")
+CMAKE_PLATFORM_FLAGS+=("-Dxml=ON")
+CMAKE_PLATFORM_FLAGS+=("-Dxrootd=ON")
+
+# On by default but disabled
+CMAKE_PLATFORM_FLAGS+=("-Dgfal=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Dpythia6=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Dmysql=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Doracle=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Dpgsql=OFF")
+
+# Disable other specific features
+CMAKE_PLATFORM_FLAGS+=("-Dalien=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Darrow=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Dcefweb=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Ddcache=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Dfcgi=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Dfortran=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Dgsl_shared=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Dmacos_native=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Dmonalisa=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Dmpi=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Dodbc=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Dpythia6_nolink=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Dqt5web=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Dshadowpw=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Dunuran=OFF")
+CMAKE_PLATFORM_FLAGS+=("-During=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Dvc=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Dveccore=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Dvecgeom=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Dvmc=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Dxproofd=OFF")
+
+# Platform specific options
+CMAKE_PLATFORM_FLAGS+=("-Dx11=ON")
+CMAKE_PLATFORM_FLAGS+=("-Dcocoa=OFF")
+
+# Developer only options
+CMAKE_PLATFORM_FLAGS+=("-Dccache=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Dcoverage=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Ddev=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Ddistcc=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Dmemory_termination=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Dmemstat=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Dtest_distrdf_pyspark=OFF")
+CMAKE_PLATFORM_FLAGS+=("-win_broken_tests=OFF")
+CMAKE_PLATFORM_FLAGS+=("-winrtdebug=OFF")
+
+# cxxmodules 	Enable support for C++ modules 	OFF
+# jemalloc 	Use jemalloc memory allocator 	OFF
+# libcxx 	Build using libc++ 	OFF
+# runtime_cxxmodules 	Enable runtime support for C++ modules 	ON
+# tcmalloc 	Use tcmalloc memory allocator 	OFF
+
 
 # Configure the tests
 if [ -n "${ROOT_CONDA_RUN_GTESTS+x}" ]; then
