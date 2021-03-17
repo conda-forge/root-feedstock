@@ -9,6 +9,13 @@ sed -i -e "s@${OLDVERSIONMACOS}@${MACOSX_DEPLOYMENT_TARGET}@g" \
 
 declare -a CMAKE_PLATFORM_FLAGS
 
+# Cling needs some minor patches to the LLVM sources
+sed -i "s@LLVM_LINK_LLVM_DYLIB yes@LLVM_LINK_LLVM_DYLIB no@g" "${PREFIX}/lib/cmake/llvm/LLVMConfig.cmake"
+cd "${PREFIX}"
+patch -p1 < "${RECIPE_DIR}/llvm-patches/0001-Fix-the-compilation.patch"
+patch -p1 < "${RECIPE_DIR}/llvm-patches/0002-Make-datamember-protected.patch"
+cd -
+
 if [[ "${target_platform}" == "osx-arm64" ]]; then
     CONDA_SUBDIR=${target_platform} conda create --prefix "${SRC_DIR}/clang_env" --yes \
         "llvmdev=5.0.0" "clangdev=5.0.0" "clang_variant * root_20201127"
@@ -90,58 +97,57 @@ if [ -n "${ROOT_CONDA_RUN_GTESTS+x}" ]; then
     export LD_LIBRARY_PATH=$PREFIX/lib
 fi
 
-cmake -LAH \
-    "${CMAKE_PLATFORM_FLAGS[@]}" \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_PREFIX_PATH="${PREFIX}" \
-    -DCMAKE_INSTALL_PREFIX="${PREFIX}" \
-    -DCMAKE_INSTALL_RPATH="${PREFIX}/lib" \
-    -DCMAKE_INSTALL_NAME_DIR="${PREFIX}/lib" \
-    -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON \
-    -DCMAKE_INSTALL_RPATH_USE_LINK_PATH=ON \
-    -DPYTHON_EXECUTABLE="${PYTHON}" \
-    -DTBB_ROOT_DIR="${PREFIX}" \
-    -DLLVM_CONFIG="${Clang_DIR}/bin/llvm-config" \
-    -Dexplicitlink=ON \
-    -Dexceptions=ON \
-    -Dfail-on-missing=ON \
-    -Dgnuinstall=OFF \
-    -Dshared=ON \
-    -Dsoversion=ON \
-    -Dpyroot=OFF \
-    -Dtmva-pymva=OFF \
-    -Dbuiltin_afterimage=OFF \
-    -Dbuiltin_llvm=OFF \
-    -Dbuiltin_clang=OFF \
-    -DCLING_BUILD_PLUGINS=ON \
-    -Dbuiltin_cling=ON \
-    -Dclad=ON \
-    -Dbuiltin_nlohmannjson=OFF \
-    -Dbuiltin_davix=OFF \
-    -Dbuiltin_ftgl=OFF \
-    -Dbuiltin_gl2ps=OFF \
-    -Dbuiltin_freetype=OFF \
-    -Dbuiltin_glew=OFF \
-    -Dbuiltin_xrootd=OFF \
-    -Dbuiltin_zlib=OFF \
-    -Drpath=ON \
-    -DCMAKE_CXX_STANDARD=17 \
-    -Dminuit2=ON \
-    -Droofit=ON \
-    -Dtbb=ON \
-    -Dcastor=OFF \
-    -Dgfal=OFF \
-    -Dmysql=OFF \
-    -Dopengl=ON \
-    -Doracle=OFF \
-    -Dpgsql=OFF \
-    -Dpythia6=OFF \
-    -Dpythia8=ON \
-    -Dtesting=OFF \
-    -Droottest=OFF \
-    -Droot7=ON \
-    -Dimt=ON \
-    ../root-source
+CMAKE_PLATFORM_FLAGS+=("-DCMAKE_BUILD_TYPE=Release")
+CMAKE_PLATFORM_FLAGS+=("-DCMAKE_PREFIX_PATH=${PREFIX}")
+CMAKE_PLATFORM_FLAGS+=("-DCMAKE_INSTALL_PREFIX=${PREFIX}")
+CMAKE_PLATFORM_FLAGS+=("-DCMAKE_INSTALL_RPATH=${PREFIX}/lib")
+CMAKE_PLATFORM_FLAGS+=("-DCMAKE_INSTALL_NAME_DIR=${PREFIX}/lib")
+CMAKE_PLATFORM_FLAGS+=("-DCMAKE_BUILD_WITH_INSTALL_RPATH=ON")
+CMAKE_PLATFORM_FLAGS+=("-DCMAKE_INSTALL_RPATH_USE_LINK_PATH=ON")
+CMAKE_PLATFORM_FLAGS+=("-DPYTHON_EXECUTABLE=${PYTHON}")
+CMAKE_PLATFORM_FLAGS+=("-DTBB_ROOT_DIR=${PREFIX}")
+CMAKE_PLATFORM_FLAGS+=("-DLLVM_CONFIG=${Clang_DIR}/bin/llvm-config")
+CMAKE_PLATFORM_FLAGS+=("-Dexplicitlink=ON")
+CMAKE_PLATFORM_FLAGS+=("-Dexceptions=ON")
+CMAKE_PLATFORM_FLAGS+=("-Dfail-on-missing=ON")
+CMAKE_PLATFORM_FLAGS+=("-Dgnuinstall=ON")
+CMAKE_PLATFORM_FLAGS+=("-Dshared=ON")
+CMAKE_PLATFORM_FLAGS+=("-Dsoversion=ON")
+CMAKE_PLATFORM_FLAGS+=("-Dpyroot=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Dtmva-pymva=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_afterimage=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_llvm=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_clang=OFF")
+CMAKE_PLATFORM_FLAGS+=("-DCLING_BUILD_PLUGINS=ON")
+CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_cling=ON")
+CMAKE_PLATFORM_FLAGS+=("-Dclad=ON")
+CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_nlohmannjson=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_davix=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_ftgl=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_gl2ps=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_freetype=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_glew=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_xrootd=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_zlib=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Drpath=ON")
+CMAKE_PLATFORM_FLAGS+=("-DCMAKE_CXX_STANDARD=17")
+CMAKE_PLATFORM_FLAGS+=("-Dminuit2=ON")
+CMAKE_PLATFORM_FLAGS+=("-Droofit=ON")
+CMAKE_PLATFORM_FLAGS+=("-Dtbb=ON")
+CMAKE_PLATFORM_FLAGS+=("-Dcastor=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Dgfal=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Dmysql=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Dopengl=ON")
+CMAKE_PLATFORM_FLAGS+=("-Doracle=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Dpgsql=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Dpythia6=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Dpythia8=ON")
+CMAKE_PLATFORM_FLAGS+=("-Dtesting=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Droottest=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Droot7=ON")
+CMAKE_PLATFORM_FLAGS+=("-Dimt=ON")
+
+cmake "${CMAKE_PLATFORM_FLAGS[@]}" ../root-source
 
 make "-j${CPU_COUNT}"
 

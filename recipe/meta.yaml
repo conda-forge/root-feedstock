@@ -1,5 +1,5 @@
 {% set name = "root" %}
-{% set version = "6.23.0" %}
+{% set version = "6.24.0" %}
 {% set build_number = 0 %}
 {% set build_number = datetime.datetime.utcnow().strftime('%H%M%S') %}
 {% set clang_version = "9.0.1" %}
@@ -10,7 +10,7 @@
 {%- endif %}
 
 {%- if "ROOT_CONDA_BUILD_NUMBER" in os.environ %}
-   {%- set version = "6.23.0" %}
+   {%- set version = "6.25.0" %}
    {%- set build_number = os.environ["ROOT_CONDA_BUILD_NUMBER"] %}
 {%- endif %}
 
