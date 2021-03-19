@@ -1,6 +1,6 @@
 {% set name = "root" %}
 {% set version = "6.22.6" %}
-{% set build_number = 1 %}
+{% set build_number = 2 %}
 {% set clang_version = "5.0.0" %}
 {% set clang_patches_version = "root_20201127" %}
 
@@ -288,7 +288,7 @@ outputs:
             bash -c 'fn={}; if grep --quiet "^$fn\$" "${SRC_DIR}/initial-filelist.txt"; then echo "Skipping $fn"; else echo "Found new file $fn"; mv "$fn" "${SRC_DIR}/root-binaries/"; fi' \;
       run_exports:
         # https://abi-laboratory.pro/?view=timeline&l=root
-        - {{ pin_subpackage('root_base', max_pin='x.x') }}
+        - {{ pin_subpackage('root_base', max_pin='x.x.x') }}
       ignore_prefix_files:
         - lib/*.pcm            # [not aarch64]
         # https://github.com/root-project/root/blob/975be1e7647098ee8db5333f0769fb12287d0f75/cmake/modules/RootBuildOptions.cmake#L328-L332
