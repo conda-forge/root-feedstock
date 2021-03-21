@@ -1,12 +1,12 @@
-From ff8906c1eaf56ba4105ef32ee38e5f9e27417b41 Mon Sep 17 00:00:00 2001
+From d0f9767d614dd3b2361c434ba6bd97eef051e579 Mon Sep 17 00:00:00 2001
 From: Chris Burr <christopher.burr@cern.ch>
-Date: Wed, 17 Mar 2021 21:30:19 +0100
+Date: Sun, 21 Mar 2021 22:23:31 +0100
 Subject: [PATCH] Support standalone pyroot
 
 ---
- bindings/CMakeLists.txt         | 37 ++++++++++++++++
- bindings/tpython/CMakeLists.txt | 78 ++++++++++++++++++++++++---------
- 2 files changed, 94 insertions(+), 21 deletions(-)
+ bindings/CMakeLists.txt         | 37 +++++++++++++++
+ bindings/tpython/CMakeLists.txt | 79 ++++++++++++++++++++++++---------
+ 2 files changed, 95 insertions(+), 21 deletions(-)
 
 diff --git a/bindings/CMakeLists.txt b/bindings/CMakeLists.txt
 index 46989ba7dd..0d0a78dca2 100644
@@ -57,10 +57,10 @@ index 46989ba7dd..0d0a78dca2 100644
  if(pyroot)
    if ((MSVC AND NOT CMAKE_INSTALL_BINDIR STREQUAL CMAKE_INSTALL_PYTHONDIR) OR
 diff --git a/bindings/tpython/CMakeLists.txt b/bindings/tpython/CMakeLists.txt
-index 8544fec933..eccc6b7214 100644
+index 8544fec933..a7288be4bf 100644
 --- a/bindings/tpython/CMakeLists.txt
 +++ b/bindings/tpython/CMakeLists.txt
-@@ -8,27 +8,63 @@
+@@ -8,27 +8,64 @@
  # CMakeLists.txt file for building TPython
  ###########################################################
  
@@ -118,6 +118,7 @@ index 8544fec933..eccc6b7214 100644
 +        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT libraries
 +        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT libraries
 +        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT libraries
++        PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 +    )
 +else()
 +    ROOT_STANDARD_LIBRARY_PACKAGE(ROOTTPython
@@ -146,5 +147,5 @@ index 8544fec933..eccc6b7214 100644
  # Disables warnings originating from deprecated register keyword in Python
  if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" AND CMAKE_CXX_STANDARD GREATER_EQUAL 11)
 -- 
-2.30.1
+2.29.2
 
