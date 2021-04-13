@@ -1,21 +1,21 @@
+MACOSX_DEPLOYMENT_TARGET:
+- '10.13'
+MACOSX_SDK_VERSION:
+- '10.13'
 c_compiler:
-- gcc
+- clang
 c_compiler_version:
-- '9'
-cdt_name:
-- cos6
+- '11'
 cfitsio:
 - '3.470'
 channel_sources:
-- chrisburr/label/root-llvm9-2,conda-forge,defaults
+- conda-forge,defaults
 channel_targets:
 - conda-forge main
 cxx_compiler:
-- gxx
+- clangxx
 cxx_compiler_version:
-- '9'
-docker_image:
-- quay.io/condaforge/linux-anvil-comp7
+- '11'
 fftw:
 - '3'
 freetype:
@@ -44,11 +44,10 @@ libxml2:
 - '2.9'
 lz4_c:
 - 1.9.3
+macos_machine:
+- x86_64-apple-darwin13.4.0
 numpy:
-- '1.16'
-- '1.16'
-- '1.16'
-- '1.19'
+- '1.17'
 openssl:
 - 1.1.1
 pcre:
@@ -85,13 +84,10 @@ pin_run_as_build:
     max_pin: x.x
 python:
 - 3.6.* *_cpython
-- 3.7.* *_cpython
-- 3.8.* *_cpython
-- 3.9.* *_cpython
 sqlite:
 - '3'
 target_platform:
-- linux-64
+- osx-64
 tbb:
 - '2020'
 tbb_devel:
@@ -103,8 +99,6 @@ xz:
 zip_keys:
 - - c_compiler_version
   - cxx_compiler_version
-- - cdt_name
-  - docker_image
 - - python
   - numpy
 zlib:
