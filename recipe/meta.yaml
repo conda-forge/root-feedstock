@@ -14,6 +14,8 @@
    {%- set build_number = os.environ["ROOT_CONDA_BUILD_NUMBER"] %}
 {%- endif %}
 
+{% set builtin_pyroot = True %}
+
 package:
   name: root_base
   version: {{ version }}
@@ -35,7 +37,9 @@ source:
     - patches/root-x.xx.xx-osx-remove-hardcoded-sysroot.patch  # [osx]
     - patches/0001-Hacks.patch
     # - 0001-Add-missing-libs.patch
+{% if not builtin_pyroot %}
     - 0001-Support-standalone-pyroot.patch
+{% endif %}
 
 build:
   number: {{ build_number }}
@@ -120,7 +124,15 @@ requirements:
     - xxhash
     - zlib
     - zstd
+{% if builtin_pyroot %}
+    - python
+    - numpy
+{% endif %}
   run:
+{% if builtin_pyroot %}
+    - python
+    - {{ pin_compatible('numpy') }}
+{% endif %}
     # FIXME: Required to ensure a consistent etc/allDict.cxx.pch
     - {{ pin_compatible('libcxx', min_pin='x', max_pin='x') }}
     - {{ compiler('c') }}
@@ -185,6 +197,11 @@ outputs:
       # run_exports:
       #   # https://abi-laboratory.pro/?view=timeline&l=root
       #   - {{ pin_subpackage('root_base', max_pin='x.x') }}
+      build:
+        script_env:
+          - ROOT_CONDA_BUILTIN_PYROOT=1
+          # - ROOT_CONDA_RUN_GTESTS=1
+          # - ROOT_CONDA_USE_CCACHE
       ignore_prefix_files:
         - lib/*.pcm            # [not aarch64]
         # https://github.com/root-project/root/blob/975be1e7647098ee8db5333f0769fb12287d0f75/cmake/modules/RootBuildOptions.cmake#L328-L332
@@ -193,6 +210,7 @@ outputs:
         - set -x
         - cd build-dir
         - make install
+{% if not builtin_pyroot %}
   - name: pyroot
     build:
       number: {{ build_number }}
@@ -231,6 +249,7 @@ outputs:
         - ROOT
       # commands:
       #   - python test_pyroot.py  # [not (osx and arm64)]
+{% endif %}
   - name: root
     build:
       number: {{ build_number }}
@@ -317,4 +336,3 @@ extra:
     - chrisburr
     - henryiii
     - eguiraud
-    - egpbos

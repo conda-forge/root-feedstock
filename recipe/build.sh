@@ -142,10 +142,16 @@ patch -p1 < "${RECIPE_DIR}/llvm-patches/0002-Make-datamember-protected.patch"
 cd -
 
 # Disable the Python bindings, we will build them in standalone mode
-CMAKE_PLATFORM_FLAGS+=("-DPYTHON_EXECUTABLE=${PYTHON}")
 CMAKE_PLATFORM_FLAGS+=("-Dpyroot_legacy=OFF")
-CMAKE_PLATFORM_FLAGS+=("-Dpyroot=OFF")
-CMAKE_PLATFORM_FLAGS+=("-Dtmva-pymva=OFF")
+if [ -n "${ROOT_CONDA_BUILTIN_PYROOT+x}" ]; then
+    CMAKE_PLATFORM_FLAGS+=("-DPYTHON_EXECUTABLE=${PYTHON}")
+    CMAKE_PLATFORM_FLAGS+=("-Dpyroot=ON")
+    CMAKE_PLATFORM_FLAGS+=("-Dtmva-pymva=ON")
+else
+    CMAKE_PLATFORM_FLAGS+=("-DPYTHON_EXECUTABLE=${PYTHON}")
+    CMAKE_PLATFORM_FLAGS+=("-Dpyroot=OFF")
+    CMAKE_PLATFORM_FLAGS+=("-Dtmva-pymva=OFF")
+fi
 
 # Disable the R bindings, should be made standalong like PyROOT
 CMAKE_PLATFORM_FLAGS+=("-Dr=OFF")
