@@ -1,0 +1,25 @@
+From 3ae8447d25e5a3ed29e6433f6a4afb7897dd65f9 Mon Sep 17 00:00:00 2001
+From: Chris Burr <christopher.burr@cern.ch>
+Date: Tue, 13 Apr 2021 06:56:48 +0200
+Subject: [PATCH] Fix using external nlohmann_json
+
+---
+ graf3d/eve7/inc/ROOT/REveElement.hxx | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/graf3d/eve7/inc/ROOT/REveElement.hxx b/graf3d/eve7/inc/ROOT/REveElement.hxx
+index d31ba22b65..68bcb1d164 100644
+--- a/graf3d/eve7/inc/ROOT/REveElement.hxx
++++ b/graf3d/eve7/inc/ROOT/REveElement.hxx
+@@ -18,7 +18,7 @@
+ 
+ #include <memory>
+ 
+-#include <nlohmann/json_fwd.hpp>
++#include <nlohmann/json.hpp>
+ 
+ class TGeoMatrix;
+ 
+-- 
+2.29.2
+
