@@ -70,15 +70,6 @@ cd build-dir
 CXXFLAGS=$(echo "${CXXFLAGS}" | sed -E 's@-std=c\+\+[^ ]+@@g')
 export CXXFLAGS
 
-# # Enable ccache if requested
-# if [ -n "${ROOT_CONDA_USE_CCACHE-}" ]; then
-#     export CCACHE_DIR=${HOME}/feedstock_root/ccache/
-#     CCACHE_BASEDIR=$(cd "${PWD}/.."; pwd)
-#     export CCACHE_BASEDIR
-#     echo "Enabling ccache with CCACHE_BASEDIR=$CCACHE_BASEDIR"
-#     CMAKE_PLATFORM_FLAGS+=("-Dccache=ON")
-# fi
-
 # The cross-linux toolchain breaks find_file relative to the current file
 # Patch up with sed
 sed -i -E 's#(ROOT_TEST_DRIVER RootTestDriver.cmake PATHS \$\{THISDIR\} \$\{CMAKE_MODULE_PATH\} NO_DEFAULT_PATH)#\1 CMAKE_FIND_ROOT_PATH_BOTH#g' \
@@ -253,7 +244,7 @@ CMAKE_PLATFORM_FLAGS+=("-Dcocoa=OFF")
 # runtime_cxxmodules 	Enable runtime support for C++ modules 	ON
 
 # Configure the tests
-if [ -n "${ROOT_CONDA_RUN_GTESTS-}" ]; then
+if [ "${ROOT_CONDA_RUN_GTESTS-}" = "1" ]; then
     CMAKE_PLATFORM_FLAGS+=("-Dtesting=ON")
     # Required for the tests to work correctly
     export LD_LIBRARY_PATH=$PREFIX/lib
@@ -267,7 +258,7 @@ cmake "${CMAKE_PLATFORM_FLAGS[@]}" ../root-source
 
 make "-j${CPU_COUNT}"
 
-if [ -n "${ROOT_CONDA_RUN_GTESTS-}" ]; then
+if [ "${ROOT_CONDA_RUN_GTESTS-}" = "1" ]; then
     # Run gtests, never fail as Jenkins will check the test results instead
     ctest "-j${CPU_COUNT}" -T test --no-compress-output \
         --exclude-regex '^(pyunittests-pyroot-numbadeclare|test-periodic-build|tutorial-pyroot-pyroot004_NumbaDeclare-py)$' \

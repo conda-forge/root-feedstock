@@ -56,14 +56,10 @@ build:
   script_env:
     {% if builtin_pyroot %}- ROOT_CONDA_BUILTIN_PYROOT=1 {%- endif %}
     {% if builtin_clang %}- ROOT_CONDA_BUILTIN_CLANG=1 {%- endif %}
-    # - ROOT_CONDA_RUN_GTESTS=1
-    # - ROOT_CONDA_USE_CCACHE
+    - ROOT_CONDA_RUN_GTESTS=1
 
 requirements:
   build:
-{%- if "ROOT_CONDA_USE_CCACHE" in os.environ %}
-    - ccache
-{%- endif %}
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     - cmake
