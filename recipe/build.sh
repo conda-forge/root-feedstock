@@ -38,9 +38,11 @@ else
     CMAKE_PLATFORM_FLAGS+=("-Dcocoa=ON")
     CMAKE_PLATFORM_FLAGS+=("-DBLA_PREFER_PKGCONFIG=ON")
 
-    # HACK: Fix LLVM headers for Clang 8's C++17 mode
-    sed -i.bak -E 's#std::pointer_to_unary_function<(const )?Value \*, (const )?BasicBlock \*>#\1BasicBlock *(*)(\2Value *)#g' \
-        "${Clang_DIR}/include/llvm/IR/Instructions.h"
+    if [ "${ROOT_CONDA_BUILTIN_CLANG-}" != "1" ]; then
+        # HACK: Fix LLVM headers for Clang 8's C++17 mode
+        sed -i.bak -E 's#std::pointer_to_unary_function<(const )?Value \*, (const )?BasicBlock \*>#\1BasicBlock *(*)(\2Value *)#g' \
+            "${Clang_DIR}/include/llvm/IR/Instructions.h"
+    fi
 
     # HACK: Hack the macOS SDK to make rootcling find the correct ncurses
     if [[ -f  "$CONDA_BUILD_SYSROOT/usr/include/module.modulemap.bak" ]]; then
@@ -69,7 +71,7 @@ CXXFLAGS=$(echo "${CXXFLAGS}" | sed -E 's@-std=c\+\+[^ ]+@@g')
 export CXXFLAGS
 
 # # Enable ccache if requested
-# if [ -n "${ROOT_CONDA_USE_CCACHE+x}" ]; then
+# if [ -n "${ROOT_CONDA_USE_CCACHE-}" ]; then
 #     export CCACHE_DIR=${HOME}/feedstock_root/ccache/
 #     CCACHE_BASEDIR=$(cd "${PWD}/.."; pwd)
 #     export CCACHE_BASEDIR
@@ -92,7 +94,8 @@ CMAKE_PLATFORM_FLAGS+=("-DCMAKE_INSTALL_PREFIX=${PREFIX}")
 CMAKE_PLATFORM_FLAGS+=("-DCMAKE_PREFIX_PATH=${PREFIX}")
 
 CMAKE_PLATFORM_FLAGS+=("-Dfail-on-missing=ON")
-CMAKE_PLATFORM_FLAGS+=("-Dgnuinstall=ON")
+# TODO: Switch this on?
+CMAKE_PLATFORM_FLAGS+=("-Dgnuinstall=OFF")
 CMAKE_PLATFORM_FLAGS+=("-Drpath=ON")
 CMAKE_PLATFORM_FLAGS+=("-Dshared=ON")
 CMAKE_PLATFORM_FLAGS+=("-Dsoversion=ON")
@@ -127,24 +130,31 @@ CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_zlib=OFF")
 CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_zstd=OFF")
 
 # Configure LLVM/Clang/Cling
-CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_llvm=OFF")
-CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_clang=OFF")
-CMAKE_PLATFORM_FLAGS+=("-DLLVM_CONFIG=${Clang_DIR}/bin/llvm-config")
-CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_cling=ON")
-CMAKE_PLATFORM_FLAGS+=("-DCLING_BUILD_PLUGINS=ON")
-CMAKE_PLATFORM_FLAGS+=("-Dclad=ON")
+if [ "${ROOT_CONDA_BUILTIN_CLANG-}" = "1" ]; then
+    CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_llvm=ON")
+    CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_clang=ON")
+else
+    CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_llvm=OFF")
+    CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_clang=OFF")
 
-# Cling needs some minor patches to the LLVM sources, hackily apply them rather than rebuilding LLVM
-sed -i "s@LLVM_LINK_LLVM_DYLIB yes@LLVM_LINK_LLVM_DYLIB no@g" "${PREFIX}/lib/cmake/llvm/LLVMConfig.cmake"
-cd "${PREFIX}"
-patch -p1 < "${RECIPE_DIR}/llvm-patches/0001-Fix-the-compilation.patch"
-patch -p1 < "${RECIPE_DIR}/llvm-patches/0002-Make-datamember-protected.patch"
-cd -
+    CMAKE_PLATFORM_FLAGS+=("-DLLVM_CONFIG=${Clang_DIR}/bin/llvm-config")
+    CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_cling=ON")
+    CMAKE_PLATFORM_FLAGS+=("-DCLING_BUILD_PLUGINS=ON")
+    CMAKE_PLATFORM_FLAGS+=("-Dclad=ON")
+
+    # Cling needs some minor patches to the LLVM sources, hackily apply them rather than rebuilding LLVM
+    sed -i "s@LLVM_LINK_LLVM_DYLIB yes@LLVM_LINK_LLVM_DYLIB no@g" "${PREFIX}/lib/cmake/llvm/LLVMConfig.cmake"
+    cd "${PREFIX}"
+    patch -p1 < "${RECIPE_DIR}/llvm-patches/0001-Fix-the-compilation.patch"
+    patch -p1 < "${RECIPE_DIR}/llvm-patches/0002-Make-datamember-protected.patch"
+    cd -
+fi
 
 # Disable the Python bindings, we will build them in standalone mode
 CMAKE_PLATFORM_FLAGS+=("-Dpyroot_legacy=OFF")
-if [ -n "${ROOT_CONDA_BUILTIN_PYROOT+x}" ]; then
+if [ "${ROOT_CONDA_BUILTIN_PYROOT-}" = "1" ]; then
     CMAKE_PLATFORM_FLAGS+=("-DPYTHON_EXECUTABLE=${PYTHON}")
+    CMAKE_PLATFORM_FLAGS+=("-DCMAKE_INSTALL_PYTHONDIR=${SP_DIR}")
     CMAKE_PLATFORM_FLAGS+=("-Dpyroot=ON")
     CMAKE_PLATFORM_FLAGS+=("-Dtmva-pymva=ON")
 else
@@ -243,7 +253,7 @@ CMAKE_PLATFORM_FLAGS+=("-Dcocoa=OFF")
 # runtime_cxxmodules 	Enable runtime support for C++ modules 	ON
 
 # Configure the tests
-if [ -n "${ROOT_CONDA_RUN_GTESTS+x}" ]; then
+if [ -n "${ROOT_CONDA_RUN_GTESTS-}" ]; then
     CMAKE_PLATFORM_FLAGS+=("-Dtesting=ON")
     # Required for the tests to work correctly
     export LD_LIBRARY_PATH=$PREFIX/lib
@@ -257,7 +267,7 @@ cmake "${CMAKE_PLATFORM_FLAGS[@]}" ../root-source
 
 make "-j${CPU_COUNT}"
 
-if [ -n "${ROOT_CONDA_RUN_GTESTS+x}" ]; then
+if [ -n "${ROOT_CONDA_RUN_GTESTS-}" ]; then
     # Run gtests, never fail as Jenkins will check the test results instead
     ctest "-j${CPU_COUNT}" -T test --no-compress-output \
         --exclude-regex '^(pyunittests-pyroot-numbadeclare|test-periodic-build|tutorial-pyroot-pyroot004_NumbaDeclare-py)$' \
