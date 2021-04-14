@@ -1,6 +1,6 @@
 {% set name = "root" %}
 {% set version = "6.22.8" %}
-{% set build_number = 2 %}
+{% set build_number = 3 %}
 {% set clang_version = "5.0.0" %}
 {% set clang_patches_version = "root_20201127" %}
 
@@ -56,6 +56,7 @@ source:
     - patches/root-x.xx.xx-copy-abspath-headers.patch  # [osx]
     - patches/root-x.xx.xx-osx-remove-hardcoded-sysroot.patch  # [osx]
     - patches/0001-Patch-for-apple-silicon.patch
+    - patches/7852.patch
 
 build:
   number: {{ build_number }}
