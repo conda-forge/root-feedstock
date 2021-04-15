@@ -43,7 +43,7 @@ source:
 
 build:
   number: {{ build_number }}
-  skip: True  # [win or ppc64le]
+  skip: True  # [win]
   ignore_prefix_files:
     - lib/*.pcm            # [not aarch64]
     # https://github.com/root-project/root/blob/975be1e7647098ee8db5333f0769fb12287d0f75/cmake/modules/RootBuildOptions.cmake#L328-L332
