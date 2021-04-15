@@ -1,7 +1,7 @@
 MACOSX_DEPLOYMENT_TARGET:
-- '10.13'
+- '10.14'
 MACOSX_SDK_VERSION:
-- '10.13'
+- '10.14'
 c_compiler:
 - clang
 c_compiler_version:
@@ -89,9 +89,9 @@ sqlite:
 target_platform:
 - osx-64
 tbb:
-- '2020'
+- '2021'
 tbb_devel:
-- '2020'
+- '2021'
 xrootd:
 - '5'
 xz:
