@@ -24,6 +24,8 @@ giflib:
 - '5.2'
 glew:
 - '2.1'
+graphviz:
+- '2.46'
 gsl:
 - '2.6'
 libblas:
@@ -55,6 +57,8 @@ pin_run_as_build:
     max_pin: x
   glew:
     max_pin: x.x
+  graphviz:
+    max_pin: x
   libpng:
     max_pin: x.x
   librsvg:

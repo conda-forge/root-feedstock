@@ -46,6 +46,13 @@ Current build status
 
 
 <table><tr>
+    <td>Travis</td>
+    <td>
+      <a href="https://travis-ci.com/conda-forge/root-feedstock">
+        <img alt="macOS" src="https://img.shields.io/travis/com/conda-forge/root-feedstock/master.svg?label=macOS">
+      </a>
+    </td>
+  </tr><tr>
     <td>Drone</td>
     <td>
       <a href="https://cloud.drone.io/conda-forge/root-feedstock">
@@ -122,6 +129,34 @@ Current build status
                 </a>
               </td>
             </tr><tr>
+              <td>linux_ppc64le_numpy1.17python3.6.____cpython</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2612&branchName=master">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/root-feedstock?branchName=master&jobName=linux&configuration=linux_ppc64le_numpy1.17python3.6.____cpython" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>linux_ppc64le_numpy1.17python3.7.____cpython</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2612&branchName=master">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/root-feedstock?branchName=master&jobName=linux&configuration=linux_ppc64le_numpy1.17python3.7.____cpython" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>linux_ppc64le_numpy1.17python3.8.____cpython</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2612&branchName=master">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/root-feedstock?branchName=master&jobName=linux&configuration=linux_ppc64le_numpy1.17python3.8.____cpython" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>linux_ppc64le_numpy1.19python3.9.____cpython</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2612&branchName=master">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/root-feedstock?branchName=master&jobName=linux&configuration=linux_ppc64le_numpy1.19python3.9.____cpython" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
               <td>osx_64_numpy1.17python3.6.____cpython</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2612&branchName=master">
@@ -177,7 +212,6 @@ Current release info
 | Name | Downloads | Version | Platforms |
 | --- | --- | --- | --- |
 | [![Conda Recipe](https://img.shields.io/badge/recipe-root-green.svg)](https://anaconda.org/conda-forge/root) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/root.svg)](https://anaconda.org/conda-forge/root) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/root.svg)](https://anaconda.org/conda-forge/root) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/root.svg)](https://anaconda.org/conda-forge/root) |
-| [![Conda Recipe](https://img.shields.io/badge/recipe-root--nightly-green.svg)](https://anaconda.org/conda-forge/root-nightly) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/root-nightly.svg)](https://anaconda.org/conda-forge/root-nightly) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/root-nightly.svg)](https://anaconda.org/conda-forge/root-nightly) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/root-nightly.svg)](https://anaconda.org/conda-forge/root-nightly) |
 | [![Conda Recipe](https://img.shields.io/badge/recipe-root_base-green.svg)](https://anaconda.org/conda-forge/root_base) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/root_base.svg)](https://anaconda.org/conda-forge/root_base) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/root_base.svg)](https://anaconda.org/conda-forge/root_base) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/root_base.svg)](https://anaconda.org/conda-forge/root_base) |
 
 Installing root_base
@@ -190,10 +224,10 @@ conda config --add channels conda-forge
 conda config --set channel_priority strict
 ```
 
-Once the `conda-forge` channel has been enabled, `root, root-nightly, root_base` can be installed with:
+Once the `conda-forge` channel has been enabled, `root, root_base` can be installed with:
 
 ```
-conda install root root-nightly root_base
+conda install root root_base
 ```
 
 It is possible to list all of the versions of `root` available on your platform with:

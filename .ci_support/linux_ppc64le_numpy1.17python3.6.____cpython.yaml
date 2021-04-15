@@ -1,19 +1,21 @@
-MACOSX_DEPLOYMENT_TARGET:
-- '11.0'
 c_compiler:
-- clang
+- gcc
 c_compiler_version:
-- '11'
+- '9'
+cdt_name:
+- cos7
 cfitsio:
 - '3.470'
 channel_sources:
-- conda-forge/label/rust_dev,conda-forge
+- conda-forge,defaults
 channel_targets:
 - conda-forge main
 cxx_compiler:
-- clangxx
+- gxx
 cxx_compiler_version:
-- '11'
+- '9'
+docker_image:
+- quay.io/condaforge/linux-anvil-ppc64le
 fftw:
 - '3'
 freetype:
@@ -25,13 +27,13 @@ giflib:
 glew:
 - '2.1'
 graphviz:
-- '2.46'
+- '2.40'
 gsl:
 - '2.6'
 libblas:
-- 3.9 *netlib
+- 3.8 *netlib
 libcblas:
-- 3.9 *netlib
+- 3.8 *netlib
 libpng:
 - '1.6'
 librsvg:
@@ -42,10 +44,8 @@ libxml2:
 - '2.9'
 lz4_c:
 - 1.9.3
-macos_machine:
-- arm64-apple-darwin20.0.0
 numpy:
-- '1.19'
+- '1.17'
 openssl:
 - 1.1.1
 pcre:
@@ -81,11 +81,11 @@ pin_run_as_build:
   zlib:
     max_pin: x.x
 python:
-- 3.8.* *_cpython
+- 3.6.* *_cpython
 sqlite:
 - '3'
 target_platform:
-- osx-arm64
+- linux-ppc64le
 tbb:
 - '2021'
 tbb_devel:
