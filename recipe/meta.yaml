@@ -37,6 +37,7 @@ source:
     - patches/root-x.xx.xx-copy-abspath-headers.patch  # [osx]
     - patches/root-x.xx.xx-osx-remove-hardcoded-sysroot.patch  # [osx]
     - patches/0001-Hacks.patch
+    - patches/0001-Patch-for-apple-silicon.patch
     # - 0001-Add-missing-libs.patch
 {% if not builtin_pyroot %}
     - 0001-Support-standalone-pyroot.patch
@@ -56,7 +57,7 @@ build:
   script_env:
     {% if builtin_pyroot %}- ROOT_CONDA_BUILTIN_PYROOT=1 {%- endif %}
     {% if builtin_clang %}- ROOT_CONDA_BUILTIN_CLANG=1 {%- endif %}
-    - ROOT_CONDA_RUN_GTESTS=1
+    # - ROOT_CONDA_RUN_GTESTS=1
 
 requirements:
   build:
@@ -89,7 +90,7 @@ requirements:
     - giflib
     - glew
     - gl2ps
-    - graphviz  # [not (osx and arm64)]
+    - graphviz
     - gsl
     - libglu  # [linux]
     - libpng
@@ -122,9 +123,9 @@ requirements:
     - zlib
     - zstd
 {% if not builtin_clang %}
-    - llvm =9  # [not (osx and arm64)]
-    - llvmdev =9  # [not (osx and arm64)]
-    - clangdev ={{ clang_version }}  # [not (osx and arm64)]
+    - llvm {{ clang_version }}  # [not (osx and arm64)]
+    - llvmdev {{ clang_version }}  # [not (osx and arm64)]
+    - clangdev {{ clang_version }} {{ clang_patches_version }}*  # [not (osx and arm64)]
     # - cling
     # FIXME: Clad should use build strings
     # - clad =*=hd7828ce_0

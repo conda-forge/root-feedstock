@@ -11,8 +11,9 @@ declare -a CMAKE_PLATFORM_FLAGS
 
 if [[ "${target_platform}" == "osx-arm64" ]]; then
     CONDA_SUBDIR=${target_platform} conda create --prefix "${SRC_DIR}/clang_env" --yes \
-        "llvmdev=5.0.0" "clangdev=5.0.0" "clang_variant * root_20201127"
+        "llvm 9.0.1" "llvmdev 9.0.1" "clangdev 9.0.1 root_62400*"
     Clang_DIR=${SRC_DIR}/clang_env
+    CMAKE_PLATFORM_FLAGS+=("-DLLVM_CMAKE_PATH=${SRC_DIR}/clang_env/lib/cmake")
 else
     Clang_DIR=${PREFIX}
 fi
@@ -22,7 +23,7 @@ if [ "$(uname)" == "Linux" ]; then
     CMAKE_PLATFORM_FLAGS+=("-DCMAKE_AR=${GCC_AR}")
     CMAKE_PLATFORM_FLAGS+=("-DCLANG_DEFAULT_LINKER=${LD_GOLD}")
     CMAKE_PLATFORM_FLAGS+=("-DDEFAULT_SYSROOT=${INSTALL_SYSROOT}")
-    # CMAKE_PLATFORM_FLAGS+=("-Dx11=ON")
+    CMAKE_PLATFORM_FLAGS+=("-Dx11=ON")
     CMAKE_PLATFORM_FLAGS+=("-DRT_LIBRARY=${INSTALL_SYSROOT}/usr/lib/librt.so")
 
     # Fix finding X11 with CMake, copied from below with minor modifications
@@ -134,8 +135,8 @@ else
     CMAKE_PLATFORM_FLAGS+=("-Dclad=ON")
 
     # Cling needs some minor patches to the LLVM sources, hackily apply them rather than rebuilding LLVM
-    sed -i "s@LLVM_LINK_LLVM_DYLIB yes@LLVM_LINK_LLVM_DYLIB no@g" "${PREFIX}/lib/cmake/llvm/LLVMConfig.cmake"
-    cd "${PREFIX}"
+    sed -i "s@LLVM_LINK_LLVM_DYLIB yes@LLVM_LINK_LLVM_DYLIB no@g" "${Clang_DIR}/lib/cmake/llvm/LLVMConfig.cmake"
+    cd "${Clang_DIR}"
     patch -p1 < "${RECIPE_DIR}/llvm-patches/0001-Fix-the-compilation.patch"
     patch -p1 < "${RECIPE_DIR}/llvm-patches/0002-Make-datamember-protected.patch"
     cd -
@@ -238,8 +239,6 @@ CMAKE_PLATFORM_FLAGS+=("-Dwin_broken_tests=OFF")
 CMAKE_PLATFORM_FLAGS+=("-Dwinrtdebug=OFF")
 
 # Platform specific options
-CMAKE_PLATFORM_FLAGS+=("-Dx11=ON")
-CMAKE_PLATFORM_FLAGS+=("-Dcocoa=OFF")
 # Should be disabled for ARM?
 # runtime_cxxmodules 	Enable runtime support for C++ modules 	ON
 

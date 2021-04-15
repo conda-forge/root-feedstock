@@ -1,26 +1,42 @@
-From 7eebe4c44a6115de50d674586310617a750e2abb Mon Sep 17 00:00:00 2001
+From 1b249762382fdedd2606b540425884a2b62a57b1 Mon Sep 17 00:00:00 2001
 From: Chris Burr <chrisburr@users.noreply.github.com>
 Date: Sun, 10 Feb 2019 10:23:21 +0000
 Subject: [PATCH] Remove CLING_OSX_SYSROOT for conda
 
 ---
- interpreter/cling/lib/Interpreter/CMakeLists.txt | 6 ------
- 1 file changed, 6 deletions(-)
+ .../cling/lib/Interpreter/CMakeLists.txt      | 19 -------------------
+ 1 file changed, 19 deletions(-)
 
 diff --git a/interpreter/cling/lib/Interpreter/CMakeLists.txt b/interpreter/cling/lib/Interpreter/CMakeLists.txt
-index 840cc0b818d..b7c31fdd620 100644
+index 7539671735..bde1aafd5b 100644
 --- a/interpreter/cling/lib/Interpreter/CMakeLists.txt
 +++ b/interpreter/cling/lib/Interpreter/CMakeLists.txt
-@@ -291,12 +291,6 @@ if (UNIX)
+@@ -291,25 +291,6 @@ if (UNIX)
      #define CLING_CXX_INCL \"${CLING_CXX_HEADERS}\"
      #define CLING_INCLUDE_PATHS \"${CLING_INCLUDE_PATHS}\"
    ")
 -  if (CMAKE_OSX_SYSROOT)
+-    # CMAKE_OSX_SYSROOT hardcodes the concrete version of the sdk
+-    # (eg .../MacOSX11.1.sdk) which changes after every update of XCode. We use
+-    # the assumption that in the parent folder there is a symlink MacOSX.sdk
+-    # which points to the current active sdk. This change allows releases
+-    # to work when the users update their sdks.
+-    # FIXME: That is a horrible hack and we should teach CIFactory to pick up
+-    # the SDK directory at runtime, just as we do for the include paths to C++.
+-    set (OSX_SYSROOT_DEFAULT_SDK ${CMAKE_OSX_SYSROOT})
+-    if (${OSX_SYSROOT_DEFAULT_SDK} MATCHES "MacOSX[.0-9]+\.sdk")
+-      get_filename_component(OSX_SYSROOT_DEFAULT_SDK ${OSX_SYSROOT_DEFAULT_SDK} DIRECTORY)
+-      set (OSX_SYSROOT_DEFAULT_SDK ${OSX_SYSROOT_DEFAULT_SDK}/MacOSX.sdk/)
+-    endif()
+-
 -    file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/cling-compiledata.h.in
 -      "
--      #define CLING_OSX_SYSROOT \"${CMAKE_OSX_SYSROOT}\"
+-      #define CLING_OSX_SYSROOT \"${OSX_SYSROOT_DEFAULT_SDK}\"
 -    ")
 -  endif()
    if (CLING_CXX_PATH)
      MESSAGE(STATUS "And if not found, will invoke: '${CLING_CXX_PATH}' for them.")
      file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/cling-compiledata.h.in
+-- 
+2.29.2
+
