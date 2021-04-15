@@ -18,12 +18,11 @@ else
     Clang_DIR=${PREFIX}
 fi
 
-if [ "$(uname)" == "Linux" ]; then
+if [[ "${target_platform}" == linux* ]]; then
     INSTALL_SYSROOT=$(python -c "import os; rel = os.path.relpath('$CONDA_BUILD_SYSROOT', '$CONDA_PREFIX'); assert not rel.startswith('.'); print(os.path.join('$PREFIX', rel))")
     CMAKE_PLATFORM_FLAGS+=("-DCMAKE_AR=${GCC_AR}")
     CMAKE_PLATFORM_FLAGS+=("-DCLANG_DEFAULT_LINKER=${LD_GOLD}")
     CMAKE_PLATFORM_FLAGS+=("-DDEFAULT_SYSROOT=${INSTALL_SYSROOT}")
-    CMAKE_PLATFORM_FLAGS+=("-Dx11=ON")
     CMAKE_PLATFORM_FLAGS+=("-DRT_LIBRARY=${INSTALL_SYSROOT}/usr/lib/librt.so")
 
     # Fix finding X11 with CMake, copied from below with minor modifications
@@ -36,14 +35,13 @@ if [ "$(uname)" == "Linux" ]; then
     done
     echo "CXXFLAGS is now '${CXXFLAGS}'"
 else
-    CMAKE_PLATFORM_FLAGS+=("-Dcocoa=ON")
     CMAKE_PLATFORM_FLAGS+=("-DBLA_PREFER_PKGCONFIG=ON")
 
-    if [ "${ROOT_CONDA_BUILTIN_CLANG-}" != "1" ]; then
-        # HACK: Fix LLVM headers for Clang 8's C++17 mode
-        sed -i.bak -E 's#std::pointer_to_unary_function<(const )?Value \*, (const )?BasicBlock \*>#\1BasicBlock *(*)(\2Value *)#g' \
-            "${Clang_DIR}/include/llvm/IR/Instructions.h"
-    fi
+    # if [ "${ROOT_CONDA_BUILTIN_CLANG-}" != "1" ]; then
+    #     # HACK: Fix LLVM headers for Clang 8's C++17 mode
+    #     sed -i.bak -E 's#std::pointer_to_unary_function<(const )?Value \*, (const )?BasicBlock \*>#\1BasicBlock *(*)(\2Value *)#g' \
+    #         "${Clang_DIR}/include/llvm/IR/Instructions.h"
+    # fi
 
     # HACK: Hack the macOS SDK to make rootcling find the correct ncurses
     if [[ -f  "$CONDA_BUILD_SYSROOT/usr/include/module.modulemap.bak" ]]; then
@@ -78,11 +76,7 @@ sed -i -E 's#(ROOT_TEST_DRIVER RootTestDriver.cmake PATHS \$\{THISDIR\} \$\{CMAK
 
 # The basics
 CMAKE_PLATFORM_FLAGS+=("-DCMAKE_BUILD_TYPE=Release")
-# CMAKE_PLATFORM_FLAGS+=("-DCMAKE_BUILD_WITH_INSTALL_RPATH=ON")
-CMAKE_PLATFORM_FLAGS+=("-DCMAKE_INSTALL_NAME_DIR=${PREFIX}/lib")
 CMAKE_PLATFORM_FLAGS+=("-DCMAKE_INSTALL_PREFIX=${PREFIX}")
-# CMAKE_PLATFORM_FLAGS+=("-DCMAKE_INSTALL_RPATH_USE_LINK_PATH=ON")
-# CMAKE_PLATFORM_FLAGS+=("-DCMAKE_INSTALL_RPATH=${PREFIX}/lib")
 CMAKE_PLATFORM_FLAGS+=("-DCMAKE_PREFIX_PATH=${PREFIX}")
 
 CMAKE_PLATFORM_FLAGS+=("-Dfail-on-missing=ON")
@@ -239,6 +233,11 @@ CMAKE_PLATFORM_FLAGS+=("-Dwin_broken_tests=OFF")
 CMAKE_PLATFORM_FLAGS+=("-Dwinrtdebug=OFF")
 
 # Platform specific options
+if [[ "${target_platform}" == linux* ]]; then
+    CMAKE_PLATFORM_FLAGS+=("-Dx11=ON")
+else
+    CMAKE_PLATFORM_FLAGS+=("-Dcocoa=ON")
+fi
 # Should be disabled for ARM?
 # runtime_cxxmodules 	Enable runtime support for C++ modules 	ON
 
@@ -266,12 +265,6 @@ if [ "${ROOT_CONDA_RUN_GTESTS-}" = "1" ]; then
     cp -rp "Testing" "${HOME}/feedstock_root/"
 fi
 
-# cd ../..
-# # TODO: Remove
-# cp -rp $PWD $PWD.bak
-# cd -
-# make install
-
 # # Remove thisroot.*
 # test "$(ls "${PREFIX}"/bin/thisroot.* | wc -l) = 3"
 # rm "${PREFIX}"/bin/thisroot.*
@@ -279,23 +272,6 @@ fi
 #     cp "${RECIPE_DIR}/thisroot" "${PREFIX}/bin/thisroot.${suffix}"
 #     chmod +x "${PREFIX}/bin/thisroot.${suffix}"
 # done
-
-# # Symlink the python components in to the site packages directory
-# mkdir -p "${SP_DIR}"
-# ln -s "${PREFIX}/lib/JupyROOT/" "${SP_DIR}/"
-# ln -s "${PREFIX}/lib/ROOT/" "${SP_DIR}/"
-# ln -s "${PREFIX}/lib/cppyy/" "${SP_DIR}/"
-# ln -s "${PREFIX}/lib/cppyy_backend/" "${SP_DIR}/"
-# ln -s "${PREFIX}/lib/JsMVA/" "${SP_DIR}/"
-# ln -s "${PREFIX}/lib/cmdLineUtils.py" "${SP_DIR}/"
-# ln -s "${PREFIX}/lib"/libJupyROOT*.so "${SP_DIR}/"
-# ln -s "${PREFIX}/lib"/libROOTPythonizations*.so "${SP_DIR}/"
-# ln -s "${PREFIX}/lib"/libcppyy*.so "${SP_DIR}/"
-# # Check PyROOT is roughly working
-# # Skip on osx-arm64 as the binaries haven't been signed yet
-# if [[ "${target_platform}" != "osx-arm64" ]]; then
-#     python -c "import ROOT"
-# fi
 
 # # Add the kernel for normal Jupyter
 # mkdir -p "${PREFIX}/share/jupyter/kernels/"
@@ -319,7 +295,3 @@ fi
 # if [ "$(uname)" != "Linux" ]; then
 #     mv "${Clang_DIR}/include/llvm/IR/Instructions.h.bak" "${Clang_DIR}/include/llvm/IR/Instructions.h"
 # fi
-
-# # Clean up to minimise disk usage
-# # cd ..
-# # rm -rf build-dir

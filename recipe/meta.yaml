@@ -1,21 +1,19 @@
 {% set name = "root" %}
 {% set version = "6.24.0" %}
 {% set build_number = 0 %}
-{% set build_number = datetime.datetime.utcnow().strftime('%H%M%S') %}
 {% set clang_version = "9.0.1" %}
 {% set clang_patches_version = "root_62400" %}
 
-{%- if "ROOT_CONDA_GIT_REV" in os.environ %}
-  {% set clang_patches_version = "root_" + os.environ["ROOT_CONDA_GIT_REV"] %}
-{%- endif %}
-
-{%- if "ROOT_CONDA_BUILD_NUMBER" in os.environ %}
-   {%- set version = "6.25.0" %}
-   {%- set build_number = os.environ["ROOT_CONDA_BUILD_NUMBER"] %}
-{%- endif %}
-
 {% set builtin_pyroot = True %}
 {% set builtin_clang = False %}
+{% set run_gtests = False %}
+
+{%- if "ROOT_CONDA_IS_CI" in os.environ %}
+  {%- set version = "6.25.0" %}
+  {% set clang_patches_version = "root_" + os.environ["ROOT_CONDA_GIT_REV"] %}
+  {% set build_number = datetime.datetime.utcnow().strftime('%H%M%S') %}
+  {% set run_gtests = True %}
+{%- endif %}
 
 package:
   name: root_base
@@ -38,7 +36,6 @@ source:
     - patches/root-x.xx.xx-osx-remove-hardcoded-sysroot.patch  # [osx]
     - patches/0001-Hacks.patch
     - patches/0001-Patch-for-apple-silicon.patch
-    # - 0001-Add-missing-libs.patch
 {% if not builtin_pyroot %}
     - 0001-Support-standalone-pyroot.patch
 {% endif %}
@@ -47,7 +44,6 @@ source:
 build:
   number: {{ build_number }}
   skip: True  # [win or ppc64le]
-  # string: py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ build_number }}
   ignore_prefix_files:
     - lib/*.pcm            # [not aarch64]
     # https://github.com/root-project/root/blob/975be1e7647098ee8db5333f0769fb12287d0f75/cmake/modules/RootBuildOptions.cmake#L328-L332
@@ -57,7 +53,7 @@ build:
   script_env:
     {% if builtin_pyroot %}- ROOT_CONDA_BUILTIN_PYROOT=1 {%- endif %}
     {% if builtin_clang %}- ROOT_CONDA_BUILTIN_CLANG=1 {%- endif %}
-    # - ROOT_CONDA_RUN_GTESTS=1
+    {% if run_gtests %}- ROOT_CONDA_RUN_GTESTS=1 {%- endif %}
 
 requirements:
   build:
@@ -126,9 +122,6 @@ requirements:
     - llvm {{ clang_version }}  # [not (osx and arm64)]
     - llvmdev {{ clang_version }}  # [not (osx and arm64)]
     - clangdev {{ clang_version }} {{ clang_patches_version }}*  # [not (osx and arm64)]
-    # - cling
-    # FIXME: Clad should use build strings
-    # - clad =*=hd7828ce_0
 {% endif %}
 {% if builtin_pyroot %}
     - python
@@ -144,7 +137,6 @@ requirements:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     - {{ pin_compatible('xxhash', max_pin='x.x.x') }}
-    # - cling
     - nlohmann_json
     - cffi
     - sysroot_linux-64  # [linux]
@@ -190,8 +182,8 @@ test:
     # This tutorial uses davix to access a ROOT file over HTTP
     - root -b -l -q -x "${PREFIX}/tutorials/tree/run_h1analysis.C"
     # - XrdSecPROTOCOL=unix python -c "import ROOT; ROOT.ROOT.EnableImplicitMT(); rdf = ROOT.RDataFrame('DecayTree', 'root://eospublic.cern.ch//eos/opendata/lhcb/AntimatterMatters2017/data/B2HHH_MagnetUp.root'); print(rdf.Cache('H1_PX').AsNumpy())"
-    # - python test_pyroot.py  # [not (osx and arm64)]
-    # - ipython -c 'import JsMVA'
+    - python test_pyroot.py
+    - ipython -c 'import JsMVA'
     # This command only works if the compilers are available
     - root -l -b -q -x test.cpp++
 
@@ -199,16 +191,14 @@ outputs:
   - name: root_base
     build:
       number: {{ build_number }}
-      # string: py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ build_number }}
-      # run_exports:
-      #   # https://abi-laboratory.pro/?view=timeline&l=root
-      #   - {{ pin_subpackage('root_base', max_pin='x.x') }}
+      run_exports:
+        # https://abi-laboratory.pro/?view=timeline&l=root
+        - {{ pin_subpackage('root_base', max_pin='x.x.x') }}
       ignore_prefix_files:
         - lib/*.pcm            # [not aarch64]
         # https://github.com/root-project/root/blob/975be1e7647098ee8db5333f0769fb12287d0f75/cmake/modules/RootBuildOptions.cmake#L328-L332
         - etc/allDict.cxx.pch  # [aarch64]
       script:
-        - set -x
         - cd build-dir
         - make install
 {% if not builtin_pyroot %}
@@ -216,7 +206,6 @@ outputs:
     build:
       number: {{ build_number }}
       script:
-        - set -x
         - mkdir "pyroot-$PY_VER-build-dir"
         - cd "pyroot-$PY_VER-build-dir"
         - |
@@ -244,12 +233,12 @@ outputs:
         - python
         - {{ pin_compatible('numpy') }}
     test:
-      # files:
-      #   - test_pyroot.py
+      files:
+        - test_pyroot.py
       imports:
         - ROOT
-      # commands:
-      #   - python test_pyroot.py  # [not (osx and arm64)]
+      commands:
+        - python test_pyroot.py
 {% endif %}
   - name: root
     build:
@@ -271,9 +260,7 @@ outputs:
         - metakernel
         - ipython
         - notebook
-        # # Numba doesn't yet support Python 3.9
-        # # https://github.com/conda-forge/numba-feedstock/pull/61#issuecomment-708913681
-        - numba  # [not (osx and arm64)]
+        - numba
     test:
       files:
         - test.cpp
@@ -283,12 +270,13 @@ outputs:
         - JupyROOT
       commands:
         - ipython -c "import JsMVA"
-        - python test_pyroot.py  # [not (osx and arm64)]
+        - python test_pyroot.py
         - root -l -b -q -x test.cpp
         - root -b -l -q -x -e 'gSystem->LoadAllLibraries(); 0'
         - root -b -l -q -x "${PREFIX}/tutorials/eve/geom_lhcb.C" || true
         - root -b -l -q -x "${PREFIX}/tutorials/tree/run_h1analysis.C"
         - root -l -b -q -x test.cpp++
+{%- if "ROOT_CONDA_IS_CI" in os.environ %}
   - name: root-nightly
     build:
       number: {{ build_number }}
@@ -299,11 +287,11 @@ outputs:
       run:
         - {{ pin_subpackage('root', exact=True) }}
         - python
+{%- endif %}
 
 about:
   home: https://root.cern/
   license: LGPL-2.1-only
-  license_family: LGPL
   license_file: root-source/LICENSE
   doc_url: https://root.cern/documentation
   dev_url: https://github.com/root-project/root/
