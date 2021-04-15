@@ -37,12 +37,6 @@ if [[ "${target_platform}" == linux* ]]; then
 else
     CMAKE_PLATFORM_FLAGS+=("-DBLA_PREFER_PKGCONFIG=ON")
 
-    # if [ "${ROOT_CONDA_BUILTIN_CLANG-}" != "1" ]; then
-    #     # HACK: Fix LLVM headers for Clang 8's C++17 mode
-    #     sed -i.bak -E 's#std::pointer_to_unary_function<(const )?Value \*, (const )?BasicBlock \*>#\1BasicBlock *(*)(\2Value *)#g' \
-    #         "${Clang_DIR}/include/llvm/IR/Instructions.h"
-    # fi
-
     # HACK: Hack the macOS SDK to make rootcling find the correct ncurses
     if [[ -f  "$CONDA_BUILD_SYSROOT/usr/include/module.modulemap.bak" ]]; then
         echo "ERROR: Looks like the macOS SDK hack has already been applied"
@@ -264,34 +258,3 @@ if [ "${ROOT_CONDA_RUN_GTESTS-}" = "1" ]; then
     rm -rf "${HOME}/feedstock_root/Testing"
     cp -rp "Testing" "${HOME}/feedstock_root/"
 fi
-
-# # Remove thisroot.*
-# test "$(ls "${PREFIX}"/bin/thisroot.* | wc -l) = 3"
-# rm "${PREFIX}"/bin/thisroot.*
-# for suffix in sh csh fish; do
-#     cp "${RECIPE_DIR}/thisroot" "${PREFIX}/bin/thisroot.${suffix}"
-#     chmod +x "${PREFIX}/bin/thisroot.${suffix}"
-# done
-
-# # Add the kernel for normal Jupyter
-# mkdir -p "${PREFIX}/share/jupyter/kernels/"
-# cp -r "${PREFIX}/etc/notebook/kernels/root" "${PREFIX}/share/jupyter/kernels/"
-# # Create the config file for normal jupyter (lab|notebook)
-# mkdir -p "${PREFIX}/etc/jupyter/"
-# cp "${PREFIX}/etc/notebook/jupyter_notebook_config.py" "${PREFIX}/etc/jupyter/jupyter_notebook_config.py"
-
-# # Add the post activate/deactivate scripts
-# mkdir -p "${PREFIX}/etc/conda/activate.d"
-# cp "${RECIPE_DIR}/activate.sh" "${PREFIX}/etc/conda/activate.d/activate-root.sh"
-# cp "${RECIPE_DIR}/activate.csh" "${PREFIX}/etc/conda/activate.d/activate-root.csh"
-# cp "${RECIPE_DIR}/activate.fish" "${PREFIX}/etc/conda/activate.d/activate-root.fish"
-
-# mkdir -p "${PREFIX}/etc/conda/deactivate.d"
-# cp "${RECIPE_DIR}/deactivate.sh" "${PREFIX}/etc/conda/deactivate.d/deactivate-root.sh"
-# cp "${RECIPE_DIR}/deactivate.csh" "${PREFIX}/etc/conda/deactivate.d/deactivate-root.csh"
-# cp "${RECIPE_DIR}/deactivate.fish" "${PREFIX}/etc/conda/deactivate.d/deactivate-root.fish"
-
-# # Revert the HACK
-# if [ "$(uname)" != "Linux" ]; then
-#     mv "${Clang_DIR}/include/llvm/IR/Instructions.h.bak" "${Clang_DIR}/include/llvm/IR/Instructions.h"
-# fi

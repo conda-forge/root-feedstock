@@ -155,20 +155,12 @@ requirements:
 test:
   files:
     - test.cpp
-    - test_pyroot.py
-  # requires:
-  #   - ipython
-  # imports:
-  #   - ROOT
-  #   - JupyROOT
-  #   - JsMVA
   commands:
     - root -l -b -q -x
     - root -l -b -q -x test.cpp
     # When testing with -e, explicitly set the return code to zero
     - root -b -l -q -x -e '2+3; 0'
     - root -b -l -q -x -e 'gSystem->LoadAllLibraries(); 0'
-    - echo ${CONDA_BUILD_SYSROOT}  # [osx]
     # # There should be no hard coded references to the SDK
     # Check the thisroot scripts work
     # - thisroot.sh
@@ -181,9 +173,7 @@ test:
     - root -b -l -q -x "${PREFIX}/tutorials/eve/geom_lhcb.C" || true
     # This tutorial uses davix to access a ROOT file over HTTP
     - root -b -l -q -x "${PREFIX}/tutorials/tree/run_h1analysis.C"
-    # - XrdSecPROTOCOL=unix python -c "import ROOT; ROOT.ROOT.EnableImplicitMT(); rdf = ROOT.RDataFrame('DecayTree', 'root://eospublic.cern.ch//eos/opendata/lhcb/AntimatterMatters2017/data/B2HHH_MagnetUp.root'); print(rdf.Cache('H1_PX').AsNumpy())"
-    - python test_pyroot.py
-    - ipython -c 'import JsMVA'
+    - XrdSecPROTOCOL=unix python -c "import ROOT; ROOT.ROOT.EnableImplicitMT(); rdf = ROOT.RDataFrame('DecayTree', 'root://eospublic.cern.ch//eos/opendata/lhcb/AntimatterMatters2017/data/B2HHH_MagnetUp.root'); print(rdf.Cache('H1_PX').AsNumpy())"
     # This command only works if the compilers are available
     - root -l -b -q -x test.cpp++
 
@@ -201,6 +191,22 @@ outputs:
       script:
         - cd build-dir
         - make install
+        # Remove thisroot.*
+        - rm "${PREFIX}"/bin/thisroot.*
+        - |
+          for suffix in sh csh fish; do
+            cp "${RECIPE_DIR}/thisroot" "${PREFIX}/bin/thisroot.${suffix}"
+            chmod +x "${PREFIX}/bin/thisroot.${suffix}"
+          done
+        # Add the post activate/deactivate scripts
+        - mkdir -p "${PREFIX}/etc/conda/activate.d"
+        - cp "${RECIPE_DIR}/activate.sh" "${PREFIX}/etc/conda/activate.d/activate-root.sh"
+        - cp "${RECIPE_DIR}/activate.csh" "${PREFIX}/etc/conda/activate.d/activate-root.csh"
+        - cp "${RECIPE_DIR}/activate.fish" "${PREFIX}/etc/conda/activate.d/activate-root.fish"
+        - mkdir -p "${PREFIX}/etc/conda/deactivate.d"
+        - cp "${RECIPE_DIR}/deactivate.sh" "${PREFIX}/etc/conda/deactivate.d/deactivate-root.sh"
+        - cp "${RECIPE_DIR}/deactivate.csh" "${PREFIX}/etc/conda/deactivate.d/deactivate-root.csh"
+        - cp "${RECIPE_DIR}/deactivate.fish" "${PREFIX}/etc/conda/deactivate.d/deactivate-root.fish"
 {% if not builtin_pyroot %}
   - name: pyroot
     build:
