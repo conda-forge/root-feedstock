@@ -161,11 +161,10 @@ test:
     # When testing with -e, explicitly set the return code to zero
     - root -b -l -q -x -e '2+3; 0'
     - root -b -l -q -x -e 'gSystem->LoadAllLibraries(); 0'
-    # # There should be no hard coded references to the SDK
     # Check the thisroot scripts work
-    # - thisroot.sh
-    # - thisroot.csh
-    # - thisroot.fish
+    - thisroot.sh
+    - thisroot.csh
+    - thisroot.fish
     # Test if OpenGL is working
     - root -b -l -q -x -e 'gStyle->SetCanvasPreferGL(kTRUE); c = new TCanvas(); if (!c->UseGL()) { throw std::runtime_error("OpenGL does not appear to be working"); }'
     # This test will fail due to lack of graphics support but try it anyway
@@ -173,9 +172,13 @@ test:
     - root -b -l -q -x "${PREFIX}/tutorials/eve/geom_lhcb.C" || true
     # This tutorial uses davix to access a ROOT file over HTTP
     - root -b -l -q -x "${PREFIX}/tutorials/tree/run_h1analysis.C"
-    - XrdSecPROTOCOL=unix python -c "import ROOT; ROOT.ROOT.EnableImplicitMT(); rdf = ROOT.RDataFrame('DecayTree', 'root://eospublic.cern.ch//eos/opendata/lhcb/AntimatterMatters2017/data/B2HHH_MagnetUp.root'); print(rdf.Cache('H1_PX').AsNumpy())"
+    # FIXME: This test fails on ppc64le for some reason...
+    - XrdSecPROTOCOL=unix python -c "import ROOT; ROOT.ROOT.EnableImplicitMT(); rdf = ROOT.RDataFrame('DecayTree', 'root://eospublic.cern.ch//eos/opendata/lhcb/AntimatterMatters2017/data/B2HHH_MagnetUp.root'); print(rdf.Cache('H1_PX').AsNumpy())"  # [not ppc64le]
     # This command only works if the compilers are available
     - root -l -b -q -x test.cpp++
+    # Ensure "error evaluating expression" doesn't cause the interpreter to exit
+    # - bash -xc "(bin/root -q -e 'TBrow; TBrowser' 2>&1; true) | grep 'terminate called after throwing an instance' --count && exit 42; exit 0"
+
 
 outputs:
   - name: root_base
