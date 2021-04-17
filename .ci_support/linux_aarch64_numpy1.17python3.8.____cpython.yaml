@@ -11,7 +11,7 @@ cdt_name:
 cfitsio:
 - '3.470'
 channel_sources:
-- conda-forge
+- chrisburr/label/conda_artifacts_305146,conda-forge,defaults
 channel_targets:
 - conda-forge main
 cxx_compiler:
