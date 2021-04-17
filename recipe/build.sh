@@ -69,7 +69,11 @@ sed -i -E 's#(ROOT_TEST_DRIVER RootTestDriver.cmake PATHS \$\{THISDIR\} \$\{CMAK
     ../root-source/cmake/modules/RootNewMacros.cmake
 
 # The basics
-CMAKE_PLATFORM_FLAGS+=("-DCMAKE_BUILD_TYPE=Release")
+if [ "${ROOT_CONDA_BUILD_TYPE-}" != "" ]; then
+    CMAKE_PLATFORM_FLAGS+=("-DCMAKE_BUILD_TYPE=Release")
+else
+    CMAKE_PLATFORM_FLAGS+=("-DCMAKE_BUILD_TYPE=${ROOT_CONDA_BUILD_TYPE}")
+fi
 CMAKE_PLATFORM_FLAGS+=("-DCMAKE_INSTALL_PREFIX=${PREFIX}")
 CMAKE_PLATFORM_FLAGS+=("-DCMAKE_PREFIX_PATH=${PREFIX}")
 
@@ -130,7 +134,13 @@ else
     cd -
 fi
 
-# Disable the Python bindings, we will build them in standalone mode
+# Enable some vectorisation options
+CMAKE_PLATFORM_FLAGS+=("-DCMAKE_CXX_FLAGS='-march=nehalem'")
+CMAKE_PLATFORM_FLAGS+=("-Dveccore=ON")
+CMAKE_PLATFORM_FLAGS+=("-Dvc=ON")
+CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_veccore=ON")
+
+# Disable the Python bindings if we're building them in standalone mode
 CMAKE_PLATFORM_FLAGS+=("-Dpyroot_legacy=OFF")
 if [ "${ROOT_CONDA_BUILTIN_PYROOT-}" = "1" ]; then
     CMAKE_PLATFORM_FLAGS+=("-DPYTHON_EXECUTABLE=${PYTHON}")
@@ -205,8 +215,6 @@ CMAKE_PLATFORM_FLAGS+=("-Dqt5web=OFF")
 CMAKE_PLATFORM_FLAGS+=("-Dshadowpw=OFF")
 CMAKE_PLATFORM_FLAGS+=("-Dunuran=OFF")
 CMAKE_PLATFORM_FLAGS+=("-During=OFF")
-CMAKE_PLATFORM_FLAGS+=("-Dvc=OFF")
-CMAKE_PLATFORM_FLAGS+=("-Dveccore=OFF")
 CMAKE_PLATFORM_FLAGS+=("-Dvecgeom=OFF")
 CMAKE_PLATFORM_FLAGS+=("-Dvmc=OFF")
 CMAKE_PLATFORM_FLAGS+=("-Dxproofd=OFF")

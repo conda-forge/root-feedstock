@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 import sys
 import ROOT
-import numba
 
 @ROOT.Numba.Declare(["float"], "float")
 def fn(x):

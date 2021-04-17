@@ -9,7 +9,7 @@
 {% set run_gtests = False %}
 
 {%- if "ROOT_CONDA_IS_CI" in os.environ %}
-  {%- set version = "6.25.0" %}
+  {%- set version = os.environ["ROOT_CONDA_VERSION"] %}
   {% set clang_patches_version = "root_" + os.environ["ROOT_CONDA_GIT_REV"] %}
   {% set build_number = os.environ["ROOT_CONDA_BUILD_NUMBER"] %}
   {% set run_gtests = True %}
@@ -51,6 +51,7 @@ build:
     {% if builtin_pyroot %}- ROOT_CONDA_BUILTIN_PYROOT=1 {%- endif %}
     {% if builtin_clang %}- ROOT_CONDA_BUILTIN_CLANG=1 {%- endif %}
     {% if run_gtests %}- ROOT_CONDA_RUN_GTESTS=1 {%- endif %}
+    - ROOT_CONDA_BUILD_TYPE
 
 requirements:
   build:
@@ -100,6 +101,7 @@ requirements:
     - sqlite
     - tbb
     - tbb-devel
+    - vector-classes
     - vdt
     - xorg-libx11  # [linux]
     - xorg-libxau  # [linux]
