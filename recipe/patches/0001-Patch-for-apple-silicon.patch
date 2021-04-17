@@ -5,8 +5,7 @@ Subject: [PATCH] Patch for apple silicon
 
 ---
  cmake/modules/SearchInstalledSoftware.cmake | 2 +-
- math/mathcore/src/mixmax.icc                | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
 diff --git a/cmake/modules/SearchInstalledSoftware.cmake b/cmake/modules/SearchInstalledSoftware.cmake
 index bb1286b159..a4f23f9c90 100644
@@ -21,19 +20,3 @@ index bb1286b159..a4f23f9c90 100644
    else()
      message(STATUS "Cocoa option can only be enabled on MacOSX platform")
      set(cocoa OFF CACHE BOOL "Disabled because only available on MacOSX (${cocoa_description})" FORCE)
-diff --git a/math/mathcore/src/mixmax.icc b/math/mathcore/src/mixmax.icc
-index 9b9a51b453..97fbef1d1c 100644
---- a/math/mathcore/src/mixmax.icc
-+++ b/math/mathcore/src/mixmax.icc
-@@ -257,7 +257,7 @@ inline myuint fmodmulM61(myuint cum, myuint a, myuint b){
- 
- inline myuint fmodmulM61(myuint cum, myuint s, myuint a)
- {
--    register myuint o,ph,pl,ah,al;
-+    myuint o,ph,pl,ah,al;
-     o=(s)*a;
-     ph = ((s)>>32);
-     pl = (s) & MASK32;
--- 
-2.29.2
-
