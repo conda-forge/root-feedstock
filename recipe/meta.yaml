@@ -138,13 +138,14 @@ requirements:
     - {{ pin_compatible('xxhash', max_pin='x.x.x') }}
     - nlohmann_json
     - cffi
+    - graphviz
+    - vector-classes
     - sysroot_linux-64  # [linux]
     - xorg-libx11  # [linux]
     - xorg-libxext  # [linux]
     - xorg-libxpm  # [linux]
     - xorg-libxft  # [linux]
     - libglu  # [linux]
-    - graphviz
   run_constrained:
     # Items listed here conflict with ROOT
     - cling 9999
