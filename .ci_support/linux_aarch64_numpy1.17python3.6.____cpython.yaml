@@ -91,9 +91,9 @@ sqlite:
 target_platform:
 - linux-aarch64
 tbb:
-- '2021'
+- '2020'
 tbb_devel:
-- '2021'
+- '2020'
 xrootd:
 - '5'
 xz:

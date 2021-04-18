@@ -89,9 +89,9 @@ sqlite:
 target_platform:
 - osx-64
 tbb:
-- '2021'
+- '2020'
 tbb_devel:
-- '2021'
+- '2020'
 xrootd:
 - '5'
 xz:
