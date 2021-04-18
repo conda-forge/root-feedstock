@@ -134,7 +134,9 @@ else
 fi
 
 # Enable some vectorisation options
-CMAKE_PLATFORM_FLAGS+=("-DCMAKE_CXX_FLAGS='-march=nehalem'")
+if [[ "${target_platform}" == *-64 ]]; then
+    CMAKE_PLATFORM_FLAGS+=("-DCMAKE_CXX_FLAGS='-march=nehalem'")
+fi
 CMAKE_PLATFORM_FLAGS+=("-Dveccore=ON")
 CMAKE_PLATFORM_FLAGS+=("-Dvc=ON")
 CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_veccore=ON")
