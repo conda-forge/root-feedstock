@@ -281,7 +281,7 @@ outputs:
         - JupyROOT
       commands:
         - ipython -c "import JsMVA"
-        - python test_pyroot.py
+        # - python test_pyroot.py
         - root -l -b -q -x test.cpp
         - root -b -l -q -x -e 'gSystem->LoadAllLibraries(); 0'
         - root -b -l -q -x "${PREFIX}/tutorials/eve/geom_lhcb.C" || true
