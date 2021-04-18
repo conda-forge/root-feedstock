@@ -10,7 +10,7 @@
 
 {%- if "ROOT_CONDA_IS_CI" in os.environ %}
   {%- set version = os.environ["ROOT_CONDA_VERSION"] %}
-  {% set clang_patches_version = "root_" + os.environ["ROOT_CONDA_GIT_REV"] %}
+  # {# set clang_patches_version = "root_" + os.environ["ROOT_CONDA_GIT_REV"] #}
   {% set build_number = os.environ["ROOT_CONDA_BUILD_NUMBER"] %}
   {% set run_gtests = True %}
 {%- endif %}
@@ -20,13 +20,13 @@ package:
   version: {{ version }}
 
 source:
-{%- if "ROOT_CONDA_GIT_REV" in os.environ %}
-  git_url: {{ os.environ.get("ROOT_CONDA_GIT_URL", "https://github.com/root-project/root.git") }}
-  git_rev: {{ os.environ["ROOT_CONDA_GIT_REV"] }}
-{%- else %}
+# {%- if "ROOT_CONDA_GIT_REV" in os.environ %}
+#   git_url: {{ os.environ.get("ROOT_CONDA_GIT_URL", "https://github.com/root-project/root.git") }}
+#   git_rev: {{ os.environ["ROOT_CONDA_GIT_REV"] }}
+# {%- else %}
   url: https://github.com/root-project/root/archive/v{{ '-'.join(version.split('.')[:-1] + [version.split('.')[-1].rjust(2, '0')]) }}.tar.gz
   sha256: 847833b264cb708bf133f91e0d65ba4ccdb40fccbc4a84c90394edc36c60d992
-{%- endif %}
+# {%- endif %}
   folder: root-source
   patches:
     - patches/root-x.xx.xx_cling-runtime-sysroot.patch
