@@ -257,6 +257,27 @@ CMAKE_PLATFORM_FLAGS+=("-Droottest=OFF")
 # Now we can actually run CMake
 cmake "${CMAKE_PLATFORM_FLAGS[@]}" ../root-source
 
+if [[ "${target_platform}" == osx* ]]; then
+    # This is a horrible hack to hide the LLVM/Clang symbols in libCling.so on macOS
+    cd core/metacling/src
+    # First build libCling.so
+    make "-j${CPU_COUNT}"
+    # Find the symbols in libCling.so
+    nm -g ../../../lib/libCling.so | ruby -ne 'if /^[0-9a-f]+.*\s(\S+)$/.match($_) then print $1,"\n" end' | sort -u > original.exp
+    # Find the symbols in the LLVM and Clang static libraries
+    nm -g $PREFIX/lib/lib{LLVM,clang}*.a | ruby -ne 'if /^[0-9a-f]+.*\s(\S+)$/.match($_) then print $1,"\n" end' | sort -u > clang_and_llvm.exp
+    # Find the difference, i.e. symbols that are in libCling.so but aren't defined in LLVM/Clang
+    comm -23 original.exp clang_and_llvm.exp > allowed_symbols.exp
+    # Add "-exported_symbols_list" to the link command
+    sed -i "s@$CXX @$CXX -exported_symbols_list $PWD/allowed_symbols.exp @g" CMakeFiles/Cling.dir/link.txt
+    # Build libCling.so again now the link command has been updated
+    make "-j${CPU_COUNT}"
+    # Show some details about the number of symbols before and after in case further debugging is required
+    nm -g ../../../lib/libCling.so | ruby -ne 'if /^[0-9a-f]+.*\s(\S+)$/.match($_) then print $1,"\n" end' | sort -u > new.exp
+    wc -l *.exp
+    cd -
+fi
+
 make "-j${CPU_COUNT}"
 
 if [ "${ROOT_CONDA_RUN_GTESTS-}" = "1" ]; then
