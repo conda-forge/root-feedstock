@@ -179,9 +179,8 @@ test:
     - XrdSecPROTOCOL=unix python -c "import ROOT; ROOT.ROOT.EnableImplicitMT(); rdf = ROOT.RDataFrame('DecayTree', 'root://eospublic.cern.ch//eos/opendata/lhcb/AntimatterMatters2017/data/B2HHH_MagnetUp.root'); print(rdf.Cache('H1_PX').AsNumpy())"  # [not ppc64le]
     # This command only works if the compilers are available
     - root -l -b -q -x test.cpp++
-    # Ensure "error evaluating expression" doesn't cause the interpreter to exit
-    # - bash -xc "(bin/root -q -e 'TBrow; TBrowser' 2>&1; true) | grep 'terminate called after throwing an instance' --count && exit 42; exit 0"
-
+    # Ensure exceptions don't cause the interpreter to exit
+    - echo '.q' | root -e 'sddsa0'
 
 outputs:
   - name: root_base
