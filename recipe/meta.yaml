@@ -180,7 +180,8 @@ test:
     # This command only works if the compilers are available
     - root -l -b -q -x test.cpp++
     # Ensure exceptions don't cause the interpreter to exit
-    - echo '.q' | root -e 'sddsa0'
+    # Expected to fail on apple silicon: https://github.com/root-project/root/issues/7541
+    - echo '.q' | root -e 'sddsa0'  # [not (osx and arm64)]
 
 outputs:
   - name: root_base
