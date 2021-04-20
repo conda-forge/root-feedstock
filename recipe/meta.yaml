@@ -140,7 +140,7 @@ requirements:
     - nlohmann_json
     - cffi
     - graphviz
-    - vector-classes
+    - {{ pin_compatible('vector-classes', max_pin='x.x') }}
     - sysroot_linux-64  # [linux]
     - xorg-libx11  # [linux]
     - xorg-libxext  # [linux]
