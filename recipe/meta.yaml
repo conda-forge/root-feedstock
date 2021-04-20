@@ -1,12 +1,12 @@
 {% set name = "root" %}
-{% set version = "6.24.0" %}
+{% set version = "6-25-01" %}
 {% set build_number = 0 %}
 {% set clang_version = "9.0.1" %}
 {% set clang_patches_version = "root_62400" %}
 
-{% set builtin_pyroot = True %}
-{% set builtin_clang = False %}
-{% set run_gtests = False %}
+{% set builtin_pyroot = true %}
+{% set builtin_clang = false %}
+{% set run_gtests = false %}
 
 {%- if "ROOT_CONDA_IS_CI" in os.environ %}
   {%- set version = os.environ["ROOT_CONDA_VERSION"] %}
@@ -25,7 +25,7 @@ source:
 #   git_rev: {{ os.environ["ROOT_CONDA_GIT_REV"] }}
 # {%- else %}
   url: https://github.com/root-project/root/archive/v{{ '-'.join(version.split('.')[:-1] + [version.split('.')[-1].rjust(2, '0')]) }}.tar.gz
-  sha256: 847833b264cb708bf133f91e0d65ba4ccdb40fccbc4a84c90394edc36c60d992
+  sha256: 590669913f072e6da04e10eb39cefb2786135ab4a26d6abb286206c2583d2728
 # {%- endif %}
   folder: root-source
   patches:
@@ -41,7 +41,7 @@ source:
 
 build:
   number: {{ build_number }}
-  skip: True  # [win]
+  skip: true  # [win]
   ignore_prefix_files:
     - lib/*.pcm            # [not aarch64]
     # https://github.com/root-project/root/blob/975be1e7647098ee8db5333f0769fb12287d0f75/cmake/modules/RootBuildOptions.cmake#L328-L332
@@ -308,33 +308,33 @@ about:
   doc_url: https://root.cern/documentation
   dev_url: https://github.com/root-project/root/
   summary: |
-      ROOT is a modular scientific software toolkit. It provides all the functionalities needed to deal with big data
-      processing, statistical analysis, visualisation and storage. It is mainly written in C++ but integrated with other
-      languages such as Python and R.
+    ROOT is a modular scientific software toolkit. It provides all the functionalities needed to deal with big data
+    processing, statistical analysis, visualisation and storage. It is mainly written in C++ but integrated with other
+    languages such as Python and R.
   description: |
-      Almost everything in ROOT should be supported in this Conda package; ROOT was built with lots of options turned
-      on. Here are a few things to try:
+    Almost everything in ROOT should be supported in this Conda package; ROOT was built with lots of options turned
+    on. Here are a few things to try:
 
-      * `root`: you can start up a session and see the splash screen; Control-D to exit.
-      * `python` followed by `import ROOT` will load PyROOT.
-      * `root --notebook` will start a notebook server with a ROOT kernel choice.
-      * `rootbrowse` will open a TBrowser session so you can look through files.
-      * `root -l -q $ROOTSYS/tutorials/dataframe/df013_InspectAnalysis.C` will run a DataFrame example with an animated plot.
-      * `root -b -q -l -n -e "std::cout << TROOT::GetTutorialDir() << std::endl;"` will print the tutorial dir.
-      * `root -b -l -q -e 'std::cout << (float) TPython::Eval("1+1") << endl;'` will run Python from C++ ROOT.
+    * `root`: you can start up a session and see the splash screen; Control-D to exit.
+    * `python` followed by `import ROOT` will load PyROOT.
+    * `root --notebook` will start a notebook server with a ROOT kernel choice.
+    * `rootbrowse` will open a TBrowser session so you can look through files.
+    * `root -l -q $ROOTSYS/tutorials/dataframe/df013_InspectAnalysis.C` will run a DataFrame example with an animated plot.
+    * `root -b -q -l -n -e "std::cout << TROOT::GetTutorialDir() << std::endl;"` will print the tutorial dir.
+    * `root -b -l -q -e 'std::cout << (float) TPython::Eval("1+1") << endl;'` will run Python from C++ ROOT.
 
-      See the post [here](https://iscinumpy.gitlab.io/post/root-conda/) for more information about using this Conda package.
+    See the post [here](https://iscinumpy.gitlab.io/post/root-conda/) for more information about using this Conda package.
 
-      The ROOT package will prepare the required compilers. Everything in Conda is symlinked into
-      `$CONDA_PREFIX` if you build things by hand; tools like CMake should find it automatically. The `thisroot.*`
-      scripts should not be used and are not provided. Graphics, `rootbrowse`, etc. all should work. OpenGL is enabled.
+    The ROOT package will prepare the required compilers. Everything in Conda is symlinked into
+    `$CONDA_PREFIX` if you build things by hand; tools like CMake should find it automatically. The `thisroot.*`
+    scripts should not be used and are not provided. Graphics, `rootbrowse`, etc. all should work. OpenGL is enabled.
 
-      There is also a `root_base` package, with minimal dependecies, that libraries should depend on this to avoid
-      having a runtime dependency on the `compilers` package. `root-dependencies` and `root-binaries` are also available.
-      In most cases users should use the `root` package directly, since it adds both of these, along with compilers,
-      Jupyter, and a few other things to facilitate using ROOT or PyROOT.
+    There is also a `root_base` package, with minimal dependecies, that libraries should depend on this to avoid
+    having a runtime dependency on the `compilers` package. `root-dependencies` and `root-binaries` are also available.
+    In most cases users should use the `root` package directly, since it adds both of these, along with compilers,
+    Jupyter, and a few other things to facilitate using ROOT or PyROOT.
 
-      ROOT was built with and will report `-std=c++17` from `root-config`.
+    ROOT was built with and will report `-std=c++17` from `root-config`.
 
 extra:
   recipe-maintainers:
