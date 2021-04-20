@@ -30,8 +30,6 @@ graphviz:
 - '2.40'
 gsl:
 - '2.6'
-krb5:
-- 1.17.1
 libblas:
 - 3.8 *netlib
 libcblas:
@@ -61,8 +59,6 @@ pin_run_as_build:
     max_pin: x.x
   graphviz:
     max_pin: x
-  krb5:
-    max_pin: x.x
   libpng:
     max_pin: x.x
   librsvg:
@@ -91,9 +87,9 @@ sqlite:
 target_platform:
 - linux-64
 tbb:
-- '2021'
+- '2020'
 tbb_devel:
-- '2021'
+- '2020'
 xrootd:
 - '5'
 xz:
