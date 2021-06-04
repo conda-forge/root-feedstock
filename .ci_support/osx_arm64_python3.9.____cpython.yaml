@@ -24,6 +24,8 @@ giflib:
 - '5.2'
 glew:
 - '2.1'
+glib:
+- '2'
 graphviz:
 - '2.47'
 gsl:
