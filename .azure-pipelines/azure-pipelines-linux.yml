@@ -5,25 +5,29 @@
 jobs:
 - job: linux
   pool:
-    vmImage: ubuntu-16.04
+    vmImage: ubuntu-latest
   strategy:
     matrix:
       linux_64_numpy1.17python3.6.____cpython:
         CONFIG: linux_64_numpy1.17python3.6.____cpython
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-comp7
+        SHORT_CONFIG_NAME: linux_64_numpy1.17python3.6.____cpython
       linux_64_numpy1.17python3.7.____cpython:
         CONFIG: linux_64_numpy1.17python3.7.____cpython
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-comp7
+        SHORT_CONFIG_NAME: linux_64_numpy1.17python3.7.____cpython
       linux_64_numpy1.17python3.8.____cpython:
         CONFIG: linux_64_numpy1.17python3.8.____cpython
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-comp7
+        SHORT_CONFIG_NAME: linux_64_numpy1.17python3.8.____cpython
       linux_64_numpy1.19python3.9.____cpython:
         CONFIG: linux_64_numpy1.19python3.9.____cpython
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-comp7
+        SHORT_CONFIG_NAME: linux_64_numpy1.19python3.9.____cpython
   timeoutInMinutes: 360
 
   steps:
@@ -51,8 +55,7 @@ jobs:
       FEEDSTOCK_TOKEN: $(FEEDSTOCK_TOKEN)
       STAGING_BINSTAR_TOKEN: $(STAGING_BINSTAR_TOKEN)
   - script: |
-        full_artifact_name="conda_artifacts_$(build.BuildId)_$(CONFIG)"
-        artifact_name=`echo "$full_artifact_name" | head -c 80`
+        artifact_name="conda_artifacts_$(build.BuildId)_$(SHORT_CONFIG_NAME)"
         echo "##vso[task.setVariable variable=ARTIFACT_NAME]$artifact_name"
         if [ -d build_artifacts ]; then
           echo "##vso[task.setVariable variable=CONDA_BLD_DIR_EXISTS]true"
