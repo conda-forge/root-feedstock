@@ -1,25 +1,21 @@
-BUILD:
-- aarch64-conda_cos7-linux-gnu
 c_compiler:
 - gcc
 c_compiler_version:
-- '9'
-cdt_arch:
-- aarch64
+- '7'
 cdt_name:
 - cos7
 cfitsio:
 - '3.470'
 channel_sources:
-- conda-forge
+- conda-forge,defaults
 channel_targets:
 - conda-forge main
 cxx_compiler:
 - gxx
 cxx_compiler_version:
-- '9'
+- '7'
 docker_image:
-- quay.io/condaforge/linux-anvil-aarch64
+- quay.io/condaforge/linux-anvil-ppc64le
 fftw:
 - '3'
 freetype:
@@ -35,7 +31,7 @@ glib:
 graphviz:
 - '2.47'
 gsl:
-- '2.6'
+- '2.7'
 libblas:
 - 3.8 *netlib
 libcblas:
@@ -51,7 +47,7 @@ libxml2:
 lz4_c:
 - 1.9.3
 numpy:
-- '1.17'
+- '1.18'
 openssl:
 - 1.1.1
 pcre:
@@ -87,11 +83,11 @@ pin_run_as_build:
   zlib:
     max_pin: x.x
 python:
-- 3.7.* *_cpython
+- 3.6.* *_cpython
 sqlite:
 - '3'
 target_platform:
-- linux-aarch64
+- linux-ppc64le
 tbb:
 - '2020'
 tbb_devel:
