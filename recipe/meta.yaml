@@ -206,6 +206,9 @@ outputs:
             cp "${RECIPE_DIR}/thisroot" "${PREFIX}/bin/thisroot.${suffix}"
             chmod +x "${PREFIX}/bin/thisroot.${suffix}"
           done
+        # Install the jupyter kernel
+        - mkdir -p "$PREFIX/share/jupyter/kernels"
+        - cp -r "$PREFIX/etc/notebook/kernels/root" "$PREFIX/share/jupyter/kernels"
         # Add the post activate/deactivate scripts
         - mkdir -p "${PREFIX}/etc/conda/activate.d"
         - cp "${RECIPE_DIR}/activate.sh" "${PREFIX}/etc/conda/activate.d/activate-root.sh"
@@ -253,6 +256,7 @@ outputs:
         - ROOT
       commands:
         - python test_pyroot.py
+        - jupyter-kernelspec list | grep ' root '
 {% endif %}
   - name: root
     build:
@@ -290,6 +294,7 @@ outputs:
         - root -b -l -q -x "${PREFIX}/tutorials/eve/geom_lhcb.C" || true
         - root -b -l -q -x "${PREFIX}/tutorials/tree/run_h1analysis.C"
         - root -l -b -q -x test.cpp++
+        - jupyter-kernelspec list | grep ' root '
 {%- if "ROOT_CONDA_IS_CI" in os.environ %}
   - name: root-nightly
     build:
