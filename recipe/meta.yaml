@@ -1,8 +1,7 @@
 {% set name = "root" %}
-{% set tag_name = "6-24-02" %}
+{% set tag_name = "6-24-04" %}
 {% set version = ".".join(tag_name.split("-")|map("int")|map("string")) %}
-{% set version = "6.24.2" %}
-{% set build_number = 1 %}
+{% set build_number = 0 %}
 {% set clang_version = "9.0.1" %}
 {% set clang_patches_version = "root_62400" %}
 
@@ -27,7 +26,7 @@ source:
   git_rev: {{ os.environ["ROOT_CONDA_GIT_REV"] }}
 {%- else %}
   url: https://github.com/root-project/root/archive/refs/tags/v{{ tag_name }}.tar.gz
-  sha256: ce12182ab875c302c6ba1ba1f667e93bcbea77c657a2ff4ebf05272073d68726
+  sha256: 25cf2840547a52f9248e4ce8815613c5ac403b1967910466c12d493ab6fee377
 {%- endif %}
   folder: root-source
   patches:
