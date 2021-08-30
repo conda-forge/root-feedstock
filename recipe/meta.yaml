@@ -152,7 +152,7 @@ requirements:
   run_constrained:
     - __osx >={{ MACOSX_DEPLOYMENT_TARGET|default("10.9") }}  # [osx]
     # Older numba versions have trouble with how LLVM is linked
-    - numba >=0.52
+    - numba >=0.52  # [py>=37]
     # Items listed here conflict with ROOT
     - cling 9999
     - root5 9999
@@ -278,7 +278,7 @@ outputs:
         - metakernel
         - ipython
         - notebook
-        - numba
+        - numba  # [py>=37]
     test:
       files:
         - test.cpp
