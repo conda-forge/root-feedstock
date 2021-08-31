@@ -31,7 +31,7 @@ glib:
 graphviz:
 - '2.47'
 gsl:
-- '2.6'
+- '2.7'
 libblas:
 - 3.8 *netlib
 libcblas:
@@ -91,9 +91,9 @@ sqlite:
 target_platform:
 - osx-64
 tbb:
-- '2020'
+- '2021'
 tbb_devel:
-- '2020'
+- '2021'
 xrootd:
 - '5'
 xz:

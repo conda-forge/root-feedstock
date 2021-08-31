@@ -1,7 +1,6 @@
 {% set name = "root" %}
-{% set tag_name = "6-24-02" %}
+{% set tag_name = "6-24-04" %}
 {% set version = ".".join(tag_name.split("-")|map("int")|map("string")) %}
-{% set version = "6.24.2" %}
 {% set build_number = 0 %}
 {% set clang_version = "9.0.1" %}
 {% set clang_patches_version = "root_62400" %}
@@ -27,7 +26,7 @@ source:
   git_rev: {{ os.environ["ROOT_CONDA_GIT_REV"] }}
 {%- else %}
   url: https://github.com/root-project/root/archive/refs/tags/v{{ tag_name }}.tar.gz
-  sha256: ce12182ab875c302c6ba1ba1f667e93bcbea77c657a2ff4ebf05272073d68726
+  sha256: 25cf2840547a52f9248e4ce8815613c5ac403b1967910466c12d493ab6fee377
 {%- endif %}
   folder: root-source
   patches:
@@ -37,6 +36,7 @@ source:
     - patches/0001-Hacks.patch
     - patches/0001-Patch-for-apple-silicon.patch
     - patches/0001-Set-LLVM_REQUIRES_EH-for-Cling.patch
+    - patches/0001-Workaround-https-github.com-root-project-root-issues.patch
 {% if not builtin_pyroot %}
     - 0001-Support-standalone-pyroot.patch
 {% endif %}
@@ -153,7 +153,7 @@ requirements:
   run_constrained:
     - __osx >={{ MACOSX_DEPLOYMENT_TARGET|default("10.9") }}  # [osx]
     # Older numba versions have trouble with how LLVM is linked
-    - numba >=0.52
+    - numba >=0.52  # [py>=37]
     # Items listed here conflict with ROOT
     - cling 9999
     - root5 9999
@@ -207,6 +207,9 @@ outputs:
             cp "${RECIPE_DIR}/thisroot" "${PREFIX}/bin/thisroot.${suffix}"
             chmod +x "${PREFIX}/bin/thisroot.${suffix}"
           done
+        # Install the jupyter kernel
+        - mkdir -p "$PREFIX/share/jupyter/kernels"
+        - cp -r "$PREFIX/etc/notebook/kernels/root" "$PREFIX/share/jupyter/kernels"
         # Add the post activate/deactivate scripts
         - mkdir -p "${PREFIX}/etc/conda/activate.d"
         - cp "${RECIPE_DIR}/activate.sh" "${PREFIX}/etc/conda/activate.d/activate-root.sh"
@@ -254,6 +257,7 @@ outputs:
         - ROOT
       commands:
         - python test_pyroot.py
+        - jupyter-kernelspec list | grep ' root '
 {% endif %}
   - name: root
     build:
@@ -275,7 +279,7 @@ outputs:
         - metakernel
         - ipython
         - notebook
-        - numba
+        - numba  # [py>=37]
     test:
       files:
         - test.cpp
@@ -291,6 +295,7 @@ outputs:
         - root -b -l -q -x "${PREFIX}/tutorials/eve/geom_lhcb.C" || true
         - root -b -l -q -x "${PREFIX}/tutorials/tree/run_h1analysis.C"
         - root -l -b -q -x test.cpp++
+        - jupyter-kernelspec list | grep ' root '
 {%- if "ROOT_CONDA_IS_CI" in os.environ %}
   - name: root-nightly
     build:
