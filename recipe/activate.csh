@@ -1,4 +1,7 @@
 #!/usr/bin/env csh
 
-setenv ROOTSYS "${CONDA_PREFIX}"
+if ($?ROOTSYS) then
+	setenv CONDA_BACKUP_ROOTSYS "${ROOTSYS}"
+endif
 
+setenv ROOTSYS "${CONDA_PREFIX}"
