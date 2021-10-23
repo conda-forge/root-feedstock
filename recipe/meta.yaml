@@ -66,6 +66,7 @@ requirements:
   build:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
+    - sysroot_linux-64 2.17  # [linux]
     - cmake
     - git
     - pkg-config
@@ -83,6 +84,7 @@ requirements:
     - libcblas
     - {{ compiler('c') }}  # [linux]
     - {{ compiler('cxx') }}  # [linux]
+    - sysroot_linux-64 2.17  # [linux]
     - afterimage
     - cfitsio
     - davix
