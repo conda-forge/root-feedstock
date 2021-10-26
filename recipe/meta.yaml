@@ -1,7 +1,7 @@
 {% set name = "root" %}
 {% set tag_name = "6-24-06" %}
 {% set version = ".".join(tag_name.split("-")|map("int")|map("string")) %}
-{% set build_number = 0 %}
+{% set build_number = 1 %}
 {% set clang_version = "9.0.1" %}
 {% set clang_patches_version = "root_62400" %}
 
