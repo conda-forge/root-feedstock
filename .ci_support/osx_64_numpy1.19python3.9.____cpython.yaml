@@ -7,15 +7,17 @@ c_compiler:
 c_compiler_version:
 - '11'
 cfitsio:
-- '3.470'
+- 4.0.0
 channel_sources:
-- conda-forge,defaults
+- conda-forge
 channel_targets:
 - conda-forge main
 cxx_compiler:
 - clangxx
 cxx_compiler_version:
 - '11'
+davix:
+- '0.7'
 fftw:
 - '3'
 freetype:
@@ -72,8 +74,6 @@ pin_run_as_build:
   libxml2:
     max_pin: x.x
   lz4-c:
-    max_pin: x.x.x
-  openssl:
     max_pin: x.x.x
   python:
     min_pin: x.x
