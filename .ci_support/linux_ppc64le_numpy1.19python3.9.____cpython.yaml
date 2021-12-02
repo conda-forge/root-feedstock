@@ -5,15 +5,17 @@ c_compiler_version:
 cdt_name:
 - cos7
 cfitsio:
-- '3.470'
+- 4.0.0
 channel_sources:
-- conda-forge,defaults
+- conda-forge
 channel_targets:
 - conda-forge main
 cxx_compiler:
 - gxx
 cxx_compiler_version:
 - '7'
+davix:
+- '0.8'
 docker_image:
 - quay.io/condaforge/linux-anvil-ppc64le
 fftw:
@@ -70,8 +72,6 @@ pin_run_as_build:
   libxml2:
     max_pin: x.x
   lz4-c:
-    max_pin: x.x.x
-  openssl:
     max_pin: x.x.x
   python:
     min_pin: x.x
