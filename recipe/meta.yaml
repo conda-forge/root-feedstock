@@ -98,7 +98,7 @@ requirements:
     - libxml2
     - lz4-c
     # - mysql
-    - nlohmann_json
+    - nlohmann_json <3.10.4
     - openssl
     - pcre
     # - postgresql
@@ -141,11 +141,11 @@ requirements:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     - {{ pin_compatible('xxhash', max_pin='x.x.x') }}
-    - nlohmann_json
+    - nlohmann_json <3.10.4
     - cffi
     - graphviz
     - {{ pin_compatible('vector-classes', max_pin='x.x') }}
-    - sysroot_linux-64  # [linux]
+    - sysroot_linux-64 =2.17  # [linux]
     - xorg-libx11  # [linux]
     - xorg-libxext  # [linux]
     - xorg-libxpm  # [linux]
@@ -246,7 +246,7 @@ outputs:
         - {{ pin_subpackage('root_base', exact=True) }}
         - python
         - numpy
-        - nlohmann_json
+        - nlohmann_json <3.10.4
       run:
         - {{ pin_subpackage('root_base', exact=True) }}
         - python
