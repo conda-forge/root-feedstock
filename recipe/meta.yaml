@@ -98,7 +98,7 @@ requirements:
     - libxml2
     - lz4-c
     # - mysql
-    - nlohmann_json <3.10.4
+    - nlohmann_json
     - openssl
     - pcre
     # - postgresql

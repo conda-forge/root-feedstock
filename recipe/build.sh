@@ -46,6 +46,10 @@ else
     fi
 fi
 
+if [[ "${target_platform}" == osx* ]]; then
+    CXXFLAGS="${CXXFLAGS} -D_LIBCPP_DISABLE_AVAILABILITY"
+fi
+
 export CFLAGS="${CFLAGS//-isystem /-I}"
 export CPPFLAGS="${CPPFLAGS//-isystem /-I}"
 export CXXFLAGS="${CXXFLAGS//-isystem /-I}"
