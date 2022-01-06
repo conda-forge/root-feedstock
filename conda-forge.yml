@@ -1,5 +1,4 @@
 conda_forge_output_validation: true
-build_with_mambabuild: false
 provider:
   linux_aarch64: default
   linux_ppc64le: default
