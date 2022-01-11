@@ -264,7 +264,7 @@ fi
 CMAKE_PLATFORM_FLAGS+=("-Droottest=OFF")
 
 # Now we can actually run CMake
-cmake "${CMAKE_PLATFORM_FLAGS[@]}" ../root-source
+cmake $CMAKE_ARGS "${CMAKE_PLATFORM_FLAGS[@]}" ../root-source
 
 if [[ "${target_platform}" == osx* ]]; then
     # This is a horrible hack to hide the LLVM/Clang symbols in libCling.so on macOS
