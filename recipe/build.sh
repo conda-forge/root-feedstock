@@ -1,6 +1,11 @@
 #!/bin/bash
 set -x
 
+if [[ "${target_platform}" == "linux-ppc64le" ]]; then
+  export CXXFLAGS="${CXXFLAGS} -fplt"
+  export CFLAGS="${CFLAGS} -fplt"
+fi
+
 # Manually set the deployment_target
 # May not be very important but nice to do
 OLDVERSIONMACOS='${MACOSX_VERSION}'
