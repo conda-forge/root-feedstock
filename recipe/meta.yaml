@@ -189,7 +189,7 @@ test:
     - root -l -b -q -x test.cpp++
     # Ensure exceptions don't cause the interpreter to exit
     # Expected to fail on apple silicon: https://github.com/root-project/root/issues/7541
-    - echo '.q' | root -e 'sddsa0'  # [not (osx and arm64)]
+    - echo '.q' | root -e 'sddsa0'  # [not (osx and arm64) and build_platform == target_platform]
 
 outputs:
   - name: root_base
