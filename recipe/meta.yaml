@@ -128,7 +128,7 @@ requirements:
     - zstd
 {% if not builtin_clang %}
     - llvm {{ clang_version }}  # [not (osx and arm64)]
-    - llvmdev {{ clang_version }}  # [not (osx and arm64)]
+    - llvmdev {{ clang_version }} cling*  # [not (osx and arm64)]
     - clangdev {{ clang_version }} {{ clang_patches_version }}*  # [not (osx and arm64)]
 {% endif %}
 {% if builtin_pyroot %}

@@ -16,7 +16,7 @@ declare -a CMAKE_PLATFORM_FLAGS
 
 if [[ "${target_platform}" == "osx-arm64" ]]; then
     CONDA_SUBDIR=${target_platform} conda create --prefix "${SRC_DIR}/clang_env" --yes \
-        "llvm 9.0.1" "llvmdev 9.0.1" "clangdev 9.0.1 root_62400*"
+        "llvm 9.0.1" "llvmdev 9.0.1 cling*" "clangdev 9.0.1 root_62400*"
     Clang_DIR=${SRC_DIR}/clang_env
     CMAKE_PLATFORM_FLAGS+=("-DLLVM_CMAKE_PATH=${SRC_DIR}/clang_env/lib/cmake")
 else
@@ -136,10 +136,6 @@ else
 
     # Cling needs some minor patches to the LLVM sources, hackily apply them rather than rebuilding LLVM
     sed -i "s@LLVM_LINK_LLVM_DYLIB yes@LLVM_LINK_LLVM_DYLIB no@g" "${Clang_DIR}/lib/cmake/llvm/LLVMConfig.cmake"
-    cd "${Clang_DIR}"
-    patch -p1 < "${RECIPE_DIR}/llvm-patches/0001-Fix-the-compilation.patch"
-    patch -p1 < "${RECIPE_DIR}/llvm-patches/0002-Make-datamember-protected.patch"
-    cd -
 fi
 
 # Enable some vectorisation options
