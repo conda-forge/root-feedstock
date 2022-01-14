@@ -7,15 +7,17 @@ cdt_name:
 cfitsio:
 - '3.470'
 channel_sources:
-- conda-forge,defaults
+- conda-forge
 channel_targets:
 - conda-forge main
 cxx_compiler:
 - gxx
 cxx_compiler_version:
 - '9'
+davix:
+- '0.8'
 docker_image:
-- quay.io/condaforge/linux-anvil-comp7
+- quay.io/condaforge/linux-anvil-cos7-x86_64
 fftw:
 - '3'
 freetype:
@@ -71,8 +73,6 @@ pin_run_as_build:
     max_pin: x.x
   lz4-c:
     max_pin: x.x.x
-  openssl:
-    max_pin: x.x.x
   python:
     min_pin: x.x
     max_pin: x.x
@@ -99,8 +99,6 @@ xz:
 zip_keys:
 - - c_compiler_version
   - cxx_compiler_version
-- - cdt_name
-  - docker_image
 - - python
   - numpy
 zlib:
