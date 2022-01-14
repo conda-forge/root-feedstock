@@ -1,0 +1,15 @@
+diff --git a/cmake/modules/SearchRootCoreDeps.cmake b/cmake/modules/SearchRootCoreDeps.cmake
+index b26c36ef26..53a18f2c62 100644
+--- a/cmake/modules/SearchRootCoreDeps.cmake
++++ b/cmake/modules/SearchRootCoreDeps.cmake
+@@ -220,6 +220,10 @@ else()
+
+ endif()
+
++if (APPLE)
++    set(PYTHON_LIBRARIES_Development_Main "-undefined dynamic_lookup")
++endif()
++
+ # Create lists of Python 2 and 3 useful variables used to build PyROOT with both versions
+ # PYTHON_UNDER_VERSION_STRING and OTHER_PYTHON_UNDER_VERSION_STRING in particular are
+ # introduced because it's not possible to create a library containing '.' in the name

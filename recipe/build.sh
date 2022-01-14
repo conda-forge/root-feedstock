@@ -1,6 +1,18 @@
 #!/bin/bash
 set -x
 
+# Conda's binary relocation can result in string changing which can result in errors like
+#   > $ root.exe -l -b -q -x root-feedstock/recipe/test.cpp++
+#   > powerpc64le-conda-linux-gnu-c++: error: missing filename after '-o'
+# https://gitter.im/conda-forge/conda-forge.github.io?at=61e18f469a3354540621b912
+export CXXFLAGS="${CXXFLAGS} -fno-merge-constants"
+export CFLAGS="${CFLAGS} -fno-merge-constants"
+
+if [[ "${target_platform}" == "linux-ppc64le" ]]; then
+  export CXXFLAGS="${CXXFLAGS} -fplt"
+  export CFLAGS="${CFLAGS} -fplt"
+fi
+
 # Manually set the deployment_target
 # May not be very important but nice to do
 OLDVERSIONMACOS='${MACOSX_VERSION}'
@@ -11,7 +23,7 @@ declare -a CMAKE_PLATFORM_FLAGS
 
 if [[ "${target_platform}" == "osx-arm64" ]]; then
     CONDA_SUBDIR=${target_platform} conda create --prefix "${SRC_DIR}/clang_env" --yes \
-        "llvm 9.0.1" "llvmdev 9.0.1" "clangdev 9.0.1 root_62400*"
+        "llvm 9.0.1" "llvmdev 9.0.1 cling*" "clangdev 9.0.1 root_62400*"
     Clang_DIR=${SRC_DIR}/clang_env
     CMAKE_PLATFORM_FLAGS+=("-DLLVM_CMAKE_PATH=${SRC_DIR}/clang_env/lib/cmake")
 else
@@ -44,6 +56,10 @@ else
     else
         sed -i.bak "s@\"ncurses.h\"@\"${PREFIX}/include/ncurses.h\"@g" "${CONDA_BUILD_SYSROOT}/usr/include/module.modulemap"
     fi
+fi
+
+if [[ "${target_platform}" == osx* ]]; then
+    CXXFLAGS="${CXXFLAGS} -D_LIBCPP_DISABLE_AVAILABILITY"
 fi
 
 export CFLAGS="${CFLAGS//-isystem /-I}"
@@ -127,10 +143,6 @@ else
 
     # Cling needs some minor patches to the LLVM sources, hackily apply them rather than rebuilding LLVM
     sed -i "s@LLVM_LINK_LLVM_DYLIB yes@LLVM_LINK_LLVM_DYLIB no@g" "${Clang_DIR}/lib/cmake/llvm/LLVMConfig.cmake"
-    cd "${Clang_DIR}"
-    patch -p1 < "${RECIPE_DIR}/llvm-patches/0001-Fix-the-compilation.patch"
-    patch -p1 < "${RECIPE_DIR}/llvm-patches/0002-Make-datamember-protected.patch"
-    cd -
 fi
 
 # Enable some vectorisation options
@@ -255,7 +267,7 @@ fi
 CMAKE_PLATFORM_FLAGS+=("-Droottest=OFF")
 
 # Now we can actually run CMake
-cmake "${CMAKE_PLATFORM_FLAGS[@]}" ../root-source
+cmake $CMAKE_ARGS "${CMAKE_PLATFORM_FLAGS[@]}" ../root-source
 
 if [[ "${target_platform}" == osx* ]]; then
     # This is a horrible hack to hide the LLVM/Clang symbols in libCling.so on macOS
