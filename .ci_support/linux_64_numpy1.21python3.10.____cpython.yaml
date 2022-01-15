@@ -3,7 +3,7 @@ c_compiler:
 c_compiler_version:
 - '9'
 cdt_name:
-- cos6
+- cos7
 cfitsio:
 - 4.0.0
 channel_sources:
