@@ -36,6 +36,7 @@ source:
     - patches/0001-Hacks.patch
     - patches/0001-Patch-for-apple-silicon.patch
     - patches/0001-Set-LLVM_REQUIRES_EH-for-Cling.patch
+    - patches/0001-Remove-O1-from-default-cling-args.patch
     # hack to remove libpython links on macOS
     - no-link-libpython.patch
     # For Python 3.11
@@ -110,7 +111,6 @@ requirements:
     - sqlite
     - tbb
     - tbb-devel
-    - vector-classes
     - vdt
     - xorg-libx11  # [linux]
     - xorg-libxau  # [linux]
