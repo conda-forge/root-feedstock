@@ -33,16 +33,14 @@ source:
     - patches/root-x.xx.xx_cling-runtime-sysroot.patch
     - patches/root-x.xx.xx-copy-abspath-headers.patch  # [osx]
     - patches/root-x.xx.xx-osx-remove-hardcoded-sysroot.patch  # [osx]
-    - patches/root-x.xx.xx-fix-text-edit.patch
     - patches/0001-Hacks.patch
     - patches/0001-Patch-for-apple-silicon.patch
     - patches/0001-Set-LLVM_REQUIRES_EH-for-Cling.patch
     - patches/0001-Workaround-https-github.com-root-project-root-issues.patch
     - patches/0003-fix-codecvt-header-map.patch
+    - patches/0001-Remove-O1-from-default-cling-args.patch
     # hack to remove libpython links on macOS
     - no-link-libpython.patch
-    - patches/root-6.26.0-ppc64le-use-large-code-model.patch
-    - patches/root-6.26.0-Do-not-link-libCoreEntitlements.patch
 {% if not builtin_pyroot %}
     - 0001-Support-standalone-pyroot.patch
 {% endif %}
@@ -113,7 +111,6 @@ requirements:
     - sqlite
     - tbb
     - tbb-devel
-    - vector-classes
     - vdt
     - xorg-libx11  # [linux]
     - xorg-libxau  # [linux]
@@ -151,7 +148,6 @@ requirements:
     - {{ pin_compatible('nlohmann_json', max_pin='x.x.x') }}
     - cffi
     - graphviz
-    - {{ pin_compatible('vector-classes', max_pin='x.x') }}
     - sysroot_linux-64 =2.17  # [linux]
     - xorg-libx11  # [linux]
     - xorg-libxext  # [linux]
