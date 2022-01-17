@@ -314,6 +314,8 @@ outputs:
       run:
         - {{ pin_subpackage('root', exact=True) }}
         - python
+        # https://github.com/conda/conda-build/issues/3308
+        - openssl
 {%- endif %}
 
 about:
