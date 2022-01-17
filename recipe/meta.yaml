@@ -146,7 +146,7 @@ requirements:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     - {{ pin_compatible('xxhash', max_pin='x.x.x') }}
-    - nlohmann_json <3.10.4
+    - {{ pin_compatible('nlohmann_json', max_pin='x.x.x') }}
     - cffi
     - graphviz
     - {{ pin_compatible('vector-classes', max_pin='x.x') }}
