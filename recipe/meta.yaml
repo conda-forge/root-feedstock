@@ -38,7 +38,6 @@ source:
     - patches/0001-Set-LLVM_REQUIRES_EH-for-Cling.patch
     - patches/0001-Workaround-https-github.com-root-project-root-issues.patch
     - patches/0003-fix-codecvt-header-map.patch
-    - patches/0001-Remove-O1-from-default-cling-args.patch
     # hack to remove libpython links on macOS
     - no-link-libpython.patch
 {% if not builtin_pyroot %}
