@@ -121,7 +121,7 @@ CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_openui5=ON")
 CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_pcre=OFF")
 CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_tbb=OFF")
 CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_unuran=OFF")
-CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_vc=ON")
+CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_vc=OFF")
 CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_vdt=OFF")
 CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_xrootd=OFF")
 CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_xxhash=OFF")
@@ -200,8 +200,7 @@ CMAKE_PLATFORM_FLAGS+=("-Dsqlite=ON")
 CMAKE_PLATFORM_FLAGS+=("-Dssl=ON")
 CMAKE_PLATFORM_FLAGS+=("-Dtbb=ON")
 CMAKE_PLATFORM_FLAGS+=("-Dvdt=ON")
-## THIS IS A HACK!!!!
-CMAKE_PLATFORM_FLAGS+=("-Dwebgui=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Dwebgui=ON")
 CMAKE_PLATFORM_FLAGS+=("-Dxml=ON")
 CMAKE_PLATFORM_FLAGS+=("-Dxrootd=ON")
 
@@ -292,10 +291,6 @@ if [[ "${target_platform}" == osx* ]]; then
 fi
 
 make "-j${CPU_COUNT}"
-
-# cd tutorials
-# EXTRA_CLING_ARGS='-O1' LD_LIBRARY_PATH=$SRC_DIR/build-dir/lib: ROOTIGNOREPREFIX=1 ROOT_HIST=0 $SRC_DIR/build-dir/bin/root.exe -l -q -b -n -x hsimple.C -e return
-# cd ..
 
 if [ "${ROOT_CONDA_RUN_GTESTS-}" = "1" ]; then
     # Run gtests, never fail as Jenkins will check the test results instead
