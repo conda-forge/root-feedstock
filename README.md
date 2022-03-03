@@ -205,7 +205,6 @@ Current release info
 | Name | Downloads | Version | Platforms |
 | --- | --- | --- | --- |
 | [![Conda Recipe](https://img.shields.io/badge/recipe-root-green.svg)](https://anaconda.org/conda-forge/root) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/root.svg)](https://anaconda.org/conda-forge/root) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/root.svg)](https://anaconda.org/conda-forge/root) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/root.svg)](https://anaconda.org/conda-forge/root) |
-| [![Conda Recipe](https://img.shields.io/badge/recipe-root--nightly-green.svg)](https://anaconda.org/conda-forge/root-nightly) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/root-nightly.svg)](https://anaconda.org/conda-forge/root-nightly) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/root-nightly.svg)](https://anaconda.org/conda-forge/root-nightly) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/root-nightly.svg)](https://anaconda.org/conda-forge/root-nightly) |
 | [![Conda Recipe](https://img.shields.io/badge/recipe-root_base-green.svg)](https://anaconda.org/conda-forge/root_base) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/root_base.svg)](https://anaconda.org/conda-forge/root_base) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/root_base.svg)](https://anaconda.org/conda-forge/root_base) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/root_base.svg)](https://anaconda.org/conda-forge/root_base) |
 
 Installing root_base
@@ -218,10 +217,10 @@ conda config --add channels conda-forge
 conda config --set channel_priority strict
 ```
 
-Once the `conda-forge` channel has been enabled, `root, root-nightly, root_base` can be installed with:
+Once the `conda-forge` channel has been enabled, `root, root_base` can be installed with:
 
 ```
-conda install root root-nightly root_base
+conda install root root_base
 ```
 
 It is possible to list all of the versions of `root` available on your platform with:
