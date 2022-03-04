@@ -26,7 +26,7 @@ declare -a CMAKE_PLATFORM_FLAGS
 
 if [[ "${target_platform}" == "osx-arm64" ]]; then
     CONDA_SUBDIR=${target_platform} conda create --prefix "${SRC_DIR}/clang_env" --yes \
-        "llvm 9.0.1" "llvmdev 9.0.1 cling*" "clangdev 9.0.1 root_62400*"
+        "llvm 9.0.1" "llvmdev 9.0.1 cling*" "clangdev 9.0.1 root_62600*"
     Clang_DIR=${SRC_DIR}/clang_env
     CMAKE_PLATFORM_FLAGS+=("-DLLVM_CMAKE_PATH=${SRC_DIR}/clang_env/lib/cmake")
 else
