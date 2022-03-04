@@ -8,6 +8,9 @@ set -x
 export CXXFLAGS="${CXXFLAGS} -fno-merge-constants"
 export CFLAGS="${CFLAGS} -fno-merge-constants"
 
+# https://github.com/conda-forge/root-feedstock/issues/160
+export CXXFLAGS="${CXXFLAGS} -D__ROOFIT_NOBANNER"
+
 if [[ "${target_platform}" == "linux-ppc64le" ]]; then
   export CXXFLAGS="${CXXFLAGS} -fplt"
   export CFLAGS="${CFLAGS} -fplt"
