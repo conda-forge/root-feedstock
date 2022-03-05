@@ -8,6 +8,9 @@ set -x
 export CXXFLAGS="${CXXFLAGS} -fno-merge-constants"
 export CFLAGS="${CFLAGS} -fno-merge-constants"
 
+# https://github.com/conda-forge/root-feedstock/issues/160
+export CXXFLAGS="${CXXFLAGS} -D__ROOFIT_NOBANNER"
+
 if [[ "${target_platform}" == "linux-ppc64le" ]]; then
   export CXXFLAGS="${CXXFLAGS} -fplt"
   export CFLAGS="${CFLAGS} -fplt"
@@ -23,7 +26,7 @@ declare -a CMAKE_PLATFORM_FLAGS
 
 if [[ "${target_platform}" == "osx-arm64" ]]; then
     CONDA_SUBDIR=${target_platform} conda create --prefix "${SRC_DIR}/clang_env" --yes \
-        "llvm 9.0.1" "llvmdev 9.0.1 cling*" "clangdev 9.0.1 root_62400*"
+        "llvm 9.0.1" "llvmdev 9.0.1 cling*" "clangdev 9.0.1 root_62600*"
     Clang_DIR=${SRC_DIR}/clang_env
     CMAKE_PLATFORM_FLAGS+=("-DLLVM_CMAKE_PATH=${SRC_DIR}/clang_env/lib/cmake")
 else
@@ -48,6 +51,7 @@ if [[ "${target_platform}" == linux* ]]; then
     echo "CXXFLAGS is now '${CXXFLAGS}'"
 else
     CMAKE_PLATFORM_FLAGS+=("-DBLA_PREFER_PKGCONFIG=ON")
+    CMAKE_PLATFORM_FLAGS+=("-DCLANG_RESOURCE_DIR_VERSION=9.0.1")
 
     # HACK: Hack the macOS SDK to make rootcling find the correct ncurses
     if [[ -f  "$CONDA_BUILD_SYSROOT/usr/include/module.modulemap.bak" ]]; then
