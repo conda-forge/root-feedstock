@@ -12,3 +12,6 @@ provider:
 os_version:
   linux_64: cos7
 test_on_native_only: true
+bot:
+  abi_migration_branches:
+    - 6.24
