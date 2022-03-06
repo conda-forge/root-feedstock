@@ -1,12 +1,14 @@
 #!/bin/bash
 set -x
 
-# Conda's binary relocation can result in string changing which can result in errors like
-#   > $ root.exe -l -b -q -x root-feedstock/recipe/test.cpp++
-#   > powerpc64le-conda-linux-gnu-c++: error: missing filename after '-o'
-# https://gitter.im/conda-forge/conda-forge.github.io?at=61e18f469a3354540621b912
-export CXXFLAGS="${CXXFLAGS} -fno-merge-constants"
-export CFLAGS="${CFLAGS} -fno-merge-constants"
+if [[ "${target_platform}" == "linux-"* ]]; then
+  # Conda's binary relocation can result in string changing which can result in errors like
+  #   > $ root.exe -l -b -q -x root-feedstock/recipe/test.cpp++
+  #   > powerpc64le-conda-linux-gnu-c++: error: missing filename after '-o'
+  # https://gitter.im/conda-forge/conda-forge.github.io?at=61e18f469a3354540621b912
+  export CXXFLAGS="${CXXFLAGS} -fno-merge-constants"
+  export CFLAGS="${CFLAGS} -fno-merge-constants"
+fi
 
 # https://github.com/conda-forge/root-feedstock/issues/160
 export CXXFLAGS="${CXXFLAGS} -D__ROOFIT_NOBANNER"
