@@ -15,3 +15,6 @@ test_on_native_only: true
 github:
   branch_name: main
   tooling_branch_name: main
+bot:
+  abi_migration_branches:
+    - 6.24
