@@ -1,11 +1,15 @@
+BUILD:
+- aarch64-conda_cos7-linux-gnu
 c_compiler:
 - gcc
 c_compiler_version:
 - '10'
+cdt_arch:
+- aarch64
 cdt_name:
 - cos7
 cfitsio:
-- 4.0.0
+- 4.1.0
 channel_sources:
 - conda-forge
 channel_targets:
@@ -49,7 +53,7 @@ libxml2:
 lz4_c:
 - 1.9.3
 numpy:
-- '1.18'
+- '1.19'
 openssl:
 - 1.1.1
 pcre:
@@ -87,7 +91,7 @@ python:
 sqlite:
 - '3'
 target_platform:
-- linux-64
+- linux-aarch64
 tbb:
 - '2021'
 tbb_devel:
