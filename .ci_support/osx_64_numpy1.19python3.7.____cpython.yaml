@@ -5,7 +5,7 @@ MACOSX_SDK_VERSION:
 c_compiler:
 - clang
 c_compiler_version:
-- '11'
+- '12'
 cfitsio:
 - 4.0.0
 channel_sources:
@@ -15,7 +15,7 @@ channel_targets:
 cxx_compiler:
 - clangxx
 cxx_compiler_version:
-- '11'
+- '12'
 davix:
 - '0.8'
 fftw:
@@ -31,7 +31,7 @@ glew:
 glib:
 - '2'
 graphviz:
-- '2.47'
+- '3'
 gsl:
 - '2.7'
 libblas:
@@ -51,7 +51,7 @@ lz4_c:
 macos_machine:
 - x86_64-apple-darwin13.4.0
 numpy:
-- '1.18'
+- '1.19'
 openssl:
 - 1.1.1
 pcre:
@@ -85,7 +85,7 @@ pin_run_as_build:
   zlib:
     max_pin: x.x
 python:
-- 3.8.* *_cpython
+- 3.7.* *_cpython
 sqlite:
 - '3'
 target_platform:
