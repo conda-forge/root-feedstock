@@ -1,9 +1,9 @@
 c_compiler:
 - gcc
 c_compiler_version:
-- '9'
+- '10'
 cdt_name:
-- cos6
+- cos7
 cfitsio:
 - 4.0.0
 channel_sources:
@@ -13,7 +13,7 @@ channel_targets:
 cxx_compiler:
 - gxx
 cxx_compiler_version:
-- '9'
+- '10'
 davix:
 - '0.8'
 docker_image:
@@ -49,7 +49,7 @@ libxml2:
 lz4_c:
 - 1.9.3
 numpy:
-- '1.18'
+- '1.19'
 openssl:
 - 1.1.1
 pcre:
