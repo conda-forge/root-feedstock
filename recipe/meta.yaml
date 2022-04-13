@@ -1,7 +1,7 @@
 {% set name = "root" %}
-{% set tag_name = "6-26-00" %}
+{% set tag_name = "6-26-02" %}
 {% set version = ".".join(tag_name.split("-")|map("int")|map("string")) %}
-{% set build_number = 0 %}
+{% set build_number = 1 %}
 {% set clang_version = "9.0.1" %}
 {% set clang_patches_version = "root_62600" %}
 
@@ -26,7 +26,7 @@ source:
   git_rev: {{ os.environ["ROOT_CONDA_GIT_REV"] }}
 {%- else %}
   url: https://github.com/root-project/root/archive/refs/tags/v{{ tag_name }}.tar.gz
-  sha256: 0d492bbd28b8e0838145de055ac847b455f3411621c3da8f0baba4c3d3feea77
+  sha256: 0818285a4cd61db5bec1899c8122d279f8a68c981551cb12aa3cd1e0782b63fe
 {%- endif %}
   folder: root-source
   patches:
@@ -36,8 +36,6 @@ source:
     - patches/0001-Hacks.patch
     - patches/0001-Patch-for-apple-silicon.patch
     - patches/0001-Set-LLVM_REQUIRES_EH-for-Cling.patch
-    # - patches/0001-Workaround-https-github.com-root-project-root-issues.patch
-    - patches/0003-fix-codecvt-header-map.patch
     # hack to remove libpython links on macOS
     - no-link-libpython.patch
 {% if not builtin_pyroot %}
