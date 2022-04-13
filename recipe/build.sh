@@ -294,9 +294,11 @@ make "-j${CPU_COUNT}"
 
 if [ "${ROOT_CONDA_RUN_GTESTS-}" = "1" ]; then
     # Run gtests, never fail as Jenkins will check the test results instead
+if [[ "${CONDA_BUILD_CROSS_COMPILATION:-}" != "1" || "${CROSSCOMPILING_EMULATOR}" != "" ]]; then
     ctest "-j${CPU_COUNT}" -T test --no-compress-output \
         --exclude-regex '^(pyunittests-pyroot-numbadeclare|test-periodic-build|tutorial-pyroot-pyroot004_NumbaDeclare-py)$' \
         || true
+fi
     rm -rf "${HOME}/feedstock_root/Testing"
     cp -rp "Testing" "${HOME}/feedstock_root/"
 fi
