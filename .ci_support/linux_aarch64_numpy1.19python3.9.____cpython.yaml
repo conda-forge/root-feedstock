@@ -3,13 +3,13 @@ BUILD:
 c_compiler:
 - gcc
 c_compiler_version:
-- '9'
+- '10'
 cdt_arch:
 - aarch64
 cdt_name:
 - cos7
 cfitsio:
-- 4.0.0
+- 4.1.0
 channel_sources:
 - conda-forge
 channel_targets:
@@ -17,7 +17,7 @@ channel_targets:
 cxx_compiler:
 - gxx
 cxx_compiler_version:
-- '9'
+- '10'
 davix:
 - '0.8'
 docker_image:
@@ -35,7 +35,7 @@ glew:
 glib:
 - '2'
 graphviz:
-- '2.47'
+- '3'
 gsl:
 - '2.7'
 libblas:
