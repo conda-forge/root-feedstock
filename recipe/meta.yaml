@@ -1,7 +1,7 @@
 {% set name = "root" %}
 {% set tag_name = "6-26-02" %}
 {% set version = ".".join(tag_name.split("-")|map("int")|map("string")) %}
-{% set build_number = 1 %}
+{% set build_number = 2 %}
 {% set clang_version = "9.0.1" %}
 {% set clang_patches_version = "root_62600" %}
 
@@ -153,7 +153,7 @@ requirements:
     - xorg-libxft  # [linux]
     - libglu  # [linux]
   run_constrained:
-    - __osx >={{ MACOSX_DEPLOYMENT_TARGET|default("10.9") }}  # [osx]
+    - __osx >={{ MACOSX_DEPLOYMENT_TARGET|default("10.9") }}  # [osx and x86_64]
     # Older numba versions have trouble with how LLVM is linked
     - numba >=0.52  # [py>=37]
     # Items listed here conflict with ROOT
