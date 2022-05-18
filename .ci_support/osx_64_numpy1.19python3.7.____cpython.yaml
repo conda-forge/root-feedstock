@@ -5,7 +5,7 @@ MACOSX_SDK_VERSION:
 c_compiler:
 - clang
 c_compiler_version:
-- '12'
+- '13'
 cfitsio:
 - 4.1.0
 channel_sources:
@@ -15,7 +15,7 @@ channel_targets:
 cxx_compiler:
 - clangxx
 cxx_compiler_version:
-- '12'
+- '13'
 davix:
 - '0.8'
 fftw:
@@ -73,8 +73,6 @@ pin_run_as_build:
     max_pin: x
   libxml2:
     max_pin: x.x
-  lz4-c:
-    max_pin: x.x.x
   python:
     min_pin: x.x
     max_pin: x.x
