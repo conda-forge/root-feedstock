@@ -1,10 +1,16 @@
 azure:
   store_build_artifacts: true
+bot:
+  abi_migration_branches:
+  - 6.24
 build_platform:
   linux_aarch64: linux_64
   linux_ppc64le: linux_64
   osx_arm64: osx_64
 conda_forge_output_validation: true
+github:
+  branch_name: main
+  tooling_branch_name: main
 os_version:
   linux_64: cos7
 provider:
@@ -12,9 +18,3 @@ provider:
   linux_ppc64le: default
   osx_arm64: osx_64
 test_on_native_only: true
-github:
-  branch_name: main
-  tooling_branch_name: main
-bot:
-  abi_migration_branches:
-    - 6.24
