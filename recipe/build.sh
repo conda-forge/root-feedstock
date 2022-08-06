@@ -91,7 +91,7 @@ sed -i -E 's#(ROOT_TEST_DRIVER RootTestDriver.cmake PATHS \$\{THISDIR\} \$\{CMAK
     ../root-source/cmake/modules/RootNewMacros.cmake
 
 # The basics
-if [ "${ROOT_CONDA_BUILD_TYPE-}" != "" ]; then
+if [ "${ROOT_CONDA_BUILD_TYPE-}" == "" ]; then
     CMAKE_PLATFORM_FLAGS+=("-DCMAKE_BUILD_TYPE=Release")
 else
     CMAKE_PLATFORM_FLAGS+=("-DCMAKE_BUILD_TYPE=${ROOT_CONDA_BUILD_TYPE}")
