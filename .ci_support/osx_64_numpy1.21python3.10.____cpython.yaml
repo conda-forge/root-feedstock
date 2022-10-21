@@ -57,30 +57,10 @@ openssl:
 pcre:
 - '8'
 pin_run_as_build:
-  fftw:
-    max_pin: x
-  freetype:
-    max_pin: x
-  glew:
-    max_pin: x.x
   graphviz:
     max_pin: x
-  libpng:
-    max_pin: x.x
-  librsvg:
-    max_pin: x
-  libtiff:
-    max_pin: x
-  libxml2:
-    max_pin: x.x
   python:
     min_pin: x.x
-    max_pin: x.x
-  sqlite:
-    max_pin: x
-  xz:
-    max_pin: x.x
-  zlib:
     max_pin: x.x
 python:
 - 3.10.* *_cpython
@@ -95,7 +75,7 @@ tbb_devel:
 xrootd:
 - '5'
 xz:
-- '5.2'
+- '5'
 zip_keys:
 - - c_compiler_version
   - cxx_compiler_version
