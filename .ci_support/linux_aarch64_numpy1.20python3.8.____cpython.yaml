@@ -1,7 +1,11 @@
+BUILD:
+- aarch64-conda_cos7-linux-gnu
 c_compiler:
 - gcc
 c_compiler_version:
 - 10.3.0
+cdt_arch:
+- aarch64
 cdt_name:
 - cos7
 cfitsio:
@@ -31,7 +35,7 @@ glew:
 glib:
 - '2'
 graphviz:
-- '5'
+- '6'
 gsl:
 - '2.7'
 libblas:
@@ -49,43 +53,23 @@ libxml2:
 lz4_c:
 - 1.9.3
 numpy:
-- '1.19'
+- '1.20'
 openssl:
 - 1.1.1
 pcre:
 - '8'
 pin_run_as_build:
-  fftw:
-    max_pin: x
-  freetype:
-    max_pin: x
-  glew:
-    max_pin: x.x
   graphviz:
     max_pin: x
-  libpng:
-    max_pin: x.x
-  librsvg:
-    max_pin: x
-  libtiff:
-    max_pin: x
-  libxml2:
-    max_pin: x.x
   python:
     min_pin: x.x
-    max_pin: x.x
-  sqlite:
-    max_pin: x
-  xz:
-    max_pin: x.x
-  zlib:
     max_pin: x.x
 python:
 - 3.8.* *_cpython
 sqlite:
 - '3'
 target_platform:
-- linux-ppc64le
+- linux-aarch64
 tbb:
 - '2021'
 tbb_devel:
@@ -93,7 +77,7 @@ tbb_devel:
 xrootd:
 - '5'
 xz:
-- '5.2'
+- '5'
 zip_keys:
 - - c_compiler_version
   - cxx_compiler_version
