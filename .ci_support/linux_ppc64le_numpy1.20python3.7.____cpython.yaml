@@ -1,7 +1,7 @@
 c_compiler:
 - gcc
 c_compiler_version:
-- 10.3.0
+- '10'
 cdt_name:
 - cos7
 cfitsio:
@@ -13,7 +13,7 @@ channel_targets:
 cxx_compiler:
 - gxx
 cxx_compiler_version:
-- 10.3.0
+- '10'
 davix:
 - '0.8'
 docker_image:
