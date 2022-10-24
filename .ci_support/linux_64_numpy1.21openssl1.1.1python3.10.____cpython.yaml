@@ -45,11 +45,11 @@ librsvg:
 libtiff:
 - '4'
 libxml2:
-- '2.9'
+- '2.10'
 lz4_c:
 - 1.9.3
 numpy:
-- '1.20'
+- '1.21'
 openssl:
 - 1.1.1
 pcre:
@@ -61,7 +61,7 @@ pin_run_as_build:
     min_pin: x.x
     max_pin: x.x
 python:
-- 3.8.* *_cpython
+- 3.10.* *_cpython
 sqlite:
 - '3'
 target_platform:
