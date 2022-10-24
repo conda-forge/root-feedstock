@@ -8,66 +8,126 @@ jobs:
     vmImage: ubuntu-latest
   strategy:
     matrix:
-      linux_64_numpy1.19python3.7.____cpython:
-        CONFIG: linux_64_numpy1.19python3.7.____cpython
+      linux_64_numpy1.20openssl1.1.1python3.7.____cpython:
+        CONFIG: linux_64_numpy1.20openssl1.1.1python3.7.____cpython
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
-        SHORT_CONFIG: linux_64_numpy1.19python3.7.____cpython
-      linux_64_numpy1.19python3.8.____cpython:
-        CONFIG: linux_64_numpy1.19python3.8.____cpython
+        SHORT_CONFIG: linux_64_numpy1.20openssl1.1.1pytho_h03b43dd402
+      linux_64_numpy1.20openssl1.1.1python3.8.____cpython:
+        CONFIG: linux_64_numpy1.20openssl1.1.1python3.8.____cpython
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
-        SHORT_CONFIG: linux_64_numpy1.19python3.8.____cpython
-      linux_64_numpy1.19python3.9.____cpython:
-        CONFIG: linux_64_numpy1.19python3.9.____cpython
+        SHORT_CONFIG: linux_64_numpy1.20openssl1.1.1pytho_h56700011c9
+      linux_64_numpy1.20openssl1.1.1python3.9.____cpython:
+        CONFIG: linux_64_numpy1.20openssl1.1.1python3.9.____cpython
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
-        SHORT_CONFIG: linux_64_numpy1.19python3.9.____cpython
-      linux_64_numpy1.21python3.10.____cpython:
-        CONFIG: linux_64_numpy1.21python3.10.____cpython
+        SHORT_CONFIG: linux_64_numpy1.20openssl1.1.1pytho_h90f93beee8
+      linux_64_numpy1.20openssl3python3.7.____cpython:
+        CONFIG: linux_64_numpy1.20openssl3python3.7.____cpython
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
-        SHORT_CONFIG: linux_64_numpy1.21python3.10.____cpython
-      linux_aarch64_numpy1.19python3.7.____cpython:
-        CONFIG: linux_aarch64_numpy1.19python3.7.____cpython
+        SHORT_CONFIG: linux_64_numpy1.20openssl3python3.7.____cpython
+      linux_64_numpy1.20openssl3python3.8.____cpython:
+        CONFIG: linux_64_numpy1.20openssl3python3.8.____cpython
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
-        SHORT_CONFIG: linux_aarch64_numpy1.19python3.7.____cpython
-      linux_aarch64_numpy1.19python3.8.____cpython:
-        CONFIG: linux_aarch64_numpy1.19python3.8.____cpython
+        SHORT_CONFIG: linux_64_numpy1.20openssl3python3.8.____cpython
+      linux_64_numpy1.20openssl3python3.9.____cpython:
+        CONFIG: linux_64_numpy1.20openssl3python3.9.____cpython
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
-        SHORT_CONFIG: linux_aarch64_numpy1.19python3.8.____cpython
-      linux_aarch64_numpy1.19python3.9.____cpython:
-        CONFIG: linux_aarch64_numpy1.19python3.9.____cpython
+        SHORT_CONFIG: linux_64_numpy1.20openssl3python3.9.____cpython
+      linux_64_numpy1.21openssl1.1.1python3.10.____cpython:
+        CONFIG: linux_64_numpy1.21openssl1.1.1python3.10.____cpython
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
-        SHORT_CONFIG: linux_aarch64_numpy1.19python3.9.____cpython
-      linux_aarch64_numpy1.21python3.10.____cpython:
-        CONFIG: linux_aarch64_numpy1.21python3.10.____cpython
+        SHORT_CONFIG: linux_64_numpy1.21openssl1.1.1pytho_h9d29ba6ef8
+      linux_64_numpy1.21openssl3python3.10.____cpython:
+        CONFIG: linux_64_numpy1.21openssl3python3.10.____cpython
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
-        SHORT_CONFIG: linux_aarch64_numpy1.21python3.10.____cpython
-      linux_ppc64le_numpy1.19python3.7.____cpython:
-        CONFIG: linux_ppc64le_numpy1.19python3.7.____cpython
+        SHORT_CONFIG: linux_64_numpy1.21openssl3python3.10.____cpython
+      linux_aarch64_numpy1.20openssl1.1.1python3.7.____cpython:
+        CONFIG: linux_aarch64_numpy1.20openssl1.1.1python3.7.____cpython
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
-        SHORT_CONFIG: linux_ppc64le_numpy1.19python3.7.____cpython
-      linux_ppc64le_numpy1.19python3.8.____cpython:
-        CONFIG: linux_ppc64le_numpy1.19python3.8.____cpython
+        SHORT_CONFIG: linux_aarch64_numpy1.20openssl1.1.1_ha1473d16a5
+      linux_aarch64_numpy1.20openssl1.1.1python3.8.____cpython:
+        CONFIG: linux_aarch64_numpy1.20openssl1.1.1python3.8.____cpython
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
-        SHORT_CONFIG: linux_ppc64le_numpy1.19python3.8.____cpython
-      linux_ppc64le_numpy1.19python3.9.____cpython:
-        CONFIG: linux_ppc64le_numpy1.19python3.9.____cpython
+        SHORT_CONFIG: linux_aarch64_numpy1.20openssl1.1.1_h84c80dee64
+      linux_aarch64_numpy1.20openssl1.1.1python3.9.____cpython:
+        CONFIG: linux_aarch64_numpy1.20openssl1.1.1python3.9.____cpython
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
-        SHORT_CONFIG: linux_ppc64le_numpy1.19python3.9.____cpython
-      linux_ppc64le_numpy1.21python3.10.____cpython:
-        CONFIG: linux_ppc64le_numpy1.21python3.10.____cpython
+        SHORT_CONFIG: linux_aarch64_numpy1.20openssl1.1.1_h49d3bb948f
+      linux_aarch64_numpy1.20openssl3python3.7.____cpython:
+        CONFIG: linux_aarch64_numpy1.20openssl3python3.7.____cpython
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
-        SHORT_CONFIG: linux_ppc64le_numpy1.21python3.10.____cpython
+        SHORT_CONFIG: linux_aarch64_numpy1.20openssl3pyth_h8fae17d8b0
+      linux_aarch64_numpy1.20openssl3python3.8.____cpython:
+        CONFIG: linux_aarch64_numpy1.20openssl3python3.8.____cpython
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
+        SHORT_CONFIG: linux_aarch64_numpy1.20openssl3pyth_h7745bd5b27
+      linux_aarch64_numpy1.20openssl3python3.9.____cpython:
+        CONFIG: linux_aarch64_numpy1.20openssl3python3.9.____cpython
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
+        SHORT_CONFIG: linux_aarch64_numpy1.20openssl3pyth_hf4106c6d68
+      linux_aarch64_numpy1.21openssl1.1.1python3.10.____cpython:
+        CONFIG: linux_aarch64_numpy1.21openssl1.1.1python3.10.____cpython
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
+        SHORT_CONFIG: linux_aarch64_numpy1.21openssl1.1.1_ha7ab4b30ed
+      linux_aarch64_numpy1.21openssl3python3.10.____cpython:
+        CONFIG: linux_aarch64_numpy1.21openssl3python3.10.____cpython
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
+        SHORT_CONFIG: linux_aarch64_numpy1.21openssl3pyth_h9360ca082d
+      linux_ppc64le_numpy1.20openssl1.1.1python3.7.____cpython:
+        CONFIG: linux_ppc64le_numpy1.20openssl1.1.1python3.7.____cpython
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
+        SHORT_CONFIG: linux_ppc64le_numpy1.20openssl1.1.1_h282c6eb063
+      linux_ppc64le_numpy1.20openssl1.1.1python3.8.____cpython:
+        CONFIG: linux_ppc64le_numpy1.20openssl1.1.1python3.8.____cpython
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
+        SHORT_CONFIG: linux_ppc64le_numpy1.20openssl1.1.1_he37e51b2be
+      linux_ppc64le_numpy1.20openssl1.1.1python3.9.____cpython:
+        CONFIG: linux_ppc64le_numpy1.20openssl1.1.1python3.9.____cpython
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
+        SHORT_CONFIG: linux_ppc64le_numpy1.20openssl1.1.1_h577859b0e0
+      linux_ppc64le_numpy1.20openssl3python3.7.____cpython:
+        CONFIG: linux_ppc64le_numpy1.20openssl3python3.7.____cpython
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
+        SHORT_CONFIG: linux_ppc64le_numpy1.20openssl3pyth_h5b231e195e
+      linux_ppc64le_numpy1.20openssl3python3.8.____cpython:
+        CONFIG: linux_ppc64le_numpy1.20openssl3python3.8.____cpython
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
+        SHORT_CONFIG: linux_ppc64le_numpy1.20openssl3pyth_hce2c7da967
+      linux_ppc64le_numpy1.20openssl3python3.9.____cpython:
+        CONFIG: linux_ppc64le_numpy1.20openssl3python3.9.____cpython
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
+        SHORT_CONFIG: linux_ppc64le_numpy1.20openssl3pyth_h8677f5c0ab
+      linux_ppc64le_numpy1.21openssl1.1.1python3.10.____cpython:
+        CONFIG: linux_ppc64le_numpy1.21openssl1.1.1python3.10.____cpython
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
+        SHORT_CONFIG: linux_ppc64le_numpy1.21openssl1.1.1_h658d828d2f
+      linux_ppc64le_numpy1.21openssl3python3.10.____cpython:
+        CONFIG: linux_ppc64le_numpy1.21openssl3python3.10.____cpython
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
+        SHORT_CONFIG: linux_ppc64le_numpy1.21openssl3pyth_h702d2472cc
   timeoutInMinutes: 360
 
   steps:
