@@ -1,11 +1,7 @@
-BUILD:
-- aarch64-conda_cos7-linux-gnu
 c_compiler:
 - gcc
 c_compiler_version:
 - '10'
-cdt_arch:
-- aarch64
 cdt_name:
 - cos7
 cfitsio:
@@ -49,7 +45,7 @@ librsvg:
 libtiff:
 - '4'
 libxml2:
-- '2.9'
+- '2.10'
 lz4_c:
 - 1.9.3
 numpy:
@@ -69,7 +65,7 @@ python:
 sqlite:
 - '3'
 target_platform:
-- linux-aarch64
+- linux-ppc64le
 tbb:
 - '2021'
 tbb_devel:
