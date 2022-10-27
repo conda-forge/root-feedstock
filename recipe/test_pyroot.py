@@ -2,7 +2,14 @@
 import sys
 import ROOT
 
-if sys.version_info >= (3, 7):
+if sys.version_info >= (3, 11):
+    try:
+        import numba
+    except ImportError:
+        print("Skipping numba test")
+    else:
+        raise RuntimeError("Looks like numba is now supported!")
+elif sys.version_info >= (3, 7):
     @ROOT.Numba.Declare(["float"], "float")
     def fn(x):
         return x**2
