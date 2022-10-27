@@ -8,10 +8,6 @@ jobs:
     vmImage: macOS-11
   strategy:
     matrix:
-      osx_64_numpy1.20openssl1.1.1python3.7.____cpython:
-        CONFIG: osx_64_numpy1.20openssl1.1.1python3.7.____cpython
-        UPLOAD_PACKAGES: 'True'
-        SHORT_CONFIG: osx_64_numpy1.20openssl1.1.1python3_hd47c9492b4
       osx_64_numpy1.20openssl1.1.1python3.8.____cpython:
         CONFIG: osx_64_numpy1.20openssl1.1.1python3.8.____cpython
         UPLOAD_PACKAGES: 'True'
@@ -20,10 +16,6 @@ jobs:
         CONFIG: osx_64_numpy1.20openssl1.1.1python3.9.____cpython
         UPLOAD_PACKAGES: 'True'
         SHORT_CONFIG: osx_64_numpy1.20openssl1.1.1python3_h8337850636
-      osx_64_numpy1.20openssl3python3.7.____cpython:
-        CONFIG: osx_64_numpy1.20openssl3python3.7.____cpython
-        UPLOAD_PACKAGES: 'True'
-        SHORT_CONFIG: osx_64_numpy1.20openssl3python3.7.____cpython
       osx_64_numpy1.20openssl3python3.8.____cpython:
         CONFIG: osx_64_numpy1.20openssl3python3.8.____cpython
         UPLOAD_PACKAGES: 'True'
@@ -40,6 +32,14 @@ jobs:
         CONFIG: osx_64_numpy1.21openssl3python3.10.____cpython
         UPLOAD_PACKAGES: 'True'
         SHORT_CONFIG: osx_64_numpy1.21openssl3python3.10.____cpython
+      osx_64_numpy1.23openssl1.1.1python3.11.____cpython:
+        CONFIG: osx_64_numpy1.23openssl1.1.1python3.11.____cpython
+        UPLOAD_PACKAGES: 'True'
+        SHORT_CONFIG: osx_64_numpy1.23openssl1.1.1python3_ha81386403e
+      osx_64_numpy1.23openssl3python3.11.____cpython:
+        CONFIG: osx_64_numpy1.23openssl3python3.11.____cpython
+        UPLOAD_PACKAGES: 'True'
+        SHORT_CONFIG: osx_64_numpy1.23openssl3python3.11.____cpython
       osx_arm64_numpy1.20openssl1.1.1python3.8.____cpython:
         CONFIG: osx_arm64_numpy1.20openssl1.1.1python3.8.____cpython
         UPLOAD_PACKAGES: 'True'
@@ -64,6 +64,14 @@ jobs:
         CONFIG: osx_arm64_numpy1.21openssl3python3.10.____cpython
         UPLOAD_PACKAGES: 'True'
         SHORT_CONFIG: osx_arm64_numpy1.21openssl3python3._h1dc00f7918
+      osx_arm64_numpy1.23openssl1.1.1python3.11.____cpython:
+        CONFIG: osx_arm64_numpy1.23openssl1.1.1python3.11.____cpython
+        UPLOAD_PACKAGES: 'True'
+        SHORT_CONFIG: osx_arm64_numpy1.23openssl1.1.1pyth_h5cf7f556df
+      osx_arm64_numpy1.23openssl3python3.11.____cpython:
+        CONFIG: osx_arm64_numpy1.23openssl3python3.11.____cpython
+        UPLOAD_PACKAGES: 'True'
+        SHORT_CONFIG: osx_arm64_numpy1.23openssl3python3._hb76b6721b1
   timeoutInMinutes: 360
 
   steps:
