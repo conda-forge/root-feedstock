@@ -1,0 +1,131 @@
+From a2b916e1dd6406cd9270c4878d932c648698bf02 Mon Sep 17 00:00:00 2001
+From: Enric Tejedor Saavedra <enric.tejedor.saavedra@cern.ch>
+Date: Thu, 9 Jun 2022 12:24:07 +0200
+Subject: [PATCH 1/3] [PyROOT] code.h must not be included directly in 3.11
+
+It has been moved to Include/cpython, and it is included by Python.h.
+
+See:
+https://docs.python.org/3.11/whatsnew/3.11.html
+---
+ bindings/pyroot/cppyy/CPyCppyy/src/CPPOverload.cxx | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/bindings/pyroot/cppyy/CPyCppyy/src/CPPOverload.cxx b/bindings/pyroot/cppyy/CPyCppyy/src/CPPOverload.cxx
+index 59997e390d4c..28bbd635c24d 100644
+--- a/bindings/pyroot/cppyy/CPyCppyy/src/CPPOverload.cxx
++++ b/bindings/pyroot/cppyy/CPyCppyy/src/CPPOverload.cxx
+@@ -1,10 +1,10 @@
+ // Bindings
+ #include "CPyCppyy.h"
+ #include "structmember.h"    // from Python
+-#if PY_VERSION_HEX >= 0x02050000
+-#include "code.h"            // from Python
+-#else
++#if PY_VERSION_HEX < 0x02050000
+ #include "compile.h"         // from Python
++#elif PY_VERSION_HEX < 0x030b0000
++#include "code.h"            // from Python
+ #endif
+ #ifndef CO_NOFREE
+ // python2.2 does not have CO_NOFREE defined
+
+From 3d8995cc03b1fe6e7e15f8c0963e0b9f82536817 Mon Sep 17 00:00:00 2001
+From: Enric Tejedor Saavedra <enric.tejedor.saavedra@cern.ch>
+Date: Fri, 10 Jun 2022 16:07:10 +0200
+Subject: [PATCH 2/3] [TPython] PySys_SetArgv is deprecated in 3.11
+
+We should use the new PyConfig API of the Python Initialization
+Configuration instead.
+
+See:
+https://docs.python.org/3.11/whatsnew/3.11.html#id7
+---
+ bindings/tpython/src/TPython.cxx | 38 +++++++++++++++++++++++++++-----
+ 1 file changed, 32 insertions(+), 6 deletions(-)
+
+diff --git a/bindings/tpython/src/TPython.cxx b/bindings/tpython/src/TPython.cxx
+index aefd5359f556..9e57cbf4cf29 100644
+--- a/bindings/tpython/src/TPython.cxx
++++ b/bindings/tpython/src/TPython.cxx
+@@ -120,7 +120,37 @@ Bool_t TPython::Initialize()
+ #if PY_VERSION_HEX < 0x03020000
+       PyEval_InitThreads();
+ #endif
++
++// set the command line arguments on python's sys.argv
++#if PY_VERSION_HEX < 0x03000000
++      char *argv[] = {const_cast<char *>("root")};
++#else
++      wchar_t *argv[] = {const_cast<wchar_t *>(L"root")};
++#endif
++      int argc = sizeof(argv) / sizeof(argv[0]);
++#if PY_VERSION_HEX < 0x030b0000
+       Py_Initialize();
++#else
++      PyStatus status;
++      PyConfig config;
++
++      PyConfig_InitPythonConfig(&config);
++
++      status = PyConfig_SetArgv(&config, argc, argv);
++      if (PyStatus_Exception(status)) {
++         PyConfig_Clear(&config);
++         std::cerr << "Error when setting command line arguments." << std::endl;
++         return kFALSE;
++      }
++
++      status = Py_InitializeFromConfig(&config);
++      if (PyStatus_Exception(status)) {
++         PyConfig_Clear(&config);
++         std::cerr << "Error when initializing Python." << std::endl;
++         return kFALSE;
++      }
++      PyConfig_Clear(&config);
++#endif
+ #if PY_VERSION_HEX >= 0x03020000
+ #if PY_VERSION_HEX < 0x03090000
+       PyEval_InitThreads();
+@@ -134,13 +164,9 @@ Bool_t TPython::Initialize()
+          return kFALSE;
+       }
+ 
+-// set the command line arguments on python's sys.argv
+-#if PY_VERSION_HEX < 0x03000000
+-      char *argv[] = {const_cast<char *>("root")};
+-#else
+-      wchar_t *argv[] = {const_cast<wchar_t *>(L"root")};
++#if PY_VERSION_HEX < 0x030b0000
++      PySys_SetArgv(argc, argv);
+ #endif
+-      PySys_SetArgv(sizeof(argv) / sizeof(argv[0]), argv);
+ 
+       // force loading of the ROOT module
+       const int ret = PyRun_SimpleString(const_cast<char *>("import ROOT"));
+
+From 5085bcd47832abfe3070def087d03732118c9175 Mon Sep 17 00:00:00 2001
+From: Enric Tejedor Saavedra <enric.tejedor.saavedra@cern.ch>
+Date: Fri, 10 Jun 2022 16:42:49 +0200
+Subject: [PATCH 3/3] [PyROOT] Prevent cast error when calling PyTuple_SET_ITEM
+ in 3.11
+
+PyTuple_SET_ITEM ends up calling _PyObject_CAST(nullptr) which
+causes "error: invalid cast from type 'std::nullptr_t' to type
+'const PyObject*' {aka 'const _object*'}
+---
+ bindings/pyroot/cppyy/CPyCppyy/src/CPPMethod.cxx | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/bindings/pyroot/cppyy/CPyCppyy/src/CPPMethod.cxx b/bindings/pyroot/cppyy/CPyCppyy/src/CPPMethod.cxx
+index 685ad3dc6093..21893485944d 100644
+--- a/bindings/pyroot/cppyy/CPyCppyy/src/CPPMethod.cxx
++++ b/bindings/pyroot/cppyy/CPyCppyy/src/CPPMethod.cxx
+@@ -580,7 +580,7 @@ PyObject* CPyCppyy::CPPMethod::ProcessKeywords(PyObject* self, PyObject* args, P
+ // set all values to zero to be able to check them later (this also guarantees normal
+ // cleanup by the tuple deallocation)
+     for (Py_ssize_t i = 0; i < nArgs+nKeys; ++i)
+-        PyTuple_SET_ITEM(newArgs, i, nullptr);
++        PyTuple_SET_ITEM(newArgs, i, static_cast<PyObject*>(nullptr));
+ 
+ // next, insert the keyword values
+     PyObject *key, *value;
