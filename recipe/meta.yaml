@@ -38,6 +38,9 @@ source:
     - patches/0001-Set-LLVM_REQUIRES_EH-for-Cling.patch
     # hack to remove libpython links on macOS
     - no-link-libpython.patch
+    # For Python 3.11
+    - patches/pr-10734.patch
+    - patches/pr-11457.patch
 {% if not builtin_pyroot %}
     - 0001-Support-standalone-pyroot.patch
 {% endif %}
@@ -155,7 +158,8 @@ requirements:
   run_constrained:
     - __osx >={{ MACOSX_DEPLOYMENT_TARGET|default("10.9") }}  # [osx and x86_64]
     # Older numba versions have trouble with how LLVM is linked
-    - numba >=0.52  # [py>=37]
+    # numba isn't ready for 3.11 yet
+    - numba >=0.52  # [py>=37 and py<311]
     # Items listed here conflict with ROOT
     - cling 9999
     - root5 9999
@@ -282,7 +286,8 @@ outputs:
         - metakernel
         - ipython
         - notebook
-        - numba  # [py>=37]
+        # numba isn't ready for 3.11 yet
+        - numba  # [py>=37 and py<311]
     test:
       files:
         - test.cpp
