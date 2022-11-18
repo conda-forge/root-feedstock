@@ -12,3 +12,5 @@ provider:
 os_version:
   linux_64: cos7
 test_on_native_only: true
+conda_build:
+  pkg_format: '2'
