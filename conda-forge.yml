@@ -15,3 +15,5 @@ provider:
   linux_ppc64le: default
   osx_arm64: osx_64
 test_on_native_only: true
+conda_build:
+  pkg_format: '2'
