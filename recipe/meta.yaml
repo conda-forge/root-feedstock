@@ -287,6 +287,8 @@ outputs:
         - notebook
         # numba isn't ready for 3.11 yet
         - numba  # [py>=37 and py<311]
+        # https://github.com/conda/conda-build/issues/3308
+        - openssl
     test:
       files:
         - test.cpp
