@@ -2,8 +2,8 @@
 {% set tag_name = "6-26-10" %}
 {% set version = ".".join(tag_name.split("-")|map("int")|map("string")) %}
 {% set build_number = 1 %}
-{% set clang_version = "9.0.1" %}
-{% set clang_patches_version = "root_62600" %}
+{% set clang_version = "13.0.1" %}
+{% set clang_patches_version = "root" %}
 
 {% set builtin_pyroot = True %}
 {% set builtin_clang = False %}
@@ -110,6 +110,7 @@ requirements:
     - sqlite
     - tbb
     - tbb-devel
+    - vector-classes
     - vdt
     - xorg-libx11  # [linux]
     - xorg-libxau  # [linux]
@@ -127,7 +128,7 @@ requirements:
     - zstd
 {% if not builtin_clang %}
     - llvm {{ clang_version }}  # [not (osx and arm64)]
-    - llvmdev {{ clang_version }} cling*  # [not (osx and arm64)]
+    - llvmdev {{ clang_version }}  # [not (osx and arm64)]
     - clangdev {{ clang_version }} {{ clang_patches_version }}*  # [not (osx and arm64)]
 {% endif %}
 {% if builtin_pyroot %}
