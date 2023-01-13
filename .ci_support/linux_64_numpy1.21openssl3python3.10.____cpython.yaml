@@ -43,7 +43,7 @@ libpng:
 librsvg:
 - '2'
 libtiff:
-- '4'
+- '4.4'
 libxml2:
 - '2.10'
 lz4_c:
