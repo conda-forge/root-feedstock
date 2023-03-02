@@ -38,8 +38,6 @@ source:
     - patches/0001-Set-LLVM_REQUIRES_EH-for-Cling.patch
     # hack to remove libpython links on macOS
     - no-link-libpython.patch
-    # For Python 3.11
-    - patches/pr-10734.patch
 {% if not builtin_pyroot %}
     - 0001-Support-standalone-pyroot.patch
 {% endif %}
@@ -275,6 +273,8 @@ outputs:
 {% endif %}
         - python
         - openssl
+        # Workaround due to root_base's ld_impl_linux-64 constraint not being accounted for when rendering
+        - ld_impl_linux-64 <2.40
       run:
         - {{ pin_subpackage('root_base', exact=True) }}
 {% if not builtin_pyroot %}
