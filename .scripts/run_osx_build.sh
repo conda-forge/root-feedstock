@@ -25,12 +25,11 @@ conda activate base
 export CONDA_SOLVER="libmamba"
 export CONDA_LIBMAMBA_SOLVER_NO_CHANNELS_FROM_INSTALLED=1
 
-mamba install --update-specs --quiet --yes --channel conda-forge --strict-channel-priority \
-    pip mamba conda-build boa conda-forge-ci-setup=4
+# Workaround for bug in https://github.com/conda/conda-build/pull/4281
+mamba install --update-specs --yes --quiet --channel conda-forge --strict-channel-priority \
+    pip mamba 'conda-build<3.23.0' boa conda-forge-ci-setup=3
 mamba update --update-specs --yes --quiet --channel conda-forge --strict-channel-priority \
-    pip mamba conda-build boa conda-forge-ci-setup=4
-
-
+    pip mamba 'conda-build<3.23.0' boa conda-forge-ci-setup=3
 
 echo -e "\n\nSetting up the condarc and mangling the compiler."
 setup_conda_rc ./ ./recipe ./.ci_support/${CONFIG}.yaml
