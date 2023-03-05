@@ -28,7 +28,7 @@ declare -a CMAKE_PLATFORM_FLAGS
 
 if [[ "${target_platform}" == "osx-arm64" ]]; then
     CONDA_SUBDIR=${target_platform} conda create --prefix "${SRC_DIR}/clang_env" --yes \
-        "llvm 9.0.1" "llvmdev 9.0.1 cling*" "clangdev 9.0.1 root_62600*"
+        "llvm 13.0.1" "clangdev 13.0.1 root_62800*"
     Clang_DIR=${SRC_DIR}/clang_env
     CMAKE_PLATFORM_FLAGS+=("-DLLVM_CMAKE_PATH=${SRC_DIR}/clang_env/lib/cmake")
 else
@@ -53,7 +53,7 @@ if [[ "${target_platform}" == linux* ]]; then
     echo "CXXFLAGS is now '${CXXFLAGS}'"
 else
     CMAKE_PLATFORM_FLAGS+=("-DBLA_PREFER_PKGCONFIG=ON")
-    CMAKE_PLATFORM_FLAGS+=("-DCLANG_RESOURCE_DIR_VERSION=9.0.1")
+    CMAKE_PLATFORM_FLAGS+=("-DCLANG_RESOURCE_DIR_VERSION=13.0.1")
 
     # HACK: Hack the macOS SDK to make rootcling find the correct ncurses
     if [[ -f  "$CONDA_BUILD_SYSROOT/usr/include/module.modulemap.bak" ]]; then
@@ -297,6 +297,10 @@ if [[ "${target_platform}" == osx* ]]; then
 fi
 
 make "-j${CPU_COUNT}"
+
+# cd tutorials
+# EXTRA_CLING_ARGS='-O1' LD_LIBRARY_PATH=$SRC_DIR/build-dir/lib: ROOTIGNOREPREFIX=1 ROOT_HIST=0 $SRC_DIR/build-dir/bin/root.exe -l -q -b -n -x hsimple.C -e return
+# cd ..
 
 if [ "${ROOT_CONDA_RUN_GTESTS-}" = "1" ]; then
     # Run gtests, never fail as Jenkins will check the test results instead
