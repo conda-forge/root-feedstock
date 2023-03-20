@@ -1,11 +1,7 @@
-BUILD:
-- aarch64-conda_cos7-linux-gnu
 c_compiler:
 - gcc
 c_compiler_version:
-- '10'
-cdt_arch:
-- aarch64
+- '11'
 cdt_name:
 - cos7
 cfitsio:
@@ -17,7 +13,7 @@ channel_targets:
 cxx_compiler:
 - gxx
 cxx_compiler_version:
-- '10'
+- '11'
 davix:
 - '0.8'
 docker_image:
@@ -47,13 +43,13 @@ libpng:
 librsvg:
 - '2'
 libtiff:
-- '4'
+- '4.4'
 libxml2:
 - '2.10'
 lz4_c:
 - 1.9.3
 numpy:
-- '1.20'
+- '1.21'
 openssl:
 - '3'
 pcre:
@@ -65,11 +61,11 @@ pin_run_as_build:
     min_pin: x.x
     max_pin: x.x
 python:
-- 3.8.* *_cpython
+- 3.10.* *_cpython
 sqlite:
 - '3'
 target_platform:
-- linux-aarch64
+- linux-64
 tbb:
 - '2021'
 tbb_devel:
