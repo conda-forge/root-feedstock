@@ -31,7 +31,7 @@ glew:
 glib:
 - '2'
 graphviz:
-- '6'
+- '8'
 gsl:
 - '2.7'
 libblas:
