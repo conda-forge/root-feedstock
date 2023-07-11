@@ -3,7 +3,7 @@ MACOSX_DEPLOYMENT_TARGET:
 c_compiler:
 - clang
 c_compiler_version:
-- '14'
+- '15'
 cfitsio:
 - 4.2.0
 channel_sources:
@@ -13,7 +13,7 @@ channel_targets:
 cxx_compiler:
 - clangxx
 cxx_compiler_version:
-- '14'
+- '15'
 davix:
 - '0.8'
 fftw:
@@ -29,7 +29,7 @@ glew:
 glib:
 - '2'
 graphviz:
-- '6'
+- '8'
 gsl:
 - '2.7'
 libblas:
@@ -43,7 +43,7 @@ librsvg:
 libtiff:
 - '4.4'
 libxml2:
-- '2.10'
+- '2.11'
 lz4_c:
 - 1.9.3
 macos_machine:
