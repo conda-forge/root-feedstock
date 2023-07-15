@@ -2,7 +2,7 @@
 import sys
 import ROOT
 
-if sys.version_info >= (3, 11):
+if sys.version_info >= (3, 12):
     try:
         import numba
     except ImportError:
