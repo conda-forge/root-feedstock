@@ -1,9 +1,9 @@
+MACOSX_DEPLOYMENT_TARGET:
+- '11.0'
 c_compiler:
-- gcc
+- clang
 c_compiler_version:
-- '11'
-cdt_name:
-- cos7
+- '15'
 cfitsio:
 - 4.2.0
 channel_sources:
@@ -11,13 +11,11 @@ channel_sources:
 channel_targets:
 - conda-forge main
 cxx_compiler:
-- gxx
+- clangxx
 cxx_compiler_version:
-- '11'
+- '15'
 davix:
 - '0.8'
-docker_image:
-- quay.io/condaforge/linux-anvil-cos7-x86_64
 fftw:
 - '3'
 freetype:
@@ -31,7 +29,7 @@ glew:
 glib:
 - '2'
 graphviz:
-- '6'
+- '8'
 gsl:
 - '2.7'
 libblas:
@@ -43,13 +41,15 @@ libpng:
 librsvg:
 - '2'
 libtiff:
-- '4.4'
+- '4.5'
 libxml2:
 - '2.10'
 lz4_c:
 - 1.9.3
+macos_machine:
+- arm64-apple-darwin20.0.0
 numpy:
-- '1.20'
+- '1.21'
 openssl:
 - '3'
 pcre:
@@ -65,7 +65,7 @@ python:
 sqlite:
 - '3'
 target_platform:
-- linux-64
+- osx-arm64
 tbb:
 - '2021'
 tbb_devel:
