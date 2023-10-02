@@ -17,7 +17,7 @@ cxx_compiler_version:
 davix:
 - '0.8'
 docker_image:
-- quay.io/condaforge/linux-anvil-ppc64le
+- quay.io/condaforge/linux-anvil-cos7-x86_64
 fftw:
 - '3'
 freetype:
@@ -43,13 +43,13 @@ libpng:
 librsvg:
 - '2'
 libtiff:
-- '4.5'
+- '4.6'
 libxml2:
 - '2.11'
 lz4_c:
 - 1.9.3
 numpy:
-- '1.21'
+- '1.22'
 openssl:
 - '3'
 pcre:
@@ -65,7 +65,7 @@ python:
 sqlite:
 - '3'
 target_platform:
-- linux-ppc64le
+- linux-64
 tbb:
 - '2021'
 tbb_devel:

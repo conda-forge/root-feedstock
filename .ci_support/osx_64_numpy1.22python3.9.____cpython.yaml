@@ -43,7 +43,7 @@ libpng:
 librsvg:
 - '2'
 libtiff:
-- '4.5'
+- '4.6'
 libxml2:
 - '2.11'
 lz4_c:
@@ -51,7 +51,7 @@ lz4_c:
 macos_machine:
 - x86_64-apple-darwin13.4.0
 numpy:
-- '1.21'
+- '1.22'
 openssl:
 - '3'
 pcre:
