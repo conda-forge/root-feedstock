@@ -1,6 +1,6 @@
-From c1693a420ec32669704a3a00e10c7b6379a193a9 Mon Sep 17 00:00:00 2001
-From: Enrico Guiraud <enrico.guiraud@cern.ch>
-Date: Fri, 20 Aug 2021 11:05:20 +0200
+From 70ecc234e0e6418929132de4abb1a56bd43ed216 Mon Sep 17 00:00:00 2001
+From: Vincenzo Eduardo Padulano <v.e.padulano@gmail.com>
+Date: Thu, 9 Nov 2023 14:11:02 +0100
 Subject: [PATCH] interpreter/CMakeLists.txt hacks
 
 ---
@@ -8,10 +8,10 @@ Subject: [PATCH] interpreter/CMakeLists.txt hacks
  1 file changed, 10 insertions(+), 2 deletions(-)
 
 diff --git a/interpreter/CMakeLists.txt b/interpreter/CMakeLists.txt
-index 8f9b36c07c..4320303ac5 100644
+index 6275a81000..bad1aa743c 100644
 --- a/interpreter/CMakeLists.txt
 +++ b/interpreter/CMakeLists.txt
-@@ -298,6 +298,9 @@ else()
+@@ -303,6 +303,9 @@ else()
  
    set(LLVM_DIR "${LLVM_BINARY_DIR}")
  
@@ -21,10 +21,10 @@ index 8f9b36c07c..4320303ac5 100644
    # Normalize LLVM_CMAKE_PATH. --cmakedir might contain backslashes.
    # CMake assumes slashes as PATH.
    file(TO_CMAKE_PATH ${LLVM_CONFIG_CMAKE_PATH} LLVM_CMAKE_PATH)
-@@ -476,9 +479,11 @@ if (builtin_cling)
+@@ -484,9 +487,11 @@ if (builtin_cling)
    # compilation properties.
    if (builtin_llvm)
-     get_directory_property(LLVM_DEFS DIRECTORY llvm/src COMPILE_DEFINITIONS)
+     get_directory_property(LLVM_DEFS DIRECTORY llvm-project/llvm COMPILE_DEFINITIONS)
 -    # Turns DEFINE1;DEFINE2 to -DDEFINE1 -DDEFINE2
 -    string (REPLACE ";" " -D" LLVM_DEFS ";${LLVM_DEFS}")
 +  else()
@@ -35,16 +35,17 @@ index 8f9b36c07c..4320303ac5 100644
  
    # FIXME: Reduce the usage of CLING_CXXFLAGS by adding a cmake routine in
    # RootMacros.cmake for all cling-dependent libraries
-@@ -520,6 +525,9 @@ if (builtin_cling)
+@@ -529,6 +534,9 @@ if (builtin_cling)
      endif()
    endif()
  else()
 +  message(WARNING "CBURR ${LLVM_DEFINITIONS}")
 +  string(APPEND CMAKE_CXX_FLAGS ${LLVM_DEFINITIONS})
-+
++  
    set(Cling_DIR ${LLVM_BINARY_DIR}/lib/cmake/cling/)
    find_package(Cling REQUIRED CONFIG PATHS ${Cling_DIR} "${Cling_DIR}/lib/cmake/cling" "${Cling_DIR}/cmake" NO_DEFAULT_PATH)
- 
+   find_package(Clang REQUIRED CONFIG PATHS ${Cling_DIR} "${Cling_DIR}/lib/cmake/clang" "${Cling_DIR}/cmake" NO_DEFAULT_PATH)
 -- 
-2.33.0
+2.41.0
+
 
