@@ -95,6 +95,7 @@ requirements:
     - gl2ps
     - graphviz
     - gsl
+    - gtest
     - libglu  # [linux]
     - libpng
     - librsvg
