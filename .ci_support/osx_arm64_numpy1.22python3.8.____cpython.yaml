@@ -1,11 +1,9 @@
 MACOSX_DEPLOYMENT_TARGET:
 - '11.0'
-MACOSX_SDK_VERSION:
-- '11.0'
 c_compiler:
 - clang
 c_compiler_version:
-- '15'
+- '16'
 cfitsio:
 - 4.3.0
 channel_sources:
@@ -15,7 +13,7 @@ channel_targets:
 cxx_compiler:
 - clangxx
 cxx_compiler_version:
-- '15'
+- '16'
 davix:
 - '0.8'
 fftw:
@@ -43,15 +41,15 @@ libpng:
 librsvg:
 - '2'
 libtiff:
-- '4.5'
+- '4.6'
 libxml2:
 - '2.11'
 lz4_c:
 - 1.9.3
 macos_machine:
-- x86_64-apple-darwin13.4.0
+- arm64-apple-darwin20.0.0
 numpy:
-- '1.21'
+- '1.22'
 openssl:
 - '3'
 pcre:
@@ -63,11 +61,11 @@ pin_run_as_build:
     min_pin: x.x
     max_pin: x.x
 python:
-- 3.9.* *_cpython
+- 3.8.* *_cpython
 sqlite:
 - '3'
 target_platform:
-- osx-64
+- osx-arm64
 tbb:
 - '2021'
 tbb_devel:
