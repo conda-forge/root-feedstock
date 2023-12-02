@@ -3,9 +3,9 @@ MACOSX_DEPLOYMENT_TARGET:
 c_compiler:
 - clang
 c_compiler_version:
-- '15'
+- '16'
 cfitsio:
-- 4.3.0
+- 4.3.1
 channel_sources:
 - conda-forge
 channel_targets:
@@ -13,7 +13,7 @@ channel_targets:
 cxx_compiler:
 - clangxx
 cxx_compiler_version:
-- '15'
+- '16'
 davix:
 - '0.8'
 fftw:
@@ -29,7 +29,7 @@ glew:
 glib:
 - '2'
 graphviz:
-- '8'
+- '9'
 gsl:
 - '2.7'
 libblas:
@@ -41,7 +41,7 @@ libpng:
 librsvg:
 - '2'
 libtiff:
-- '4.5'
+- '4.6'
 libxml2:
 - '2.11'
 lz4_c:
