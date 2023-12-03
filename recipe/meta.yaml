@@ -1,7 +1,7 @@
 {% set name = "root" %}
 {% set tag_name = "6-28-10" %}
 {% set version = ".".join(tag_name.split("-")|map("int")|map("string")) %}
-{% set build_number = 0 %}
+{% set build_number = 1 %}
 {% set clang_version = "13.0.1" %}
 {% set clang_patches_version = "root_62810" %}
 
@@ -38,6 +38,7 @@ source:
     - patches/0001-Set-LLVM_REQUIRES_EH-for-Cling.patch
     # hack to remove libpython links on macOS
     - no-link-libpython.patch
+    - patches/disable-hsimple.root  # [build_platform != target_platform]
 {% if not builtin_pyroot %}
     - 0001-Support-standalone-pyroot.patch
 {% endif %}
@@ -52,6 +53,7 @@ build:
   ignore_run_exports_from:
     - clangdev
   script_env:
+    - clang_patches_version={{ clang_patches_version }}
     {% if builtin_pyroot %}- ROOT_CONDA_BUILTIN_PYROOT=1 {%- endif %}
     {% if builtin_clang %}- ROOT_CONDA_BUILTIN_CLANG=1 {%- endif %}
     {% if run_gtests %}- ROOT_CONDA_RUN_GTESTS=1 {%- endif %}
