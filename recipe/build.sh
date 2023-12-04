@@ -28,7 +28,7 @@ declare -a CMAKE_PLATFORM_FLAGS
 
 if [[ "${target_platform}" == "osx-arm64" ]]; then
     CONDA_SUBDIR=${target_platform} conda create --prefix "${SRC_DIR}/clang_env" --yes \
-        "llvm 13.0.1" "clangdev 13.0.1 root_62804*"
+        "llvm 13.0.1" "clangdev 13.0.1 ${clang_patches_version}*"
     Clang_DIR=${SRC_DIR}/clang_env
     CMAKE_PLATFORM_FLAGS+=("-DLLVM_CMAKE_PATH=${SRC_DIR}/clang_env/lib/cmake")
 else
@@ -105,7 +105,7 @@ CMAKE_PLATFORM_FLAGS+=("-Dgnuinstall=OFF")
 CMAKE_PLATFORM_FLAGS+=("-Drpath=ON")
 CMAKE_PLATFORM_FLAGS+=("-Dshared=ON")
 CMAKE_PLATFORM_FLAGS+=("-Dsoversion=ON")
-CMAKE_PLATFORM_FLAGS+=("-DCMAKE_CXX_STANDARD=17")
+CMAKE_PLATFORM_FLAGS+=("-DCMAKE_CXX_STANDARD=20")
 CMAKE_PLATFORM_FLAGS+=("-DTBB_ROOT_DIR=${PREFIX}")
 
 # Disable all of the builtins

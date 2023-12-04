@@ -8,26 +8,66 @@ jobs:
     vmImage: ubuntu-latest
   strategy:
     matrix:
-      linux_64_numpy1.21python3.10.____cpython:
-        CONFIG: linux_64_numpy1.21python3.10.____cpython
+      linux_64_numpy1.22python3.10.____cpython:
+        CONFIG: linux_64_numpy1.22python3.10.____cpython
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
-        SHORT_CONFIG: linux_64_numpy1.21python3.10.____cpython
-      linux_64_numpy1.21python3.8.____cpython:
-        CONFIG: linux_64_numpy1.21python3.8.____cpython
+        SHORT_CONFIG: linux_64_numpy1.22python3.10.____cpython
+      linux_64_numpy1.22python3.8.____cpython:
+        CONFIG: linux_64_numpy1.22python3.8.____cpython
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
-        SHORT_CONFIG: linux_64_numpy1.21python3.8.____cpython
-      linux_64_numpy1.21python3.9.____cpython:
-        CONFIG: linux_64_numpy1.21python3.9.____cpython
+        SHORT_CONFIG: linux_64_numpy1.22python3.8.____cpython
+      linux_64_numpy1.22python3.9.____cpython:
+        CONFIG: linux_64_numpy1.22python3.9.____cpython
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
-        SHORT_CONFIG: linux_64_numpy1.21python3.9.____cpython
+        SHORT_CONFIG: linux_64_numpy1.22python3.9.____cpython
       linux_64_numpy1.23python3.11.____cpython:
         CONFIG: linux_64_numpy1.23python3.11.____cpython
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
         SHORT_CONFIG: linux_64_numpy1.23python3.11.____cpython
+      linux_aarch64_numpy1.22python3.10.____cpython:
+        CONFIG: linux_aarch64_numpy1.22python3.10.____cpython
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
+        SHORT_CONFIG: linux_aarch64_numpy1.22python3.10.____cpython
+      linux_aarch64_numpy1.22python3.8.____cpython:
+        CONFIG: linux_aarch64_numpy1.22python3.8.____cpython
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
+        SHORT_CONFIG: linux_aarch64_numpy1.22python3.8.____cpython
+      linux_aarch64_numpy1.22python3.9.____cpython:
+        CONFIG: linux_aarch64_numpy1.22python3.9.____cpython
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
+        SHORT_CONFIG: linux_aarch64_numpy1.22python3.9.____cpython
+      linux_aarch64_numpy1.23python3.11.____cpython:
+        CONFIG: linux_aarch64_numpy1.23python3.11.____cpython
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
+        SHORT_CONFIG: linux_aarch64_numpy1.23python3.11.____cpython
+      linux_ppc64le_numpy1.22python3.10.____cpython:
+        CONFIG: linux_ppc64le_numpy1.22python3.10.____cpython
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
+        SHORT_CONFIG: linux_ppc64le_numpy1.22python3.10.____cpython
+      linux_ppc64le_numpy1.22python3.8.____cpython:
+        CONFIG: linux_ppc64le_numpy1.22python3.8.____cpython
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
+        SHORT_CONFIG: linux_ppc64le_numpy1.22python3.8.____cpython
+      linux_ppc64le_numpy1.22python3.9.____cpython:
+        CONFIG: linux_ppc64le_numpy1.22python3.9.____cpython
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
+        SHORT_CONFIG: linux_ppc64le_numpy1.22python3.9.____cpython
+      linux_ppc64le_numpy1.23python3.11.____cpython:
+        CONFIG: linux_ppc64le_numpy1.23python3.11.____cpython
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
+        SHORT_CONFIG: linux_ppc64le_numpy1.23python3.11.____cpython
   timeoutInMinutes: 360
 
   steps:
@@ -41,6 +81,9 @@ jobs:
 
   - script: |
         export CI=azure
+        export flow_run_id=azure_$(Build.BuildNumber).$(System.JobAttempt)
+        export remote_url=$(Build.Repository.Uri)
+        export sha=$(Build.SourceVersion)
         export GIT_BRANCH=$BUILD_SOURCEBRANCHNAME
         export FEEDSTOCK_NAME=$(basename ${BUILD_REPOSITORY_NAME})
         if [[ "${BUILD_REASON:-}" == "PullRequest" ]]; then
