@@ -104,6 +104,7 @@ requirements:
     # - mysql
     - nlohmann_json
     - openssl
+    - openssl 3.1
     - pcre
     # - postgresql
     - pythia8
