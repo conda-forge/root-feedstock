@@ -1,13 +1,11 @@
-BUILD:
-- aarch64-conda_cos7-linux-gnu
+MACOSX_DEPLOYMENT_TARGET:
+- '11.0'
+MACOSX_SDK_VERSION:
+- '11.0'
 c_compiler:
-- gcc
+- clang
 c_compiler_version:
-- '12'
-cdt_arch:
-- aarch64
-cdt_name:
-- cos7
+- '16'
 cfitsio:
 - 4.3.1
 channel_sources:
@@ -15,13 +13,11 @@ channel_sources:
 channel_targets:
 - conda-forge main
 cxx_compiler:
-- gxx
+- clangxx
 cxx_compiler_version:
-- '12'
+- '16'
 davix:
 - '0.8'
-docker_image:
-- quay.io/condaforge/linux-anvil-cos7-x86_64
 fftw:
 - '3'
 freetype:
@@ -52,8 +48,10 @@ libxml2:
 - '2'
 lz4_c:
 - 1.9.3
+macos_machine:
+- x86_64-apple-darwin13.4.0
 numpy:
-- '1.23'
+- '1.26'
 openssl:
 - '3'
 pcre:
@@ -65,11 +63,11 @@ pin_run_as_build:
     min_pin: x.x
     max_pin: x.x
 python:
-- 3.11.* *_cpython
+- 3.12.* *_cpython
 sqlite:
 - '3'
 target_platform:
-- linux-aarch64
+- osx-64
 tbb:
 - '2021'
 tbb_devel:

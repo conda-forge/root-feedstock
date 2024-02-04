@@ -1,11 +1,7 @@
-BUILD:
-- aarch64-conda_cos7-linux-gnu
 c_compiler:
 - gcc
 c_compiler_version:
 - '12'
-cdt_arch:
-- aarch64
 cdt_name:
 - cos7
 cfitsio:
@@ -53,7 +49,7 @@ libxml2:
 lz4_c:
 - 1.9.3
 numpy:
-- '1.23'
+- '1.26'
 openssl:
 - '3'
 pcre:
@@ -65,11 +61,11 @@ pin_run_as_build:
     min_pin: x.x
     max_pin: x.x
 python:
-- 3.11.* *_cpython
+- 3.12.* *_cpython
 sqlite:
 - '3'
 target_platform:
-- linux-aarch64
+- linux-64
 tbb:
 - '2021'
 tbb_devel:
