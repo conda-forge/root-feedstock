@@ -68,16 +68,6 @@ if [[ "${target_platform}" == osx* ]]; then
     CXXFLAGS="${CXXFLAGS} -D_LIBCPP_DISABLE_AVAILABILITY"
 fi
 
-export CFLAGS="${CFLAGS//-isystem /-I}"
-export CPPFLAGS="${CPPFLAGS//-isystem /-I}"
-export CXXFLAGS="${CXXFLAGS//-isystem /-I}"
-export DEBUG_CFLAGS="${DEBUG_CFLAGS//-isystem /-I}"
-export DEBUG_CXXFLAGS="${DEBUG_CXXFLAGS//-isystem /-I}"
-export DEBUG_FFLAGS="${DEBUG_FFLAGS//-isystem /-I}"
-export DEBUG_FORTRANFLAGS="${DEBUG_FORTRANFLAGS//-isystem /-I}"
-export FFLAGS="${FFLAGS//-isystem /-I}"
-export FORTRANFLAGS="${FORTRANFLAGS//-isystem /-I}"
-
 mkdir -p build-dir
 cd build-dir
 
