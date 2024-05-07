@@ -1,17 +1,17 @@
-From eb8fe8b58bf5a0ee7932094d150a3f6ed800a7cf Mon Sep 17 00:00:00 2001
-From: Chris Burr <christopher.burr@cern.ch>
-Date: Mon, 14 Dec 2020 19:34:00 +0100
+From d1e56d4a37eff018ddbb19df750f77ea1388ea13 Mon Sep 17 00:00:00 2001
+From: Vincenzo Eduardo Padulano <vincenzo.eduardo.padulano@cern.ch>
+Date: Thu, 13 Jun 2024 16:23:27 +0200
 Subject: [PATCH] Patch for apple silicon
 
 ---
  cmake/modules/SearchInstalledSoftware.cmake | 2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/cmake/modules/SearchInstalledSoftware.cmake b/cmake/modules/SearchInstalledSoftware.cmake
-index bb1286b159..a4f23f9c90 100644
+index 109602f5e2..d4c4c7c66b 100644
 --- a/cmake/modules/SearchInstalledSoftware.cmake
 +++ b/cmake/modules/SearchInstalledSoftware.cmake
-@@ -35,7 +35,7 @@ endif()
+@@ -37,7 +37,7 @@ endif()
  if(cocoa)
    if(APPLE)
      set(x11 OFF CACHE BOOL "Disabled because cocoa requested (${x11_description})" FORCE)

@@ -36,7 +36,7 @@ source:
     - patches/0001-Patch-for-apple-silicon.patch
     - patches/0001-Set-LLVM_REQUIRES_EH-for-Cling.patch
     # hack to remove libpython links on macOS
-    - no-link-libpython.patch
+    - patches/apple-no-link-libpython.patch
     - patches/disable-hsimple.root  # [build_platform != target_platform]
     - patches/0001-core-Fallback-to-urandom-for-increased-compatibility.patch
     - patches/0001-core-Link-clad-to-clang-only-if-target-available.patch
