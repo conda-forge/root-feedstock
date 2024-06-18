@@ -1,0 +1,25 @@
+From ebd773823921ce819f2976126dd1b9cd3cded67c Mon Sep 17 00:00:00 2001
+From: Vincenzo Eduardo Padulano <vincenzo.eduardo.padulano@cern.ch>
+Date: Thu, 20 Jun 2024 14:08:06 +0200
+Subject: [PATCH] [PyROOT] Avoid linking TPython against libPython
+
+---
+ bindings/tpython/CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/bindings/tpython/CMakeLists.txt b/bindings/tpython/CMakeLists.txt
+index dbe1c9273a..14893e272d 100644
+--- a/bindings/tpython/CMakeLists.txt
++++ b/bindings/tpython/CMakeLists.txt
+@@ -27,7 +27,7 @@ ROOT_STANDARD_LIBRARY_PACKAGE(ROOTTPython
+     # We link libTPython against Python libraries to compensate for the fact that libcppyy
+     # is built with unresolved symbols. If we didn't do this, invoking TPython from C++
+     # would not work.
+-    Python3::Python
++    Python3::Module
+ )
+ 
+ # Disables warnings originating from deprecated register keyword in Python
+-- 
+2.39.3 (Apple Git-145)
+

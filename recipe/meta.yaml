@@ -35,12 +35,13 @@ source:
     - patches/0001-Hacks.patch
     - patches/0001-Patch-for-apple-silicon.patch
     - patches/0001-Set-LLVM_REQUIRES_EH-for-Cling.patch
-    # hack to remove libpython links on macOS
-    - patches/apple-no-link-libpython.patch
     - patches/disable-hsimple.root  # [build_platform != target_platform]
     - patches/0001-core-Fallback-to-urandom-for-increased-compatibility.patch
     - patches/0001-core-Link-clad-to-clang-only-if-target-available.patch
     - patches/0001-Reset-CMAKE-module-path-for-interpreter.patch
+    - patches/0001-force-one-modulemap-for-darwin.patch  # [osx]
+    - patches/0001-Remove-check-for-SDK-version-in-CIFactory.patch  # [osx]
+    - patches/0001-avoid-linking-TPython-against-libPython.patch  # [osx]
 {% if not builtin_pyroot %}
     - 0001-Support-standalone-pyroot.patch
 {% endif %}
@@ -55,6 +56,7 @@ build:
   ignore_run_exports_from:
     - clangdev
   script_env:
+    - clang_version={{ clang_version }}
     - clang_patches_version={{ clang_patches_version }}
     {% if builtin_pyroot %}- ROOT_CONDA_BUILTIN_PYROOT=1 {%- endif %}
     {% if builtin_clang %}- ROOT_CONDA_BUILTIN_CLANG=1 {%- endif %}

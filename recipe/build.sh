@@ -28,7 +28,7 @@ declare -a CMAKE_PLATFORM_FLAGS
 
 if [[ "${target_platform}" == "osx-arm64" ]]; then
     CONDA_SUBDIR=${target_platform} conda create --prefix "${SRC_DIR}/clang_env" --yes \
-        "llvm 13.0.1" "clangdev 13.0.1 ${clang_patches_version}*"
+        "llvm ${clang_version}" "clangdev ${clang_version} ${clang_patches_version}*"
     Clang_DIR=${SRC_DIR}/clang_env
     CMAKE_PLATFORM_FLAGS+=("-DLLVM_CMAKE_PATH=${SRC_DIR}/clang_env/lib/cmake")
 else
@@ -53,7 +53,8 @@ if [[ "${target_platform}" == linux* ]]; then
     echo "CXXFLAGS is now '${CXXFLAGS}'"
 else
     CMAKE_PLATFORM_FLAGS+=("-DBLA_PREFER_PKGCONFIG=ON")
-    CMAKE_PLATFORM_FLAGS+=("-DCLANG_RESOURCE_DIR_VERSION=13.0.1")
+    clang_version_split=(${clang_version//./ })
+    CMAKE_PLATFORM_FLAGS+=("-DCLANG_RESOURCE_DIR_VERSION=${clang_version_split[0]}")
 
     # HACK: Hack the macOS SDK to make rootcling find the correct ncurses
     if [[ -f  "$CONDA_BUILD_SYSROOT/usr/include/module.modulemap.bak" ]]; then

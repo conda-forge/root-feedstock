@@ -1,0 +1,42 @@
+From c0c8a036809b935a165c4f090aa787ebcf65cf0a Mon Sep 17 00:00:00 2001
+From: Vincenzo Eduardo Padulano <vincenzo.eduardo.padulano@cern.ch>
+Date: Wed, 19 Jun 2024 14:49:12 +0200
+Subject: [PATCH] Remove check for SDK version in CIFactory
+
+---
+ interpreter/cling/lib/Interpreter/CIFactory.cpp | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/interpreter/cling/lib/Interpreter/CIFactory.cpp b/interpreter/cling/lib/Interpreter/CIFactory.cpp
+index c4aced66da..f06fd5d4bd 100644
+--- a/interpreter/cling/lib/Interpreter/CIFactory.cpp
++++ b/interpreter/cling/lib/Interpreter/CIFactory.cpp
+@@ -666,11 +666,11 @@ namespace {
+         llvm::SmallString<512> libcModuleMap(cIncLoc);
+         llvm::sys::path::append(libcModuleMap, "module.modulemap");
+         ModuleMapFiles.push_back(libcModuleMap.str().str());
+-        if (CI.getTarget().getSDKVersion() < VersionTuple(14, 4)) {
+-          llvm::SmallString<512> stdModuleMap(stdIncLoc);
+-          llvm::sys::path::append(stdModuleMap, "module.modulemap");
+-          ModuleMapFiles.push_back(stdModuleMap.str().str());
+-        }
++        // if (CI.getTarget().getSDKVersion() < VersionTuple(14, 4)) {
++        //   llvm::SmallString<512> stdModuleMap(stdIncLoc);
++        //   llvm::sys::path::append(stdModuleMap, "module.modulemap");
++        //   ModuleMapFiles.push_back(stdModuleMap.str().str());
++        // }
+       }
+     }
+ 
+@@ -694,7 +694,7 @@ namespace {
+                             /*RegisterModuleMap=*/ true,
+                             /*AllowModulemapOverride=*/ false);
+ #elif __APPLE__
+-    if (Triple.isMacOSX() && CI.getTarget().getSDKVersion() >= VersionTuple(14, 4))
++    if (Triple.isMacOSX())
+       maybeAppendOverlayEntry(stdIncLoc.str(), "std_darwin.modulemap",
+                               clingIncLoc.str().str(), MOverlay,
+                               /*RegisterModuleMap=*/ true,
+-- 
+2.39.3 (Apple Git-145)
+
