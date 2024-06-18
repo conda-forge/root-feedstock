@@ -64,7 +64,7 @@ requirements:
   build:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
-    - sysroot_linux-64 2.17  # [linux]
+    - {{ stdlib("c") }}
     - cmake
     - git
     - pkg-config
@@ -82,7 +82,7 @@ requirements:
     - libcblas
     - {{ compiler('c') }}  # [linux]
     - {{ compiler('cxx') }}  # [linux]
-    - sysroot_linux-64 2.17  # [linux]
+    - {{ stdlib("c") }}
     - afterimage
     - cfitsio
     - davix
@@ -146,18 +146,17 @@ requirements:
     - {{ pin_compatible('libcxx', min_pin='x', max_pin='x') }}
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
+    - {{ stdlib("c") }}
     - {{ pin_compatible('xxhash', max_pin='x.x.x') }}
     - {{ pin_compatible('nlohmann_json', max_pin='x.x.x') }}
     - cffi
     - graphviz
-    - sysroot_linux-64 =2.17  # [linux]
     - xorg-libx11  # [linux]
     - xorg-libxext  # [linux]
     - xorg-libxpm  # [linux]
     - xorg-libxft  # [linux]
     - libglu  # [linux]
   run_constrained:
-    - __osx >={{ MACOSX_DEPLOYMENT_TARGET|default("10.9") }}  # [osx and x86_64]
     # Older numba versions have trouble with how LLVM is linked
     - numba >=0.52
     # Items listed here conflict with ROOT
@@ -208,7 +207,7 @@ outputs:
       build:
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
-        - sysroot_linux-64 2.17  # [linux]
+        - {{ stdlib("c") }}
         - cmake
         - git
         - pkg-config
@@ -241,6 +240,7 @@ outputs:
       build:
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
+        - {{ stdlib("c") }}
         - cmake
         - make
       host:
