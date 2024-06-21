@@ -1,9 +1,9 @@
 {% set name = "root" %}
-{% set tag_name = "6-30-04" %}
+{% set tag_name = "6-32-00" %}
 {% set version = ".".join(tag_name.split("-")|map("int")|map("string")) %}
 {% set build_number = 0 %}
-{% set clang_version = "13.0.1" %}
-{% set clang_patches_version = "root_63004" %}
+{% set clang_version = "16.0.6" %}
+{% set clang_patches_version = "root_63200" %}
 
 {% set builtin_pyroot = True %}
 {% set builtin_clang = False %}
@@ -26,7 +26,7 @@ source:
   git_rev: {{ os.environ["ROOT_CONDA_GIT_REV"] }}
 {%- else %}
   url: https://github.com/root-project/root/archive/refs/tags/v{{ tag_name }}.tar.gz
-  sha256: 1f6db8baf6a07856b57f7c0e3207ac092f5358ef02f86aecddf4612f93ecd93a
+  sha256: 3e497c8217b3ef629f339077f92d7ad377e5295611a2bf9faf0067566125c634
 {%- endif %}
   folder: root-source
   patches:
@@ -35,9 +35,13 @@ source:
     - patches/0001-Hacks.patch
     - patches/0001-Patch-for-apple-silicon.patch
     - patches/0001-Set-LLVM_REQUIRES_EH-for-Cling.patch
-    # hack to remove libpython links on macOS
-    - no-link-libpython.patch
     - patches/disable-hsimple.root  # [build_platform != target_platform]
+    - patches/0001-core-Fallback-to-urandom-for-increased-compatibility.patch
+    - patches/0001-core-Link-clad-to-clang-only-if-target-available.patch
+    - patches/0001-Reset-CMAKE-module-path-for-interpreter.patch
+    - patches/0001-force-one-modulemap-for-darwin.patch  # [osx]
+    - patches/0001-Remove-check-for-SDK-version-in-CIFactory.patch  # [osx]
+    - patches/0001-avoid-linking-TPython-against-libPython.patch  # [osx]
 {% if not builtin_pyroot %}
     - 0001-Support-standalone-pyroot.patch
 {% endif %}
@@ -52,6 +56,7 @@ build:
   ignore_run_exports_from:
     - clangdev
   script_env:
+    - clang_version={{ clang_version }}
     - clang_patches_version={{ clang_patches_version }}
     {% if builtin_pyroot %}- ROOT_CONDA_BUILTIN_PYROOT=1 {%- endif %}
     {% if builtin_clang %}- ROOT_CONDA_BUILTIN_CLANG=1 {%- endif %}
@@ -62,7 +67,7 @@ requirements:
   build:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
-    - sysroot_linux-64 2.17  # [linux]
+    - {{ stdlib("c") }}
     - cmake
     - git
     - pkg-config
@@ -80,7 +85,7 @@ requirements:
     - libcblas
     - {{ compiler('c') }}  # [linux]
     - {{ compiler('cxx') }}  # [linux]
-    - sysroot_linux-64 2.17  # [linux]
+    - {{ stdlib("c") }}
     - afterimage
     - cfitsio
     - davix
@@ -144,18 +149,17 @@ requirements:
     - {{ pin_compatible('libcxx', min_pin='x', max_pin='x') }}
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
+    - {{ stdlib("c") }}
     - {{ pin_compatible('xxhash', max_pin='x.x.x') }}
     - {{ pin_compatible('nlohmann_json', max_pin='x.x.x') }}
     - cffi
     - graphviz
-    - sysroot_linux-64 =2.17  # [linux]
     - xorg-libx11  # [linux]
     - xorg-libxext  # [linux]
     - xorg-libxpm  # [linux]
     - xorg-libxft  # [linux]
     - libglu  # [linux]
   run_constrained:
-    - __osx >={{ MACOSX_DEPLOYMENT_TARGET|default("10.9") }}  # [osx and x86_64]
     # Older numba versions have trouble with how LLVM is linked
     - numba >=0.52
     # Items listed here conflict with ROOT
@@ -192,6 +196,7 @@ test:
 
 outputs:
   - name: root_base
+    script: install_root.sh
     build:
       number: {{ build_number }}
       run_exports:
@@ -201,28 +206,23 @@ outputs:
         - lib/*.pcm            # [not aarch64]
         # https://github.com/root-project/root/blob/975be1e7647098ee8db5333f0769fb12287d0f75/cmake/modules/RootBuildOptions.cmake#L328-L332
         - etc/allDict.cxx.pch  # [aarch64]
-      script:
-        - cd build-dir
-        - make install
-        # Remove thisroot.*
-        - rm "${PREFIX}"/bin/thisroot.*
-        - |
-          for suffix in sh csh fish; do
-            cp "${RECIPE_DIR}/thisroot" "${PREFIX}/bin/thisroot.${suffix}"
-            chmod +x "${PREFIX}/bin/thisroot.${suffix}"
-          done
-        # Install the jupyter kernel
-        - mkdir -p "$PREFIX/share/jupyter/kernels"
-        - cp -r "$PREFIX/etc/notebook/kernels/root" "$PREFIX/share/jupyter/kernels"
-        # Add the post activate/deactivate scripts
-        - mkdir -p "${PREFIX}/etc/conda/activate.d"
-        - cp "${RECIPE_DIR}/activate.sh" "${PREFIX}/etc/conda/activate.d/activate-root.sh"
-        - cp "${RECIPE_DIR}/activate.csh" "${PREFIX}/etc/conda/activate.d/activate-root.csh"
-        - cp "${RECIPE_DIR}/activate.fish" "${PREFIX}/etc/conda/activate.d/activate-root.fish"
-        - mkdir -p "${PREFIX}/etc/conda/deactivate.d"
-        - cp "${RECIPE_DIR}/deactivate.sh" "${PREFIX}/etc/conda/deactivate.d/deactivate-root.sh"
-        - cp "${RECIPE_DIR}/deactivate.csh" "${PREFIX}/etc/conda/deactivate.d/deactivate-root.csh"
-        - cp "${RECIPE_DIR}/deactivate.fish" "${PREFIX}/etc/conda/deactivate.d/deactivate-root.fish"
+    requirements:
+      build:
+        - {{ compiler('c') }}
+        - {{ compiler('cxx') }}
+        - {{ stdlib("c") }}
+        - cmake
+        - git
+        - pkg-config
+        - sed
+        - make
+        # Required for OpenGL support
+        # See https://conda-forge.org/docs/maintainer/knowledge_base.html?highlight=cdt#libgl
+        - {{ cdt('mesa-libgl-devel') }}  # [linux]
+        - {{ cdt('mesa-dri-drivers') }}  # [linux]
+        - {{ cdt('libselinux') }}  # [linux]
+        - {{ cdt('libxdamage') }}  # [linux]
+        - {{ cdt('libxxf86vm') }}  # [linux]
 {% if not builtin_pyroot %}
   - name: pyroot
     build:
@@ -243,6 +243,7 @@ outputs:
       build:
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
+        - {{ stdlib("c") }}
         - cmake
         - make
       host:
@@ -295,7 +296,6 @@ outputs:
         - ROOT
         - JupyROOT
       commands:
-        - ipython -c "import JsMVA"
         - python test_pyroot.py
         - root -l -b -q -x test.cpp
         - root -b -l -q -x -e 'gSystem->LoadAllLibraries(); 0'

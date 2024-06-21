@@ -57,7 +57,7 @@ libxml2:
 lz4_c:
 - 1.9.3
 numpy:
-- '1.22'
+- '1.26'
 openssl:
 - '3'
 pcre:
@@ -69,7 +69,7 @@ pin_run_as_build:
     min_pin: x.x
     max_pin: x.x
 python:
-- 3.8.* *_cpython
+- 3.12.* *_cpython
 sqlite:
 - '3'
 target_platform:

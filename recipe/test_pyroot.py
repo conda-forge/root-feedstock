@@ -2,21 +2,24 @@
 import sys
 import ROOT
 
-if sys.version_info >= (3, 12):
-    try:
-        import numba
-    except ImportError:
-        print("Skipping numba test")
-    else:
-        raise RuntimeError("Looks like numba is now supported!")
-elif sys.version_info >= (3, 7):
-    @ROOT.Numba.Declare(["float"], "float")
-    def fn(x):
-        return x**2
+def test_1():
+    if sys.version_info >= (3, 8): # Minimum supported Python version by ROOT
+        try:
+            import numba
+        except ImportError:
+            print("Skipping numba test")
+            return
 
-    assert fn(6) == 36
+        @ROOT.Numba.Declare(["float"], "float")
+        def fn(x):
+            return x**2
 
-    # ROOT doesn't like how conda-forge's Python 3.6 binaries are linked
-    # This is expected to fail but it should be fixed upstream rather than patched here
+        assert fn(6) == 36
+
+def test_2():
     assert ROOT.TPython.Exec("print('1 + 1 =', 1+1)")
     assert int(ROOT.TPython.Eval("1+1")) == 2
+
+if __name__ == "__main__":
+    test_1()
+    test_2()
