@@ -364,6 +364,6 @@ Feedstock Maintainers
 =====================
 
 * [@chrisburr](https://github.com/chrisburr/)
-* [@eguiraud](https://github.com/eguiraud/)
+* [@vepadulano](https://github.com/vepadulano/)
 * [@henryiii](https://github.com/henryiii/)
 
