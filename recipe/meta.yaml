@@ -1,7 +1,7 @@
 {% set name = "root" %}
 {% set tag_name = "6-32-00" %}
 {% set version = ".".join(tag_name.split("-")|map("int")|map("string")) %}
-{% set build_number = 1 %}
+{% set build_number = 2 %}
 {% set clang_version = "16.0.6" %}
 {% set clang_patches_version = "root_63200" %}
 
@@ -35,7 +35,6 @@ source:
     - patches/0001-Hacks.patch
     - patches/0001-Patch-for-apple-silicon.patch
     - patches/0001-Set-LLVM_REQUIRES_EH-for-Cling.patch
-    - patches/disable-hsimple.root  # [build_platform != target_platform]
     - patches/0001-core-Fallback-to-urandom-for-increased-compatibility.patch
     - patches/0001-core-Link-clad-to-clang-only-if-target-available.patch
     - patches/0001-Reset-CMAKE-module-path-for-interpreter.patch
