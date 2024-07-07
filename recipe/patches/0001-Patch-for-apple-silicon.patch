@@ -1,14 +1,14 @@
-From d1e56d4a37eff018ddbb19df750f77ea1388ea13 Mon Sep 17 00:00:00 2001
+From b156b2c874bbcca3d160be87a0e1dced85034e62 Mon Sep 17 00:00:00 2001
 From: Vincenzo Eduardo Padulano <vincenzo.eduardo.padulano@cern.ch>
-Date: Thu, 13 Jun 2024 16:23:27 +0200
+Date: Thu, 4 Jul 2024 11:43:29 +0200
 Subject: [PATCH] Patch for apple silicon
 
 ---
- cmake/modules/SearchInstalledSoftware.cmake | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ cmake/modules/SearchInstalledSoftware.cmake | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/cmake/modules/SearchInstalledSoftware.cmake b/cmake/modules/SearchInstalledSoftware.cmake
-index 109602f5e2..d4c4c7c66b 100644
+index 109602f5e2..9d75aa0f0a 100644
 --- a/cmake/modules/SearchInstalledSoftware.cmake
 +++ b/cmake/modules/SearchInstalledSoftware.cmake
 @@ -37,7 +37,7 @@ endif()
@@ -20,3 +20,12 @@ index 109602f5e2..d4c4c7c66b 100644
    else()
      message(STATUS "Cocoa option can only be enabled on MacOSX platform")
      set(cocoa OFF CACHE BOOL "Disabled because only available on MacOSX (${cocoa_description})" FORCE)
+@@ -114,7 +114,7 @@ if(NOT builtin_freetype)
+       set(FREETYPE_INCLUDE_DIR ${FREETYPE_INCLUDE_DIR_freetype2})
+     else()
+       message(STATUS "FreeType not found. Switching on builtin_freetype option")
+-      set(builtin_freetype ON CACHE BOOL "Enabled because FreeType not found (${builtin_freetype_description})" FORCE)
++      set(builtin_freetype OFF CACHE BOOL "Enabled because FreeType not found (${builtin_freetype_description})" FORCE)
+     endif()
+   endif()
+ endif()
