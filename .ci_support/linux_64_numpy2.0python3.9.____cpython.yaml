@@ -53,7 +53,7 @@ libxml2:
 lz4_c:
 - 1.9.3
 numpy:
-- '1.22'
+- '2.0'
 openssl:
 - '3'
 pcre:
