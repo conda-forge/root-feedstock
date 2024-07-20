@@ -1,7 +1,7 @@
 {% set name = "root" %}
 {% set tag_name = "6-32-02" %}
 {% set version = ".".join(tag_name.split("-")|map("int")|map("string")) %}
-{% set build_number = 0 %}
+{% set build_number = 1 %}
 {% set clang_version = "16.0.6" %}
 {% set clang_patches_version = "root_63202" %}
 
@@ -141,7 +141,6 @@ requirements:
   run:
 {% if builtin_pyroot %}
     - python
-    - {{ pin_compatible('numpy') }}
 {% endif %}
     # FIXME: Required to ensure a consistent etc/allDict.cxx.pch
     - {{ pin_compatible('libcxx', min_pin='x', max_pin='x') }}
@@ -252,7 +251,6 @@ outputs:
       run:
         - {{ pin_subpackage('root_base', exact=True) }}
         - python
-        - {{ pin_compatible('numpy') }}
     test:
       files:
         - test_pyroot.py
