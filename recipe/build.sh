@@ -110,7 +110,6 @@ CMAKE_PLATFORM_FLAGS+=("-DCMAKE_CXX_STANDARD=20")
 CMAKE_PLATFORM_FLAGS+=("-DTBB_ROOT_DIR=${PREFIX}")
 
 # Disable all of the builtins
-CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_afterimage=OFF")
 CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_cfitsio=OFF")
 CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_davix=OFF")
 CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_fftw3=OFF")
