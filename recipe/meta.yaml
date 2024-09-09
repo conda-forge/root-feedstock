@@ -84,7 +84,6 @@ requirements:
     - {{ compiler('c') }}  # [linux]
     - {{ compiler('cxx') }}  # [linux]
     - {{ stdlib("c") }}
-    - afterimage
     - cfitsio
     - davix
     - fftw
