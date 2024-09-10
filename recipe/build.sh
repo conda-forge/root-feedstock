@@ -1,6 +1,9 @@
 #!/bin/bash
 set -x
 
+# rebuild afterimage ./configure script after patch
+(cd root-source/graf2d/asimage/src/libAfterImage; autoconf)
+
 if [[ "${target_platform}" == "linux-"* ]]; then
   # Conda's binary relocation can result in string changing which can result in errors like
   #   > $ root.exe -l -b -q -x root-feedstock/recipe/test.cpp++
