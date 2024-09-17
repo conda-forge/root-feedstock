@@ -53,7 +53,7 @@ libxml2:
 lz4_c:
 - 1.9.3
 numpy:
-- '1.22'
+- '2.0'
 openssl:
 - '3'
 pcre:
@@ -67,7 +67,7 @@ python:
 sqlite:
 - '3'
 target_platform:
-- linux-64
+- linux-ppc64le
 tbb:
 - '2021'
 tbb_devel:

@@ -53,9 +53,9 @@ libxml2:
 lz4_c:
 - 1.9.3
 macos_machine:
-- arm64-apple-darwin20.0.0
+- x86_64-apple-darwin13.4.0
 numpy:
-- '1.26'
+- '2.0'
 openssl:
 - '3'
 pcre:
@@ -65,11 +65,11 @@ pin_run_as_build:
     min_pin: x.x
     max_pin: x.x
 python:
-- 3.12.* *_cpython
+- 3.9.* *_cpython
 sqlite:
 - '3'
 target_platform:
-- osx-arm64
+- osx-64
 tbb:
 - '2021'
 tbb_devel:
