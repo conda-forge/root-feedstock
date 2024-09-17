@@ -1,6 +1,9 @@
 #!/bin/bash
 set -x
 
+# rebuild afterimage ./configure script after patch
+(cd root-source/graf2d/asimage/src/libAfterImage; autoconf)
+
 if [[ "${target_platform}" == "linux-"* ]]; then
   # Conda's binary relocation can result in string changing which can result in errors like
   #   > $ root.exe -l -b -q -x root-feedstock/recipe/test.cpp++
@@ -110,7 +113,6 @@ CMAKE_PLATFORM_FLAGS+=("-DCMAKE_CXX_STANDARD=20")
 CMAKE_PLATFORM_FLAGS+=("-DTBB_ROOT_DIR=${PREFIX}")
 
 # Disable all of the builtins
-CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_afterimage=OFF")
 CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_cfitsio=OFF")
 CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_davix=OFF")
 CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_fftw3=OFF")
