@@ -5,13 +5,13 @@ MACOSX_SDK_VERSION:
 c_compiler:
 - clang
 c_compiler_version:
-- '16'
+- '17'
 c_stdlib:
 - macosx_deployment_target
 c_stdlib_version:
 - '11.0'
 cfitsio:
-- 4.4.0
+- 4.4.1
 channel_sources:
 - conda-forge
 channel_targets:
@@ -19,7 +19,7 @@ channel_targets:
 cxx_compiler:
 - clangxx
 cxx_compiler_version:
-- '16'
+- '17'
 davix:
 - '0.8'
 fftw:
@@ -35,7 +35,7 @@ glew:
 glib:
 - '2'
 graphviz:
-- '11'
+- '12'
 gsl:
 - '2.7'
 libblas:
@@ -47,22 +47,20 @@ libpng:
 librsvg:
 - '2'
 libtiff:
-- '4.6'
+- '4.7'
 libxml2:
 - '2'
 lz4_c:
 - 1.9.3
 macos_machine:
-- x86_64-apple-darwin13.4.0
+- arm64-apple-darwin20.0.0
 numpy:
-- '1.26'
+- '2.0'
 openssl:
 - '3'
 pcre:
 - '8'
 pin_run_as_build:
-  graphviz:
-    max_pin: x
   python:
     min_pin: x.x
     max_pin: x.x
@@ -71,7 +69,7 @@ python:
 sqlite:
 - '3'
 target_platform:
-- osx-64
+- osx-arm64
 tbb:
 - '2021'
 tbb_devel:
