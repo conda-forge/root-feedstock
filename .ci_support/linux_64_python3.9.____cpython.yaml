@@ -7,9 +7,9 @@ c_stdlib:
 c_stdlib_version:
 - '2.17'
 cdt_name:
-- cos7
+- conda
 cfitsio:
-- 4.4.1
+- 4.5.0
 channel_sources:
 - conda-forge
 channel_targets:
@@ -21,7 +21,7 @@ cxx_compiler_version:
 davix:
 - '0.8'
 docker_image:
-- quay.io/condaforge/linux-anvil-cos7-x86_64
+- quay.io/condaforge/linux-anvil-x86_64:cos7
 fftw:
 - '3'
 freetype:
@@ -47,7 +47,7 @@ libpng:
 librsvg:
 - '2'
 libtiff:
-- '4.6'
+- '4.7'
 libxml2:
 - '2'
 lz4_c:
@@ -64,6 +64,8 @@ pin_run_as_build:
     max_pin: x.x
 python:
 - 3.9.* *_cpython
+root_base:
+- 6.32.2
 sqlite:
 - '3'
 target_platform:
@@ -79,8 +81,6 @@ xz:
 zip_keys:
 - - c_compiler_version
   - cxx_compiler_version
-- - c_stdlib_version
-  - cdt_name
 - - python
   - numpy
 zlib:
