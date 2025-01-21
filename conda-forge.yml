@@ -17,3 +17,4 @@ provider:
   linux_ppc64le: default
   osx_arm64: default
 test: native
+conda_build_tool: rattler-build
