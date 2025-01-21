@@ -9,25 +9,13 @@
 {% set builtin_clang = False %}
 {% set run_gtests = False %}
 
-{%- if "ROOT_CONDA_IS_CI" in os.environ %}
-  {%- set version = os.environ["ROOT_CONDA_VERSION"] %}
-  {% set clang_patches_version = "root_" + os.environ["ROOT_CONDA_GIT_REV"] %}
-  {% set build_number = os.environ["ROOT_CONDA_BUILD_NUMBER"] %}
-  {% set run_gtests = True %}
-{%- endif %}
-
 package:
   name: root_base
   version: {{ version }}
 
 source:
-{%- if "ROOT_CONDA_GIT_REV" in os.environ %}
-  git_url: {{ os.environ.get("ROOT_CONDA_GIT_URL", "https://github.com/root-project/root.git") }}
-  git_rev: {{ os.environ["ROOT_CONDA_GIT_REV"] }}
-{%- else %}
   url: https://github.com/root-project/root/archive/refs/tags/v{{ tag_name }}.tar.gz
   sha256: 332c763d2d5eb8a759893453637f24b3900476f73a1a4c7a205f8f7b3104f449
-{%- endif %}
   folder: root-source
   patches:
     - patches/root-x.xx.xx_cling-runtime-sysroot.patch
@@ -41,9 +29,6 @@ source:
     - patches/0001-Remove-check-for-SDK-version-in-CIFactory.patch  # [osx]
     - patches/0001-avoid-linking-TPython-against-libPython.patch  # [osx]
     - patches/0001-std_darwin.modulemap-Remove-headers-for-MacOSX15.0.s.patch  # [osx]
-{% if not builtin_pyroot %}
-    - patches/0001-Support-standalone-pyroot.patch
-{% endif %}
     - patches/0001-Hackily-fix-cross-compilation.patch
 
 build:
@@ -58,10 +43,6 @@ build:
   script_env:
     - clang_version={{ clang_version }}
     - clang_patches_version={{ clang_patches_version }}
-    {% if builtin_pyroot %}- ROOT_CONDA_BUILTIN_PYROOT=1 {%- endif %}
-    {% if builtin_clang %}- ROOT_CONDA_BUILTIN_CLANG=1 {%- endif %}
-    {% if run_gtests %}- ROOT_CONDA_RUN_GTESTS=1 {%- endif %}
-    {% if "ROOT_CONDA_BUILD_TYPE" in os.environ %}- ROOT_CONDA_BUILD_TYPE {%- endif %}
 
 requirements:
   build:
@@ -131,19 +112,8 @@ requirements:
     - xxhash
     - zlib
     - zstd
-{% if not builtin_clang %}
-    - llvm {{ clang_version }}  # [not (osx and arm64)]
-    - llvmdev {{ clang_version }}  # [not (osx and arm64)]
-    - clangdev {{ clang_version }} {{ clang_patches_version }}*  # [not (osx and arm64)]
-{% endif %}
-{% if builtin_pyroot %}
-    - python
-    - numpy
-{% endif %}
   run:
-{% if builtin_pyroot %}
     - python
-{% endif %}
     # FIXME: Required to ensure a consistent etc/allDict.cxx.pch
     - {{ pin_compatible('libcxx', min_pin='x', max_pin='x') }}
     - {{ compiler('c') }}
@@ -223,62 +193,16 @@ outputs:
         - {{ cdt('libselinux') }}  # [linux]
         - {{ cdt('libxdamage') }}  # [linux]
         - {{ cdt('libxxf86vm') }}  # [linux]
-{% if not builtin_pyroot %}
-  - name: pyroot
-    build:
-      number: {{ build_number }}
-      script:
-        - mkdir "pyroot-$PY_VER-build-dir"
-        - cd "pyroot-$PY_VER-build-dir"
-        - |
-          cmake \
-            ../root-source/bindings \
-            -DPython_EXECUTABLE=${PYTHON} \
-            -DCMAKE_INSTALL_PREFIX=${PREFIX} \
-            -Ddataframe=ON \
-            -Dstandalone_pyroot=ON
-        - make -j${CPU_COUNT}
-        - make install
-    requirements:
-      build:
-        - {{ compiler('c') }}
-        - {{ compiler('cxx') }}
-        - {{ stdlib("c") }}
-        - cmake
-        - make
-      host:
-        - {{ pin_subpackage('root_base', exact=True) }}
-        - python
-        - numpy
-        - nlohmann_json <3.10.4
-      run:
-        - {{ pin_subpackage('root_base', exact=True) }}
-        - python
-    test:
-      files:
-        - test_pyroot.py
-      imports:
-        - ROOT
-      commands:
-        - python test_pyroot.py
-        - jupyter-kernelspec list | grep ' root '
-{% endif %}
   - name: root
     build:
       number: {{ build_number }}
     requirements:
       host:
         - {{ pin_subpackage('root_base', exact=True) }}
-{% if not builtin_pyroot %}
-        - {{ pin_subpackage('pyroot', exact=True) }}
-{% endif %}
         - python
         - openssl
       run:
         - {{ pin_subpackage('root_base', exact=True) }}
-{% if not builtin_pyroot %}
-        - {{ pin_subpackage('pyroot', exact=True) }}
-{% endif %}
         - python
         - compilers  # This package is hostile to how conda-build manages compilers
         - metakernel
@@ -300,22 +224,6 @@ outputs:
         - root -b -l -q -x "${PREFIX}/tutorials/tree/run_h1analysis.C"
         - root -l -b -q -x test.cpp++
         - jupyter-kernelspec list | grep ' root '
-{%- if "ROOT_CONDA_IS_CI" in os.environ %}
-  - name: root-nightly
-    build:
-      number: {{ build_number }}
-    requirements:
-      host:
-        - {{ pin_subpackage('root', exact=True) }}
-        - python
-        # https://github.com/conda/conda-build/issues/3308
-        - openssl
-      run:
-        - {{ pin_subpackage('root', exact=True) }}
-        - python
-        # https://github.com/conda/conda-build/issues/3308
-        - openssl
-{%- endif %}
 
 about:
   home: https://root.cern/
