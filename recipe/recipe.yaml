@@ -13,6 +13,10 @@ recipe:
   name: root
   version: ${{ version }}
 
+build:
+  number: ${{ build_number }}
+  skip: win
+
 cache:
   source:
     url: https://github.com/root-project/root/archive/refs/tags/v${{ tag_name }}.tar.gz
@@ -41,8 +45,6 @@ cache:
       - pr-17269.patch
 
   build:
-    number: ${{ build_number }}
-    skip: win
     script:
       file: build_root.sh
       env:
@@ -135,9 +137,11 @@ cache:
       - xxhash
       - zlib
       - zstd
-      - llvm ${{ clang_version }}.*  # [not (osx and arm64)]
-      - llvmdev ${{ clang_version }}.*  # [not (osx and arm64)]
-      - clangdev ${{ clang_version }}.* ${{ clang_patches_version }}*  # [not (osx and arm64)]
+      - if: not (osx and arm64)
+        then:
+          - llvm ${{ clang_version }}.*
+          - llvmdev ${{ clang_version }}.*
+          - clangdev ${{ clang_version }}.* ${{ clang_patches_version }}*
     run:
       - python
       - numpy
@@ -270,4 +274,3 @@ extra:
     - vepadulano
     - chrisburr
     - henryiii
-
