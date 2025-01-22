@@ -1,9 +1,10 @@
 #!/bin/bash
 set -x
 
-export CMAKE_C_COMPILER_LAUNCHER=sccache
-export CMAKE_CXX_COMPILER_LAUNCHER=sccache
-export LDFLAGS="-fuse-ld=mold"
+if command -v sccache &> /dev/null; then
+    export CMAKE_C_COMPILER_LAUNCHER=sccache
+    export CMAKE_CXX_COMPILER_LAUNCHER=sccache
+fi
 
 # rebuild afterimage ./configure script after patch
 (cd root-source/graf2d/asimage/src/libAfterImage; autoconf)

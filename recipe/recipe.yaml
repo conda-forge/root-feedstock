@@ -39,7 +39,6 @@ cache:
           - patches/0001-avoid-linking-TPython-against-libPython.patch
           - patches/0001-std_darwin.modulemap-Remove-headers-for-MacOSX15.0.s.patch
       - patches/0001-Hackily-fix-cross-compilation.patch
-      - 0001-Support-linking-with-mold-2.32.0.patch
       - 0002-Debugging.patch
       - PR-15804.patch
       - pr-17269.patch
@@ -70,7 +69,6 @@ cache:
       - sed
       - make
       - ninja
-      - mold
       # Required for OpenGL support
       # See https://conda-forge.org/docs/maintainer/knowledge_base.html?highlight=cdt#libgl
       - if: linux
