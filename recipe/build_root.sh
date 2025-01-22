@@ -1,6 +1,10 @@
 #!/bin/bash
 set -x
 
+export CMAKE_C_COMPILER_LAUNCHER=sccache
+export CMAKE_CXX_COMPILER_LAUNCHER=sccache
+export LDFLAGS="-fuse-ld=mold"
+
 # rebuild afterimage ./configure script after patch
 (cd root-source/graf2d/asimage/src/libAfterImage; autoconf)
 
@@ -164,7 +168,7 @@ CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_veccore=ON")
 
 # Disable the Python bindings if we're building them in standalone mode
 CMAKE_PLATFORM_FLAGS+=("-Dpyroot_legacy=OFF")
-if [ "${ROOT_CONDA_BUILTIN_PYROOT-}" = "1" ]; then
+if [ "${ROOT_CONDA_BUILTIN_PYROOT-}" = "true" ]; then
     CMAKE_PLATFORM_FLAGS+=("-DPYTHON_EXECUTABLE=${PYTHON}")
     CMAKE_PLATFORM_FLAGS+=("-DCMAKE_INSTALL_PYTHONDIR=${SP_DIR}")
     CMAKE_PLATFORM_FLAGS+=("-Dpyroot=ON")
@@ -274,7 +278,7 @@ fi
 CMAKE_PLATFORM_FLAGS+=("-Droottest=OFF")
 
 # Now we can actually run CMake
-cmake $CMAKE_ARGS "${CMAKE_PLATFORM_FLAGS[@]}" ../root-source
+cmake -G Ninja $CMAKE_ARGS "${CMAKE_PLATFORM_FLAGS[@]}" ../root-source
 
 if [[ "${target_platform}" == osx* ]]; then
     # This is a horrible hack to hide the LLVM/Clang symbols in libCling.so on macOS
@@ -297,7 +301,7 @@ if [[ "${target_platform}" == osx* ]]; then
     cd -
 fi
 
-make "-j${CPU_COUNT}"
+cmake --build . -- "-j${CPU_COUNT}"
 
 # cd tutorials
 # EXTRA_CLING_ARGS='-O1' LD_LIBRARY_PATH=$SRC_DIR/build-dir/lib: ROOTIGNOREPREFIX=1 ROOT_HIST=0 $SRC_DIR/build-dir/bin/root.exe -l -q -b -n -x hsimple.C -e return
@@ -311,3 +315,26 @@ if [ "${ROOT_CONDA_RUN_GTESTS-}" = "1" ]; then
     rm -rf "${HOME}/feedstock_root/Testing"
     cp -rp "Testing" "${HOME}/feedstock_root/"
 fi
+
+cmake --build . --target install
+
+# Remove thisroot.*
+rm "${PREFIX}"/bin/thisroot.*
+for suffix in sh csh fish; do
+cp "${RECIPE_DIR}/thisroot" "${PREFIX}/bin/thisroot.${suffix}"
+chmod +x "${PREFIX}/bin/thisroot.${suffix}"
+done
+
+# Install the jupyter kernel
+mkdir -p "$PREFIX/share/jupyter/kernels"
+cp -r "$PREFIX/etc/notebook/kernels/root" "$PREFIX/share/jupyter/kernels"
+
+# Add the post activate/deactivate scripts
+mkdir -p "${PREFIX}/etc/conda/activate.d"
+cp "${RECIPE_DIR}/activate.sh" "${PREFIX}/etc/conda/activate.d/activate-root.sh"
+cp "${RECIPE_DIR}/activate.csh" "${PREFIX}/etc/conda/activate.d/activate-root.csh"
+cp "${RECIPE_DIR}/activate.fish" "${PREFIX}/etc/conda/activate.d/activate-root.fish"
+mkdir -p "${PREFIX}/etc/conda/deactivate.d"
+cp "${RECIPE_DIR}/deactivate.sh" "${PREFIX}/etc/conda/deactivate.d/deactivate-root.sh"
+cp "${RECIPE_DIR}/deactivate.csh" "${PREFIX}/etc/conda/deactivate.d/deactivate-root.csh"
+cp "${RECIPE_DIR}/deactivate.fish" "${PREFIX}/etc/conda/deactivate.d/deactivate-root.fish"

@@ -1,5 +1,3 @@
-schema_version: 1
-
 context:
   name: root
   tag_name: 6-32-02
@@ -12,163 +10,162 @@ context:
   run_gtests: false
 
 recipe:
-  name: root_base
+  name: root
   version: ${{ version }}
 
-source:
-  url: https://github.com/root-project/root/archive/refs/tags/v${{ tag_name }}.tar.gz
-  sha256: 332c763d2d5eb8a759893453637f24b3900476f73a1a4c7a205f8f7b3104f449
-  target_directory: root-source
-  patches:
-    - patches/root-x.xx.xx_cling-runtime-sysroot.patch
-    - if: osx
-      then: patches/root-x.xx.xx-osx-remove-hardcoded-sysroot.patch
-    - patches/0001-Hacks.patch
-    - patches/0001-Patch-for-apple-silicon.patch
-    - patches/0001-Set-LLVM_REQUIRES_EH-for-Cling.patch
-    - if: build_platform != target_platform
-      then: patches/disable-hsimple.root
-    - patches/0001-Reset-CMAKE-module-path-for-interpreter.patch
-    - if: osx
-      then: patches/0001-force-one-modulemap-for-darwin.patch
-    - if: osx
-      then: patches/0001-Remove-check-for-SDK-version-in-CIFactory.patch
-    - if: osx
-      then: patches/0001-avoid-linking-TPython-against-libPython.patch
-    - if: osx
-      then: patches/0001-std_darwin.modulemap-Remove-headers-for-MacOSX15.0.s.patch
-    - patches/0001-Hackily-fix-cross-compilation.patch
+cache:
+  source:
+    url: https://github.com/root-project/root/archive/refs/tags/v${{ tag_name }}.tar.gz
+    sha256: 332c763d2d5eb8a759893453637f24b3900476f73a1a4c7a205f8f7b3104f449
+    target_directory: root-source
+    patches:
+      - patches/root-x.xx.xx_cling-runtime-sysroot.patch
+      - if: osx
+        then: patches/root-x.xx.xx-osx-remove-hardcoded-sysroot.patch
+      - patches/0001-Hacks.patch
+      - patches/0001-Patch-for-apple-silicon.patch
+      - patches/0001-Set-LLVM_REQUIRES_EH-for-Cling.patch
+      - if: build_platform != target_platform
+        then: patches/disable-hsimple.root
+      - patches/0001-Reset-CMAKE-module-path-for-interpreter.patch
+      - if: osx
+        then:
+          - patches/0001-force-one-modulemap-for-darwin.patch
+          - patches/0001-Remove-check-for-SDK-version-in-CIFactory.patch
+          - patches/0001-avoid-linking-TPython-against-libPython.patch
+          - patches/0001-std_darwin.modulemap-Remove-headers-for-MacOSX15.0.s.patch
+      - patches/0001-Hackily-fix-cross-compilation.patch
+      - 0001-Support-linking-with-mold-2.32.0.patch
+      - 0002-Debugging.patch
+      - PR-15804.patch
+      - pr-17269.patch
 
-build:
-  number: ${{ build_number }}
-  skip: win
-  script:
-    env:
-      clang_version: ${{ clang_version }}
-      clang_patches_version: ${{ clang_patches_version }}
-  prefix_detection:
-    ignore:
-      - if: not aarch64
-        then: lib/*.pcm
-      - if: aarch64
-        then: etc/allDict.cxx.pch
-  ignore_run_exports_from:
-    - clangdev
-
-requirements:
   build:
-    - ${{ compiler('c') }}
-    - ${{ compiler('cxx') }}
-    - ${{ stdlib("c") }}
-    - autoconf
-    - cmake
-    - git
-    - pkg-config
-    - sed
-    - make
-    # Required for OpenGL support
-    # See https://conda-forge.org/docs/maintainer/knowledge_base.html?highlight=cdt#libgl
-    - if: linux
-      then: ${{ cdt('mesa-libgl-devel') }}
-    - if: linux
-      then: ${{ cdt('mesa-dri-drivers') }}
-    - if: linux
-      then: ${{ cdt('libselinux') }}
-    - if: linux
-      then: ${{ cdt('libxdamage') }}
-    - if: linux
-      then: ${{ cdt('libxxf86vm') }}
-  host:
-    - libblas
-    - libcblas
-    - if: linux
-      then: ${{ compiler('c') }}
-    - if: linux
-      then: ${{ compiler('cxx') }}
-    - ${{ stdlib("c") }}
-    - cfitsio
-    - davix
-    - fftw
-    - freetype
-    - ftgl
-    - gdk-pixbuf
-    - giflib
-    - glew
-    - glib
-    - gl2ps
-    - graphviz
-    - gsl
-    - gtest
-    - if: linux
-      then: libglu
-    - libpng
-    - librsvg
-    - libtiff
-    - libxml2
-    - lz4-c
-    # - mysql
-    - nlohmann_json
-    - openssl
-    - pcre
-    # - postgresql
-    - pythia8
-    - sqlite
-    - tbb
-    - tbb-devel
-    - vector-classes
-    - vdt
-    - if: linux
-      then: xorg-libx11
-    - if: linux
-      then: xorg-libxau
-    - if: linux
-      then: xorg-libxcursor
-    - if: linux
-      then: xorg-libxext
-    - if: linux
-      then: xorg-libxfixes
-    - if: linux
-      then: xorg-libxft
-    - if: linux
-      then: xorg-libxpm
-    - xrootd
-    - xz
-    # FIXME: The generated allDict.cxx.pch is dependent on version of the C++ headers used
-    - ${{ pin_compatible('libcxx', lower_bound='x', upper_bound='x') }}
-    - xxhash
-    - zlib
-    - zstd
-  run:
-    - python
-    # FIXME: Required to ensure a consistent etc/allDict.cxx.pch
-    - ${{ pin_compatible('libcxx', lower_bound='x', upper_bound='x') }}
-    - ${{ compiler('c') }}
-    - ${{ compiler('cxx') }}
-    - ${{ stdlib("c") }}
-    - ${{ pin_compatible('xxhash', upper_bound='x.x.x') }}
-    - ${{ pin_compatible('nlohmann_json', upper_bound='x.x.x') }}
-    - cffi
-    - graphviz
-    - if: linux
-      then: xorg-libx11
-    - if: linux
-      then: xorg-libxext
-    - if: linux
-      then: xorg-libxpm
-    - if: linux
-      then: xorg-libxft
-    - if: linux
-      then: libglu
-  run_constraints:
-    - numba >=0.52
-    - cling 9999
-    - root5 9999
+    number: ${{ build_number }}
+    skip: win
+    script:
+      file: build_root.sh
+      env:
+        clang_version: ${{ clang_version }}
+        clang_patches_version: ${{ clang_patches_version }}
+        ROOT_CONDA_BUILTIN_PYROOT: ${{ builtin_pyroot }}
+    prefix_detection:
+      ignore:
+        - if: not aarch64
+          then: lib/*.pcm
+        - if: aarch64
+          then: etc/allDict.cxx.pch
+
+  requirements:
+    build:
+      - ${{ compiler('c') }}
+      - ${{ compiler('cxx') }}
+      - ${{ stdlib("c") }}
+      - autoconf
+      - cmake
+      - git
+      - pkg-config
+      - sed
+      - make
+      - ninja
+      - mold
+      # Required for OpenGL support
+      # See https://conda-forge.org/docs/maintainer/knowledge_base.html?highlight=cdt#libgl
+      - if: linux
+        then:
+          - ${{ cdt('mesa-libgl-devel') }}
+          - ${{ cdt('mesa-dri-drivers') }}
+          - ${{ cdt('libselinux') }}
+          - ${{ cdt('libxdamage') }}
+          - ${{ cdt('libxxf86vm') }}
+    host:
+      - libblas
+      - libcblas
+      - if: linux
+        then:
+          - ${{ compiler('c') }}
+          - ${{ compiler('cxx') }}
+      - ${{ stdlib("c") }}
+      - cfitsio
+      - davix
+      - fftw
+      - freetype
+      - ftgl
+      - gdk-pixbuf
+      - giflib
+      - glew
+      - glib
+      - gl2ps
+      - graphviz
+      - gsl
+      - gtest
+      - if: linux
+        then: libglu
+      - libpng
+      - librsvg
+      - libtiff
+      - libxml2
+      - lz4-c
+      # - mysql
+      - nlohmann_json
+      - openssl
+      - pcre
+      # - postgresql
+      - pythia8
+      - sqlite
+      - tbb
+      - tbb-devel
+      - vector-classes
+      - vdt
+      - python
+      - numpy
+      - if: linux
+        then:
+          - xorg-xorgproto
+          - xorg-libx11
+          - xorg-libxau
+          - xorg-libxcursor
+          - xorg-libxext
+          - xorg-libxfixes
+          - xorg-libxft
+          - xorg-libxpm
+      - xrootd
+      - xz
+      # FIXME: The generated allDict.cxx.pch is dependent on version of the C++ headers used
+      - xxhash
+      - zlib
+      - zstd
+      - llvm ${{ clang_version }}.*  # [not (osx and arm64)]
+      - llvmdev ${{ clang_version }}.*  # [not (osx and arm64)]
+      - clangdev ${{ clang_version }}.* ${{ clang_patches_version }}*  # [not (osx and arm64)]
+    run:
+      - python
+      - numpy
+      # FIXME: Required to ensure a consistent etc/allDict.cxx.pch
+      - ${{ compiler('c') }}
+      - ${{ compiler('cxx') }}
+      - ${{ stdlib("c") }}
+      - ${{ pin_compatible('xxhash', upper_bound='x.x.x') }}
+      - ${{ pin_compatible('nlohmann_json', upper_bound='x.x.x') }}
+      - cffi
+      - graphviz
+      - if: linux
+        then:
+          - xorg-xorgproto
+          - xorg-libx11
+          - xorg-libxext
+          - xorg-libxpm
+          - xorg-libxft
+          - libglu
+    run_constraints:
+      - numba >=0.52
+      - cling ==9999
+      - root5 ==9999
 
 outputs:
   - package:
       name: root_base
     build:
-      number: ${{ build_number }}
       prefix_detection:
         ignore:
           - if: not aarch64
@@ -176,35 +173,31 @@ outputs:
           - if: aarch64
             then: etc/allDict.cxx.pch
     requirements:
-      build:
-        - ${{ compiler('c') }}
-        - ${{ compiler('cxx') }}
-        - ${{ stdlib("c") }}
-        - autoconf
-        - cmake
-        - git
-        - pkg-config
-        - sed
-        - make
-        # Required for OpenGL support
-        # See https://conda-forge.org/docs/maintainer/knowledge_base.html?highlight=cdt#libgl
-        - if: linux
-          then: ${{ cdt('mesa-libgl-devel') }}
-        - if: linux
-          then: ${{ cdt('mesa-dri-drivers') }}
-        - if: linux
-          then: ${{ cdt('libselinux') }}
-        - if: linux
-          then: ${{ cdt('libxdamage') }}
-        - if: linux
-          then: ${{ cdt('libxxf86vm') }}
       run_exports:
         - ${{ pin_subpackage('root_base', upper_bound='x.x.x') }}
-    script: install_root.sh
+    tests:
+      - files:
+          recipe:
+            - test.cpp
+        script:
+          - root -l -b -q -x
+          - root -l -b -q -x test.cpp
+          - "root -b -l -q -x -e '2+3; 0'"
+          - "root -b -l -q -x -e 'gSystem->LoadAllLibraries(); 0'"
+          - thisroot.sh
+          - thisroot.csh
+          - thisroot.fish
+          - "root -b -l -q -x -e 'gStyle->SetCanvasPreferGL(kTRUE); c = new TCanvas(); if (!c->UseGL()) { throw std::runtime_error(\"OpenGL does not appear to be working\"); }'"
+          - "root -b -l -q -x \"${PREFIX}/tutorials/eve/geom_lhcb.C\" || true"
+          - "root -b -l -q -x \"${PREFIX}/tutorials/tree/run_h1analysis.C\""
+          - if: not ppc64le
+            then: "XrdSecPROTOCOL=unix python -c \"import ROOT; ROOT.ROOT.EnableImplicitMT(); rdf = ROOT.RDataFrame('DecayTree', 'root://eospublic.cern.ch//eos/opendata/lhcb/AntimatterMatters2017/data/B2HHH_MagnetUp.root'); print(rdf.Cache('H1_PX').AsNumpy())\""
+          - root -l -b -q -x test.cpp++
+          - if: not (osx and arm64) and build_platform == target_platform
+            then: "echo '.q' | root -e 'sddsa0'"
+
   - package:
       name: root
-    build:
-      number: ${{ build_number }}
     requirements:
       host:
         - ${{ pin_subpackage('root_base', exact=True) }}
@@ -237,27 +230,6 @@ outputs:
           - root -l -b -q -x test.cpp++
           - "jupyter-kernelspec list | grep ' root '"
 
-tests:
-  - files:
-      recipe:
-        - test.cpp
-    script:
-      - root -l -b -q -x
-      - root -l -b -q -x test.cpp
-      - "root -b -l -q -x -e '2+3; 0'"
-      - "root -b -l -q -x -e 'gSystem->LoadAllLibraries(); 0'"
-      - thisroot.sh
-      - thisroot.csh
-      - thisroot.fish
-      - "root -b -l -q -x -e 'gStyle->SetCanvasPreferGL(kTRUE); c = new TCanvas(); if (!c->UseGL()) { throw std::runtime_error(\"OpenGL does not appear to be working\"); }'"
-      - "root -b -l -q -x \"${PREFIX}/tutorials/eve/geom_lhcb.C\" || true"
-      - "root -b -l -q -x \"${PREFIX}/tutorials/tree/run_h1analysis.C\""
-      - if: not ppc64le
-        then: "XrdSecPROTOCOL=unix python -c \"import ROOT; ROOT.ROOT.EnableImplicitMT(); rdf = ROOT.RDataFrame('DecayTree', 'root://eospublic.cern.ch//eos/opendata/lhcb/AntimatterMatters2017/data/B2HHH_MagnetUp.root'); print(rdf.Cache('H1_PX').AsNumpy())\""
-      - root -l -b -q -x test.cpp++
-      - if: not (osx and arm64) and build_platform == target_platform
-        then: "echo '.q' | root -e 'sddsa0'"
-
 about:
   license: LGPL-2.1-only
   license_file: root-source/LICENSE
@@ -287,8 +259,6 @@ about:
     having a runtime dependency on the `compilers` package. `root-dependencies` and `root-binaries` are also available.
     In most cases users should use the `root` package directly, since it adds both of these, along with compilers,
     Jupyter, and a few other things to facilitate using ROOT or PyROOT.
-
-    ROOT was built with and will report `-std=c++17` from `root-config`.
 
 
   homepage: https://root.cern/

@@ -1,0 +1,25 @@
+From a11375bda2a3e6a983fba755167f52bf21cb831f Mon Sep 17 00:00:00 2001
+From: Chris Burr <christopher.burr@cern.ch>
+Date: Wed, 22 Jan 2025 23:45:12 +0100
+Subject: [PATCH 2/2] Debugging
+
+---
+ net/http/CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/net/http/CMakeLists.txt b/net/http/CMakeLists.txt
+index 6ef98a604b..0d81c67bfb 100644
+--- a/net/http/CMakeLists.txt
++++ b/net/http/CMakeLists.txt
+@@ -87,7 +87,7 @@ if(ssl)
+     target_compile_definitions(RHTTP PUBLIC -DOPENSSL_API_1_0)
+     set(link_ssl ON)
+   else()
+-    MESSAGE(WARNING "Not able to recognize SSL version ${OPENSSL_VERSION}, disable SSL")
++    MESSAGE(WARNING "Not able to recognize SSL version ${OPENSSL_VERSION} '${ssl_major}', disable SSL")
+     target_compile_definitions(RHTTP PUBLIC -DNO_SSL)
+   endif()
+   if(link_ssl)
+-- 
+2.47.1
+
