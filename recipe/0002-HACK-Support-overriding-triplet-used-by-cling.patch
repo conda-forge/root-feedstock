@@ -1,0 +1,29 @@
+From f49a3a46cc52199dfcb4af188d8228c2cb128e8b Mon Sep 17 00:00:00 2001
+From: Chris Burr <christopher.burr@cern.ch>
+Date: Thu, 23 Jan 2025 16:03:46 +0100
+Subject: [PATCH 2/2] HACK: Support overriding triplet used by cling
+
+---
+ interpreter/cling/lib/Interpreter/CIFactory.cpp | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/interpreter/cling/lib/Interpreter/CIFactory.cpp b/interpreter/cling/lib/Interpreter/CIFactory.cpp
+index 1c099ad3f5..215d29bd0b 100644
+--- a/interpreter/cling/lib/Interpreter/CIFactory.cpp
++++ b/interpreter/cling/lib/Interpreter/CIFactory.cpp
+@@ -1266,9 +1266,9 @@ namespace {
+     bool profilingEnabled =
+         cling::utils::ConvertEnvValueToBool(std::getenv("CLING_PROFILE"));
+ 
+-#if __APPLE__ && __arm64__
+-    argvCompile.push_back("--target=arm64-apple-darwin20.3.0");
+-#endif
++
++    argvCompile.push_back(TODO_OVERRIDE_TARGET);
++
+ #if __aarch64__
+     // Disable outline-atomics on AArch64; the routines __aarch64_* are defined
+     // in the static library libgcc.a and not necessarily included in libCling
+-- 
+2.47.1
+

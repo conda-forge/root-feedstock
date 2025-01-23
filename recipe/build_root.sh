@@ -46,7 +46,12 @@ else
 fi
 
 if [[ "${target_platform}" == linux* ]]; then
-    INSTALL_SYSROOT=$(python -c "import os; rel = os.path.relpath('$CONDA_BUILD_SYSROOT', '$CONDA_PREFIX'); assert not rel.startswith('.'); print(os.path.join('$PREFIX', rel))")
+    rel=$(realpath --relative-to="$CONDA_PREFIX" "$CONDA_BUILD_SYSROOT")
+    if [[ $rel == .* ]]; then
+        echo "Error: Relative path starts with '.'"
+        exit 1
+    fi
+    INSTALL_SYSROOT="$PREFIX/$rel"
     CMAKE_PLATFORM_FLAGS+=("-DCMAKE_AR=${GCC_AR}")
     CMAKE_PLATFORM_FLAGS+=("-DCLANG_DEFAULT_LINKER=${LD_GOLD}")
     CMAKE_PLATFORM_FLAGS+=("-DDEFAULT_SYSROOT=${INSTALL_SYSROOT}")
@@ -116,7 +121,7 @@ CMAKE_PLATFORM_FLAGS+=("-Dgnuinstall=OFF")
 CMAKE_PLATFORM_FLAGS+=("-Drpath=ON")
 CMAKE_PLATFORM_FLAGS+=("-Dshared=ON")
 CMAKE_PLATFORM_FLAGS+=("-Dsoversion=ON")
-CMAKE_PLATFORM_FLAGS+=("-DCMAKE_CXX_STANDARD=20")
+CMAKE_PLATFORM_FLAGS+=("-DCMAKE_CXX_STANDARD=${ROOT_CXX_STANDARD}")
 CMAKE_PLATFORM_FLAGS+=("-DTBB_ROOT_DIR=${PREFIX}")
 
 # Disable all of the builtins
@@ -152,7 +157,14 @@ else
     CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_llvm=OFF")
     CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_clang=OFF")
 
-    CMAKE_PLATFORM_FLAGS+=("-DLLVM_CONFIG=${Clang_DIR}/bin/llvm-config")
+    if [[ "${target_platform}" == "${build_platform}" ]]; then
+        CMAKE_PLATFORM_FLAGS+=("-DLLVM_CONFIG=${Clang_DIR}/bin/llvm-config")
+        CMAKE_PLATFORM_FLAGS+=("-DLLVM_TABLEGEN_EXE=${Clang_DIR}/bin/llvm-tblgen")
+    else
+        CMAKE_PLATFORM_FLAGS+=("-DLLVM_CONFIG=${BUILD_PREFIX}/bin/llvm-config")
+        CMAKE_PLATFORM_FLAGS+=("-DLLVM_TABLEGEN_EXE=${BUILD_PREFIX}/bin/llvm-tblgen")
+    fi
+
     CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_cling=ON")
     CMAKE_PLATFORM_FLAGS+=("-DCLING_BUILD_PLUGINS=ON")
     CMAKE_PLATFORM_FLAGS+=("-Dclad=ON")
@@ -169,15 +181,57 @@ CMAKE_PLATFORM_FLAGS+=("-Dveccore=ON")
 CMAKE_PLATFORM_FLAGS+=("-Dvc=ON")
 CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_veccore=ON")
 
+# Cross compilation options
+if [[ "${target_platform}" != "${build_platform}" ]]; then
+    CMAKE_PLATFORM_FLAGS+=("-Dfound_urandom=ON")
+
+    sed -i "s@TODO_OVERRIDE_TARGET@\"--target=${HOST}\"@g" ../root-source/interpreter/cling/lib/Interpreter/CIFactory.cpp
+
+    CMAKE_PREFIX_PATH=$BUILD_PREFIX:/home/cburr/Development/conda-forge/root-feedstock/output/bld/rattler-build_root_base/build_env/x86_64-conda-linux-gnu/sysroot/usr \
+        cmake "$SRC_DIR/root-source" \
+            -B ../root-build-host \
+            -Dbuiltin_zstd=OFF \
+            -Dbuiltin_zlib=OFF \
+            -Dminimal=ON \
+            -DCMAKE_BUILD_TYPE=Release \
+            -GNinja \
+            -Dfound_urandom=ON \
+            -DCMAKE_C_COMPILER=$CC_FOR_BUILD \
+            -DCMAKE_CXX_COMPILER=$CXX_FOR_BUILD \
+            -DCMAKE_C_FLAGS=-O2 \
+            -DCMAKE_CXX_FLAGS=-O2 \
+            -DCMAKE_EXE_LINKER_FLAGS=-Wl,-rpath,${BUILD_PREFIX}/lib \
+            -DCMAKE_MODULE_LINKER_FLAGS= \
+            -DCMAKE_SHARED_LINKER_FLAGS= \
+            -Dbuiltin_llvm=OFF \
+            -Dbuiltin_clang=OFF \
+            -DLLVM_CONFIG="${BUILD_PREFIX}/bin/llvm-config" \
+            -DLLVM_TABLEGEN_EXE="${BUILD_PREFIX}/bin/llvm-tblgen" \
+            -DCMAKE_CXX_STANDARD=${ROOT_CXX_STANDARD} \
+            -DROOT_CLING_TARGET=all \
+            -DCLING_CXX_PATH="$CXX"
+
+    cmake --build ../root-build-host --target rootcling_stage1 -- "-j${CPU_COUNT}"
+    CMAKE_PLATFORM_FLAGS+=("-DROOTCLING_STAGE1_PATH=$PWD/../root-build-host/core/rootcling_stage1/src/rootcling_stage1")
+fi
+# powerpc64le-conda-linux-gnu
+
 # Disable the Python bindings if we're building them in standalone mode
 CMAKE_PLATFORM_FLAGS+=("-Dpyroot_legacy=OFF")
 if [ "${ROOT_CONDA_BUILTIN_PYROOT-}" = "true" ]; then
-    CMAKE_PLATFORM_FLAGS+=("-DPYTHON_EXECUTABLE=${PYTHON}")
+    Python_INCLUDE_DIR="$(python -c 'import sysconfig; print(sysconfig.get_path("include"))')"
+    Python_NumPy_INCLUDE_DIR="$(python -c 'import numpy;print(numpy.get_include())')"
+    CMAKE_PLATFORM_FLAGS+=("-DPython_EXECUTABLE:PATH=${PYTHON}")
+    CMAKE_PLATFORM_FLAGS+=("-DPython_INCLUDE_DIR:PATH=${Python_INCLUDE_DIR}")
+    CMAKE_PLATFORM_FLAGS+=("-DPython_NumPy_INCLUDE_DIR=${Python_NumPy_INCLUDE_DIR}")
+    CMAKE_PLATFORM_FLAGS+=("-DPython3_EXECUTABLE:PATH=${PYTHON}")
+    CMAKE_PLATFORM_FLAGS+=("-DPython3_INCLUDE_DIR:PATH=${Python_INCLUDE_DIR}")
+    CMAKE_PLATFORM_FLAGS+=("-DPython3_NumPy_INCLUDE_DIR=${Python_NumPy_INCLUDE_DIR}")
     CMAKE_PLATFORM_FLAGS+=("-DCMAKE_INSTALL_PYTHONDIR=${SP_DIR}")
     CMAKE_PLATFORM_FLAGS+=("-Dpyroot=ON")
     CMAKE_PLATFORM_FLAGS+=("-Dtmva-pymva=ON")
 else
-    CMAKE_PLATFORM_FLAGS+=("-DPYTHON_EXECUTABLE=${PYTHON}")
+    CMAKE_PLATFORM_FLAGS+=("-DPython3_EXECUTABLE=${PYTHON}")
     CMAKE_PLATFORM_FLAGS+=("-Dpyroot=OFF")
     CMAKE_PLATFORM_FLAGS+=("-Dtmva-pymva=OFF")
 fi

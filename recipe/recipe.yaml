@@ -11,6 +11,7 @@ context:
   # to prevent ROOT from being held up by this, only have a strong dependency on
   # numba for supported python versions
   max_supported_numba_py: 3.12
+  root_cxx_standard: 20
 
 recipe:
   name: root
@@ -45,6 +46,8 @@ cache:
       - 0002-Debugging.patch
       - PR-15804.patch
       - pr-17269.patch
+      - 0001-Support-getting-rootcling_stage1-from-external-build.patch
+      - 0002-HACK-Support-overriding-triplet-used-by-cling.patch
 
   build:
     script:
@@ -53,6 +56,7 @@ cache:
         clang_version: ${{ clang_version }}
         clang_patches_version: ${{ clang_patches_version }}
         ROOT_CONDA_BUILTIN_PYROOT: ${{ builtin_pyroot }}
+        ROOT_CXX_STANDARD: ${{ root_cxx_standard }}
     prefix_detection:
       ignore:
         - if: not aarch64
@@ -81,6 +85,14 @@ cache:
           - ${{ cdt('libselinux') }}
           - ${{ cdt('libxdamage') }}
           - ${{ cdt('libxxf86vm') }}
+      - if: build_platform != target_platform
+        then:
+          - cross-python_${{ target_platform }}
+          - python
+          - numpy
+          - llvm ${{ clang_version }}.*
+          - llvmdev ${{ clang_version }}.*
+          - clangdev ${{ clang_version }}.* ${{ clang_patches_version }}*
     host:
       - libblas
       - libcblas
