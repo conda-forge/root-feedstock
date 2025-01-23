@@ -46,7 +46,7 @@ cache:
       - 0002-Debugging.patch
       - PR-15804.patch
       - pr-17269.patch
-      - 0001-Support-getting-rootcling_stage1-from-external-build.patch
+      # - 0001-Support-getting-rootcling_stage1-from-external-build.patch
       - 0002-HACK-Support-overriding-triplet-used-by-cling.patch
 
   build:

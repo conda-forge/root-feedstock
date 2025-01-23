@@ -188,8 +188,8 @@ if [[ "${target_platform}" != "${build_platform}" ]]; then
     sed -i "s@TODO_OVERRIDE_TARGET@\"--target=${HOST}\"@g" ../root-source/interpreter/cling/lib/Interpreter/CIFactory.cpp
 
     CMAKE_PREFIX_PATH=$BUILD_PREFIX:/home/cburr/Development/conda-forge/root-feedstock/output/bld/rattler-build_root_base/build_env/x86_64-conda-linux-gnu/sysroot/usr \
-        cmake "$SRC_DIR/root-source" \
-            -B ../root-build-host \
+        cmake "${SRC_DIR}/root-source" \
+            -B "${SRC_DIR}/root-build-host" \
             -Dbuiltin_zstd=OFF \
             -Dbuiltin_zlib=OFF \
             -Dminimal=ON \
@@ -211,10 +211,8 @@ if [[ "${target_platform}" != "${build_platform}" ]]; then
             -DROOT_CLING_TARGET=all \
             -DCLING_CXX_PATH="$CXX"
 
-    cmake --build ../root-build-host --target rootcling_stage1 -- "-j${CPU_COUNT}"
-    CMAKE_PLATFORM_FLAGS+=("-DROOTCLING_STAGE1_PATH=$PWD/../root-build-host/core/rootcling_stage1/src/rootcling_stage1")
+    cmake --build "${SRC_DIR}/root-build-host" --target rootcling_stage1 -- "-j${CPU_COUNT}"
 fi
-# powerpc64le-conda-linux-gnu
 
 # Disable the Python bindings if we're building them in standalone mode
 CMAKE_PLATFORM_FLAGS+=("-Dpyroot_legacy=OFF")
@@ -356,6 +354,13 @@ if [[ "${target_platform}" == osx* ]]; then
     nm -g ../../../lib/libCling.so | ruby -ne 'if /^[0-9a-f]+.*\s(\S+)$/.match($_) then print $1,"\n" end' | sort -u > new.exp
     wc -l *.exp
     cd -
+fi
+
+if [[ "${target_platform}" != "${build_platform}" ]]; then
+    cmake --build . --target rootcling_stage1 -- "-j${CPU_COUNT}"
+    mv core/rootcling_stage1/src/rootcling_stage1{,.orig}
+    cp "${SRC_DIR}/root-build-host/core/rootcling_stage1/src/rootcling_stage1" core/rootcling_stage1/src/rootcling_stage1
+    touch --reference core/rootcling_stage1/src/rootcling_stage1.orig core/rootcling_stage1/src/rootcling_stage1
 fi
 
 cmake --build . -- "-j${CPU_COUNT}"
