@@ -169,10 +169,12 @@ outputs:
     build:
       prefix_detection:
         ignore:
-          - if: not aarch64
-            then: lib/*.pcm
           - if: aarch64
             then: etc/allDict.cxx.pch
+            else: lib/*.pcm
+      dynamic_linking:
+        overdepending_behavior: ignore
+
     requirements:
       run_exports:
         - ${{ pin_subpackage('root_base', upper_bound='x.x.x') }}
