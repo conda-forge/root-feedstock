@@ -9,7 +9,7 @@ c_stdlib_version:
 cdt_name:
 - conda
 cfitsio:
-- 4.4.1
+- 4.5.0
 channel_sources:
 - conda-forge
 channel_targets:
@@ -51,9 +51,9 @@ libtiff:
 libxml2:
 - '2'
 lz4_c:
-- 1.9.3
+- '1.10'
 numpy:
-- '2.0'
+- '2'
 openssl:
 - '3'
 pcre:
@@ -63,7 +63,7 @@ pin_run_as_build:
     min_pin: x.x
     max_pin: x.x
 python:
-- 3.10.* *_cpython
+- 3.13.* *_cp313
 root_base:
 - 6.32.2
 sqlite:
