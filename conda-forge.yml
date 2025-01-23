@@ -18,3 +18,4 @@ provider:
   osx_arm64: default
 test: native
 conda_build_tool: rattler-build
+conda_install_tool: pixi
