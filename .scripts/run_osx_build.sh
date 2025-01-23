@@ -26,6 +26,9 @@ eval "$(pixi shell-hook)"
 mv pixi.toml.bak pixi.toml
 ( endgroup "Provisioning base env with pixi" ) 2> /dev/null
 
+# build portion of https://github.com/conda-forge/conda-smithy/issues/2057
+EXTRA_CB_OPTIONS="${EXTRA_CB_OPTIONS:-} --experimental"
+
 ( startgroup "Configuring conda" ) 2> /dev/null
 export CONDA_SOLVER="libmamba"
 export CONDA_LIBMAMBA_SOLVER_NO_CHANNELS_FROM_INSTALLED=1
