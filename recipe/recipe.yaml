@@ -7,6 +7,10 @@ context:
   builtin_pyroot: true
   builtin_clang: false
   run_gtests: false
+  # When new Python versions are released numba tends to be slow to support them
+  # to prevent ROOT from being held up by this, only have a strong dependency on
+  # numba for supported python versions
+  max_supported_numba_py: 3.12
 
 recipe:
   name: root
@@ -212,7 +216,8 @@ outputs:
         - metakernel
         - ipython
         - notebook
-        - numba
+        - if: python <= max_supported_numba_py
+          then: numba
     tests:
       - python:
           imports:
