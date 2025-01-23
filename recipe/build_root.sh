@@ -4,6 +4,8 @@ set -x
 if command -v sccache &> /dev/null; then
     export CMAKE_C_COMPILER_LAUNCHER=sccache
     export CMAKE_CXX_COMPILER_LAUNCHER=sccache
+else
+    echo "Disabling sccache as it is not available"
 fi
 
 # rebuild afterimage ./configure script after patch

@@ -1,8 +1,7 @@
 context:
   name: root
-  tag_name: 6-32-02
-  version: 6.32.2
-  build_number: 3
+  tag_name: 6-32-08
+  build_number: 0
   clang_version: 16.0.6
   clang_patches_version: root_63202
   builtin_pyroot: true
@@ -11,7 +10,7 @@ context:
 
 recipe:
   name: root
-  version: ${{ version }}
+  version: ${{ tag_name | replace("-", ".") }}
 
 build:
   number: ${{ build_number }}
@@ -20,7 +19,7 @@ build:
 cache:
   source:
     url: https://github.com/root-project/root/archive/refs/tags/v${{ tag_name }}.tar.gz
-    sha256: 332c763d2d5eb8a759893453637f24b3900476f73a1a4c7a205f8f7b3104f449
+    sha256: 6c6616953e44c3979af596ddde7bcd51ac6786fd9f9b35ec0c8cf72213f8d7d4
     target_directory: root-source
     patches:
       - patches/root-x.xx.xx_cling-runtime-sysroot.patch
