@@ -31,11 +31,21 @@ pkgs_dirs:
 solver: libmamba
 
 CONDARC
-mv /opt/conda/conda-meta/history /opt/conda/conda-meta/history.$(date +%Y-%m-%d-%H-%M-%S)
-echo > /opt/conda/conda-meta/history
-micromamba install --root-prefix ~/.conda --prefix /opt/conda \
-    --yes --override-channels --channel conda-forge --strict-channel-priority \
-    pip  rattler-build conda-forge-ci-setup=4 "conda-build>=24.1"
+curl -fsSL https://pixi.sh/install.sh | bash
+export PATH="~/.pixi/bin:$PATH"
+pushd "${FEEDSTOCK_ROOT}"
+arch=$(uname -m)
+if [[ "$arch" == "x86_64" ]]; then
+  arch="64"
+fi
+sed -i.bak "s/platforms = .*/platforms = [\"linux-${arch}\"]/" pixi.toml
+echo "Creating environment"
+PIXI_CACHE_DIR=/opt/conda pixi install
+pixi list
+echo "Activating environment"
+eval "$(pixi shell-hook)"
+mv pixi.toml.bak pixi.toml
+popd
 export CONDA_LIBMAMBA_SOLVER_NO_CHANNELS_FROM_INSTALLED=1
 
 # set up the condarc
@@ -64,9 +74,6 @@ if [[ "${HOST_PLATFORM}" != "${BUILD_PLATFORM}" ]] && [[ "${BUILD_WITH_CONDA_DEB
     EXTRA_CB_OPTIONS="${EXTRA_CB_OPTIONS:-} --no-test"
 fi
 
-# build portion of https://github.com/conda-forge/conda-smithy/issues/2057
-EXTRA_CB_OPTIONS="${EXTRA_CB_OPTIONS:-} --experimental"
-
 ( endgroup "Configuring conda" ) 2> /dev/null
 
 if [[ -f "${FEEDSTOCK_ROOT}/LICENSE.txt" ]]; then
@@ -90,16 +97,11 @@ else
     command -v inspect_artifacts >/dev/null 2>&1 && inspect_artifacts --recipe-dir "${RECIPE_ROOT}" -m "${CONFIG_FILE}" || echo "inspect_artifacts needs conda-forge-ci-setup >=4.9.4"
 
     ( endgroup "Inspecting artifacts" ) 2> /dev/null
-    ( startgroup "Validating outputs" ) 2> /dev/null
-
-    validate_recipe_outputs "${FEEDSTOCK_NAME}"
-
-    ( endgroup "Validating outputs" ) 2> /dev/null
 
     ( startgroup "Uploading packages" ) 2> /dev/null
 
     if [[ "${UPLOAD_PACKAGES}" != "False" ]] && [[ "${IS_PR_BUILD}" == "False" ]]; then
-        upload_package --validate --feedstock-name="${FEEDSTOCK_NAME}"  "${FEEDSTOCK_ROOT}" "${RECIPE_ROOT}" "${CONFIG_FILE}"
+        upload_package  "${FEEDSTOCK_ROOT}" "${RECIPE_ROOT}" "${CONFIG_FILE}"
     fi
 
     ( endgroup "Uploading packages" ) 2> /dev/null

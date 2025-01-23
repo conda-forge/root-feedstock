@@ -9,37 +9,24 @@ set -xe
 MINIFORGE_HOME="${MINIFORGE_HOME:-${HOME}/miniforge3}"
 MINIFORGE_HOME="${MINIFORGE_HOME%/}" # remove trailing slash
 export CONDA_BLD_PATH="${CONDA_BLD_PATH:-${MINIFORGE_HOME}/conda-bld}"
-
-( startgroup "Provisioning base env with micromamba" ) 2> /dev/null
-MICROMAMBA_VERSION="1.5.10-0"
-if [[ "$(uname -m)" == "arm64" ]]; then
-  osx_arch="osx-arm64"
-else
-  osx_arch="osx-64"
+( startgroup "Provisioning base env with pixi" ) 2> /dev/null
+mkdir -p "${MINIFORGE_HOME}"
+curl -fsSL https://pixi.sh/install.sh | bash
+export PATH="~/.pixi/bin:$PATH"
+arch=$(uname -m)
+if [[ "$arch" == "x86_64" ]]; then
+  arch="64"
 fi
-MICROMAMBA_URL="https://github.com/mamba-org/micromamba-releases/releases/download/${MICROMAMBA_VERSION}/micromamba-${osx_arch}"
-MAMBA_ROOT_PREFIX="${MINIFORGE_HOME}-micromamba-$(date +%s)"
-echo "Downloading micromamba ${MICROMAMBA_VERSION}"
-micromamba_exe="$(mktemp -d)/micromamba"
-curl -L -o "${micromamba_exe}" "${MICROMAMBA_URL}"
-chmod +x "${micromamba_exe}"
+sed -i.bak "s/platforms = .*/platforms = [\"osx-${arch}\"]/" pixi.toml
 echo "Creating environment"
-"${micromamba_exe}" create --yes --root-prefix "${MAMBA_ROOT_PREFIX}" --prefix "${MINIFORGE_HOME}" \
-  --channel conda-forge \
-  pip rattler-build conda-forge-ci-setup=4 "conda-build>=24.1"
-echo "Moving pkgs cache from ${MAMBA_ROOT_PREFIX} to ${MINIFORGE_HOME}"
-mv "${MAMBA_ROOT_PREFIX}/pkgs" "${MINIFORGE_HOME}"
-echo "Cleaning up micromamba"
-rm -rf "${MAMBA_ROOT_PREFIX}" "${micromamba_exe}" || true
-( endgroup "Provisioning base env with micromamba" ) 2> /dev/null
-
-# build portion of https://github.com/conda-forge/conda-smithy/issues/2057
-EXTRA_CB_OPTIONS="${EXTRA_CB_OPTIONS:-} --experimental"
+pixi install
+pixi list
+echo "Activating environment"
+eval "$(pixi shell-hook)"
+mv pixi.toml.bak pixi.toml
+( endgroup "Provisioning base env with pixi" ) 2> /dev/null
 
 ( startgroup "Configuring conda" ) 2> /dev/null
-echo "Activating environment"
-source "${MINIFORGE_HOME}/etc/profile.d/conda.sh"
-conda activate base
 export CONDA_SOLVER="libmamba"
 export CONDA_LIBMAMBA_SOLVER_NO_CHANNELS_FROM_INSTALLED=1
 
@@ -99,16 +86,11 @@ else
     command -v inspect_artifacts >/dev/null 2>&1 && inspect_artifacts --recipe-dir ./recipe -m ./.ci_support/${CONFIG}.yaml || echo "inspect_artifacts needs conda-forge-ci-setup >=4.9.4"
 
     ( endgroup "Inspecting artifacts" ) 2> /dev/null
-    ( startgroup "Validating outputs" ) 2> /dev/null
-
-    validate_recipe_outputs "${FEEDSTOCK_NAME}"
-
-    ( endgroup "Validating outputs" ) 2> /dev/null
 
     ( startgroup "Uploading packages" ) 2> /dev/null
 
     if [[ "${UPLOAD_PACKAGES}" != "False" ]] && [[ "${IS_PR_BUILD}" == "False" ]]; then
-      upload_package --validate --feedstock-name="${FEEDSTOCK_NAME}" ./ ./recipe ./.ci_support/${CONFIG}.yaml
+      upload_package  ./ ./recipe ./.ci_support/${CONFIG}.yaml
     fi
 
     ( endgroup "Uploading packages" ) 2> /dev/null
