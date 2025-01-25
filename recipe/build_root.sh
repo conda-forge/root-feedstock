@@ -8,9 +8,6 @@ else
     echo "Disabling sccache as it is not available"
 fi
 
-# rebuild afterimage ./configure script after patch
-(cd root-source/graf2d/asimage/src/libAfterImage; autoconf)
-
 if [[ "${target_platform}" == "linux-"* ]]; then
   # Conda's binary relocation can result in string changing which can result in errors like
   #   > $ root.exe -l -b -q -x root-feedstock/recipe/test.cpp++
@@ -127,6 +124,7 @@ CMAKE_PLATFORM_FLAGS+=("-DCMAKE_CXX_STANDARD=${ROOT_CXX_STANDARD}")
 CMAKE_PLATFORM_FLAGS+=("-DTBB_ROOT_DIR=${PREFIX}")
 
 # Disable all of the builtins
+CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_afterimage=OFF")
 CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_cfitsio=OFF")
 CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_davix=OFF")
 CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_fftw3=OFF")
@@ -374,14 +372,27 @@ else
 fi
 CMAKE_PLATFORM_FLAGS+=("-Droottest=OFF")
 
+if [[ "${target_platform}" != osx* ]]; then
+    # Can't use ninja on macOS due to "horrible hack to hide the LLVM/Clang symbols" (see below)
+    CMAKE_PLATFORM_FLAGS+=("-GNinja")
+fi
+
 # Now we can actually run CMake
-cmake -G Ninja $CMAKE_ARGS "${CMAKE_PLATFORM_FLAGS[@]}" ${SRC_DIR}/root-source
+cmake $CMAKE_ARGS "${CMAKE_PLATFORM_FLAGS[@]}" ${SRC_DIR}/root-source
+
+if [[ "${target_platform}" != "${build_platform}" ]]; then
+    # Build rootcling_stage1 then substitute the binary with the host version
+    cmake --build . --target rootcling_stage1 -- "-j${CPU_COUNT}"
+    mv core/rootcling_stage1/src/rootcling_stage1{,.orig}
+    cp "${SRC_DIR}/build-rootcling_stage1-xp/core/rootcling_stage1/src/rootcling_stage1" core/rootcling_stage1/src/rootcling_stage1
+    touch --reference core/rootcling_stage1/src/rootcling_stage1{.orig,}
+fi
 
 if [[ "${target_platform}" == osx* ]]; then
     # This is a horrible hack to hide the LLVM/Clang symbols in libCling.so on macOS
     cd core/metacling/src
     # First build libCling.so
-    make "-j${CPU_COUNT}"
+    cmake --build . -- "-j${CPU_COUNT}"
     # Find the symbols in libCling.so
     nm -g ../../../lib/libCling.so | ruby -ne 'if /^[0-9a-f]+.*\s(\S+)$/.match($_) then print $1,"\n" end' | sort -u > original.exp
     # Find the symbols in the LLVM and Clang static libraries
@@ -391,7 +402,7 @@ if [[ "${target_platform}" == osx* ]]; then
     # Add "-exported_symbols_list" to the link command
     sed -i "s@$CXX @$CXX -exported_symbols_list $PWD/allowed_symbols.exp @g" CMakeFiles/Cling.dir/link.txt
     # Build libCling.so again now the link command has been updated
-    make "-j${CPU_COUNT}"
+    cmake --build . -- "-j${CPU_COUNT}"
     # Show some details about the number of symbols before and after in case further debugging is required
     nm -g ../../../lib/libCling.so | ruby -ne 'if /^[0-9a-f]+.*\s(\S+)$/.match($_) then print $1,"\n" end' | sort -u > new.exp
     wc -l *.exp
@@ -399,12 +410,6 @@ if [[ "${target_platform}" == osx* ]]; then
 fi
 
 if [[ "${target_platform}" != "${build_platform}" ]]; then
-    # Build rootcling_stage1 then substitute the binary with the host version
-    cmake --build . --target rootcling_stage1 -- "-j${CPU_COUNT}"
-    mv core/rootcling_stage1/src/rootcling_stage1{,.orig}
-    cp "${SRC_DIR}/build-rootcling_stage1-xp/core/rootcling_stage1/src/rootcling_stage1" core/rootcling_stage1/src/rootcling_stage1
-    touch --reference core/rootcling_stage1/src/rootcling_stage1{.orig,}
-
     # Build rootcling then substitute the binary with the host version
     cmake --build . --target rootcling -- "-j${CPU_COUNT}"
     mv bin/rootcling{,.orig}
