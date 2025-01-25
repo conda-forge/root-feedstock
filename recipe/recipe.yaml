@@ -120,6 +120,7 @@ cache:
       - if: linux
         then: libglu
       - libpng
+      - afterimage
       - librsvg
       - libtiff
       - libxml2
