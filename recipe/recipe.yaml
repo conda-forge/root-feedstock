@@ -41,7 +41,6 @@ cache:
           - patches/0001-force-one-modulemap-for-darwin.patch
           - patches/0001-Remove-check-for-SDK-version-in-CIFactory.patch
           - patches/0001-avoid-linking-TPython-against-libPython.patch
-          - patches/0001-std_darwin.modulemap-Remove-headers-for-MacOSX15.0.s.patch
       - patches/0001-Hackily-fix-cross-compilation.patch
       - 0002-Debugging.patch
       - PR-15804.patch
