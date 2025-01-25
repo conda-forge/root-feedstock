@@ -176,9 +176,6 @@ else
 fi
 
 # Enable some vectorisation options
-# if [[ "${target_platform}" == *-64 ]]; then
-#     export CXXFLAGS="${CXXFLAGS} -march=nehalem"
-# fi
 CMAKE_PLATFORM_FLAGS+=("-Dveccore=ON")
 CMAKE_PLATFORM_FLAGS+=("-Dvc=ON")
 CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_veccore=ON")
@@ -192,7 +189,7 @@ if [[ "${target_platform}" != "${build_platform}" ]]; then
     sed -i "s@TODO_OVERRIDE_TARGET@\"--target=${BUILD}\"@g" "${SRC_DIR}/root-source/interpreter/cling/lib/Interpreter/CIFactory.cpp"
     diff "${SRC_DIR}/root-source/interpreter/cling/lib/Interpreter/CIFactory.cpp"{.orig,} || true
 
-    CONDA_BUILD_SYSROOT="${BUILD_PREFIX}/x86_64-conda-linux-gnu/sysroot" CMAKE_ARGS= CMAKE_PREFIX_PATH="${BUILD_PREFIX}:${BUILD_PREFIX}/${BUILD}/sysroot/usr" LD=${BUILD_PREFIX}/bin/x86_64-conda-linux-gnu-ld \
+    CONDA_BUILD_SYSROOT="${BUILD_PREFIX}/x86_64-conda-linux-gnu/sysroot" \
         cmake "${SRC_DIR}/root-source" \
             -B "${SRC_DIR}/build-rootcling_stage1-xp" \
             -Dminimal=ON \
@@ -216,10 +213,9 @@ if [[ "${target_platform}" != "${build_platform}" ]]; then
             -DCMAKE_CXX_STANDARD=${ROOT_CXX_STANDARD} \
             -DROOT_CLING_TARGET=all \
             -DCLING_CXX_PATH="$CXX_FOR_BUILD" \
-            $(echo $CMAKE_ARGS | sed 's@aarch64@x86_64@g' | sed s@$PREFIX@$BUILD_PREFIX@g) \
-            -DLLVM_CMAKE_PATH=$BUILD_PREFIX/lib/cmake
+            $(echo $CMAKE_ARGS | sed 's@aarch64@x86_64@g' | sed s@$PREFIX@$BUILD_PREFIX@g)
 
-    CONDA_BUILD_SYSROOT="${BUILD_PREFIX}/x86_64-conda-linux-gnu/sysroot" CMAKE_ARGS= CMAKE_PREFIX_PATH="${BUILD_PREFIX}:${BUILD_PREFIX}/${BUILD}/sysroot/usr" LD=${BUILD_PREFIX}/bin/x86_64-conda-linux-gnu-ld \
+    CONDA_BUILD_SYSROOT="${BUILD_PREFIX}/x86_64-conda-linux-gnu/sysroot" \
         cmake --build "${SRC_DIR}/build-rootcling_stage1-xp" --target rootcling_stage1 -- "-j${CPU_COUNT}"
 
     # Build rootcling for the current platform but that will target the host platform
@@ -227,7 +223,7 @@ if [[ "${target_platform}" != "${build_platform}" ]]; then
     sed -i "s@TODO_OVERRIDE_TARGET@\"--target=${HOST}\"@g" ${SRC_DIR}/root-source/interpreter/cling/lib/Interpreter/CIFactory.cpp
     diff ${SRC_DIR}/root-source/interpreter/cling/lib/Interpreter/CIFactory.cpp{.orig,} || true
 
-    CONDA_BUILD_SYSROOT="${BUILD_PREFIX}/x86_64-conda-linux-gnu/sysroot" CMAKE_ARGS= CMAKE_PREFIX_PATH="${BUILD_PREFIX}:${BUILD_PREFIX}/${BUILD}/sysroot/usr" LD=${BUILD_PREFIX}/bin/x86_64-conda-linux-gnu-ld \
+    CONDA_BUILD_SYSROOT="${BUILD_PREFIX}/x86_64-conda-linux-gnu/sysroot" \
         cmake "${SRC_DIR}/root-source" \
             -B "${SRC_DIR}/build-rootcling-xp" \
             -Dminimal=ON \
@@ -251,8 +247,7 @@ if [[ "${target_platform}" != "${build_platform}" ]]; then
             -DCMAKE_CXX_STANDARD=${ROOT_CXX_STANDARD} \
             -DROOT_CLING_TARGET=all \
             -DCLING_CXX_PATH="$CXX" \
-            $(echo $CMAKE_ARGS | sed 's@aarch64@x86_64@g' | sed s@$PREFIX@$BUILD_PREFIX@g) \
-            -DLLVM_CMAKE_PATH=$BUILD_PREFIX/lib/cmake
+            $(echo $CMAKE_ARGS | sed 's@aarch64@x86_64@g' | sed s@$PREFIX@$BUILD_PREFIX@g)
 
     cmake --build "${SRC_DIR}/build-rootcling-xp" --target rootcling_stage1 -- "-j${CPU_COUNT}"
     mv "${SRC_DIR}/build-rootcling-xp/core/rootcling_stage1/src/rootcling_stage1"{,.orig}

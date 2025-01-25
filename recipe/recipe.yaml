@@ -59,11 +59,8 @@ cache:
         clang_patches_version: ${{ clang_patches_version }}
         ROOT_CONDA_BUILTIN_PYROOT: ${{ builtin_pyroot }}
         ROOT_CXX_STANDARD: ${{ root_cxx_standard }}
-    prefix_detection:
-      ignore:
-        - if: aarch64
-          then: etc/allDict.cxx.pch
-          else: lib/*.pcm
+    dynamic_linking:
+      overdepending_behavior: ignore
 
   requirements:
     build:
@@ -194,9 +191,11 @@ outputs:
           - if: aarch64
             then: etc/allDict.cxx.pch
             else: lib/*.pcm
-      dynamic_linking:
-        overdepending_behavior: ignore
-
+      files:
+        exclude:
+          - LICENSE
+          - README/**
+          - tutorials/**
     requirements:
       run_exports:
         - ${{ pin_subpackage('root_base', upper_bound='x.x.x') }}
@@ -223,6 +222,11 @@ outputs:
 
   - package:
       name: root
+    build:
+      files:
+        exclude:
+          - LICENSE
+          - README/**
     requirements:
       host:
         - ${{ pin_subpackage('root_base', exact=True) }}
