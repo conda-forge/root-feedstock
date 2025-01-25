@@ -47,7 +47,9 @@ cache:
       - PR-15804.patch
       - pr-17269.patch
       # - 0001-Support-getting-rootcling_stage1-from-external-build.patch
-      - 0002-HACK-Support-overriding-triplet-used-by-cling.patch
+      - if: build_platform != target_platform
+        then:
+          - 0002-HACK-Support-overriding-triplet-used-by-cling.patch
 
   build:
     script:
@@ -59,10 +61,9 @@ cache:
         ROOT_CXX_STANDARD: ${{ root_cxx_standard }}
     prefix_detection:
       ignore:
-        - if: not aarch64
-          then: lib/*.pcm
         - if: aarch64
           then: etc/allDict.cxx.pch
+          else: lib/*.pcm
 
   requirements:
     build:
@@ -93,6 +94,11 @@ cache:
           - llvm ${{ clang_version }}.*
           - llvmdev ${{ clang_version }}.*
           - clangdev ${{ clang_version }}.* ${{ clang_patches_version }}*
+          - xxhash
+          - zlib
+          - zstd
+          - freetype
+          - xz
     host:
       - libblas
       - libcblas

@@ -62,9 +62,11 @@ if [[ "${target_platform}" == linux* ]]; then
     cp "${RECIPE_DIR}/FindX11.cmake" "root-source/cmake/modules/"
 
     # Hide symbols from LLVM/clang to avoid conflicts with other libraries
+    set +x
     for lib_name in $(ls "${PREFIX}/lib" | grep -E 'lib(LLVM|clang).*\.a'); do
         export CXXFLAGS="${CXXFLAGS} -Wl,--exclude-libs,${lib_name}"
     done
+    set -x
     echo "CXXFLAGS is now '${CXXFLAGS}'"
 else
     CMAKE_PLATFORM_FLAGS+=("-DBLA_PREFER_PKGCONFIG=ON")
@@ -104,7 +106,7 @@ export CXXFLAGS
 # The cross-linux toolchain breaks find_file relative to the current file
 # Patch up with sed
 sed -i -E 's#(ROOT_TEST_DRIVER RootTestDriver.cmake PATHS \$\{THISDIR\} \$\{CMAKE_MODULE_PATH\} NO_DEFAULT_PATH)#\1 CMAKE_FIND_ROOT_PATH_BOTH#g' \
-    ../root-source/cmake/modules/RootNewMacros.cmake
+    ${SRC_DIR}/root-source/cmake/modules/RootNewMacros.cmake
 
 # The basics
 if [ "${ROOT_CONDA_BUILD_TYPE-}" == "" ]; then
@@ -185,33 +187,78 @@ CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_veccore=ON")
 if [[ "${target_platform}" != "${build_platform}" ]]; then
     CMAKE_PLATFORM_FLAGS+=("-Dfound_urandom=ON")
 
-    sed -i "s@TODO_OVERRIDE_TARGET@\"--target=${HOST}\"@g" ../root-source/interpreter/cling/lib/Interpreter/CIFactory.cpp
+    # Build rootcling_stage1 for the current platform
+    cp "${SRC_DIR}/root-source/interpreter/cling/lib/Interpreter/CIFactory.cpp"{,.orig}
+    sed -i "s@TODO_OVERRIDE_TARGET@\"--target=${BUILD}\"@g" "${SRC_DIR}/root-source/interpreter/cling/lib/Interpreter/CIFactory.cpp"
+    diff "${SRC_DIR}/root-source/interpreter/cling/lib/Interpreter/CIFactory.cpp"{.orig,} || true
 
-    CMAKE_PREFIX_PATH=$BUILD_PREFIX:/home/cburr/Development/conda-forge/root-feedstock/output/bld/rattler-build_root_base/build_env/x86_64-conda-linux-gnu/sysroot/usr \
+    CONDA_BUILD_SYSROOT="${BUILD_PREFIX}/x86_64-conda-linux-gnu/sysroot" CMAKE_ARGS= CMAKE_PREFIX_PATH="${BUILD_PREFIX}:${BUILD_PREFIX}/${BUILD}/sysroot/usr" LD=${BUILD_PREFIX}/bin/x86_64-conda-linux-gnu-ld \
         cmake "${SRC_DIR}/root-source" \
-            -B "${SRC_DIR}/root-build-host" \
-            -Dbuiltin_zstd=OFF \
-            -Dbuiltin_zlib=OFF \
+            -B "${SRC_DIR}/build-rootcling_stage1-xp" \
             -Dminimal=ON \
+            -Dfail-on-missing=ON \
+            -Drpath=ON \
             -DCMAKE_BUILD_TYPE=Release \
             -GNinja \
             -Dfound_urandom=ON \
             -DCMAKE_C_COMPILER=$CC_FOR_BUILD \
             -DCMAKE_CXX_COMPILER=$CXX_FOR_BUILD \
-            -DCMAKE_C_FLAGS=-O2 \
-            -DCMAKE_CXX_FLAGS=-O2 \
-            -DCMAKE_EXE_LINKER_FLAGS=-Wl,-rpath,${BUILD_PREFIX}/lib \
-            -DCMAKE_MODULE_LINKER_FLAGS= \
-            -DCMAKE_SHARED_LINKER_FLAGS= \
+            -DCMAKE_C_FLAGS="$(echo $CFLAGS | sed s@$PREFIX@$BUILD_PREFIX@g)" \
+            -DCMAKE_CXX_FLAGS="$(echo $CXXFLAGS | sed s@$PREFIX@$BUILD_PREFIX@g)" \
+            -DCMAKE_LINKER="${BUILD_PREFIX}/bin/x86_64-conda-linux-gnu-ld" \
+            -DCMAKE_EXE_LINKER_FLAGS="$(echo $LDFLAGS | sed s@$PREFIX@$BUILD_PREFIX@g)" \
+            -DCMAKE_MODULE_LINKER_FLAGS="$(echo $LDFLAGS | sed s@$PREFIX@$BUILD_PREFIX@g)" \
+            -DCMAKE_SHARED_LINKER_FLAGS="$(echo $LDFLAGS | sed s@$PREFIX@$BUILD_PREFIX@g)" \
             -Dbuiltin_llvm=OFF \
             -Dbuiltin_clang=OFF \
             -DLLVM_CONFIG="${BUILD_PREFIX}/bin/llvm-config" \
             -DLLVM_TABLEGEN_EXE="${BUILD_PREFIX}/bin/llvm-tblgen" \
             -DCMAKE_CXX_STANDARD=${ROOT_CXX_STANDARD} \
             -DROOT_CLING_TARGET=all \
-            -DCLING_CXX_PATH="$CXX"
+            -DCLING_CXX_PATH="$CXX_FOR_BUILD" \
+            $(echo $CMAKE_ARGS | sed 's@aarch64@x86_64@g' | sed s@$PREFIX@$BUILD_PREFIX@g) \
+            -DLLVM_CMAKE_PATH=$BUILD_PREFIX/lib/cmake
 
-    cmake --build "${SRC_DIR}/root-build-host" --target rootcling_stage1 -- "-j${CPU_COUNT}"
+    CONDA_BUILD_SYSROOT="${BUILD_PREFIX}/x86_64-conda-linux-gnu/sysroot" CMAKE_ARGS= CMAKE_PREFIX_PATH="${BUILD_PREFIX}:${BUILD_PREFIX}/${BUILD}/sysroot/usr" LD=${BUILD_PREFIX}/bin/x86_64-conda-linux-gnu-ld \
+        cmake --build "${SRC_DIR}/build-rootcling_stage1-xp" --target rootcling_stage1 -- "-j${CPU_COUNT}"
+
+    # Build rootcling for the current platform but that will target the host platform
+    cp ${SRC_DIR}/root-source/interpreter/cling/lib/Interpreter/CIFactory.cpp{.orig,}
+    sed -i "s@TODO_OVERRIDE_TARGET@\"--target=${HOST}\"@g" ${SRC_DIR}/root-source/interpreter/cling/lib/Interpreter/CIFactory.cpp
+    diff ${SRC_DIR}/root-source/interpreter/cling/lib/Interpreter/CIFactory.cpp{.orig,} || true
+
+    CONDA_BUILD_SYSROOT="${BUILD_PREFIX}/x86_64-conda-linux-gnu/sysroot" CMAKE_ARGS= CMAKE_PREFIX_PATH="${BUILD_PREFIX}:${BUILD_PREFIX}/${BUILD}/sysroot/usr" LD=${BUILD_PREFIX}/bin/x86_64-conda-linux-gnu-ld \
+        cmake "${SRC_DIR}/root-source" \
+            -B "${SRC_DIR}/build-rootcling-xp" \
+            -Dminimal=ON \
+            -Dfail-on-missing=ON \
+            -Drpath=ON \
+            -DCMAKE_BUILD_TYPE=Release \
+            -GNinja \
+            -Dfound_urandom=ON \
+            -DCMAKE_C_COMPILER=$CC_FOR_BUILD \
+            -DCMAKE_CXX_COMPILER=$CXX_FOR_BUILD \
+            -DCMAKE_C_FLAGS="$(echo $CFLAGS | sed s@$PREFIX@$BUILD_PREFIX@g)" \
+            -DCMAKE_CXX_FLAGS="$(echo $CXXFLAGS | sed s@$PREFIX@$BUILD_PREFIX@g)" \
+            -DCMAKE_LINKER="${BUILD_PREFIX}/bin/x86_64-conda-linux-gnu-ld" \
+            -DCMAKE_EXE_LINKER_FLAGS="$(echo $LDFLAGS | sed s@$PREFIX@$BUILD_PREFIX@g)" \
+            -DCMAKE_MODULE_LINKER_FLAGS="$(echo $LDFLAGS | sed s@$PREFIX@$BUILD_PREFIX@g)" \
+            -DCMAKE_SHARED_LINKER_FLAGS="$(echo $LDFLAGS | sed s@$PREFIX@$BUILD_PREFIX@g)" \
+            -Dbuiltin_llvm=OFF \
+            -Dbuiltin_clang=OFF \
+            -DLLVM_CONFIG="${BUILD_PREFIX}/bin/llvm-config" \
+            -DLLVM_TABLEGEN_EXE="${BUILD_PREFIX}/bin/llvm-tblgen" \
+            -DCMAKE_CXX_STANDARD=${ROOT_CXX_STANDARD} \
+            -DROOT_CLING_TARGET=all \
+            -DCLING_CXX_PATH="$CXX" \
+            $(echo $CMAKE_ARGS | sed 's@aarch64@x86_64@g' | sed s@$PREFIX@$BUILD_PREFIX@g) \
+            -DLLVM_CMAKE_PATH=$BUILD_PREFIX/lib/cmake
+
+    cmake --build "${SRC_DIR}/build-rootcling-xp" --target rootcling_stage1 -- "-j${CPU_COUNT}"
+    mv "${SRC_DIR}/build-rootcling-xp/core/rootcling_stage1/src/rootcling_stage1"{,.orig}
+    cp "${SRC_DIR}"/build-{rootcling_stage1,rootcling}-xp/"core/rootcling_stage1/src/rootcling_stage1"
+    touch --reference "${SRC_DIR}/build-rootcling-xp/core/rootcling_stage1/src/rootcling_stage1"{.orig,}
+    cmake --build "${SRC_DIR}/build-rootcling-xp" --target rootcling -- "-j${CPU_COUNT}"
 fi
 
 # Disable the Python bindings if we're building them in standalone mode
@@ -333,7 +380,7 @@ fi
 CMAKE_PLATFORM_FLAGS+=("-Droottest=OFF")
 
 # Now we can actually run CMake
-cmake -G Ninja $CMAKE_ARGS "${CMAKE_PLATFORM_FLAGS[@]}" ../root-source
+cmake -G Ninja $CMAKE_ARGS "${CMAKE_PLATFORM_FLAGS[@]}" ${SRC_DIR}/root-source
 
 if [[ "${target_platform}" == osx* ]]; then
     # This is a horrible hack to hide the LLVM/Clang symbols in libCling.so on macOS
@@ -357,13 +404,26 @@ if [[ "${target_platform}" == osx* ]]; then
 fi
 
 if [[ "${target_platform}" != "${build_platform}" ]]; then
+    # Build rootcling_stage1 then substitute the binary with the host version
     cmake --build . --target rootcling_stage1 -- "-j${CPU_COUNT}"
     mv core/rootcling_stage1/src/rootcling_stage1{,.orig}
-    cp "${SRC_DIR}/root-build-host/core/rootcling_stage1/src/rootcling_stage1" core/rootcling_stage1/src/rootcling_stage1
-    touch --reference core/rootcling_stage1/src/rootcling_stage1.orig core/rootcling_stage1/src/rootcling_stage1
+    cp "${SRC_DIR}/build-rootcling_stage1-xp/core/rootcling_stage1/src/rootcling_stage1" core/rootcling_stage1/src/rootcling_stage1
+    touch --reference core/rootcling_stage1/src/rootcling_stage1{.orig,}
+
+    # Build rootcling then substitute the binary with the host version
+    cmake --build . --target rootcling -- "-j${CPU_COUNT}"
+    mv bin/rootcling{,.orig}
+    cp "${SRC_DIR}/build-rootcling-xp/bin/rootcling" bin/rootcling
+    touch --reference bin/rootcling{.orig,}
 fi
 
 cmake --build . -- "-j${CPU_COUNT}"
+
+if [[ "${target_platform}" != "${build_platform}" ]]; then
+    # Restore the original rootcling_stage1/rootcling binaries
+    mv core/rootcling_stage1/src/rootcling_stage1{.orig,}
+    mv bin/rootcling{.orig,}
+fi
 
 # cd tutorials
 # EXTRA_CLING_ARGS='-O1' LD_LIBRARY_PATH=$SRC_DIR/build-dir/lib: ROOTIGNOREPREFIX=1 ROOT_HIST=0 $SRC_DIR/build-dir/bin/root.exe -l -q -b -n -x hsimple.C -e return

@@ -1,17 +1,48 @@
-From f49a3a46cc52199dfcb4af188d8228c2cb128e8b Mon Sep 17 00:00:00 2001
+From 5e0be89a2fa8418d191b9850070537b627a769b0 Mon Sep 17 00:00:00 2001
 From: Chris Burr <christopher.burr@cern.ch>
 Date: Thu, 23 Jan 2025 16:03:46 +0100
 Subject: [PATCH 2/2] HACK: Support overriding triplet used by cling
 
 ---
- interpreter/cling/lib/Interpreter/CIFactory.cpp | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ .../cling/lib/Interpreter/CIFactory.cpp       | 31 ++++++++++++++++---
+ 1 file changed, 27 insertions(+), 4 deletions(-)
 
 diff --git a/interpreter/cling/lib/Interpreter/CIFactory.cpp b/interpreter/cling/lib/Interpreter/CIFactory.cpp
-index 1c099ad3f5..215d29bd0b 100644
+index 1c099ad3f5..80cf3128ca 100644
 --- a/interpreter/cling/lib/Interpreter/CIFactory.cpp
 +++ b/interpreter/cling/lib/Interpreter/CIFactory.cpp
-@@ -1266,9 +1266,9 @@ namespace {
+@@ -303,18 +303,29 @@ namespace {
+         }
+   #endif // _LIBCPP_VERSION
+ 
+-  // First try the relative path 'g++'
++  // First see if the paths are being overridden
++        if (sArguments.empty()) {
++          const char* overrideClingCxxPath = std::getenv("ROOT_CONDA_OVERRIDE_CLING_CXX");
++          if (overrideClingCxxPath) {
++            cling::log() << "CBURR Overriding CLING_CXX_PATH with '" << overrideClingCxxPath << "'\n";
++            ReadCompilerIncludePaths(overrideClingCxxPath, buffer, sArguments, Verbose);
++          }
++        }
++  // Then try the relative path 'g++'
+   #ifdef CLING_CXX_RLTV
++        cling::log() << "CBURR Trying to find C++ headers with the the relative path 'g++': '" << CLING_CXX_RLTV << "'\n";
+         if (sArguments.empty())
+           ReadCompilerIncludePaths(CLING_CXX_RLTV, buffer, sArguments, Verbose);
+   #endif
+   // Then try the include directory cling was built with
+   #ifdef CLING_CXX_INCL
++        cling::log() << "CBURR Trying to find C++ headers with the include directory cling was built with: '" << CLING_CXX_INCL << "'\n";
+         if (sArguments.empty())
+           AddCxxPaths(CLING_CXX_INCL, sArguments, Verbose);
+   #endif
+   // Finally try the absolute path i.e.: '/usr/bin/g++'
+   #ifdef CLING_CXX_PATH
++        cling::log() << "CBURR Trying to find C++ headers with the absolute path: '" << CLING_CXX_PATH << "'\n";
+         if (sArguments.empty())
+           ReadCompilerIncludePaths(CLING_CXX_PATH, buffer, sArguments, Verbose);
+   #endif
+@@ -1266,9 +1277,15 @@ namespace {
      bool profilingEnabled =
          cling::utils::ConvertEnvValueToBool(std::getenv("CLING_PROFILE"));
  
@@ -19,11 +50,30 @@ index 1c099ad3f5..215d29bd0b 100644
 -    argvCompile.push_back("--target=arm64-apple-darwin20.3.0");
 -#endif
 +
-+    argvCompile.push_back(TODO_OVERRIDE_TARGET);
++    const char* overrideTarget = std::getenv("ROOT_CONDA_OVERRIDE_TARGET");
++    if (overrideTarget) {
++      std::string targetArg = "--target=" + std::string(overrideTarget);
++      argvCompile.push_back(targetArg.c_str());
++    } else {
++      argvCompile.push_back(TODO_OVERRIDE_TARGET);
++    }
 +
  #if __aarch64__
      // Disable outline-atomics on AArch64; the routines __aarch64_* are defined
      // in the static library libgcc.a and not necessarily included in libCling
+@@ -1417,6 +1434,12 @@ namespace {
+     clang::driver::Driver Drvr(argv[0], TheTriple.getTriple(), *Diags);
+     //Drvr.setWarnMissingInput(false);
+     Drvr.setCheckInputsExist(false); // think foo.C(12)
++    // TODO: Add if Verbose?
++    cling::log() << "CBURR Compiler command line: ";
++    for (const auto& arg : argvCompile) {
++      cling::log() << arg << " ";
++    }
++    cling::log() << "\n";
+     llvm::ArrayRef<const char*>RF(&(argvCompile[0]), argvCompile.size());
+     std::unique_ptr<clang::driver::Compilation>
+       Compilation(Drvr.BuildCompilation(RF));
 -- 
 2.47.1
 
