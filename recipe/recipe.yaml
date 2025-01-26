@@ -87,14 +87,16 @@ cache:
           - cross-python_${{ target_platform }}
           - python
           - numpy
-          - llvm ${{ clang_version }}.*
-          - llvmdev ${{ clang_version }}.*
-          - clangdev ${{ clang_version }}.* ${{ clang_patches_version }}*
           - xxhash
           - zlib
           - zstd
           - freetype
           - xz
+      - if: build_platform != target_platform and not osx
+        then:
+          - llvm ${{ clang_version }}.*
+          - llvmdev ${{ clang_version }}.*
+          - clangdev ${{ clang_version }}.* ${{ clang_patches_version }}*
     host:
       - libblas
       - libcblas

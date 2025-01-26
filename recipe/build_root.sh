@@ -33,13 +33,18 @@ sed -i -e "s@${OLDVERSIONMACOS}@${MACOSX_DEPLOYMENT_TARGET}@g" \
 
 declare -a CMAKE_PLATFORM_FLAGS
 
-if [[ "${target_platform}" == "osx-arm64" ]]; then
+if [[ "${target_platform}" != "${build_platform}" && "${target_platform}" == osx* ]]; then
     CONDA_SUBDIR=${target_platform} conda create --prefix "${SRC_DIR}/clang_env" --yes \
         "llvm ${clang_version}" "clangdev ${clang_version} ${clang_patches_version}*"
     Clang_DIR=${SRC_DIR}/clang_env
     CMAKE_PLATFORM_FLAGS+=("-DLLVM_CMAKE_PATH=${SRC_DIR}/clang_env/lib/cmake")
+
+    CONDA_SUBDIR=${build_platform} conda create --prefix "${SRC_DIR}/clang_env_build" --yes \
+        "llvm ${clang_version}" "clangdev ${clang_version} ${clang_patches_version}*"
+    Clang_DIR_BUILD=${SRC_DIR}/clang_env_build
 else
     Clang_DIR=${PREFIX}
+    Clang_DIR_BUILD=${BUILD_PREFIX}
 fi
 
 if [[ "${target_platform}" == linux* ]]; then
@@ -161,8 +166,8 @@ else
         CMAKE_PLATFORM_FLAGS+=("-DLLVM_CONFIG=${Clang_DIR}/bin/llvm-config")
         CMAKE_PLATFORM_FLAGS+=("-DLLVM_TABLEGEN_EXE=${Clang_DIR}/bin/llvm-tblgen")
     else
-        CMAKE_PLATFORM_FLAGS+=("-DLLVM_CONFIG=${BUILD_PREFIX}/bin/llvm-config")
-        CMAKE_PLATFORM_FLAGS+=("-DLLVM_TABLEGEN_EXE=${BUILD_PREFIX}/bin/llvm-tblgen")
+        CMAKE_PLATFORM_FLAGS+=("-DLLVM_CONFIG=${Clang_DIR_BUILD}/bin/llvm-config")
+        CMAKE_PLATFORM_FLAGS+=("-DLLVM_TABLEGEN_EXE=${Clang_DIR_BUILD}/bin/llvm-tblgen")
     fi
 
     CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_cling=ON")
@@ -187,33 +192,51 @@ if [[ "${target_platform}" != "${build_platform}" ]]; then
     sed -i "s@TODO_OVERRIDE_TARGET@\"--target=${BUILD}\"@g" "${SRC_DIR}/root-source/interpreter/cling/lib/Interpreter/CIFactory.cpp"
     diff "${SRC_DIR}/root-source/interpreter/cling/lib/Interpreter/CIFactory.cpp"{.orig,} || true
 
-    CONDA_BUILD_SYSROOT="${BUILD_PREFIX}/x86_64-conda-linux-gnu/sysroot" \
-        cmake "${SRC_DIR}/root-source" \
-            -B "${SRC_DIR}/build-rootcling_stage1-xp" \
-            -Dminimal=ON \
-            -Dfail-on-missing=ON \
-            -Drpath=ON \
-            -DCMAKE_BUILD_TYPE=Release \
-            -GNinja \
-            -Dfound_urandom=ON \
-            -DCMAKE_C_COMPILER=$CC_FOR_BUILD \
-            -DCMAKE_CXX_COMPILER=$CXX_FOR_BUILD \
-            -DCMAKE_C_FLAGS="$(echo $CFLAGS | sed s@$PREFIX@$BUILD_PREFIX@g)" \
-            -DCMAKE_CXX_FLAGS="$(echo $CXXFLAGS | sed s@$PREFIX@$BUILD_PREFIX@g)" \
-            -DCMAKE_LINKER="${BUILD_PREFIX}/bin/x86_64-conda-linux-gnu-ld" \
-            -DCMAKE_EXE_LINKER_FLAGS="$(echo $LDFLAGS | sed s@$PREFIX@$BUILD_PREFIX@g)" \
-            -DCMAKE_MODULE_LINKER_FLAGS="$(echo $LDFLAGS | sed s@$PREFIX@$BUILD_PREFIX@g)" \
-            -DCMAKE_SHARED_LINKER_FLAGS="$(echo $LDFLAGS | sed s@$PREFIX@$BUILD_PREFIX@g)" \
-            -Dbuiltin_llvm=OFF \
-            -Dbuiltin_clang=OFF \
-            -DLLVM_CONFIG="${BUILD_PREFIX}/bin/llvm-config" \
-            -DLLVM_TABLEGEN_EXE="${BUILD_PREFIX}/bin/llvm-tblgen" \
-            -DCMAKE_CXX_STANDARD=${ROOT_CXX_STANDARD} \
-            -DROOT_CLING_TARGET=all \
-            -DCLING_CXX_PATH="$CXX_FOR_BUILD" \
-            $(echo $CMAKE_ARGS | sed 's@aarch64@x86_64@g' | sed s@$PREFIX@$BUILD_PREFIX@g)
+    declare -a CMAKE_PLATFORM_FLAGS_BUILD
+    CMAKE_PLATFORM_FLAGS_BUILD+=("-Dminimal=ON")
+    CMAKE_PLATFORM_FLAGS_BUILD+=("-Dfail-on-missing=ON")
+    CMAKE_PLATFORM_FLAGS_BUILD+=("-Drpath=ON")
+    CMAKE_PLATFORM_FLAGS_BUILD+=("-DCMAKE_BUILD_TYPE=Release")
+    CMAKE_PLATFORM_FLAGS_BUILD+=("-DLLVM_CONFIG=${Clang_DIR_BUILD}/bin/llvm-config")
+    CMAKE_PLATFORM_FLAGS_BUILD+=("-DLLVM_TABLEGEN_EXE=${Clang_DIR_BUILD}/bin/llvm-tblgen")
+    CMAKE_PLATFORM_FLAGS_BUILD+=("-DCMAKE_CXX_STANDARD=${ROOT_CXX_STANDARD}")
+    CMAKE_PLATFORM_FLAGS_BUILD+=("-DROOT_CLING_TARGET=all")
+    CMAKE_PLATFORM_FLAGS_BUILD+=("-GNinja")
+    CMAKE_PLATFORM_FLAGS_BUILD+=("-Dfound_urandom=ON")
+    CMAKE_PLATFORM_FLAGS_BUILD+=("-DCMAKE_C_COMPILER=$CC_FOR_BUILD")
+    CMAKE_PLATFORM_FLAGS_BUILD+=("-DCMAKE_CXX_COMPILER=$CXX_FOR_BUILD")
+    CMAKE_PLATFORM_FLAGS_BUILD+=("-Dbuiltin_llvm=OFF")
+    CMAKE_PLATFORM_FLAGS_BUILD+=("-Dbuiltin_clang=OFF")
+    CMAKE_PLATFORM_FLAGS_BUILD+=("-DCMAKE_C_FLAGS=$(echo $CFLAGS | sed s@$PREFIX@$BUILD_PREFIX@g | sed -E 's/(^| )-m[^=]+=[^ ]+//g')")
+    CMAKE_PLATFORM_FLAGS_BUILD+=("-DCMAKE_CXX_FLAGS=$(echo $CXXFLAGS | sed s@$PREFIX@$BUILD_PREFIX@g | sed -E 's/(^| )-m[^=]+=[^ ]+//g')")
+    CMAKE_PLATFORM_FLAGS_BUILD+=("-DCMAKE_EXE_LINKER_FLAGS=$(echo $LDFLAGS | sed s@$PREFIX@$BUILD_PREFIX@g)")
+    CMAKE_PLATFORM_FLAGS_BUILD+=("-DCMAKE_MODULE_LINKER_FLAGS=$(echo $LDFLAGS | sed s@$PREFIX@$BUILD_PREFIX@g)")
+    CMAKE_PLATFORM_FLAGS_BUILD+=("-DCMAKE_SHARED_LINKER_FLAGS=$(echo $LDFLAGS | sed s@$PREFIX@$BUILD_PREFIX@g)")
 
-    CONDA_BUILD_SYSROOT="${BUILD_PREFIX}/x86_64-conda-linux-gnu/sysroot" \
+    CONDA_BUILD_SYSROOT_BUILD=$CONDA_BUILD_SYSROOT
+
+    if [[ "${target_platform}" == osx* ]]; then
+        CMAKE_PLATFORM_FLAGS_BUILD+=("-DLLVM_CMAKE_PATH=${SRC_DIR}/clang_env_build/lib/cmake")
+        clang_version_split=(${clang_version//./ })
+        CMAKE_PLATFORM_FLAGS_BUILD+=("-DCLANG_RESOURCE_DIR_VERSION=${clang_version_split[0]}")
+        # CMAKE_PLATFORM_FLAGS_BUILD+=("-DCMAKE_LINKER=${BUILD_PREFIX}/bin/arm64-apple-darwin20.0.0-ld")
+    else if [[ "${target_platform}" == linux* ]]; then
+        # CMAKE_PLATFORM_FLAGS_BUILD+=("-DCMAKE_LINKER=${BUILD_PREFIX}/bin/arm64-apple-darwin20.0.0-ld")
+
+        CONDA_BUILD_SYSROOT_BUILD="${BUILD_PREFIX}/${BUILD}/sysroot"
+    else
+        echo "Unsupported cross-compilation target"
+        exit 1
+    fi
+
+    CONDA_BUILD_SYSROOT="${CONDA_BUILD_SYSROOT_BUILD}" CMAKE_PREFIX_PATH="${BUILD_PREFIX}" \
+        cmake "${SRC_DIR}/root-source" \
+                -B "${SRC_DIR}/build-rootcling_stage1-xp" \
+                -DCLING_CXX_PATH="$CXX_FOR_BUILD" \
+                "${CMAKE_PLATFORM_FLAGS_BUILD[@]}" \
+                $(echo $CMAKE_ARGS | sed 's@aarch64@x86_64@g' | sed s@$PREFIX@$BUILD_PREFIX@g)
+
+    CONDA_BUILD_SYSROOT="${CONDA_BUILD_SYSROOT_BUILD}"  \
         cmake --build "${SRC_DIR}/build-rootcling_stage1-xp" --target rootcling_stage1 -- "-j${CPU_COUNT}"
 
     # Build rootcling for the current platform but that will target the host platform
@@ -221,36 +244,17 @@ if [[ "${target_platform}" != "${build_platform}" ]]; then
     sed -i "s@TODO_OVERRIDE_TARGET@\"--target=${HOST}\"@g" ${SRC_DIR}/root-source/interpreter/cling/lib/Interpreter/CIFactory.cpp
     diff ${SRC_DIR}/root-source/interpreter/cling/lib/Interpreter/CIFactory.cpp{.orig,} || true
 
-    CONDA_BUILD_SYSROOT="${BUILD_PREFIX}/x86_64-conda-linux-gnu/sysroot" \
+    CONDA_BUILD_SYSROOT="${CONDA_BUILD_SYSROOT_BUILD}" CMAKE_PREFIX_PATH="${BUILD_PREFIX}" \
         cmake "${SRC_DIR}/root-source" \
-            -B "${SRC_DIR}/build-rootcling-xp" \
-            -Dminimal=ON \
-            -Dfail-on-missing=ON \
-            -Drpath=ON \
-            -DCMAKE_BUILD_TYPE=Release \
-            -GNinja \
-            -Dfound_urandom=ON \
-            -DCMAKE_C_COMPILER=$CC_FOR_BUILD \
-            -DCMAKE_CXX_COMPILER=$CXX_FOR_BUILD \
-            -DCMAKE_C_FLAGS="$(echo $CFLAGS | sed s@$PREFIX@$BUILD_PREFIX@g)" \
-            -DCMAKE_CXX_FLAGS="$(echo $CXXFLAGS | sed s@$PREFIX@$BUILD_PREFIX@g)" \
-            -DCMAKE_LINKER="${BUILD_PREFIX}/bin/x86_64-conda-linux-gnu-ld" \
-            -DCMAKE_EXE_LINKER_FLAGS="$(echo $LDFLAGS | sed s@$PREFIX@$BUILD_PREFIX@g)" \
-            -DCMAKE_MODULE_LINKER_FLAGS="$(echo $LDFLAGS | sed s@$PREFIX@$BUILD_PREFIX@g)" \
-            -DCMAKE_SHARED_LINKER_FLAGS="$(echo $LDFLAGS | sed s@$PREFIX@$BUILD_PREFIX@g)" \
-            -Dbuiltin_llvm=OFF \
-            -Dbuiltin_clang=OFF \
-            -DLLVM_CONFIG="${BUILD_PREFIX}/bin/llvm-config" \
-            -DLLVM_TABLEGEN_EXE="${BUILD_PREFIX}/bin/llvm-tblgen" \
-            -DCMAKE_CXX_STANDARD=${ROOT_CXX_STANDARD} \
-            -DROOT_CLING_TARGET=all \
-            -DCLING_CXX_PATH="$CXX" \
-            $(echo $CMAKE_ARGS | sed 's@aarch64@x86_64@g' | sed s@$PREFIX@$BUILD_PREFIX@g)
+                -B "${SRC_DIR}/build-rootcling-xp" \
+                -DCLING_CXX_PATH="$CXX" \
+                "${CMAKE_PLATFORM_FLAGS_BUILD[@]}" \
+                $(echo $CMAKE_ARGS | sed 's@aarch64@x86_64@g' | sed s@$PREFIX@$BUILD_PREFIX@g)
 
     cmake --build "${SRC_DIR}/build-rootcling-xp" --target rootcling_stage1 -- "-j${CPU_COUNT}"
     mv "${SRC_DIR}/build-rootcling-xp/core/rootcling_stage1/src/rootcling_stage1"{,.orig}
     cp "${SRC_DIR}"/build-{rootcling_stage1,rootcling}-xp/"core/rootcling_stage1/src/rootcling_stage1"
-    touch --reference "${SRC_DIR}/build-rootcling-xp/core/rootcling_stage1/src/rootcling_stage1"{.orig,}
+    touch -r "${SRC_DIR}/build-rootcling-xp/core/rootcling_stage1/src/rootcling_stage1"{.orig,}
     cmake --build "${SRC_DIR}/build-rootcling-xp" --target rootcling -- "-j${CPU_COUNT}"
 fi
 
@@ -385,7 +389,7 @@ if [[ "${target_platform}" != "${build_platform}" ]]; then
     cmake --build . --target rootcling_stage1 -- "-j${CPU_COUNT}"
     mv core/rootcling_stage1/src/rootcling_stage1{,.orig}
     cp "${SRC_DIR}/build-rootcling_stage1-xp/core/rootcling_stage1/src/rootcling_stage1" core/rootcling_stage1/src/rootcling_stage1
-    touch --reference core/rootcling_stage1/src/rootcling_stage1{.orig,}
+    touch -r core/rootcling_stage1/src/rootcling_stage1{.orig,}
 fi
 
 if [[ "${target_platform}" == osx* ]]; then
@@ -414,7 +418,7 @@ if [[ "${target_platform}" != "${build_platform}" ]]; then
     cmake --build . --target rootcling -- "-j${CPU_COUNT}"
     mv bin/rootcling{,.orig}
     cp "${SRC_DIR}/build-rootcling-xp/bin/rootcling" bin/rootcling
-    touch --reference bin/rootcling{.orig,}
+    touch -r bin/rootcling{.orig,}
 fi
 
 cmake --build . -- "-j${CPU_COUNT}"
