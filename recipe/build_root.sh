@@ -230,16 +230,17 @@ if [[ "${target_platform}" != "${build_platform}" ]]; then
         exit 1
     fi
 
-    if [[ "${build_platform}" = *-64 && "${target_platform}" = *-aarch64 ]]; then
-        CMAKE_ARGS_BUILD=$(echo $CMAKE_ARGS | sed 's@aarch64@x86_64@g' | sed s@$PREFIX@$BUILD_PREFIX@g)
-    elif [[ "${build_platform}" = *-64 && "${target_platform}" = *-ppc64le ]]; then
-        CMAKE_ARGS_BUILD=$(echo $CMAKE_ARGS | sed 's@ppc64le@x86_64@g' | sed s@$PREFIX@$BUILD_PREFIX@g)
-    elif [[ "${build_platform}" = *-64 && "${target_platform}" = *-arm64 ]]; then
-        CMAKE_ARGS_BUILD=$(echo $CMAKE_ARGS | sed 's@arm64@x86_64@g' | sed s@$PREFIX@$BUILD_PREFIX@g)
-    else
-        echo "Unsupported cross-compilation target"
-        exit 1
-    fi
+    CMAKE_ARGS_BUILD=$(echo $CMAKE_ARGS | sed s@$PREFIX@$BUILD_PREFIX@g | sed s@${host_alias}@${build_alias}@g)
+    # if [[ "${build_platform}" = *-64 && "${target_platform}" = *-aarch64 ]]; then
+    #     CMAKE_ARGS_BUILD=$(echo $CMAKE_ARGS_BUILD | sed 's@aarch64@x86_64@g' | sed s@$PREFIX@$BUILD_PREFIX@g)
+    # elif [[ "${build_platform}" = *-64 && "${target_platform}" = *-ppc64le ]]; then
+    #     CMAKE_ARGS_BUILD=$(echo $CMAKE_ARGS | sed 's@ppc64le@x86_64@g' | sed s@$PREFIX@$BUILD_PREFIX@g)
+    # elif [[ "${build_platform}" = *-64 && "${target_platform}" = *-arm64 ]]; then
+    #     CMAKE_ARGS_BUILD=$(echo $CMAKE_ARGS | sed 's@arm64@x86_64@g' | sed s@$PREFIX@$BUILD_PREFIX@g)
+    # else
+    #     echo "Unsupported cross-compilation target"
+    #     exit 1
+    # fi
 
     CONDA_BUILD_SYSROOT="${CONDA_BUILD_SYSROOT_BUILD}" CMAKE_PREFIX_PATH="${BUILD_PREFIX}" \
         cmake "${SRC_DIR}/root-source" \
