@@ -206,7 +206,6 @@ if [[ "${target_platform}" != "${build_platform}" ]]; then
     CMAKE_PLATFORM_FLAGS_BUILD+=("-DLLVM_TABLEGEN_EXE=${Clang_DIR_BUILD}/bin/llvm-tblgen")
     CMAKE_PLATFORM_FLAGS_BUILD+=("-DCMAKE_CXX_STANDARD=${ROOT_CXX_STANDARD}")
     CMAKE_PLATFORM_FLAGS_BUILD+=("-DROOT_CLING_TARGET=all")
-    CMAKE_PLATFORM_FLAGS_BUILD+=("-GNinja")
     CMAKE_PLATFORM_FLAGS_BUILD+=("-Dfound_urandom=ON")
     CMAKE_PLATFORM_FLAGS_BUILD+=("-DCMAKE_C_COMPILER=$CC_FOR_BUILD")
     CMAKE_PLATFORM_FLAGS_BUILD+=("-DCMAKE_CXX_COMPILER=$CXX_FOR_BUILD")
@@ -228,6 +227,7 @@ if [[ "${target_platform}" != "${build_platform}" ]]; then
     elif [[ "${target_platform}" == linux* ]]; then
         # CMAKE_PLATFORM_FLAGS_BUILD+=("-DCMAKE_LINKER=${BUILD_PREFIX}/bin/arm64-apple-darwin20.0.0-ld")
 
+        CMAKE_PLATFORM_FLAGS_BUILD+=("-GNinja")
         CONDA_BUILD_SYSROOT_BUILD="${BUILD_PREFIX}/${BUILD}/sysroot"
     else
         echo "Unsupported cross-compilation target"
@@ -273,6 +273,26 @@ if [[ "${target_platform}" != "${build_platform}" ]]; then
     mv "${SRC_DIR}/build-rootcling-xp/core/rootcling_stage1/src/rootcling_stage1"{,.orig}
     cp "${SRC_DIR}"/build-{rootcling_stage1,rootcling}-xp/"core/rootcling_stage1/src/rootcling_stage1"
     touch -r "${SRC_DIR}/build-rootcling-xp/core/rootcling_stage1/src/rootcling_stage1"{.orig,}
+    if [[ "${target_platform}" == osx* ]]; then
+        # This is a horrible hack to hide the LLVM/Clang symbols in libCling.so on macOS
+        cd ${SRC_DIR}/build-rootcling-xp/core/metacling/src
+        # First build libCling.so
+        cmake --build . -- "-j${CPU_COUNT}"
+        # Find the symbols in libCling.so
+        nm -g ../../../lib/libCling.so | ruby -ne 'if /^[0-9a-f]+.*\s(\S+)$/.match($_) then print $1,"\n" end' | sort -u > original.exp
+        # Find the symbols in the LLVM and Clang static libraries
+        nm -g ${Clang_DIR}/lib/lib{LLVM,clang}*.a | ruby -ne 'if /^[0-9a-f]+.*\s(\S+)$/.match($_) then print $1,"\n" end' | sort -u > clang_and_llvm.exp
+        # Find the difference, i.e. symbols that are in libCling.so but aren't defined in LLVM/Clang
+        comm -23 original.exp clang_and_llvm.exp > allowed_symbols.exp
+        # Add "-exported_symbols_list" to the link command
+        sed -i "s@$CXX @$CXX -exported_symbols_list $PWD/allowed_symbols.exp @g" CMakeFiles/Cling.dir/link.txt
+        # Build libCling.so again now the link command has been updated
+        cmake --build . -- "-j${CPU_COUNT}"
+        # Show some details about the number of symbols before and after in case further debugging is required
+        nm -g ../../../lib/libCling.so | ruby -ne 'if /^[0-9a-f]+.*\s(\S+)$/.match($_) then print $1,"\n" end' | sort -u > new.exp
+        wc -l *.exp
+        cd -
+    fi
     cmake --build "${SRC_DIR}/build-rootcling-xp" --target rootcling -- "-j${CPU_COUNT}"
 fi
 
