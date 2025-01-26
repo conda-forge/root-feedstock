@@ -34,13 +34,17 @@ sed -i -e "s@${OLDVERSIONMACOS}@${MACOSX_DEPLOYMENT_TARGET}@g" \
 declare -a CMAKE_PLATFORM_FLAGS
 
 if [[ "${target_platform}" != "${build_platform}" && "${target_platform}" == osx* ]]; then
-    CONDA_SUBDIR=${target_platform} conda create --prefix "${SRC_DIR}/clang_env" --yes \
-        "llvm ${clang_version}" "clangdev ${clang_version} ${clang_patches_version}*"
+    pixi init "${SRC_DIR}/clang_env2"
+    pixi add --platform=${target_platform} --manifest-path "${SRC_DIR}/clang_env2" "llvm ${clang_version}" "clangdev ${clang_version} ${clang_patches_version}*"
+    # CONDA_SUBDIR=${target_platform} conda create --prefix "${SRC_DIR}/clang_env" --yes \
+    #     "llvm ${clang_version}" "clangdev ${clang_version} ${clang_patches_version}*"
     Clang_DIR=${SRC_DIR}/clang_env
     CMAKE_PLATFORM_FLAGS+=("-DLLVM_CMAKE_PATH=${SRC_DIR}/clang_env/lib/cmake")
 
-    CONDA_SUBDIR=${build_platform} conda create --prefix "${SRC_DIR}/clang_env_build" --yes \
-        "llvm ${clang_version}" "clangdev ${clang_version} ${clang_patches_version}*"
+    pixi init "${SRC_DIR}/clang_env2"
+    pixi add --platform=${build_platform} --manifest-path "${SRC_DIR}/clang_env2" "llvm ${clang_version}" "clangdev ${clang_version} ${clang_patches_version}*"
+    # CONDA_SUBDIR=${build_platform} conda create --prefix "${SRC_DIR}/clang_env_build" --yes \
+    #     "llvm ${clang_version}" "clangdev ${clang_version} ${clang_patches_version}*"
     Clang_DIR_BUILD=${SRC_DIR}/clang_env_build
 else
     Clang_DIR=${PREFIX}
