@@ -148,7 +148,7 @@ CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_pcre=OFF")
 CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_tbb=OFF")
 CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_unuran=OFF")
 CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_vc=OFF")
-CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_vdt=ON")
+CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_vdt=OFF")
 CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_xrootd=OFF")
 CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_xxhash=OFF")
 CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_zlib=OFF")
@@ -186,6 +186,7 @@ CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_veccore=ON")
 # Cross compilation options
 if [[ "${target_platform}" != "${build_platform}" ]]; then
     CMAKE_PLATFORM_FLAGS+=("-Dfound_urandom=ON")
+    CMAKE_PLATFORM_FLAGS+=("-DTARGET_ARCHITECTURE=generic")  # for Vc
 
     # Build rootcling_stage1 for the current platform
     cp "${SRC_DIR}/root-source/interpreter/cling/lib/Interpreter/CIFactory.cpp"{,.orig}
@@ -228,6 +229,18 @@ if [[ "${target_platform}" != "${build_platform}" ]]; then
         echo "Unsupported cross-compilation target"
         exit 1
     fi
+
+    if [[ "${build_platform}" = *-64 && "${target_platform}" = *-aarch64 ]]; then
+        CMAKE_ARGS_BUILD=$(echo $CMAKE_ARGS | sed 's@aarch64@x86_64@g' | sed s@$PREFIX@$BUILD_PREFIX@g)
+    elif [[ "${build_platform}" = *-64 && "${target_platform}" = *-ppc64le ]]; then
+        CMAKE_ARGS_BUILD=$(echo $CMAKE_ARGS | sed 's@ppc64le@x86_64@g' | sed s@$PREFIX@$BUILD_PREFIX@g)
+    elif [[ "${build_platform}" = *-64 && "${target_platform}" = *-arm64 ]]; then
+        CMAKE_ARGS_BUILD=$(echo $CMAKE_ARGS | sed 's@arm64@x86_64@g' | sed s@$PREFIX@$BUILD_PREFIX@g)
+    else
+        echo "Unsupported cross-compilation target"
+        exit 1
+    fi
+
 
     CONDA_BUILD_SYSROOT="${CONDA_BUILD_SYSROOT_BUILD}" CMAKE_PREFIX_PATH="${BUILD_PREFIX}" \
         cmake "${SRC_DIR}/root-source" \
