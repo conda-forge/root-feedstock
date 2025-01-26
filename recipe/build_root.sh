@@ -220,7 +220,7 @@ if [[ "${target_platform}" != "${build_platform}" ]]; then
         clang_version_split=(${clang_version//./ })
         CMAKE_PLATFORM_FLAGS_BUILD+=("-DCLANG_RESOURCE_DIR_VERSION=${clang_version_split[0]}")
         # CMAKE_PLATFORM_FLAGS_BUILD+=("-DCMAKE_LINKER=${BUILD_PREFIX}/bin/arm64-apple-darwin20.0.0-ld")
-    else if [[ "${target_platform}" == linux* ]]; then
+    elif [[ "${target_platform}" == linux* ]]; then
         # CMAKE_PLATFORM_FLAGS_BUILD+=("-DCMAKE_LINKER=${BUILD_PREFIX}/bin/arm64-apple-darwin20.0.0-ld")
 
         CONDA_BUILD_SYSROOT_BUILD="${BUILD_PREFIX}/${BUILD}/sysroot"
