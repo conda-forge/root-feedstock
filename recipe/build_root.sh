@@ -223,11 +223,10 @@ if [[ "${target_platform}" != "${build_platform}" ]]; then
         CMAKE_PLATFORM_FLAGS_BUILD+=("-DLLVM_CMAKE_PATH=${SRC_DIR}/clang_env_build/lib/cmake")
         clang_version_split=(${clang_version//./ })
         CMAKE_PLATFORM_FLAGS_BUILD+=("-DCLANG_RESOURCE_DIR_VERSION=${clang_version_split[0]}")
-        # CMAKE_PLATFORM_FLAGS_BUILD+=("-DCMAKE_LINKER=${BUILD_PREFIX}/bin/arm64-apple-darwin20.0.0-ld")
     elif [[ "${target_platform}" == linux* ]]; then
-        # CMAKE_PLATFORM_FLAGS_BUILD+=("-DCMAKE_LINKER=${BUILD_PREFIX}/bin/arm64-apple-darwin20.0.0-ld")
-
         CMAKE_PLATFORM_FLAGS_BUILD+=("-GNinja")
+        # FIXME: Workaround due to cross-compilation issues
+        CMAKE_PLATFORM_FLAGS_BUILD+=("-Druntime_cxxmodules=OFF")
         CONDA_BUILD_SYSROOT_BUILD="${BUILD_PREFIX}/${BUILD}/sysroot"
     else
         echo "Unsupported cross-compilation target"
@@ -235,16 +234,6 @@ if [[ "${target_platform}" != "${build_platform}" ]]; then
     fi
 
     CMAKE_ARGS_BUILD=$(echo $CMAKE_ARGS | sed s@$PREFIX@$BUILD_PREFIX@g | sed s@${host_alias}@${build_alias}@g)
-    # if [[ "${build_platform}" = *-64 && "${target_platform}" = *-aarch64 ]]; then
-    #     CMAKE_ARGS_BUILD=$(echo $CMAKE_ARGS_BUILD | sed 's@aarch64@x86_64@g' | sed s@$PREFIX@$BUILD_PREFIX@g)
-    # elif [[ "${build_platform}" = *-64 && "${target_platform}" = *-ppc64le ]]; then
-    #     CMAKE_ARGS_BUILD=$(echo $CMAKE_ARGS | sed 's@ppc64le@x86_64@g' | sed s@$PREFIX@$BUILD_PREFIX@g)
-    # elif [[ "${build_platform}" = *-64 && "${target_platform}" = *-arm64 ]]; then
-    #     CMAKE_ARGS_BUILD=$(echo $CMAKE_ARGS | sed 's@arm64@x86_64@g' | sed s@$PREFIX@$BUILD_PREFIX@g)
-    # else
-    #     echo "Unsupported cross-compilation target"
-    #     exit 1
-    # fi
 
     CONDA_BUILD_SYSROOT="${CONDA_BUILD_SYSROOT_BUILD}" CMAKE_PREFIX_PATH="${BUILD_PREFIX}" \
         cmake "${SRC_DIR}/root-source" \
@@ -281,11 +270,11 @@ if [[ "${target_platform}" != "${build_platform}" ]]; then
         # Find the symbols in libCling.so
         nm -g ../../../lib/libCling.so | ruby -ne 'if /^[0-9a-f]+.*\s(\S+)$/.match($_) then print $1,"\n" end' | sort -u > original.exp
         # Find the symbols in the LLVM and Clang static libraries
-        nm -g ${Clang_DIR}/lib/lib{LLVM,clang}*.a | ruby -ne 'if /^[0-9a-f]+.*\s(\S+)$/.match($_) then print $1,"\n" end' | sort -u > clang_and_llvm.exp
+        nm -g ${Clang_DIR_BUILD}/lib/lib{LLVM,clang}*.a | ruby -ne 'if /^[0-9a-f]+.*\s(\S+)$/.match($_) then print $1,"\n" end' | sort -u > clang_and_llvm.exp
         # Find the difference, i.e. symbols that are in libCling.so but aren't defined in LLVM/Clang
         comm -23 original.exp clang_and_llvm.exp > allowed_symbols.exp
         # Add "-exported_symbols_list" to the link command
-        sed -i "s@$CXX @$CXX -exported_symbols_list $PWD/allowed_symbols.exp @g" CMakeFiles/Cling.dir/link.txt
+        sed -i "s@$CXX_FOR_BUILD @$CXX_FOR_BUILD -exported_symbols_list $PWD/allowed_symbols.exp @g" CMakeFiles/Cling.dir/link.txt
         # Build libCling.so again now the link command has been updated
         cmake --build . -- "-j${CPU_COUNT}"
         # Show some details about the number of symbols before and after in case further debugging is required
