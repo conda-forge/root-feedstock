@@ -263,7 +263,8 @@ if [[ "${target_platform}" != "${build_platform}" ]]; then
                 "${CMAKE_PLATFORM_FLAGS_BUILD[@]}" \
                 ${CMAKE_ARGS_BUILD}
 
-    cmake --build "${SRC_DIR}/build-rootcling-xp" --target rootcling_stage1 -- "-j${CPU_COUNT}"
+    CONDA_BUILD_SYSROOT="${CONDA_BUILD_SYSROOT_BUILD}" \
+        cmake --build "${SRC_DIR}/build-rootcling-xp" --target rootcling_stage1 -- "-j${CPU_COUNT}"
     mv "${SRC_DIR}/build-rootcling-xp/core/rootcling_stage1/src/rootcling_stage1"{,.orig}
     cp "${SRC_DIR}"/build-{rootcling_stage1,rootcling}-xp/"core/rootcling_stage1/src/rootcling_stage1"
     touch -r "${SRC_DIR}/build-rootcling-xp/core/rootcling_stage1/src/rootcling_stage1"{.orig,}
