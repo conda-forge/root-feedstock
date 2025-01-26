@@ -73,6 +73,8 @@ cache:
       - sed
       - make
       - ninja
+      - if: unix
+        then: gnuconfig
       # Required for OpenGL support
       # See https://conda-forge.org/docs/maintainer/knowledge_base.html?highlight=cdt#libgl
       - if: linux
@@ -121,7 +123,6 @@ cache:
       - if: linux
         then: libglu
       - libpng
-      - afterimage
       - librsvg
       - libtiff
       - libxml2
@@ -183,6 +184,7 @@ cache:
       - numba >=0.52
       - cling ==9999
       - root5 ==9999
+      - afterimage ==9999
 
 outputs:
   - package:
@@ -194,6 +196,8 @@ outputs:
             then: etc/allDict.cxx.pch
             else: lib/*.pcm
       files:
+        include:
+          - "**"
         exclude:
           - LICENSE
           - README/**
@@ -226,9 +230,8 @@ outputs:
       name: root
     build:
       files:
-        exclude:
-          - LICENSE
-          - README/**
+        include:
+          - tutorials/**
     requirements:
       host:
         - ${{ pin_subpackage('root_base', exact=True) }}

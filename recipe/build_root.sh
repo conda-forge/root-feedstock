@@ -8,6 +8,10 @@ else
     echo "Disabling sccache as it is not available"
 fi
 
+# rebuild afterimage ./configure script after patch
+cp $BUILD_PREFIX/share/gnuconfig/config.* root-source/graf2d/asimage/src/libAfterImage
+(cd root-source/graf2d/asimage/src/libAfterImage; autoconf)
+
 if [[ "${target_platform}" == "linux-"* ]]; then
   # Conda's binary relocation can result in string changing which can result in errors like
   #   > $ root.exe -l -b -q -x root-feedstock/recipe/test.cpp++
@@ -34,17 +38,13 @@ sed -i -e "s@${OLDVERSIONMACOS}@${MACOSX_DEPLOYMENT_TARGET}@g" \
 declare -a CMAKE_PLATFORM_FLAGS
 
 if [[ "${target_platform}" != "${build_platform}" && "${target_platform}" == osx* ]]; then
-    pixi init "${SRC_DIR}/clang_env2"
-    pixi add --platform=${target_platform} --manifest-path "${SRC_DIR}/clang_env2" "llvm ${clang_version}" "clangdev ${clang_version} ${clang_patches_version}*"
-    # CONDA_SUBDIR=${target_platform} conda create --prefix "${SRC_DIR}/clang_env" --yes \
-    #     "llvm ${clang_version}" "clangdev ${clang_version} ${clang_patches_version}*"
+    CONDA_SUBDIR=${target_platform} micromamba create --prefix "${SRC_DIR}/clang_env" --yes \
+        "llvm ${clang_version}" "clangdev ${clang_version} ${clang_patches_version}*"
     Clang_DIR=${SRC_DIR}/clang_env
     CMAKE_PLATFORM_FLAGS+=("-DLLVM_CMAKE_PATH=${SRC_DIR}/clang_env/lib/cmake")
 
-    pixi init "${SRC_DIR}/clang_env2"
-    pixi add --platform=${build_platform} --manifest-path "${SRC_DIR}/clang_env2" "llvm ${clang_version}" "clangdev ${clang_version} ${clang_patches_version}*"
-    # CONDA_SUBDIR=${build_platform} conda create --prefix "${SRC_DIR}/clang_env_build" --yes \
-    #     "llvm ${clang_version}" "clangdev ${clang_version} ${clang_patches_version}*"
+    CONDA_SUBDIR=${build_platform} micromamba create --prefix "${SRC_DIR}/clang_env_build" --yes \
+        "llvm ${clang_version}" "clangdev ${clang_version} ${clang_patches_version}*"
     Clang_DIR_BUILD=${SRC_DIR}/clang_env_build
 else
     Clang_DIR=${PREFIX}
@@ -133,7 +133,7 @@ CMAKE_PLATFORM_FLAGS+=("-DCMAKE_CXX_STANDARD=${ROOT_CXX_STANDARD}")
 CMAKE_PLATFORM_FLAGS+=("-DTBB_ROOT_DIR=${PREFIX}")
 
 # Disable all of the builtins
-CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_afterimage=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_afterimage=ON")
 CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_cfitsio=OFF")
 CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_davix=OFF")
 CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_fftw3=OFF")
