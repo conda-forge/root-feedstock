@@ -1,0 +1,29 @@
+From 9a37ff787be3d58eed1a75321974e6b47599b8bd Mon Sep 17 00:00:00 2001
+From: Chris Burr <christopher.burr@cern.ch>
+Date: Sun, 26 Jan 2025 19:01:14 +0100
+Subject: [PATCH 2/2] Remove cocoa afterimage overrides
+
+---
+ cmake/modules/SearchInstalledSoftware.cmake | 6 ------
+ 1 file changed, 6 deletions(-)
+
+diff --git a/cmake/modules/SearchInstalledSoftware.cmake b/cmake/modules/SearchInstalledSoftware.cmake
+index e641a71809..0f1516c7fe 100644
+--- a/cmake/modules/SearchInstalledSoftware.cmake
++++ b/cmake/modules/SearchInstalledSoftware.cmake
+@@ -521,12 +521,6 @@ if(asimage)
+     else()
+       set(_tiffinclude --with-tiff=no)
+     endif()
+-    if(cocoa)
+-      set(_jpeginclude --without-x --with-builtin-jpeg)
+-      set(_gifinclude  --with-builtin-ungif)
+-      set(_pnginclude  --with-builtin-png)
+-      set(_tiffinclude --with-tiff=no)
+-    endif()
+     if(builtin_freetype)
+       set(_ttf_include --with-ttf-includes=-I${FREETYPE_INCLUDE_DIR})
+       set(_after_cflags "${_after_cflags} -DHAVE_FREETYPE_FREETYPE -DPNG_ARM_NEON_OPT=0")
+-- 
+2.47.0
+
