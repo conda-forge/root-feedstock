@@ -225,8 +225,6 @@ if [[ "${target_platform}" != "${build_platform}" ]]; then
         CMAKE_PLATFORM_FLAGS_BUILD+=("-DCLANG_RESOURCE_DIR_VERSION=${clang_version_split[0]}")
     elif [[ "${target_platform}" == linux* ]]; then
         CMAKE_PLATFORM_FLAGS_BUILD+=("-GNinja")
-        # FIXME: Workaround due to cross-compilation issues
-        CMAKE_PLATFORM_FLAGS_BUILD+=("-Druntime_cxxmodules=OFF")
         CONDA_BUILD_SYSROOT_BUILD="${BUILD_PREFIX}/${BUILD}/sysroot"
     else
         echo "Unsupported cross-compilation target"
@@ -282,7 +280,8 @@ if [[ "${target_platform}" != "${build_platform}" ]]; then
         wc -l *.exp
         cd -
     fi
-    cmake --build "${SRC_DIR}/build-rootcling-xp" --target rootcling -- "-j${CPU_COUNT}"
+    CONDA_BUILD_SYSROOT="${CONDA_BUILD_SYSROOT_BUILD}" \
+        cmake --build "${SRC_DIR}/build-rootcling-xp" --target rootcling -- "-j${CPU_COUNT}"
 fi
 
 # Disable the Python bindings if we're building them in standalone mode
