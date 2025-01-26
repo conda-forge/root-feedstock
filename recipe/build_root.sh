@@ -241,13 +241,12 @@ if [[ "${target_platform}" != "${build_platform}" ]]; then
         exit 1
     fi
 
-
     CONDA_BUILD_SYSROOT="${CONDA_BUILD_SYSROOT_BUILD}" CMAKE_PREFIX_PATH="${BUILD_PREFIX}" \
         cmake "${SRC_DIR}/root-source" \
                 -B "${SRC_DIR}/build-rootcling_stage1-xp" \
                 -DCLING_CXX_PATH="$CXX_FOR_BUILD" \
                 "${CMAKE_PLATFORM_FLAGS_BUILD[@]}" \
-                $(echo $CMAKE_ARGS | sed 's@aarch64@x86_64@g' | sed s@$PREFIX@$BUILD_PREFIX@g)
+                ${CMAKE_ARGS_BUILD}
 
     CONDA_BUILD_SYSROOT="${CONDA_BUILD_SYSROOT_BUILD}"  \
         cmake --build "${SRC_DIR}/build-rootcling_stage1-xp" --target rootcling_stage1 -- "-j${CPU_COUNT}"
@@ -262,7 +261,7 @@ if [[ "${target_platform}" != "${build_platform}" ]]; then
                 -B "${SRC_DIR}/build-rootcling-xp" \
                 -DCLING_CXX_PATH="$CXX" \
                 "${CMAKE_PLATFORM_FLAGS_BUILD[@]}" \
-                $(echo $CMAKE_ARGS | sed 's@aarch64@x86_64@g' | sed s@$PREFIX@$BUILD_PREFIX@g)
+                ${CMAKE_ARGS_BUILD}
 
     cmake --build "${SRC_DIR}/build-rootcling-xp" --target rootcling_stage1 -- "-j${CPU_COUNT}"
     mv "${SRC_DIR}/build-rootcling-xp/core/rootcling_stage1/src/rootcling_stage1"{,.orig}
