@@ -1,17 +1,18 @@
-From 9a37ff787be3d58eed1a75321974e6b47599b8bd Mon Sep 17 00:00:00 2001
+From a8f2e19a66d37c3981ffd1f3a3a858215fa7f582 Mon Sep 17 00:00:00 2001
 From: Chris Burr <christopher.burr@cern.ch>
 Date: Sun, 26 Jan 2025 19:01:14 +0100
-Subject: [PATCH 2/2] Remove cocoa afterimage overrides
+Subject: [PATCH] Remove cocoa afterimage overrides
 
 ---
  cmake/modules/SearchInstalledSoftware.cmake | 6 ------
- 1 file changed, 6 deletions(-)
+ graf2d/asimage/CMakeLists.txt               | 4 ----
+ 2 files changed, 10 deletions(-)
 
 diff --git a/cmake/modules/SearchInstalledSoftware.cmake b/cmake/modules/SearchInstalledSoftware.cmake
-index e641a71809..0f1516c7fe 100644
+index 682de46f27..90ff5e78e6 100644
 --- a/cmake/modules/SearchInstalledSoftware.cmake
 +++ b/cmake/modules/SearchInstalledSoftware.cmake
-@@ -521,12 +521,6 @@ if(asimage)
+@@ -445,12 +445,6 @@ if(builtin_afterimage)
      else()
        set(_tiffinclude --with-tiff=no)
      endif()
@@ -24,6 +25,21 @@ index e641a71809..0f1516c7fe 100644
      if(builtin_freetype)
        set(_ttf_include --with-ttf-includes=-I${FREETYPE_INCLUDE_DIR})
        set(_after_cflags "${_after_cflags} -DHAVE_FREETYPE_FREETYPE -DPNG_ARM_NEON_OPT=0")
+diff --git a/graf2d/asimage/CMakeLists.txt b/graf2d/asimage/CMakeLists.txt
+index 31114ad45d..64b643dd01 100644
+--- a/graf2d/asimage/CMakeLists.txt
++++ b/graf2d/asimage/CMakeLists.txt
+@@ -9,10 +9,6 @@
+ # @author Pere Mato, CERN
+ ############################################################################
+ 
+-if(cocoa)  # Not needed to locate PNG, JPG, TIFF libraries
+-  set(ASEXTRA_LIBRARIES)
+-endif()
+-
+ ROOT_STANDARD_LIBRARY_PACKAGE(ASImage
+   NO_INSTALL_HEADERS
+   HEADERS
 -- 
 2.47.0
 

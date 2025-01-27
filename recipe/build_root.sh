@@ -37,17 +37,20 @@ sed -i -e "s@${OLDVERSIONMACOS}@${MACOSX_DEPLOYMENT_TARGET}@g" \
 
 declare -a CMAKE_PLATFORM_FLAGS
 
-if [[ "${target_platform}" != "${build_platform}" && "${target_platform}" == osx* ]]; then
+if [[ "${target_platform}" == osx-arm64 ]]; then
     CONDA_SUBDIR=${target_platform} conda create --prefix "${SRC_DIR}/clang_env" --yes \
         "llvm ${clang_version}" "clangdev ${clang_version} ${clang_patches_version}*"
     Clang_DIR=${SRC_DIR}/clang_env
     CMAKE_PLATFORM_FLAGS+=("-DLLVM_CMAKE_PATH=${SRC_DIR}/clang_env/lib/cmake")
+else
+    Clang_DIR=${PREFIX}
+fi
 
+if [[ "${target_platform}" != "${build_platform}" && "${target_platform}" == osx* ]]; then
     CONDA_SUBDIR=${build_platform} conda create --prefix "${SRC_DIR}/clang_env_build" --yes \
         "llvm ${clang_version}" "clangdev ${clang_version} ${clang_patches_version}*"
     Clang_DIR_BUILD=${SRC_DIR}/clang_env_build
 else
-    Clang_DIR=${PREFIX}
     Clang_DIR_BUILD=${BUILD_PREFIX}
 fi
 
@@ -439,25 +442,14 @@ if [[ "${target_platform}" == osx* ]]; then
     cd -
 fi
 
+cmake --build . -- "-j${CPU_COUNT}"
+
 if [[ "${target_platform}" != "${build_platform}" ]]; then
     # Build rootcling then substitute the binary with the host version
     cmake --build . --target rootcling -- "-j${CPU_COUNT}"
     mv bin/rootcling{,.orig}
     cp "${SRC_DIR}/build-rootcling-xp/bin/rootcling" bin/rootcling
     touch -r bin/rootcling{.orig,}
-fi
-
-if ! cmake --build . -- "-j${CPU_COUNT}"; then
-    echo "Build failed during 'cmake --build'. Debugging information from AFTERIMAGE-stamp:"
-    if [ -d "AFTERIMAGE-prefix/src/AFTERIMAGE-stamp" ]; then
-        for fn in AFTERIMAGE-prefix/src/AFTERIMAGE-stamp/*; do
-            echo "$fn"
-            cat "$fn"
-        done
-    else
-        echo "Directory AFTERIMAGE-prefix/src/AFTERIMAGE-stamp does not exist."
-    fi
-    exit 1
 fi
 
 if [[ "${target_platform}" != "${build_platform}" ]]; then
