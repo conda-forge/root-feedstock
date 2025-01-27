@@ -450,7 +450,18 @@ if [[ "${target_platform}" != "${build_platform}" ]]; then
     touch -r bin/rootcling{.orig,}
 fi
 
-cmake --build . -- "-j${CPU_COUNT}"
+if ! cmake --build . -- "-j${CPU_COUNT}"; then
+    echo "Build failed during 'cmake --build'. Debugging information from AFTERIMAGE-stamp:"
+    if [ -d "AFTERIMAGE-prefix/src/AFTERIMAGE-stamp" ]; then
+        for fn in AFTERIMAGE-prefix/src/AFTERIMAGE-stamp/*; do
+            echo "$fn"
+            cat "$fn"
+        done
+    else
+        echo "Directory AFTERIMAGE-prefix/src/AFTERIMAGE-stamp does not exist."
+    fi
+    exit 1
+fi
 
 if [[ "${target_platform}" != "${build_platform}" ]]; then
     # Restore the original rootcling_stage1/rootcling binaries
