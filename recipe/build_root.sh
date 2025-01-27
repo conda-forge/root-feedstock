@@ -266,9 +266,9 @@ if [[ "${target_platform}" != "${build_platform}" ]]; then
         # First build libCling.so
         cmake --build . -- "-j${CPU_COUNT}"
         # Find the symbols in libCling.so
-        nm -g ../../../lib/libCling.so | ruby -ne 'if /^[0-9a-f]+.*\s(\S+)$/.match($_) then print $1,"\n" end' | sort -u > original.exp
+        "${NM}" -g ../../../lib/libCling.so | ruby -ne 'if /^[0-9a-f]+.*\s(\S+)$/.match($_) then print $1,"\n" end' | sort -u > original.exp
         # Find the symbols in the LLVM and Clang static libraries
-        nm -g ${Clang_DIR_BUILD}/lib/lib{LLVM,clang}*.a | ruby -ne 'if /^[0-9a-f]+.*\s(\S+)$/.match($_) then print $1,"\n" end' | sort -u > clang_and_llvm.exp
+        "${NM}" -g ${Clang_DIR_BUILD}/lib/lib{LLVM,clang}*.a | ruby -ne 'if /^[0-9a-f]+.*\s(\S+)$/.match($_) then print $1,"\n" end' | sort -u > clang_and_llvm.exp
         # Find the difference, i.e. symbols that are in libCling.so but aren't defined in LLVM/Clang
         comm -23 original.exp clang_and_llvm.exp > allowed_symbols.exp
         # Add "-exported_symbols_list" to the link command
@@ -276,7 +276,7 @@ if [[ "${target_platform}" != "${build_platform}" ]]; then
         # Build libCling.so again now the link command has been updated
         cmake --build . -- "-j${CPU_COUNT}"
         # Show some details about the number of symbols before and after in case further debugging is required
-        nm -g ../../../lib/libCling.so | ruby -ne 'if /^[0-9a-f]+.*\s(\S+)$/.match($_) then print $1,"\n" end' | sort -u > new.exp
+        "${NM}" -g ../../../lib/libCling.so | ruby -ne 'if /^[0-9a-f]+.*\s(\S+)$/.match($_) then print $1,"\n" end' | sort -u > new.exp
         wc -l *.exp
         cd -
     fi
@@ -424,9 +424,9 @@ if [[ "${target_platform}" == osx* ]]; then
     # First build libCling.so
     cmake --build . -- "-j${CPU_COUNT}"
     # Find the symbols in libCling.so
-    nm -g ../../../lib/libCling.so | ruby -ne 'if /^[0-9a-f]+.*\s(\S+)$/.match($_) then print $1,"\n" end' | sort -u > original.exp
+    "${NM}" -g ../../../lib/libCling.so | ruby -ne 'if /^[0-9a-f]+.*\s(\S+)$/.match($_) then print $1,"\n" end' | sort -u > original.exp
     # Find the symbols in the LLVM and Clang static libraries
-    nm -g ${Clang_DIR}/lib/lib{LLVM,clang}*.a | ruby -ne 'if /^[0-9a-f]+.*\s(\S+)$/.match($_) then print $1,"\n" end' | sort -u > clang_and_llvm.exp
+    "${NM}" -g ${Clang_DIR}/lib/lib{LLVM,clang}*.a | ruby -ne 'if /^[0-9a-f]+.*\s(\S+)$/.match($_) then print $1,"\n" end' | sort -u > clang_and_llvm.exp
     # Find the difference, i.e. symbols that are in libCling.so but aren't defined in LLVM/Clang
     comm -23 original.exp clang_and_llvm.exp > allowed_symbols.exp
     # Add "-exported_symbols_list" to the link command
@@ -434,7 +434,7 @@ if [[ "${target_platform}" == osx* ]]; then
     # Build libCling.so again now the link command has been updated
     cmake --build . -- "-j${CPU_COUNT}"
     # Show some details about the number of symbols before and after in case further debugging is required
-    nm -g ../../../lib/libCling.so | ruby -ne 'if /^[0-9a-f]+.*\s(\S+)$/.match($_) then print $1,"\n" end' | sort -u > new.exp
+    "${NM}" -g ../../../lib/libCling.so | ruby -ne 'if /^[0-9a-f]+.*\s(\S+)$/.match($_) then print $1,"\n" end' | sort -u > new.exp
     wc -l *.exp
     cd -
 fi
