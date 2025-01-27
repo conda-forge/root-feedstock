@@ -192,6 +192,9 @@ if [[ "${target_platform}" != "${build_platform}" ]]; then
     CMAKE_PLATFORM_FLAGS+=("-Dfound_urandom=ON")
     CMAKE_PLATFORM_FLAGS+=("-DTARGET_ARCHITECTURE=generic")  # for Vc
 
+    sed -i.bak -E 's@(..\<TARGET_FILE\:rootcling_stage1\>)@CONDA_BUILD_SYSROOT='${CONDA_BUILD_SYSROOT_BUILD}' \1@g' $SRC_DIR/root-source/cmake/modules/RootMacros.cmake
+    diff $SRC_DIR/root-source/cmake/modules/RootMacros.cmake{.bak,} || true
+
     # Build rootcling_stage1 for the current platform
     cp "${SRC_DIR}/root-source/interpreter/cling/lib/Interpreter/CIFactory.cpp"{,.orig}
     sed -i "s@TODO_OVERRIDE_TARGET@\"--target=${BUILD}\"@g" "${SRC_DIR}/root-source/interpreter/cling/lib/Interpreter/CIFactory.cpp"
