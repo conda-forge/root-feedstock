@@ -442,8 +442,6 @@ if [[ "${target_platform}" == osx* ]]; then
     cd -
 fi
 
-cmake --build . -- "-j${CPU_COUNT}"
-
 if [[ "${target_platform}" != "${build_platform}" ]]; then
     # Build rootcling then substitute the binary with the host version
     cmake --build . --target rootcling -- "-j${CPU_COUNT}"
@@ -451,6 +449,8 @@ if [[ "${target_platform}" != "${build_platform}" ]]; then
     cp "${SRC_DIR}/build-rootcling-xp/bin/rootcling" bin/rootcling
     touch -r bin/rootcling{.orig,}
 fi
+
+cmake --build . -- "-j${CPU_COUNT}"
 
 if [[ "${target_platform}" != "${build_platform}" ]]; then
     # Restore the original rootcling_stage1/rootcling binaries
