@@ -194,6 +194,8 @@ CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_veccore=ON")
 if [[ "${target_platform}" != "${build_platform}" ]]; then
     CMAKE_PLATFORM_FLAGS+=("-Dfound_urandom=ON")
     CMAKE_PLATFORM_FLAGS+=("-DTARGET_ARCHITECTURE=generic")  # for Vc
+    # FIXME: This is a hack...
+    CMAKE_PLATFORM_FLAGS+=("-Druntime_cxxmodules=OFF")
 
     if [[ "${target_platform}" == linux-ppc64le ]]; then
         sed -i.bak -E 's@(..\<TARGET_FILE\:rootcling_stage1\>)@CONDA_BUILD_SYSROOT='${CONDA_BUILD_SYSROOT_BUILD}' \1@g' $SRC_DIR/root-source/cmake/modules/RootMacros.cmake
@@ -224,6 +226,7 @@ if [[ "${target_platform}" != "${build_platform}" ]]; then
     CMAKE_PLATFORM_FLAGS_BUILD+=("-DCMAKE_EXE_LINKER_FLAGS=$(echo $LDFLAGS | sed s@$PREFIX@$BUILD_PREFIX@g)")
     CMAKE_PLATFORM_FLAGS_BUILD+=("-DCMAKE_MODULE_LINKER_FLAGS=$(echo $LDFLAGS | sed s@$PREFIX@$BUILD_PREFIX@g)")
     CMAKE_PLATFORM_FLAGS_BUILD+=("-DCMAKE_SHARED_LINKER_FLAGS=$(echo $LDFLAGS | sed s@$PREFIX@$BUILD_PREFIX@g)")
+    CMAKE_PLATFORM_FLAGS_BUILD+=("-Druntime_cxxmodules=OFF")
 
     CONDA_BUILD_SYSROOT_BUILD=$CONDA_BUILD_SYSROOT
 
