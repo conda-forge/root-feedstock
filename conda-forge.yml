@@ -7,8 +7,6 @@ build_platform:
   osx_arm64: osx_64
 conda_build:
   pkg_format: '2'
-# DEBUG: validation falls over lack of --experimental support
-conda_forge_output_validation: false
 github:
   branch_name: main
   tooling_branch_name: main
