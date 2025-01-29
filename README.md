@@ -11,7 +11,6 @@ Summary: ROOT is a modular scientific software toolkit. It provides all the func
 processing, statistical analysis, visualisation and storage. It is mainly written in C++ but integrated with other
 languages such as Python and R.
 
-
 Development: https://github.com/root-project/root/
 
 Documentation: https://root.cern/documentation
@@ -38,9 +37,6 @@ having a runtime dependency on the `compilers` package. `root-dependencies` and 
 In most cases users should use the `root` package directly, since it adds both of these, along with compilers,
 Jupyter, and a few other things to facilitate using ROOT or PyROOT.
 
-ROOT was built with and will report `-std=c++17` from `root-config`.
-
-
 Current build status
 ====================
 
@@ -59,143 +55,178 @@ Current build status
         <table>
           <thead><tr><th>Variant</th><th>Status</th></tr></thead>
           <tbody><tr>
-              <td>linux_64_python3.10.____cpython</td>
+              <td>linux_64_numpy2.0python3.10.____cpython</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2612&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/root-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_python3.10.____cpython" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/root-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_numpy2.0python3.10.____cpython" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>linux_64_python3.11.____cpython</td>
+              <td>linux_64_numpy2.0python3.11.____cpython</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2612&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/root-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_python3.11.____cpython" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/root-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_numpy2.0python3.11.____cpython" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>linux_64_python3.12.____cpython</td>
+              <td>linux_64_numpy2.0python3.12.____cpython</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2612&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/root-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_python3.12.____cpython" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/root-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_numpy2.0python3.12.____cpython" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>linux_64_python3.9.____cpython</td>
+              <td>linux_64_numpy2.0python3.9.____cpython</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2612&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/root-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_python3.9.____cpython" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/root-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_numpy2.0python3.9.____cpython" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>linux_aarch64_python3.10.____cpython</td>
+              <td>linux_64_numpy2python3.13.____cp313</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2612&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/root-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_aarch64_python3.10.____cpython" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/root-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_numpy2python3.13.____cp313" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>linux_aarch64_python3.11.____cpython</td>
+              <td>linux_aarch64_numpy2.0python3.10.____cpython</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2612&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/root-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_aarch64_python3.11.____cpython" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/root-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_aarch64_numpy2.0python3.10.____cpython" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>linux_aarch64_python3.12.____cpython</td>
+              <td>linux_aarch64_numpy2.0python3.11.____cpython</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2612&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/root-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_aarch64_python3.12.____cpython" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/root-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_aarch64_numpy2.0python3.11.____cpython" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>linux_aarch64_python3.9.____cpython</td>
+              <td>linux_aarch64_numpy2.0python3.12.____cpython</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2612&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/root-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_aarch64_python3.9.____cpython" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/root-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_aarch64_numpy2.0python3.12.____cpython" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>linux_ppc64le_python3.10.____cpython</td>
+              <td>linux_aarch64_numpy2.0python3.9.____cpython</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2612&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/root-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_ppc64le_python3.10.____cpython" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/root-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_aarch64_numpy2.0python3.9.____cpython" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>linux_ppc64le_python3.11.____cpython</td>
+              <td>linux_aarch64_numpy2python3.13.____cp313</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2612&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/root-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_ppc64le_python3.11.____cpython" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/root-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_aarch64_numpy2python3.13.____cp313" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>linux_ppc64le_python3.12.____cpython</td>
+              <td>linux_ppc64le_numpy2.0python3.10.____cpython</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2612&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/root-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_ppc64le_python3.12.____cpython" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/root-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_ppc64le_numpy2.0python3.10.____cpython" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>linux_ppc64le_python3.9.____cpython</td>
+              <td>linux_ppc64le_numpy2.0python3.11.____cpython</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2612&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/root-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_ppc64le_python3.9.____cpython" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/root-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_ppc64le_numpy2.0python3.11.____cpython" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>osx_64_python3.10.____cpython</td>
+              <td>linux_ppc64le_numpy2.0python3.12.____cpython</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2612&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/root-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_64_python3.10.____cpython" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/root-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_ppc64le_numpy2.0python3.12.____cpython" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>osx_64_python3.11.____cpython</td>
+              <td>linux_ppc64le_numpy2.0python3.9.____cpython</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2612&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/root-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_64_python3.11.____cpython" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/root-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_ppc64le_numpy2.0python3.9.____cpython" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>osx_64_python3.12.____cpython</td>
+              <td>linux_ppc64le_numpy2python3.13.____cp313</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2612&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/root-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_64_python3.12.____cpython" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/root-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_ppc64le_numpy2python3.13.____cp313" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>osx_64_python3.9.____cpython</td>
+              <td>osx_64_numpy2.0python3.10.____cpython</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2612&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/root-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_64_python3.9.____cpython" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/root-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_64_numpy2.0python3.10.____cpython" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>osx_arm64_python3.10.____cpython</td>
+              <td>osx_64_numpy2.0python3.11.____cpython</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2612&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/root-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_arm64_python3.10.____cpython" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/root-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_64_numpy2.0python3.11.____cpython" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>osx_arm64_python3.11.____cpython</td>
+              <td>osx_64_numpy2.0python3.12.____cpython</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2612&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/root-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_arm64_python3.11.____cpython" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/root-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_64_numpy2.0python3.12.____cpython" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>osx_arm64_python3.12.____cpython</td>
+              <td>osx_64_numpy2.0python3.9.____cpython</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2612&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/root-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_arm64_python3.12.____cpython" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/root-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_64_numpy2.0python3.9.____cpython" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>osx_arm64_python3.9.____cpython</td>
+              <td>osx_64_numpy2python3.13.____cp313</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2612&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/root-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_arm64_python3.9.____cpython" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/root-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_64_numpy2python3.13.____cp313" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>osx_arm64_numpy2.0python3.10.____cpython</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2612&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/root-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_arm64_numpy2.0python3.10.____cpython" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>osx_arm64_numpy2.0python3.11.____cpython</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2612&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/root-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_arm64_numpy2.0python3.11.____cpython" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>osx_arm64_numpy2.0python3.12.____cpython</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2612&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/root-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_arm64_numpy2.0python3.12.____cpython" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>osx_arm64_numpy2.0python3.9.____cpython</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2612&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/root-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_arm64_numpy2.0python3.9.____cpython" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>osx_arm64_numpy2python3.13.____cp313</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=2612&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/root-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_arm64_numpy2python3.13.____cp313" alt="variant">
                 </a>
               </td>
             </tr>

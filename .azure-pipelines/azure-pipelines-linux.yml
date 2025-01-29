@@ -8,70 +8,106 @@ jobs:
     vmImage: ubuntu-latest
   strategy:
     matrix:
-      linux_64_python3.10.____cpython:
-        CONFIG: linux_64_python3.10.____cpython
+      linux_64_numpy2.0python3.10.____cpython:
+        CONFIG: linux_64_numpy2.0python3.10.____cpython
         UPLOAD_PACKAGES: 'True'
-        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
-        SHORT_CONFIG: linux_64_python3.10.____cpython
-      linux_64_python3.11.____cpython:
-        CONFIG: linux_64_python3.11.____cpython
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:cos7
+        SHORT_CONFIG: linux_64_numpy2.0python3.10.____cpython
+      linux_64_numpy2.0python3.11.____cpython:
+        CONFIG: linux_64_numpy2.0python3.11.____cpython
         UPLOAD_PACKAGES: 'True'
-        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
-        SHORT_CONFIG: linux_64_python3.11.____cpython
-      linux_64_python3.12.____cpython:
-        CONFIG: linux_64_python3.12.____cpython
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:cos7
+        SHORT_CONFIG: linux_64_numpy2.0python3.11.____cpython
+      linux_64_numpy2.0python3.12.____cpython:
+        CONFIG: linux_64_numpy2.0python3.12.____cpython
         UPLOAD_PACKAGES: 'True'
-        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
-        SHORT_CONFIG: linux_64_python3.12.____cpython
-      linux_64_python3.9.____cpython:
-        CONFIG: linux_64_python3.9.____cpython
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:cos7
+        SHORT_CONFIG: linux_64_numpy2.0python3.12.____cpython
+      linux_64_numpy2.0python3.9.____cpython:
+        CONFIG: linux_64_numpy2.0python3.9.____cpython
         UPLOAD_PACKAGES: 'True'
-        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
-        SHORT_CONFIG: linux_64_python3.9.____cpython
-      linux_aarch64_python3.10.____cpython:
-        CONFIG: linux_aarch64_python3.10.____cpython
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:cos7
+        SHORT_CONFIG: linux_64_numpy2.0python3.9.____cpython
+      linux_64_numpy2python3.13.____cp313:
+        CONFIG: linux_64_numpy2python3.13.____cp313
         UPLOAD_PACKAGES: 'True'
-        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
-        SHORT_CONFIG: linux_aarch64_python3.10.____cpython
-      linux_aarch64_python3.11.____cpython:
-        CONFIG: linux_aarch64_python3.11.____cpython
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:cos7
+        SHORT_CONFIG: linux_64_numpy2python3.13.____cp313
+      linux_aarch64_numpy2.0python3.10.____cpython:
+        CONFIG: linux_aarch64_numpy2.0python3.10.____cpython
         UPLOAD_PACKAGES: 'True'
-        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
-        SHORT_CONFIG: linux_aarch64_python3.11.____cpython
-      linux_aarch64_python3.12.____cpython:
-        CONFIG: linux_aarch64_python3.12.____cpython
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:cos7
+        SHORT_CONFIG: linux_aarch64_numpy2.0python3.10.____cpython
+      linux_aarch64_numpy2.0python3.11.____cpython:
+        CONFIG: linux_aarch64_numpy2.0python3.11.____cpython
         UPLOAD_PACKAGES: 'True'
-        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
-        SHORT_CONFIG: linux_aarch64_python3.12.____cpython
-      linux_aarch64_python3.9.____cpython:
-        CONFIG: linux_aarch64_python3.9.____cpython
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:cos7
+        SHORT_CONFIG: linux_aarch64_numpy2.0python3.11.____cpython
+      linux_aarch64_numpy2.0python3.12.____cpython:
+        CONFIG: linux_aarch64_numpy2.0python3.12.____cpython
         UPLOAD_PACKAGES: 'True'
-        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
-        SHORT_CONFIG: linux_aarch64_python3.9.____cpython
-      linux_ppc64le_python3.10.____cpython:
-        CONFIG: linux_ppc64le_python3.10.____cpython
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:cos7
+        SHORT_CONFIG: linux_aarch64_numpy2.0python3.12.____cpython
+      linux_aarch64_numpy2.0python3.9.____cpython:
+        CONFIG: linux_aarch64_numpy2.0python3.9.____cpython
         UPLOAD_PACKAGES: 'True'
-        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
-        SHORT_CONFIG: linux_ppc64le_python3.10.____cpython
-      linux_ppc64le_python3.11.____cpython:
-        CONFIG: linux_ppc64le_python3.11.____cpython
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:cos7
+        SHORT_CONFIG: linux_aarch64_numpy2.0python3.9.____cpython
+      linux_aarch64_numpy2python3.13.____cp313:
+        CONFIG: linux_aarch64_numpy2python3.13.____cp313
         UPLOAD_PACKAGES: 'True'
-        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
-        SHORT_CONFIG: linux_ppc64le_python3.11.____cpython
-      linux_ppc64le_python3.12.____cpython:
-        CONFIG: linux_ppc64le_python3.12.____cpython
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:cos7
+        SHORT_CONFIG: linux_aarch64_numpy2python3.13.____cp313
+      linux_ppc64le_numpy2.0python3.10.____cpython:
+        CONFIG: linux_ppc64le_numpy2.0python3.10.____cpython
         UPLOAD_PACKAGES: 'True'
-        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
-        SHORT_CONFIG: linux_ppc64le_python3.12.____cpython
-      linux_ppc64le_python3.9.____cpython:
-        CONFIG: linux_ppc64le_python3.9.____cpython
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:cos7
+        SHORT_CONFIG: linux_ppc64le_numpy2.0python3.10.____cpython
+      linux_ppc64le_numpy2.0python3.11.____cpython:
+        CONFIG: linux_ppc64le_numpy2.0python3.11.____cpython
         UPLOAD_PACKAGES: 'True'
-        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
-        SHORT_CONFIG: linux_ppc64le_python3.9.____cpython
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:cos7
+        SHORT_CONFIG: linux_ppc64le_numpy2.0python3.11.____cpython
+      linux_ppc64le_numpy2.0python3.12.____cpython:
+        CONFIG: linux_ppc64le_numpy2.0python3.12.____cpython
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:cos7
+        SHORT_CONFIG: linux_ppc64le_numpy2.0python3.12.____cpython
+      linux_ppc64le_numpy2.0python3.9.____cpython:
+        CONFIG: linux_ppc64le_numpy2.0python3.9.____cpython
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:cos7
+        SHORT_CONFIG: linux_ppc64le_numpy2.0python3.9.____cpython
+      linux_ppc64le_numpy2python3.13.____cp313:
+        CONFIG: linux_ppc64le_numpy2python3.13.____cp313
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:cos7
+        SHORT_CONFIG: linux_ppc64le_numpy2python3.13.____cp313
   timeoutInMinutes: 360
   variables: {}
 
   steps:
+  - script: |
+         sudo mkdir -p /opt/empty_dir || true
+         for d in \
+                  /opt/ghc \
+                  /opt/hostedtoolcache \
+                  /usr/lib/jvm \
+                  /usr/local/.ghcup \
+                  /usr/local/lib/android \
+                  /usr/local/share/powershell \
+                  /usr/share/dotnet \
+                  /usr/share/swift \
+                  ; do
+           sudo rsync --stats -a --delete /opt/empty_dir/ $d || true
+         done
+         sudo apt-get purge -y -f firefox \
+                                  google-chrome-stable \
+                                  microsoft-edge-stable
+         sudo apt-get autoremove -y >& /dev/null
+         sudo apt-get autoclean -y >& /dev/null
+         df -h
+    displayName: Manage disk space
   # configure qemu binfmt-misc running.  This allows us to run docker containers
   # embedded qemu-static
   - script: |
@@ -96,8 +132,6 @@ jobs:
     displayName: Run docker build
     env:
       BINSTAR_TOKEN: $(BINSTAR_TOKEN)
-      FEEDSTOCK_TOKEN: $(FEEDSTOCK_TOKEN)
-      STAGING_BINSTAR_TOKEN: $(STAGING_BINSTAR_TOKEN)
   - script: |
         export CI=azure
         export CI_RUN_ID=$(build.BuildNumber).$(system.JobAttempt)

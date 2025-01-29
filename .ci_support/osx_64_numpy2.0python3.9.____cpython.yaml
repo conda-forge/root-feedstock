@@ -1,27 +1,27 @@
+MACOSX_DEPLOYMENT_TARGET:
+- '11.0'
+MACOSX_SDK_VERSION:
+- '11.0'
 c_compiler:
-- gcc
+- clang
 c_compiler_version:
-- '13'
+- '18'
 c_stdlib:
-- sysroot
+- macosx_deployment_target
 c_stdlib_version:
-- '2.17'
-cdt_name:
-- cos7
+- '11.0'
 cfitsio:
-- 4.4.1
+- 4.5.0
 channel_sources:
 - conda-forge
 channel_targets:
 - conda-forge main
 cxx_compiler:
-- gxx
+- clangxx
 cxx_compiler_version:
-- '13'
+- '18'
 davix:
 - '0.8'
-docker_image:
-- quay.io/condaforge/linux-anvil-cos7-x86_64
 fftw:
 - '3'
 freetype:
@@ -39,19 +39,23 @@ graphviz:
 gsl:
 - '2.7'
 libblas:
-- 3.9 *netlib
+- 3.9.* *netlib
 libcblas:
-- 3.9 *netlib
+- 3.9.* *netlib
+liblzma_devel:
+- '5'
 libpng:
 - '1.6'
 librsvg:
 - '2'
 libtiff:
-- '4.6'
+- '4.7'
 libxml2:
 - '2'
 lz4_c:
-- 1.9.3
+- '1.10'
+macos_machine:
+- x86_64-apple-darwin13.4.0
 numpy:
 - '2.0'
 openssl:
@@ -64,23 +68,21 @@ pin_run_as_build:
     max_pin: x.x
 python:
 - 3.9.* *_cpython
+root_base:
+- 6.32.2
 sqlite:
 - '3'
 target_platform:
-- linux-ppc64le
+- osx-64
 tbb:
 - '2021'
 tbb_devel:
 - '2021'
 xrootd:
 - '5'
-xz:
-- '5'
 zip_keys:
 - - c_compiler_version
   - cxx_compiler_version
-- - c_stdlib_version
-  - cdt_name
 - - python
   - numpy
 zlib:

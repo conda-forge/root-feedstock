@@ -1,12 +1,14 @@
 azure:
   store_build_artifacts: true
+  free_disk_space: true
 build_platform:
   linux_aarch64: linux_64
   linux_ppc64le: linux_64
   osx_arm64: osx_64
 conda_build:
   pkg_format: '2'
-conda_forge_output_validation: true
+# DEBUG: validation falls over lack of --experimental support
+conda_forge_output_validation: false
 github:
   branch_name: main
   tooling_branch_name: main
@@ -17,3 +19,5 @@ provider:
   linux_ppc64le: default
   osx_arm64: default
 test: native
+conda_build_tool: rattler-build
+conda_install_tool: micromamba

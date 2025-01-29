@@ -1,5 +1,3 @@
-BUILD:
-- aarch64-conda_cos7-linux-gnu
 c_compiler:
 - gcc
 c_compiler_version:
@@ -8,12 +6,10 @@ c_stdlib:
 - sysroot
 c_stdlib_version:
 - '2.17'
-cdt_arch:
-- aarch64
 cdt_name:
-- cos7
+- conda
 cfitsio:
-- 4.4.1
+- 4.5.0
 channel_sources:
 - conda-forge
 channel_targets:
@@ -25,7 +21,7 @@ cxx_compiler_version:
 davix:
 - '0.8'
 docker_image:
-- quay.io/condaforge/linux-anvil-cos7-x86_64
+- quay.io/condaforge/linux-anvil-x86_64:cos7
 fftw:
 - '3'
 freetype:
@@ -43,19 +39,21 @@ graphviz:
 gsl:
 - '2.7'
 libblas:
-- 3.9 *netlib
+- 3.9.* *netlib
 libcblas:
-- 3.9 *netlib
+- 3.9.* *netlib
+liblzma_devel:
+- '5'
 libpng:
 - '1.6'
 librsvg:
 - '2'
 libtiff:
-- '4.6'
+- '4.7'
 libxml2:
 - '2'
 lz4_c:
-- 1.9.3
+- '1.10'
 numpy:
 - '2.0'
 openssl:
@@ -67,24 +65,22 @@ pin_run_as_build:
     min_pin: x.x
     max_pin: x.x
 python:
-- 3.9.* *_cpython
+- 3.12.* *_cpython
+root_base:
+- 6.32.2
 sqlite:
 - '3'
 target_platform:
-- linux-aarch64
+- linux-ppc64le
 tbb:
 - '2021'
 tbb_devel:
 - '2021'
 xrootd:
 - '5'
-xz:
-- '5'
 zip_keys:
 - - c_compiler_version
   - cxx_compiler_version
-- - c_stdlib_version
-  - cdt_name
 - - python
   - numpy
 zlib:

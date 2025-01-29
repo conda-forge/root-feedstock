@@ -1,0 +1,65 @@
+From 747993d16a8cb3b1e0d8fd7ff556dcbe5497850f Mon Sep 17 00:00:00 2001
+From: Chris Burr <christopher.burr@cern.ch>
+Date: Mon, 27 Jan 2025 13:38:17 +0100
+Subject: [PATCH] Detect which ar binary should be used to build libAfterImage
+
+---
+ graf2d/asimage/src/libAfterImage/Makefile.in  |  7 ++++---
+ graf2d/asimage/src/libAfterImage/configure.in | 16 ++++++++++++++++
+ 2 files changed, 20 insertions(+), 3 deletions(-)
+
+diff --git a/graf2d/asimage/src/libAfterImage/Makefile.in b/graf2d/asimage/src/libAfterImage/Makefile.in
+index 7729775f54..e0a4c64b50 100644
+--- a/graf2d/asimage/src/libAfterImage/Makefile.in
++++ b/graf2d/asimage/src/libAfterImage/Makefile.in
+@@ -78,7 +78,8 @@ CCFLAGS         = @CFLAGS@  @MMX_CFLAGS@
+ EXTRA_DEFINES	= @DEFINE_XLOCALE@
+ 
+ RANLIB		= @RANLIB@
+-AR		= ar cq
++AR			= @AR@
++ARFLAGS		= @ARFLAGS@
+ CP		= @CP@
+ MV		= @MV@
+ RM		= @RM@
+@@ -320,8 +321,8 @@ apps: 	@APPSDEPS@
+ 
+ $(LIB_STATIC):	$(LIB_OBJS) $(LIB_INCS) config.h
+ 		$(RMF) $(LIB_STATIC)
+-		$(AR) $(LIB_STATIC) $(LIB_OBJS)
+-		$(RANLIB) $(LIB_STATIC)
++		$(AR) $(ARFLAGS) $@ $(LIB_OBJS)
++		$(RANLIB) $@
+ 
+ test_asstorage.o: asstorage.c
+ 		$(CC) $(CCFLAGS) $(EXTRA_DEFINES) -DTEST_ASSTORAGE $(INCLUDES) $(EXTRA_INCLUDES) -c asstorage.c -o test_asstorage.o
+diff --git a/graf2d/asimage/src/libAfterImage/configure.in b/graf2d/asimage/src/libAfterImage/configure.in
+index 2a479be9e1..1cbf9a521d 100644
+--- a/graf2d/asimage/src/libAfterImage/configure.in
++++ b/graf2d/asimage/src/libAfterImage/configure.in
+@@ -75,6 +75,22 @@ AC_ARG_WITH(afterbase_includes, [  --with-afterbase-includes=DIR  use libAfterBa
+ dnl# Check for compiler tools
+ 
+ AC_PROG_CC
++
++# Check for ar program
++AC_CHECK_TOOL([AR], [ar], [ar])
++if test "x$AR" = "x"; then
++  AC_MSG_ERROR([ar not found - cannot create static libraries])
++fi
++
++# Allow AR to be overridden
++AC_ARG_VAR([AR], [Archive creator command]) 
++
++# Default ar flags if not set
++if test "x$ARFLAGS" = "x"; then
++  ARFLAGS="cru"
++fi
++AC_SUBST([ARFLAGS])
++
+ AC_PROG_LN_S
+ dnl# AC_SUBST(CC)
+ dnl# AC_SUBST(GCC)
+-- 
+2.47.0
+
