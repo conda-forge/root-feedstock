@@ -17,10 +17,6 @@ recipe:
   name: root
   version: ${{ tag_name | replace("-", ".") }}
 
-build:
-  number: ${{ build_number }}
-  skip: win
-
 source:
   url: https://github.com/root-project/root/archive/refs/tags/v${{ tag_name }}.tar.gz
   sha256: 6c6616953e44c3979af596ddde7bcd51ac6786fd9f9b35ec0c8cf72213f8d7d4
@@ -51,6 +47,10 @@ source:
     - 0001-Enforce-fail-on-missing-with-afterimage-dependencies.patch
     - 0002-Remove-cocoa-afterimage-overrides.patch
     - 0001-Detect-which-ar-binary-should-be-used-to-build-libAf.patch
+
+build:
+  number: ${{ build_number }}
+  skip: win
 
 outputs:
   - package:
@@ -108,7 +108,7 @@ outputs:
             - zlib
             - zstd
             - freetype
-            - xz
+            - liblzma-devel
         - if: build_platform != target_platform and not osx
           then:
             - llvm ${{ clang_version }}.*
@@ -166,7 +166,7 @@ outputs:
             - xorg-libxft
             - xorg-libxpm
         - xrootd
-        - xz
+        - liblzma-devel
         # FIXME: The generated allDict.cxx.pch is dependent on version of the C++ headers used
         - xxhash
         - zlib
