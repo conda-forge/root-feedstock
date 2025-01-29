@@ -1,12 +1,12 @@
 #!/bin/bash
 set -x
 
-if command -v sccache &> /dev/null; then
-    export CMAKE_C_COMPILER_LAUNCHER=sccache
-    export CMAKE_CXX_COMPILER_LAUNCHER=sccache
-else
-    echo "Disabling sccache as it is not available"
-fi
+# if command -v sccache &> /dev/null; then
+#     export CMAKE_C_COMPILER_LAUNCHER=sccache
+#     export CMAKE_CXX_COMPILER_LAUNCHER=sccache
+# else
+#     echo "Disabling sccache as it is not available"
+# fi
 
 # rebuild afterimage ./configure script after patch
 cp $BUILD_PREFIX/share/gnuconfig/config.* root-source/graf2d/asimage/src/libAfterImage
@@ -197,14 +197,9 @@ if [[ "${target_platform}" != "${build_platform}" ]]; then
     # FIXME: This is a hack...
     CMAKE_PLATFORM_FLAGS+=("-Druntime_cxxmodules=OFF")
 
-    if [[ "${target_platform}" == linux-ppc64le ]]; then
-        sed -i.bak -E 's@(..\<TARGET_FILE\:rootcling_stage1\>)@CONDA_BUILD_SYSROOT='${CONDA_BUILD_SYSROOT_BUILD}' \1@g' $SRC_DIR/root-source/cmake/modules/RootMacros.cmake
-        diff $SRC_DIR/root-source/cmake/modules/RootMacros.cmake{.bak,} || true
-    fi
-
     # Build rootcling_stage1 for the current platform
     cp "${SRC_DIR}/root-source/interpreter/cling/lib/Interpreter/CIFactory.cpp"{,.orig}
-    sed -i "s@TODO_OVERRIDE_TARGET@\"--target=${BUILD}\"@g" "${SRC_DIR}/root-source/interpreter/cling/lib/Interpreter/CIFactory.cpp"
+    sed -i "s@TODO_OVERRIDE_TARGET@\"--target=$(echo "${BUILD}" | sed 's@powerpc64le@ppc64le@g')\"@g" "${SRC_DIR}/root-source/interpreter/cling/lib/Interpreter/CIFactory.cpp"
     diff "${SRC_DIR}/root-source/interpreter/cling/lib/Interpreter/CIFactory.cpp"{.orig,} || true
 
     declare -a CMAKE_PLATFORM_FLAGS_BUILD
@@ -242,6 +237,14 @@ if [[ "${target_platform}" != "${build_platform}" ]]; then
         exit 1
     fi
 
+    if [[ "${target_platform}" == "linux-ppc64le" ]]; then
+        mv "${CONDA_BUILD_SYSROOT}/usr/include/bits/wordsize.h"{,.orig}
+        sed -E 's@(#if defined __powerpc64__)@#define __powerpc64__ 1\n#define _CALL_ELF 2\n\1@' \
+            "${CONDA_BUILD_SYSROOT}/usr/include/bits/wordsize.h.orig" \
+            > "${CONDA_BUILD_SYSROOT}/usr/include/bits/wordsize.h"
+        diff "${CONDA_BUILD_SYSROOT}/usr/include/bits/wordsize.h"{.orig,} || true
+    fi
+
     CMAKE_ARGS_BUILD=$(echo $CMAKE_ARGS | sed s@$PREFIX@$BUILD_PREFIX@g | sed s@${host_alias}@${build_alias}@g)
 
     CONDA_BUILD_SYSROOT="${CONDA_BUILD_SYSROOT_BUILD}" CMAKE_PREFIX_PATH="${BUILD_PREFIX}" \
@@ -256,7 +259,7 @@ if [[ "${target_platform}" != "${build_platform}" ]]; then
 
     # Build rootcling for the current platform but that will target the host platform
     cp ${SRC_DIR}/root-source/interpreter/cling/lib/Interpreter/CIFactory.cpp{.orig,}
-    sed -i "s@TODO_OVERRIDE_TARGET@\"--target=${HOST}\"@g" ${SRC_DIR}/root-source/interpreter/cling/lib/Interpreter/CIFactory.cpp
+    sed -i "s@TODO_OVERRIDE_TARGET@\"--target=$(echo "${HOST}" | sed 's@powerpc64le@ppc64le@g')\"@g" ${SRC_DIR}/root-source/interpreter/cling/lib/Interpreter/CIFactory.cpp
     diff ${SRC_DIR}/root-source/interpreter/cling/lib/Interpreter/CIFactory.cpp{.orig,} || true
 
     CONDA_BUILD_SYSROOT="${CONDA_BUILD_SYSROOT_BUILD}" CMAKE_PREFIX_PATH="${BUILD_PREFIX}" \
