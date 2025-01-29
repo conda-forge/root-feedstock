@@ -33,9 +33,6 @@ echo "Cleaning up micromamba"
 rm -rf "${MAMBA_ROOT_PREFIX}" "${micromamba_exe}" || true
 ( endgroup "Provisioning base env with micromamba" ) 2> /dev/null
 
-# build portion of https://github.com/conda-forge/conda-smithy/issues/2057
-EXTRA_CB_OPTIONS="${EXTRA_CB_OPTIONS:-} --experimental"
-
 ( startgroup "Configuring conda" ) 2> /dev/null
 echo "Activating environment"
 source "${MINIFORGE_HOME}/etc/profile.d/conda.sh"
