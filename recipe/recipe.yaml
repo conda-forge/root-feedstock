@@ -21,178 +21,50 @@ build:
   number: ${{ build_number }}
   skip: win
 
-cache:
-  source:
-    url: https://github.com/root-project/root/archive/refs/tags/v${{ tag_name }}.tar.gz
-    sha256: 6c6616953e44c3979af596ddde7bcd51ac6786fd9f9b35ec0c8cf72213f8d7d4
-    target_directory: root-source
-    patches:
-      - patches/root-x.xx.xx_cling-runtime-sysroot.patch
-      - if: osx
-        then: patches/root-x.xx.xx-osx-remove-hardcoded-sysroot.patch
-      - patches/0001-Hacks.patch
-      - patches/0001-Patch-for-apple-silicon.patch
-      - patches/0001-Set-LLVM_REQUIRES_EH-for-Cling.patch
-      - if: build_platform != target_platform
-        then: patches/disable-hsimple.root
-      - patches/0001-Reset-CMAKE-module-path-for-interpreter.patch
-      - if: osx
-        then:
-          - patches/0001-force-one-modulemap-for-darwin.patch
-          - patches/0001-Remove-check-for-SDK-version-in-CIFactory.patch
-          - patches/0001-avoid-linking-TPython-against-libPython.patch
-      - patches/0001-Hackily-fix-cross-compilation.patch
-      - 0002-Debugging.patch
-      - PR-15804.patch
-      - pr-17269.patch
-      # - 0001-Support-getting-rootcling_stage1-from-external-build.patch
-      - if: build_platform != target_platform
-        then:
-          - 0002-HACK-Support-overriding-triplet-used-by-cling.patch
-      - 0001-Enforce-fail-on-missing-with-afterimage-dependencies.patch
-      - 0002-Remove-cocoa-afterimage-overrides.patch
-      - 0001-Detect-which-ar-binary-should-be-used-to-build-libAf.patch
-
-  build:
-    script:
-      file: build_root.sh
-      env:
-        clang_version: ${{ clang_version }}
-        clang_patches_version: ${{ clang_patches_version }}
-        ROOT_CONDA_BUILTIN_PYROOT: ${{ builtin_pyroot }}
-        ROOT_CXX_STANDARD: ${{ root_cxx_standard }}
-    dynamic_linking:
-      overdepending_behavior: ignore
-
-  requirements:
-    build:
-      - ${{ compiler('c') }}
-      - ${{ compiler('cxx') }}
-      - ${{ stdlib("c") }}
-      - autoconf
-      - cmake
-      - git
-      - pkg-config
-      - sed
-      - make
-      - ninja
-      - if: unix
-        then: gnuconfig
-      # Required for OpenGL support
-      # See https://conda-forge.org/docs/maintainer/knowledge_base.html?highlight=cdt#libgl
-      - if: linux
-        then:
-          - ${{ cdt('mesa-libgl-devel') }}
-          - ${{ cdt('mesa-dri-drivers') }}
-          - ${{ cdt('libselinux') }}
-          - ${{ cdt('libxdamage') }}
-          - ${{ cdt('libxxf86vm') }}
-      - if: build_platform != target_platform
-        then:
-          - cross-python_${{ target_platform }}
-          - python
-          - numpy
-          - xxhash
-          - zlib
-          - zstd
-          - freetype
-          - xz
-      - if: build_platform != target_platform and not osx
-        then:
-          - llvm ${{ clang_version }}.*
-          - llvmdev ${{ clang_version }}.*
-          - clangdev ${{ clang_version }}.* ${{ clang_patches_version }}*
-    host:
-      - libblas
-      - libcblas
-      - if: linux
-        then:
-          - ${{ compiler('c') }}
-          - ${{ compiler('cxx') }}
-      - ${{ stdlib("c") }}
-      - cfitsio
-      - davix
-      - fftw
-      - freetype
-      - ftgl
-      - gdk-pixbuf
-      - giflib
-      - glew
-      - glib
-      - gl2ps
-      - graphviz
-      - gsl
-      - gtest
-      - if: linux
-        then: libglu
-      - libpng
-      - librsvg
-      - libtiff
-      - libxml2
-      - lz4-c
-      # - mysql
-      - nlohmann_json
-      - openssl
-      - pcre
-      # - postgresql
-      - pythia8
-      - sqlite
-      - tbb
-      - tbb-devel
-      - vector-classes
-      - vdt
-      - python
-      - numpy
-      - if: linux
-        then:
-          - xorg-xorgproto
-          - xorg-libx11
-          - xorg-libxau
-          - xorg-libxcursor
-          - xorg-libxext
-          - xorg-libxfixes
-          - xorg-libxft
-          - xorg-libxpm
-      - xrootd
-      - xz
-      # FIXME: The generated allDict.cxx.pch is dependent on version of the C++ headers used
-      - xxhash
-      - zlib
-      - zstd
-      - if: not (osx and arm64)
-        then:
-          - llvm ${{ clang_version }}.*
-          - llvmdev ${{ clang_version }}.*
-          - clangdev ${{ clang_version }}.* ${{ clang_patches_version }}*
-    run:
-      - python
-      - numpy
-      # FIXME: Required to ensure a consistent etc/allDict.cxx.pch
-      - ${{ compiler('c') }}
-      - ${{ compiler('cxx') }}
-      - ${{ stdlib("c") }}
-      - ${{ pin_compatible('xxhash', upper_bound='x.x.x') }}
-      - ${{ pin_compatible('nlohmann_json', upper_bound='x.x.x') }}
-      - cffi
-      - graphviz
-      - if: linux
-        then:
-          - xorg-xorgproto
-          - xorg-libx11
-          - xorg-libxext
-          - xorg-libxpm
-          - xorg-libxft
-          - libglu
-    run_constraints:
-      - numba >=0.52
-      - cling ==9999
-      - root5 ==9999
-      - afterimage ==9999
+source:
+  url: https://github.com/root-project/root/archive/refs/tags/v${{ tag_name }}.tar.gz
+  sha256: 6c6616953e44c3979af596ddde7bcd51ac6786fd9f9b35ec0c8cf72213f8d7d4
+  target_directory: root-source
+  patches:
+    - patches/root-x.xx.xx_cling-runtime-sysroot.patch
+    - if: osx
+      then: patches/root-x.xx.xx-osx-remove-hardcoded-sysroot.patch
+    - patches/0001-Hacks.patch
+    - patches/0001-Patch-for-apple-silicon.patch
+    - patches/0001-Set-LLVM_REQUIRES_EH-for-Cling.patch
+    - if: build_platform != target_platform
+      then: patches/disable-hsimple.root
+    - patches/0001-Reset-CMAKE-module-path-for-interpreter.patch
+    - if: osx
+      then:
+        - patches/0001-force-one-modulemap-for-darwin.patch
+        - patches/0001-Remove-check-for-SDK-version-in-CIFactory.patch
+        - patches/0001-avoid-linking-TPython-against-libPython.patch
+    - patches/0001-Hackily-fix-cross-compilation.patch
+    - 0002-Debugging.patch
+    - PR-15804.patch
+    - pr-17269.patch
+    # - 0001-Support-getting-rootcling_stage1-from-external-build.patch
+    - if: build_platform != target_platform
+      then:
+        - 0002-HACK-Support-overriding-triplet-used-by-cling.patch
+    - 0001-Enforce-fail-on-missing-with-afterimage-dependencies.patch
+    - 0002-Remove-cocoa-afterimage-overrides.patch
+    - 0001-Detect-which-ar-binary-should-be-used-to-build-libAf.patch
 
 outputs:
   - package:
       name: root_base
     build:
+      script:
+        file: build_root.sh
+        env:
+          clang_version: ${{ clang_version }}
+          clang_patches_version: ${{ clang_patches_version }}
+          ROOT_CONDA_BUILTIN_PYROOT: ${{ builtin_pyroot }}
+          ROOT_CXX_STANDARD: ${{ root_cxx_standard }}
+      dynamic_linking:
+        overdepending_behavior: ignore
       prefix_detection:
         ignore:
           - if: aarch64
@@ -204,8 +76,130 @@ outputs:
         exclude:
           - LICENSE
           - README/**
-          - tutorials/**
     requirements:
+      build:
+        - ${{ compiler('c') }}
+        - ${{ compiler('cxx') }}
+        - ${{ stdlib("c") }}
+        - autoconf
+        - cmake
+        - git
+        - pkg-config
+        - sed
+        - make
+        - ninja
+        - if: unix
+          then: gnuconfig
+        # Required for OpenGL support
+        # See https://conda-forge.org/docs/maintainer/knowledge_base.html?highlight=cdt#libgl
+        - if: linux
+          then:
+            - ${{ cdt('mesa-libgl-devel') }}
+            - ${{ cdt('mesa-dri-drivers') }}
+            - ${{ cdt('libselinux') }}
+            - ${{ cdt('libxdamage') }}
+            - ${{ cdt('libxxf86vm') }}
+        - if: build_platform != target_platform
+          then:
+            - cross-python_${{ target_platform }}
+            - python
+            - numpy
+            - xxhash
+            - zlib
+            - zstd
+            - freetype
+            - xz
+        - if: build_platform != target_platform and not osx
+          then:
+            - llvm ${{ clang_version }}.*
+            - llvmdev ${{ clang_version }}.*
+            - clangdev ${{ clang_version }}.* ${{ clang_patches_version }}*
+      host:
+        - libblas
+        - libcblas
+        - if: linux
+          then:
+            - ${{ compiler('c') }}
+            - ${{ compiler('cxx') }}
+        - ${{ stdlib("c") }}
+        - cfitsio
+        - davix
+        - fftw
+        - freetype
+        - ftgl
+        - gdk-pixbuf
+        - giflib
+        - glew
+        - glib
+        - gl2ps
+        - graphviz
+        - gsl
+        - gtest
+        - if: linux
+          then: libglu
+        - libpng
+        - librsvg
+        - libtiff
+        - libxml2
+        - lz4-c
+        # - mysql
+        - nlohmann_json
+        - openssl
+        - pcre
+        # - postgresql
+        - pythia8
+        - sqlite
+        - tbb
+        - tbb-devel
+        - vector-classes
+        - vdt
+        - python
+        - numpy
+        - if: linux
+          then:
+            - xorg-xorgproto
+            - xorg-libx11
+            - xorg-libxau
+            - xorg-libxcursor
+            - xorg-libxext
+            - xorg-libxfixes
+            - xorg-libxft
+            - xorg-libxpm
+        - xrootd
+        - xz
+        # FIXME: The generated allDict.cxx.pch is dependent on version of the C++ headers used
+        - xxhash
+        - zlib
+        - zstd
+        - if: not (osx and arm64)
+          then:
+            - llvm ${{ clang_version }}.*
+            - llvmdev ${{ clang_version }}.*
+            - clangdev ${{ clang_version }}.* ${{ clang_patches_version }}*
+      run:
+        - python
+        - numpy
+        # FIXME: Required to ensure a consistent etc/allDict.cxx.pch
+        - ${{ compiler('c') }}
+        - ${{ compiler('cxx') }}
+        - ${{ stdlib("c") }}
+        - ${{ pin_compatible('xxhash', upper_bound='x.x.x') }}
+        - ${{ pin_compatible('nlohmann_json', upper_bound='x.x.x') }}
+        - cffi
+        - graphviz
+        - if: linux
+          then:
+            - xorg-xorgproto
+            - xorg-libx11
+            - xorg-libxext
+            - xorg-libxpm
+            - xorg-libxft
+            - libglu
+      run_constraints:
+        - numba >=0.52
+        - cling ==9999
+        - root5 ==9999
+        - afterimage ==9999
       run_exports:
         - ${{ pin_subpackage('root_base', upper_bound='x.x.x') }}
     tests:
@@ -231,10 +225,6 @@ outputs:
 
   - package:
       name: root
-    build:
-      files:
-        include:
-          - tutorials/**
     requirements:
       host:
         - ${{ pin_subpackage('root_base', exact=True) }}
