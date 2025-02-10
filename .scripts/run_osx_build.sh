@@ -98,6 +98,7 @@ else
     ( endgroup "Inspecting artifacts" ) 2> /dev/null
     ( startgroup "Validating outputs" ) 2> /dev/null
 
+    sed -i.bak 's@m.config.variant = package_variants\[0\]@m.config.variant = package_variants[0] if package_variants else {}@g' $(python -c 'import rattler_build_conda_compat.render; print(rattler_build_conda_compat.render.__file__)')
     validate_recipe_outputs "${FEEDSTOCK_NAME}"
 
     ( endgroup "Validating outputs" ) 2> /dev/null
