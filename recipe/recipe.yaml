@@ -84,15 +84,6 @@ outputs:
         - ninja
         - if: unix
           then: gnuconfig
-        # Required for OpenGL support
-        # See https://conda-forge.org/docs/maintainer/knowledge_base.html?highlight=cdt#libgl
-        - if: linux
-          then:
-            - ${{ cdt('mesa-libgl-devel') }}
-            - ${{ cdt('mesa-dri-drivers') }}
-            - ${{ cdt('libselinux') }}
-            - ${{ cdt('libxdamage') }}
-            - ${{ cdt('libxxf86vm') }}
         - if: build_platform != target_platform
           then:
             - cross-python_${{ target_platform }}
@@ -140,6 +131,7 @@ outputs:
         - nlohmann_json
         - openssl
         - pcre
+        - libgl-devel  # [linux]
         # - postgresql
         - pythia8
         - sqlite
