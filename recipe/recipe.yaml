@@ -106,6 +106,16 @@ outputs:
           then:
             - ${{ compiler('c') }}
             - ${{ compiler('cxx') }}
+            - libglu
+            - libgl-devel
+            - xorg-xorgproto
+            - xorg-libx11
+            - xorg-libxau
+            - xorg-libxcursor
+            - xorg-libxext
+            - xorg-libxfixes
+            - xorg-libxft
+            - xorg-libxpm
         - ${{ stdlib("c") }}
         - cfitsio
         - davix
@@ -120,8 +130,6 @@ outputs:
         - graphviz
         - gsl
         - gtest
-        - if: linux
-          then: libglu
         - libpng
         - librsvg
         - libtiff
@@ -131,7 +139,6 @@ outputs:
         - nlohmann_json
         - openssl
         - pcre
-        - libgl-devel  # [linux]
         # - postgresql
         - pythia8
         - sqlite
@@ -141,16 +148,6 @@ outputs:
         - vdt
         - python
         - numpy
-        - if: linux
-          then:
-            - xorg-xorgproto
-            - xorg-libx11
-            - xorg-libxau
-            - xorg-libxcursor
-            - xorg-libxext
-            - xorg-libxfixes
-            - xorg-libxft
-            - xorg-libxpm
         - xrootd
         - liblzma-devel
         # FIXME: The generated allDict.cxx.pch is dependent on version of the C++ headers used
