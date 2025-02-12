@@ -29,12 +29,10 @@ source:
     - patches/0001-Patch-for-apple-silicon.patch
     - patches/0001-Set-LLVM_REQUIRES_EH-for-Cling.patch
     - if: build_platform != target_platform
-      then: patches/disable-hsimple.root
+      then: patches/0001-Don-t-try-to-generate-hsimple.root-when-cross-compil.patch
     - if: osx
       then:
-        - patches/0001-force-one-modulemap-for-darwin.patch
-        - patches/0001-Remove-check-for-SDK-version-in-CIFactory.patch
-        - patches/0001-avoid-linking-TPython-against-libPython.patch
+        - patches/0001-Avoid-linking-TPython-against-libPython.patch
     - patches/0001-Hackily-fix-cross-compilation.patch
     - 0002-Debugging.patch
     - if: build_platform != target_platform
