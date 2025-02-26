@@ -1,16 +1,16 @@
 context:
   name: root
-  tag_name: 6-32-10
+  tag_name: 6-34-04
   build_number: 0
-  clang_version: 16.0.6
-  clang_patches_version: root_63202
+  clang_version: 18.1.8
+  clang_patches_version: root_63402
   builtin_pyroot: true
   builtin_clang: false
   run_gtests: false
   # When new Python versions are released numba tends to be slow to support them
   # to prevent ROOT from being held up by this, only have a strong dependency on
   # numba for supported python versions
-  max_supported_numba_py: 3.12
+  max_supported_numba_py: 3.13
   root_cxx_standard: 20
 
 recipe:
@@ -19,7 +19,7 @@ recipe:
 
 source:
   url: https://github.com/root-project/root/archive/refs/tags/v${{ tag_name }}.tar.gz
-  sha256: 876a498297e9473e4c2d073c099ac6d3a06c5ed5c66d01c0acee5351b78afe08
+  sha256: b1ada06c3c8adca2fffa9a408767806ea99a64f94e97bcafadc1015993c809c5
   target_directory: root-source
   patches:
     - patches/root-x.xx.xx_cling-runtime-sysroot.patch
@@ -29,18 +29,13 @@ source:
     - patches/0001-Patch-for-apple-silicon.patch
     - patches/0001-Set-LLVM_REQUIRES_EH-for-Cling.patch
     - if: build_platform != target_platform
-      then: patches/disable-hsimple.root
-    - patches/0001-Reset-CMAKE-module-path-for-interpreter.patch
+      then: patches/0001-Don-t-try-to-generate-hsimple.root-when-cross-compil.patch
     - if: osx
       then:
-        - patches/0001-force-one-modulemap-for-darwin.patch
-        - patches/0001-Remove-check-for-SDK-version-in-CIFactory.patch
-        - patches/0001-avoid-linking-TPython-against-libPython.patch
+        - patches/0001-Avoid-linking-TPython-against-libPython.patch
     - patches/0001-Hackily-fix-cross-compilation.patch
     - 0002-Debugging.patch
-    - PR-15804.patch
-    - pr-17269.patch
-    # - 0001-Support-getting-rootcling_stage1-from-external-build.patch
+    - patches/0001-Remove-bad-check-on-SDK-for-std_darwin.MacOSX14.2.sd.patch
     - if: build_platform != target_platform
       then:
         - 0002-HACK-Support-overriding-triplet-used-by-cling.patch
@@ -90,15 +85,6 @@ outputs:
         - ninja
         - if: unix
           then: gnuconfig
-        # Required for OpenGL support
-        # See https://conda-forge.org/docs/maintainer/knowledge_base.html?highlight=cdt#libgl
-        - if: linux
-          then:
-            - ${{ cdt('mesa-libgl-devel') }}
-            - ${{ cdt('mesa-dri-drivers') }}
-            - ${{ cdt('libselinux') }}
-            - ${{ cdt('libxdamage') }}
-            - ${{ cdt('libxxf86vm') }}
         - if: build_platform != target_platform
           then:
             - cross-python_${{ target_platform }}
@@ -111,8 +97,8 @@ outputs:
             - liblzma-devel
         - if: build_platform != target_platform and not osx
           then:
-            - llvm ${{ clang_version }}.*
-            - llvmdev ${{ clang_version }}.*
+            - llvm ${{ clang_version }}.* ${{ clang_patches_version }}*
+            - llvmdev ${{ clang_version }}.* ${{ clang_patches_version }}*
             - clangdev ${{ clang_version }}.* ${{ clang_patches_version }}*
       host:
         - libblas
@@ -121,6 +107,16 @@ outputs:
           then:
             - ${{ compiler('c') }}
             - ${{ compiler('cxx') }}
+            - libglu
+            - libgl-devel
+            - xorg-xorgproto
+            - xorg-libx11
+            - xorg-libxau
+            - xorg-libxcursor
+            - xorg-libxext
+            - xorg-libxfixes
+            - xorg-libxft
+            - xorg-libxpm
         - ${{ stdlib("c") }}
         - cfitsio
         - davix
@@ -135,8 +131,6 @@ outputs:
         - graphviz
         - gsl
         - gtest
-        - if: linux
-          then: libglu
         - libpng
         - librsvg
         - libtiff
@@ -155,16 +149,6 @@ outputs:
         - vdt
         - python
         - numpy
-        - if: linux
-          then:
-            - xorg-xorgproto
-            - xorg-libx11
-            - xorg-libxau
-            - xorg-libxcursor
-            - xorg-libxext
-            - xorg-libxfixes
-            - xorg-libxft
-            - xorg-libxpm
         - xrootd
         - liblzma-devel
         # FIXME: The generated allDict.cxx.pch is dependent on version of the C++ headers used
@@ -173,8 +157,8 @@ outputs:
         - zstd
         - if: not (osx and arm64)
           then:
-            - llvm ${{ clang_version }}.*
-            - llvmdev ${{ clang_version }}.*
+            - llvm ${{ clang_version }}.* ${{ clang_patches_version }}*
+            - llvmdev ${{ clang_version }}.* ${{ clang_patches_version }}*
             - clangdev ${{ clang_version }}.* ${{ clang_patches_version }}*
       run:
         - python
