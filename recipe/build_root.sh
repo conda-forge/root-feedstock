@@ -56,6 +56,8 @@ else
     Clang_DIR_BUILD=${BUILD_PREFIX}
 fi
 
+clang_version_split=(${clang_version//./ })
+CMAKE_PLATFORM_FLAGS+=("-DCLANG_RESOURCE_DIR_VERSION=${clang_version_split[0]}")
 if [[ "${target_platform}" == linux* ]]; then
     rel=$(realpath --relative-to="$CONDA_PREFIX" "$CONDA_BUILD_SYSROOT")
     if [[ $rel == .* ]]; then
@@ -81,8 +83,6 @@ if [[ "${target_platform}" == linux* ]]; then
     echo "CXXFLAGS is now '${CXXFLAGS}'"
 else
     CMAKE_PLATFORM_FLAGS+=("-DBLA_PREFER_PKGCONFIG=ON")
-    clang_version_split=(${clang_version//./ })
-    CMAKE_PLATFORM_FLAGS+=("-DCLANG_RESOURCE_DIR_VERSION=${clang_version_split[0]}")
 
     # HACK: Hack the macOS SDK to make rootcling find the correct ncurses
     if [[ -f  "$CONDA_BUILD_SYSROOT/usr/include/module.modulemap.bak" ]]; then
