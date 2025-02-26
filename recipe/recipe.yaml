@@ -1,6 +1,6 @@
 context:
   name: root
-  tag_name: 6-34-02
+  tag_name: 6-34-04
   build_number: 0
   clang_version: 18.1.8
   clang_patches_version: root_63402
@@ -19,7 +19,7 @@ recipe:
 
 source:
   url: https://github.com/root-project/root/archive/refs/tags/v${{ tag_name }}.tar.gz
-  sha256: 1d55b4d529076c7fef64aad1698d30c4180780399c8d974c953255119fc3b966
+  sha256: b1ada06c3c8adca2fffa9a408767806ea99a64f94e97bcafadc1015993c809c5
   target_directory: root-source
   patches:
     - patches/root-x.xx.xx_cling-runtime-sysroot.patch
@@ -35,7 +35,7 @@ source:
         - patches/0001-Avoid-linking-TPython-against-libPython.patch
     - patches/0001-Hackily-fix-cross-compilation.patch
     - 0002-Debugging.patch
-    - 0001-Remove-bad-check-on-SDK-for-std_darwin.MacOSX14.2.sd.patch
+    - patches/0001-Remove-bad-check-on-SDK-for-std_darwin.MacOSX14.2.sd.patch
     - if: build_platform != target_platform
       then:
         - 0002-HACK-Support-overriding-triplet-used-by-cling.patch
