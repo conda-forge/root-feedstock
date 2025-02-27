@@ -62,9 +62,7 @@ outputs:
         overdepending_behavior: ignore
       prefix_detection:
         ignore:
-          - if: aarch64
-            then: etc/allDict.cxx.pch
-            else: lib/*.pcm
+          - lib/*.pcm
       files:
         include:
           - "**"
