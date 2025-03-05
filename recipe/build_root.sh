@@ -468,6 +468,8 @@ if [[ "${target_platform}" != "${build_platform}" ]]; then
     # replace it with a symlink to the correct include directory
     mv "${SRC_DIR}/build-rootcling-xp/include"{,.orig}
     ln -s $PWD/include "${SRC_DIR}/build-rootcling-xp/include"
+    # we also need to clean up the pcm files that were generated during the build
+    find "${SRC_DIR}/build-rootcling-xp/lib" -name '*.pcm' -print -delete
 fi
 
 cmake --build . -- "-j${CPU_COUNT}"
