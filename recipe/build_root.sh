@@ -258,6 +258,11 @@ if [[ "${target_platform}" != "${build_platform}" ]]; then
         cmake --build "${SRC_DIR}/build-rootcling_stage1-xp" --target rootcling_stage1 -- "-j${CPU_COUNT}"
 
     # Build rootcling for the current platform but that will target the host platform
+    patch -p1 -d "${SRC_DIR}/root-source" < "${RECIPE_DIR}/0001-Add-GPLATFORMARCHDEFINE.patch"
+    patch -p1 -d "${SRC_DIR}/root-source" < "${RECIPE_DIR}/0002-XXXX.patch"
+    sed -i.orig 's@PLATFORMARCHDEFINE@__aarch64@g' "${SRC_DIR}/root-source/core/dictgen/src/rootcling_impl.cxx"
+    diff "${SRC_DIR}/root-source/core/dictgen/src/rootcling_impl.cxx"{.orig,} || true
+
     cp ${SRC_DIR}/root-source/interpreter/cling/lib/Interpreter/CIFactory.cpp{.orig,}
     sed -i "s@TODO_OVERRIDE_TARGET@\"--target=$(echo "${HOST}" | sed 's@powerpc64le@ppc64le@g')\"@g" ${SRC_DIR}/root-source/interpreter/cling/lib/Interpreter/CIFactory.cpp
     diff ${SRC_DIR}/root-source/interpreter/cling/lib/Interpreter/CIFactory.cpp{.orig,} || true
@@ -459,6 +464,10 @@ if [[ "${target_platform}" != "${build_platform}" ]]; then
     mv bin/rootcling{,.orig}
     cp "${SRC_DIR}/build-rootcling-xp/bin/rootcling" bin/rootcling
     touch -r bin/rootcling{.orig,}
+    # rootcling still points to the include directory it's own build directory
+    # replace it with a symlink to the correct include directory
+    mv "${SRC_DIR}/build-rootcling-xp/include"{,.orig}
+    ln -s $PWD/include "${SRC_DIR}/build-rootcling-xp/include"
 fi
 
 cmake --build . -- "-j${CPU_COUNT}"

@@ -91,6 +91,7 @@ outputs:
             - xxhash
             - zlib
             - zstd
+            - lz4-c
             - freetype
             - liblzma-devel
         - if: build_platform != target_platform and not osx
