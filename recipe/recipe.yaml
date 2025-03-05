@@ -43,7 +43,7 @@ source:
     - 0001-Enforce-fail-on-missing-with-afterimage-dependencies.patch
     - 0002-Remove-cocoa-afterimage-overrides.patch
     - 0001-Detect-which-ar-binary-should-be-used-to-build-libAf.patch
-    - if: build_platform != target_platform and target_platform in ['linux-aarch64', 'linux-ppc64le']'
+    - if: build_platform != target_platform and target_platform in ['linux-aarch64', 'linux-ppc64le']
       then:
         - 0001-Remove-_GLIBCXX_USE_FLOAT128.patch
 
