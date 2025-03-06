@@ -188,14 +188,15 @@ fi
 
 # Enable some vectorisation options
 CMAKE_PLATFORM_FLAGS+=("-Dveccore=ON")
-CMAKE_PLATFORM_FLAGS+=("-Dvc=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Dvc=ON")
 CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_veccore=ON")
-CMAKE_PLATFORM_FLAGS+=("-Druntime_cxxmodules=ON")
 
 # Cross compilation options
 if [[ "${target_platform}" != "${build_platform}" ]]; then
     CMAKE_PLATFORM_FLAGS+=("-Dfound_urandom=ON")
     CMAKE_PLATFORM_FLAGS+=("-DTARGET_ARCHITECTURE=generic")  # for Vc
+    # FIXME: This is a hack...
+    CMAKE_PLATFORM_FLAGS+=("-Druntime_cxxmodules=OFF")
 
     # Build rootcling_stage1 for the current platform
     cp "${SRC_DIR}/root-source/interpreter/cling/lib/Interpreter/CIFactory.cpp"{,.orig}
@@ -221,7 +222,7 @@ if [[ "${target_platform}" != "${build_platform}" ]]; then
     CMAKE_PLATFORM_FLAGS_BUILD+=("-DCMAKE_EXE_LINKER_FLAGS=$(echo $LDFLAGS | sed s@$PREFIX@$BUILD_PREFIX@g)")
     CMAKE_PLATFORM_FLAGS_BUILD+=("-DCMAKE_MODULE_LINKER_FLAGS=$(echo $LDFLAGS | sed s@$PREFIX@$BUILD_PREFIX@g)")
     CMAKE_PLATFORM_FLAGS_BUILD+=("-DCMAKE_SHARED_LINKER_FLAGS=$(echo $LDFLAGS | sed s@$PREFIX@$BUILD_PREFIX@g)")
-    CMAKE_PLATFORM_FLAGS_BUILD+=("-Druntime_cxxmodules=ON")
+    CMAKE_PLATFORM_FLAGS_BUILD+=("-Druntime_cxxmodules=OFF")
 
     CONDA_BUILD_SYSROOT_BUILD=$CONDA_BUILD_SYSROOT
 
