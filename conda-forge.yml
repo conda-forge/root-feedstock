@@ -16,7 +16,7 @@ provider:
   linux_aarch64: default
   linux_ppc64le: default
   osx_arm64: default
-test: native_and_emulated
+test: native
 conda_forge_output_validation: true
 conda_build_tool: rattler-build
 conda_install_tool: micromamba
