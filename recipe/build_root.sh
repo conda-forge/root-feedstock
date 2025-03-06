@@ -188,20 +188,25 @@ fi
 
 # Enable some vectorisation options
 CMAKE_PLATFORM_FLAGS+=("-Dveccore=ON")
-CMAKE_PLATFORM_FLAGS+=("-Dvc=ON")
+CMAKE_PLATFORM_FLAGS+=("-Dvc=OFF")
 CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_veccore=ON")
+CMAKE_PLATFORM_FLAGS+=("-Druntime_cxxmodules=ON")
 
 # Cross compilation options
 if [[ "${target_platform}" != "${build_platform}" ]]; then
     CMAKE_PLATFORM_FLAGS+=("-Dfound_urandom=ON")
     CMAKE_PLATFORM_FLAGS+=("-DTARGET_ARCHITECTURE=generic")  # for Vc
-    # FIXME: This is a hack...
-    CMAKE_PLATFORM_FLAGS+=("-Druntime_cxxmodules=OFF")
 
     # Build rootcling_stage1 for the current platform
     cp "${SRC_DIR}/root-source/interpreter/cling/lib/Interpreter/CIFactory.cpp"{,.orig}
-    sed -i "s@TODO_OVERRIDE_TARGET@\"--target=$(echo "${BUILD}" | sed 's@powerpc64le@ppc64le@g')\"@g" "${SRC_DIR}/root-source/interpreter/cling/lib/Interpreter/CIFactory.cpp"
-    diff "${SRC_DIR}/root-source/interpreter/cling/lib/Interpreter/CIFactory.cpp"{.orig,} || true
+    build_triplet=$(echo "${BUILD}" | sed 's@powerpc64le@ppc64le@g')
+    sed -i "s@TODO_OVERRIDE_TARGET@\"--target=${build_triplet}\"@g" "${SRC_DIR}/root-source/interpreter/cling/lib/Interpreter/CIFactory.cpp"
+    if diff "${SRC_DIR}/root-source/interpreter/cling/lib/Interpreter/CIFactory.cpp"{.orig,}; then
+        echo "CIFactory.cpp was not patched correctly"
+        exit 1
+    else
+        grep -- "--target=${build_triplet}" "${SRC_DIR}/root-source/interpreter/cling/lib/Interpreter/CIFactory.cpp"
+    fi
 
     declare -a CMAKE_PLATFORM_FLAGS_BUILD
     CMAKE_PLATFORM_FLAGS_BUILD+=("-Dminimal=ON")
@@ -222,7 +227,7 @@ if [[ "${target_platform}" != "${build_platform}" ]]; then
     CMAKE_PLATFORM_FLAGS_BUILD+=("-DCMAKE_EXE_LINKER_FLAGS=$(echo $LDFLAGS | sed s@$PREFIX@$BUILD_PREFIX@g)")
     CMAKE_PLATFORM_FLAGS_BUILD+=("-DCMAKE_MODULE_LINKER_FLAGS=$(echo $LDFLAGS | sed s@$PREFIX@$BUILD_PREFIX@g)")
     CMAKE_PLATFORM_FLAGS_BUILD+=("-DCMAKE_SHARED_LINKER_FLAGS=$(echo $LDFLAGS | sed s@$PREFIX@$BUILD_PREFIX@g)")
-    CMAKE_PLATFORM_FLAGS_BUILD+=("-Druntime_cxxmodules=OFF")
+    CMAKE_PLATFORM_FLAGS_BUILD+=("-Druntime_cxxmodules=ON")
 
     CONDA_BUILD_SYSROOT_BUILD=$CONDA_BUILD_SYSROOT
 
@@ -258,10 +263,26 @@ if [[ "${target_platform}" != "${build_platform}" ]]; then
     CONDA_BUILD_SYSROOT="${CONDA_BUILD_SYSROOT_BUILD}"  \
         cmake --build "${SRC_DIR}/build-rootcling_stage1-xp" --target rootcling_stage1 -- "-j${CPU_COUNT}"
 
-    # Build rootcling for the current platform but that will target the host platform
+    # Restore the original CIFactory.cpp file
     cp ${SRC_DIR}/root-source/interpreter/cling/lib/Interpreter/CIFactory.cpp{.orig,}
-    sed -i "s@TODO_OVERRIDE_TARGET@\"--target=$(echo "${HOST}" | sed 's@powerpc64le@ppc64le@g')\"@g" ${SRC_DIR}/root-source/interpreter/cling/lib/Interpreter/CIFactory.cpp
-    diff ${SRC_DIR}/root-source/interpreter/cling/lib/Interpreter/CIFactory.cpp{.orig,} || true
+
+    # Build rootcling for the current platform but that will target the host platform
+    patch -p1 -d "${SRC_DIR}/root-source" < "${RECIPE_DIR}/0001-Add-GPLATFORMARCHDEFINE.patch"
+    patch -p1 -d "${SRC_DIR}/root-source" < "${RECIPE_DIR}/0002-XXXX.patch"
+    sed -i.orig 's@PLATFORMARCHDEFINE@__aarch64@g' "${SRC_DIR}/root-source/core/dictgen/src/rootcling_impl.cxx"
+    diff "${SRC_DIR}/root-source/core/dictgen/src/rootcling_impl.cxx"{.orig,} || true
+
+    # Update the backup of the CIFactory.cpp file
+    cp ${SRC_DIR}/root-source/interpreter/cling/lib/Interpreter/CIFactory.cpp{,.orig}
+
+    # Patch CIFactory.cpp to override the target
+    sed -i "s@TODO_OVERRIDE_TARGET@\"--target=${build_triplet}\"@g" ${SRC_DIR}/root-source/interpreter/cling/lib/Interpreter/CIFactory.cpp
+    if diff "${SRC_DIR}/root-source/interpreter/cling/lib/Interpreter/CIFactory.cpp"{.orig,}; then
+        echo "CIFactory.cpp was not patched correctly"
+        exit 1
+    else
+        grep -- "--target=${host_triplet}" "${SRC_DIR}/root-source/interpreter/cling/lib/Interpreter/CIFactory.cpp"
+    fi
 
     CONDA_BUILD_SYSROOT="${CONDA_BUILD_SYSROOT_BUILD}" CMAKE_PREFIX_PATH="${BUILD_PREFIX}" \
         cmake "${SRC_DIR}/root-source" \
@@ -297,6 +318,17 @@ if [[ "${target_platform}" != "${build_platform}" ]]; then
     fi
     CONDA_BUILD_SYSROOT="${CONDA_BUILD_SYSROOT_BUILD}" \
         cmake --build "${SRC_DIR}/build-rootcling-xp" --target rootcling -- "-j${CPU_COUNT}"
+
+    # Patch CIFactory.cpp to override the target
+    cp ${SRC_DIR}/root-source/interpreter/cling/lib/Interpreter/CIFactory.cpp{.orig,}
+    host_triplet=$(echo "${HOST}" | sed 's@powerpc64le@ppc64le@g')
+    sed -i "s@TODO_OVERRIDE_TARGET@\"--target=${host_triplet}\"@g" ${SRC_DIR}/root-source/interpreter/cling/lib/Interpreter/CIFactory.cpp
+    if diff "${SRC_DIR}/root-source/interpreter/cling/lib/Interpreter/CIFactory.cpp"{.orig,}; then
+        echo "CIFactory.cpp was not patched correctly"
+        exit 1
+    else
+        grep -- "--target=${host_triplet}" "${SRC_DIR}/root-source/interpreter/cling/lib/Interpreter/CIFactory.cpp"
+    fi
 fi
 
 # Disable the Python bindings if we're building them in standalone mode
@@ -460,6 +492,12 @@ if [[ "${target_platform}" != "${build_platform}" ]]; then
     mv bin/rootcling{,.orig}
     cp "${SRC_DIR}/build-rootcling-xp/bin/rootcling" bin/rootcling
     touch -r bin/rootcling{.orig,}
+    # rootcling still points to the include directory it's own build directory
+    # replace it with a symlink to the correct include directory
+    mv "${SRC_DIR}/build-rootcling-xp/include"{,.orig}
+    ln -s $PWD/include "${SRC_DIR}/build-rootcling-xp/include"
+    # we also need to clean up the pcm files that were generated during the build
+    find "${SRC_DIR}/build-rootcling-xp/lib" -name '*.pcm' -print -delete
 fi
 
 cmake --build . -- "-j${CPU_COUNT}"

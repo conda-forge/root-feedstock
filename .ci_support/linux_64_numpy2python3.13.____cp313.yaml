@@ -67,7 +67,7 @@ pin_run_as_build:
 python:
 - 3.13.* *_cp313
 root_base:
-- 6.32.2
+- 6.32.10
 sqlite:
 - '3'
 target_platform:
@@ -78,6 +78,8 @@ tbb_devel:
 - '2021'
 xrootd:
 - '5'
+xxhash:
+- 0.8.3
 zip_keys:
 - - c_compiler_version
   - cxx_compiler_version
