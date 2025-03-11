@@ -1,0 +1,36 @@
+From 0904cd6611d0026a10ff4d23873878e5c8355526 Mon Sep 17 00:00:00 2001
+From: Chris Burr <christopher.burr@cern.ch>
+Date: Thu, 6 Mar 2025 14:58:29 +0100
+Subject: [PATCH] Support CLING_CXX_PATH environment variable
+
+---
+ interpreter/cling/lib/Interpreter/CIFactory.cpp | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/interpreter/cling/lib/Interpreter/CIFactory.cpp b/interpreter/cling/lib/Interpreter/CIFactory.cpp
+index 66514fa772..49ff6a2815 100644
+--- a/interpreter/cling/lib/Interpreter/CIFactory.cpp
++++ b/interpreter/cling/lib/Interpreter/CIFactory.cpp
+@@ -283,6 +283,11 @@ namespace {
+ 
+         SmallString<2048> buffer;
+ 
++        // Allow an envrionment variable to override the default compiler path
++        if (std::getenv("CLING_CXX_PATH"))
++          ReadCompilerIncludePaths(std::getenv("CLING_CXX_PATH"), buffer, sArguments, Verbose);
++
++        if (sArguments.empty()) {
+   #ifdef _LIBCPP_VERSION
+         // Try to use a version of clang that is located next to cling
+         // in case cling was built with a new/custom libc++
+@@ -302,6 +307,7 @@ namespace {
+           ReadCompilerIncludePaths(clang.c_str(), buffer, sArguments, Verbose);
+         }
+   #endif // _LIBCPP_VERSION
++        }
+ 
+   // First try the relative path 'g++'
+   #ifdef CLING_CXX_RLTV
+-- 
+2.45.0
+
