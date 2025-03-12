@@ -121,10 +121,9 @@ sed -i -E 's#(ROOT_TEST_DRIVER RootTestDriver.cmake PATHS \$\{THISDIR\} \$\{CMAK
 
 # The basics
 if [ "${ROOT_CONDA_BUILD_TYPE-}" == "" ]; then
-    CMAKE_PLATFORM_FLAGS+=("-DCMAKE_BUILD_TYPE=Release")
-else
-    CMAKE_PLATFORM_FLAGS+=("-DCMAKE_BUILD_TYPE=${ROOT_CONDA_BUILD_TYPE}")
+    export ROOT_CONDA_BUILD_TYPE="Release"
 fi
+CMAKE_PLATFORM_FLAGS+=("-DCMAKE_BUILD_TYPE=${ROOT_CONDA_BUILD_TYPE}")
 CMAKE_PLATFORM_FLAGS+=("-DCMAKE_INSTALL_PREFIX=${PREFIX}")
 CMAKE_PLATFORM_FLAGS+=("-DCMAKE_PREFIX_PATH=${PREFIX}")
 
@@ -188,26 +187,31 @@ fi
 
 # Enable some vectorisation options
 CMAKE_PLATFORM_FLAGS+=("-Dveccore=ON")
-CMAKE_PLATFORM_FLAGS+=("-Dvc=ON")
+CMAKE_PLATFORM_FLAGS+=("-Dvc=OFF")
 CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_veccore=ON")
+CMAKE_PLATFORM_FLAGS+=("-Druntime_cxxmodules=ON")
 
 # Cross compilation options
 if [[ "${target_platform}" != "${build_platform}" ]]; then
     CMAKE_PLATFORM_FLAGS+=("-Dfound_urandom=ON")
     CMAKE_PLATFORM_FLAGS+=("-DTARGET_ARCHITECTURE=generic")  # for Vc
-    # FIXME: This is a hack...
-    CMAKE_PLATFORM_FLAGS+=("-Druntime_cxxmodules=OFF")
 
     # Build rootcling_stage1 for the current platform
     cp "${SRC_DIR}/root-source/interpreter/cling/lib/Interpreter/CIFactory.cpp"{,.orig}
-    sed -i "s@TODO_OVERRIDE_TARGET@\"--target=$(echo "${BUILD}" | sed 's@powerpc64le@ppc64le@g')\"@g" "${SRC_DIR}/root-source/interpreter/cling/lib/Interpreter/CIFactory.cpp"
-    diff "${SRC_DIR}/root-source/interpreter/cling/lib/Interpreter/CIFactory.cpp"{.orig,} || true
+    build_triplet=$(echo "${BUILD}" | sed 's@powerpc64le@ppc64le@g')
+    sed -i "s@TODO_OVERRIDE_TARGET@${build_triplet}@g" "${SRC_DIR}/root-source/interpreter/cling/lib/Interpreter/CIFactory.cpp"
+    if diff "${SRC_DIR}/root-source/interpreter/cling/lib/Interpreter/CIFactory.cpp"{.orig,}; then
+        echo "CIFactory.cpp was not patched correctly"
+        exit 1
+    else
+        grep -- "${build_triplet}" "${SRC_DIR}/root-source/interpreter/cling/lib/Interpreter/CIFactory.cpp"
+    fi
 
     declare -a CMAKE_PLATFORM_FLAGS_BUILD
     CMAKE_PLATFORM_FLAGS_BUILD+=("-Dminimal=ON")
     CMAKE_PLATFORM_FLAGS_BUILD+=("-Dfail-on-missing=ON")
     CMAKE_PLATFORM_FLAGS_BUILD+=("-Drpath=ON")
-    CMAKE_PLATFORM_FLAGS_BUILD+=("-DCMAKE_BUILD_TYPE=Release")
+    CMAKE_PLATFORM_FLAGS_BUILD+=("-DCMAKE_BUILD_TYPE=${ROOT_CONDA_BUILD_TYPE}")
     CMAKE_PLATFORM_FLAGS_BUILD+=("-DLLVM_CONFIG=${Clang_DIR_BUILD}/bin/llvm-config")
     CMAKE_PLATFORM_FLAGS_BUILD+=("-DLLVM_TABLEGEN_EXE=${Clang_DIR_BUILD}/bin/llvm-tblgen")
     CMAKE_PLATFORM_FLAGS_BUILD+=("-DCMAKE_CXX_STANDARD=${ROOT_CXX_STANDARD}")
@@ -222,7 +226,7 @@ if [[ "${target_platform}" != "${build_platform}" ]]; then
     CMAKE_PLATFORM_FLAGS_BUILD+=("-DCMAKE_EXE_LINKER_FLAGS=$(echo $LDFLAGS | sed s@$PREFIX@$BUILD_PREFIX@g)")
     CMAKE_PLATFORM_FLAGS_BUILD+=("-DCMAKE_MODULE_LINKER_FLAGS=$(echo $LDFLAGS | sed s@$PREFIX@$BUILD_PREFIX@g)")
     CMAKE_PLATFORM_FLAGS_BUILD+=("-DCMAKE_SHARED_LINKER_FLAGS=$(echo $LDFLAGS | sed s@$PREFIX@$BUILD_PREFIX@g)")
-    CMAKE_PLATFORM_FLAGS_BUILD+=("-Druntime_cxxmodules=OFF")
+    CMAKE_PLATFORM_FLAGS_BUILD+=("-Druntime_cxxmodules=ON")
 
     CONDA_BUILD_SYSROOT_BUILD=$CONDA_BUILD_SYSROOT
 
@@ -251,26 +255,39 @@ if [[ "${target_platform}" != "${build_platform}" ]]; then
     CONDA_BUILD_SYSROOT="${CONDA_BUILD_SYSROOT_BUILD}" CMAKE_PREFIX_PATH="${BUILD_PREFIX}" \
         cmake "${SRC_DIR}/root-source" \
                 -B "${SRC_DIR}/build-rootcling_stage1-xp" \
-                -DCLING_CXX_PATH="$CXX_FOR_BUILD" \
-                "${CMAKE_PLATFORM_FLAGS_BUILD[@]}" \
-                ${CMAKE_ARGS_BUILD}
+                -DCLING_CXX_PATH="$CXX" \
+                ${CMAKE_ARGS_BUILD} \
+                "${CMAKE_PLATFORM_FLAGS_BUILD[@]}"
 
-    CONDA_BUILD_SYSROOT="${CONDA_BUILD_SYSROOT_BUILD}"  \
+    CLING_CXX_PATH=$CXX_FOR_BUILD CONDA_BUILD_SYSROOT="${CONDA_BUILD_SYSROOT_BUILD}"  \
         cmake --build "${SRC_DIR}/build-rootcling_stage1-xp" --target rootcling_stage1 -- "-j${CPU_COUNT}"
 
     # Build rootcling for the current platform but that will target the host platform
-    cp ${SRC_DIR}/root-source/interpreter/cling/lib/Interpreter/CIFactory.cpp{.orig,}
-    sed -i "s@TODO_OVERRIDE_TARGET@\"--target=$(echo "${HOST}" | sed 's@powerpc64le@ppc64le@g')\"@g" ${SRC_DIR}/root-source/interpreter/cling/lib/Interpreter/CIFactory.cpp
-    diff ${SRC_DIR}/root-source/interpreter/cling/lib/Interpreter/CIFactory.cpp{.orig,} || true
+    patch -p1 -d "${SRC_DIR}/root-source" < "${RECIPE_DIR}/0001-Add-GPLATFORMARCHDEFINE.patch"
+    patch -p1 -d "${SRC_DIR}/root-source" < "${RECIPE_DIR}/0002-XXXX.patch"
+    sed -i.orig 's@PLATFORMARCHDEFINE@__aarch64@g' "${SRC_DIR}/root-source/core/dictgen/src/rootcling_impl.cxx"
+    diff "${SRC_DIR}/root-source/core/dictgen/src/rootcling_impl.cxx"{.orig,} || true
+
+    # Patch CIFactory.cpp to override the target
+    cp ${SRC_DIR}/root-source/interpreter/cling/lib/Interpreter/CIFactory.cpp{,.before}
+    host_triplet=$(echo "${HOST}" | sed 's@powerpc64le@ppc64le@g')
+    sed -i "s@${build_triplet}@${host_triplet}@g" ${SRC_DIR}/root-source/interpreter/cling/lib/Interpreter/CIFactory.cpp
+    if diff "${SRC_DIR}/root-source/interpreter/cling/lib/Interpreter/CIFactory.cpp"{.before,}; then
+        echo "CIFactory.cpp was not patched correctly"
+        exit 1
+    else
+        grep -- "${host_triplet}" "${SRC_DIR}/root-source/interpreter/cling/lib/Interpreter/CIFactory.cpp"
+    fi
 
     CONDA_BUILD_SYSROOT="${CONDA_BUILD_SYSROOT_BUILD}" CMAKE_PREFIX_PATH="${BUILD_PREFIX}" \
         cmake "${SRC_DIR}/root-source" \
                 -B "${SRC_DIR}/build-rootcling-xp" \
                 -DCLING_CXX_PATH="$CXX" \
-                "${CMAKE_PLATFORM_FLAGS_BUILD[@]}" \
-                ${CMAKE_ARGS_BUILD}
+                -DDEFAULT_SYSROOT="${INSTALL_SYSROOT}" \
+                ${CMAKE_ARGS_BUILD} \
+                "${CMAKE_PLATFORM_FLAGS_BUILD[@]}"
 
-    CONDA_BUILD_SYSROOT="${CONDA_BUILD_SYSROOT_BUILD}" \
+    CLING_CXX_PATH=$CXX_FOR_BUILD CONDA_BUILD_SYSROOT="${CONDA_BUILD_SYSROOT_BUILD}" \
         cmake --build "${SRC_DIR}/build-rootcling-xp" --target rootcling_stage1 -- "-j${CPU_COUNT}"
     mv "${SRC_DIR}/build-rootcling-xp/core/rootcling_stage1/src/rootcling_stage1"{,.orig}
     cp "${SRC_DIR}"/build-{rootcling_stage1,rootcling}-xp/"core/rootcling_stage1/src/rootcling_stage1"
@@ -295,7 +312,7 @@ if [[ "${target_platform}" != "${build_platform}" ]]; then
         wc -l *.exp
         cd -
     fi
-    CONDA_BUILD_SYSROOT="${CONDA_BUILD_SYSROOT_BUILD}" \
+    CLING_CXX_PATH=$CXX_FOR_BUILD CONDA_BUILD_SYSROOT="${CONDA_BUILD_SYSROOT_BUILD}" \
         cmake --build "${SRC_DIR}/build-rootcling-xp" --target rootcling -- "-j${CPU_COUNT}"
 fi
 
@@ -430,6 +447,7 @@ if [[ "${target_platform}" != "${build_platform}" ]]; then
     cmake --build . --target rootcling_stage1 -- "-j${CPU_COUNT}"
     mv core/rootcling_stage1/src/rootcling_stage1{,.orig}
     cp "${SRC_DIR}/build-rootcling_stage1-xp/core/rootcling_stage1/src/rootcling_stage1" core/rootcling_stage1/src/rootcling_stage1
+    sed -i "s@--target=x86_64-conda-linux-gnu@--target=aarch64-cond-linux-gnu@g" core/rootcling_stage1/src/rootcling_stage1
     touch -r core/rootcling_stage1/src/rootcling_stage1{.orig,}
 fi
 
@@ -460,6 +478,12 @@ if [[ "${target_platform}" != "${build_platform}" ]]; then
     mv bin/rootcling{,.orig}
     cp "${SRC_DIR}/build-rootcling-xp/bin/rootcling" bin/rootcling
     touch -r bin/rootcling{.orig,}
+    # rootcling still points to the include directory it's own build directory
+    # replace it with a symlink to the correct include directory
+    mv "${SRC_DIR}/build-rootcling-xp/include"{,.orig}
+    ln -s $PWD/include "${SRC_DIR}/build-rootcling-xp/include"
+    # we also need to clean up the pcm files that were generated during the build
+    find "${SRC_DIR}/build-rootcling-xp/lib" -name '*.pcm' -print -delete
 fi
 
 cmake --build . -- "-j${CPU_COUNT}"

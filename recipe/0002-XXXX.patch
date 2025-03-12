@@ -1,0 +1,30 @@
+From 7f049cb3216a22532d522c949a348b86c9a3dc47 Mon Sep 17 00:00:00 2001
+From: Chris Burr <christopher.burr@cern.ch>
+Date: Wed, 5 Mar 2025 15:13:28 +0100
+Subject: [PATCH] XXXX
+
+---
+ interpreter/cling/lib/Interpreter/CIFactory.cpp | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/interpreter/cling/lib/Interpreter/CIFactory.cpp b/interpreter/cling/lib/Interpreter/CIFactory.cpp
+index 2a6f2a4b2d..fd41fd5bbb 100644
+--- a/interpreter/cling/lib/Interpreter/CIFactory.cpp
++++ b/interpreter/cling/lib/Interpreter/CIFactory.cpp
+@@ -1272,13 +1272,11 @@ namespace {
+ 
+     argvCompile.push_back(TODO_OVERRIDE_TARGET);
+ 
+-#if __aarch64__
+     // Disable outline-atomics on AArch64; the routines __aarch64_* are defined
+     // in the static library libgcc.a and not necessarily included in libCling
+     // or otherwise present in the process, so the interpreter has a hard time
+     // finding them.
+     argvCompile.push_back("-mno-outline-atomics");
+-#endif
+ 
+     // Variables for storing the memory of the C-string arguments.
+     // FIXME: We shouldn't use C-strings in the first place, but just use
+-- 
+2.45.0
+

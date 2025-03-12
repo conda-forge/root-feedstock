@@ -1,0 +1,91 @@
+From 161158121f75fb06f74be1a9d6284006710f66a8 Mon Sep 17 00:00:00 2001
+From: Chris Burr <christopher.burr@cern.ch>
+Date: Wed, 5 Mar 2025 15:10:49 +0100
+Subject: [PATCH 1/2] Add GPLATFORMARCHDEFINE
+
+---
+ core/dictgen/src/rootcling_impl.cxx | 60 +----------------------------
+ 1 file changed, 1 insertion(+), 59 deletions(-)
+
+diff --git a/core/dictgen/src/rootcling_impl.cxx b/core/dictgen/src/rootcling_impl.cxx
+index ad043fe967..88e103369a 100644
+--- a/core/dictgen/src/rootcling_impl.cxx
++++ b/core/dictgen/src/rootcling_impl.cxx
+@@ -2067,14 +2067,6 @@ static bool IncludeHeaders(const std::vector<std::string> &headers, cling::Inter
+ void AddPlatformDefines(std::vector<std::string> &clingArgs)
+ {
+    char platformDefines[64] = {0};
+-#ifdef __INTEL_COMPILER
+-   snprintf(platformDefines, 64, "-DG__INTEL_COMPILER=%ld", (long)__INTEL_COMPILER);
+-   clingArgs.push_back(platformDefines);
+-#endif
+-#ifdef __xlC__
+-   snprintf(platformDefines, 64, "-DG__xlC=%ld", (long)__xlC__);
+-   clingArgs.push_back(platformDefines);
+-#endif
+ #ifdef __GNUC__
+    snprintf(platformDefines, 64, "-DG__GNUC=%ld", (long)__GNUC__);
+    snprintf(platformDefines, 64, "-DG__GNUC_VER=%ld", (long)__GNUC__ * 1000 + __GNUC_MINOR__);
+@@ -2084,58 +2076,8 @@ void AddPlatformDefines(std::vector<std::string> &clingArgs)
+    snprintf(platformDefines, 64, "-DG__GNUC_MINOR=%ld", (long)__GNUC_MINOR__);
+    clingArgs.push_back(platformDefines);
+ #endif
+-#ifdef __HP_aCC
+-   snprintf(platformDefines, 64, "-DG__HP_aCC=%ld", (long)__HP_aCC);
+-   clingArgs.push_back(platformDefines);
+-#endif
+-#ifdef __sun
+-   snprintf(platformDefines, 64, "-DG__sun=%ld", (long)__sun);
+-   clingArgs.push_back(platformDefines);
+-#endif
+-#ifdef __SUNPRO_CC
+-   snprintf(platformDefines, 64, "-DG__SUNPRO_CC=%ld", (long)__SUNPRO_CC);
+-   clingArgs.push_back(platformDefines);
+-#endif
+-#ifdef _STLPORT_VERSION
+-   // stlport version, used on e.g. SUN
+-   snprintf(platformDefines, 64, "-DG__STLPORT_VERSION=%ld", (long)_STLPORT_VERSION);
+-   clingArgs.push_back(platformDefines);
+-#endif
+-#ifdef __ia64__
+-   snprintf(platformDefines, 64, "-DG__ia64=%ld", (long)__ia64__);
+-   clingArgs.push_back(platformDefines);
+-#endif
+-#ifdef __x86_64__
+-   snprintf(platformDefines, 64, "-DG__x86_64=%ld", (long)__x86_64__);
+-   clingArgs.push_back(platformDefines);
+-#endif
+-#ifdef __i386__
+-   snprintf(platformDefines, 64, "-DG__i386=%ld", (long)__i386__);
+-   clingArgs.push_back(platformDefines);
+-#endif
+-#ifdef __arm__
+-   snprintf(platformDefines, 64, "-DG__arm=%ld", (long)__arm__);
+-   clingArgs.push_back(platformDefines);
+-#endif
+-#ifdef _WIN32
+-   snprintf(platformDefines, 64, "-DG__WIN32=%ld", (long)_WIN32);
+-   clingArgs.push_back(platformDefines);
+-#else
+-# ifdef WIN32
+-   snprintf(platformDefines, 64, "-DG__WIN32=%ld", (long)WIN32);
+-   clingArgs.push_back(platformDefines);
+-# endif
+-#endif
+-#ifdef _WIN64
+-   snprintf(platformDefines, 64, "-DG__WIN64=%ld", (long)_WIN64);
+-   clingArgs.push_back(platformDefines);
+-#endif
+-#ifdef _MSC_VER
+-   snprintf(platformDefines, 64, "-DG__MSC_VER=%ld", (long)_MSC_VER);
++   snprintf(platformDefines, 64, "-DGPLATFORMARCHDEFINE=%ld", (long)1);
+    clingArgs.push_back(platformDefines);
+-   snprintf(platformDefines, 64, "-DG__VISUAL=%ld", (long)_MSC_VER);
+-   clingArgs.push_back(platformDefines);
+-#endif
+ }
+ 
+ ////////////////////////////////////////////////////////////////////////////////
+-- 
+2.45.0
+
