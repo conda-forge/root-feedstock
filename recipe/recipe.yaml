@@ -25,26 +25,14 @@ source:
     - patches/root-x.xx.xx_cling-runtime-sysroot.patch
     - if: osx
       then: patches/root-x.xx.xx-osx-remove-hardcoded-sysroot.patch
-    - patches/0001-Hacks.patch
-    - patches/0001-Patch-for-apple-silicon.patch
-    - patches/0001-Set-LLVM_REQUIRES_EH-for-Cling.patch
-    - if: build_platform != target_platform
-      then: patches/0001-Don-t-try-to-generate-hsimple.root-when-cross-compil.patch
-    - if: osx
-      then:
-        - patches/0001-Avoid-linking-TPython-against-libPython.patch
-    - patches/0001-Hackily-fix-cross-compilation.patch
-    - 0002-Debugging.patch
-    - patches/0001-Remove-bad-check-on-SDK-for-std_darwin.MacOSX14.2.sd.patch
-    - if: build_platform != target_platform
-      then:
-        # - 0002-HACK-Support-overriding-triplet-used-by-cling.patch
-        - 0001-HACK2-Support-overriding-triplet-used-by-cling.patch
-        - 0001-Disable-modules.idx.patch
-        - 0001-Support-CLING_CXX_PATH-environment-variable.patch
-    - 0001-Enforce-fail-on-missing-with-afterimage-dependencies.patch
-    - 0002-Remove-cocoa-afterimage-overrides.patch
-    - 0001-Detect-which-ar-binary-should-be-used-to-build-libAf.patch
+    - patches/0001-Respect-fail-on-missing-when-searching-for-dependenc.patch
+    - patches/0002-Only-generate-hsimple.root-when-not-cross-compiling.patch
+    - patches/0003-Avoid-linking-TPython-against-libPython.patch
+    - patches/0004-Support-overriding-AR-when-building-afterimage.patch
+    - patches/0005-WIP-Fix-builtin_llvm-OFF.patch
+    - patches/0006-HACK-Fix-macOS.patch
+    - patches/0007-HACK-Fix-cling-target-for-cross-compilation.patch
+    - patches/0008-Only-generate-modules.idx-when-not-cross-compiling.patch
     - if: build_platform != target_platform and target_platform in ['linux-aarch64', 'linux-ppc64le']
       then:
         - 0001-Remove-_GLIBCXX_USE_FLOAT128.patch

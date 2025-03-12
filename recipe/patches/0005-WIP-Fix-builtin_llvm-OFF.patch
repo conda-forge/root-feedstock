@@ -1,0 +1,49 @@
+From 902f7fb8c66c5ed980cfee4a52a9ce7541b73e82 Mon Sep 17 00:00:00 2001
+From: Chris Burr <christopher.burr@cern.ch>
+Date: Wed, 12 Mar 2025 09:26:52 +0100
+Subject: [PATCH 5/8] WIP: Fix builtin_llvm=OFF
+
+---
+ interpreter/CMakeLists.txt | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
+
+diff --git a/interpreter/CMakeLists.txt b/interpreter/CMakeLists.txt
+index ca59036be9..f08fa64dd0 100644
+--- a/interpreter/CMakeLists.txt
++++ b/interpreter/CMakeLists.txt
+@@ -323,6 +323,9 @@ else()
+ 
+   set(LLVM_DIR "${LLVM_BINARY_DIR}")
+ 
++  find_package(LLVM REQUIRED HINTS "${LLVM_CMAKE_PATH}")
++  find_package(Clang REQUIRED HINTS "${LLVM_CMAKE_PATH}")
++
+   # Normalize LLVM_CMAKE_PATH. --cmakedir might contain backslashes.
+   # CMake assumes slashes as PATH.
+   file(TO_CMAKE_PATH ${LLVM_CONFIG_CMAKE_PATH} LLVM_CMAKE_PATH)
+@@ -362,6 +365,8 @@ else()
+     "Set to ON to force using an old, unsupported host toolchain." OFF)
+   option(CLANG_ENABLE_BOOTSTRAP "Generate the clang bootstrap target" OFF)
+ 
++  set(LLVM_REQUIRES_EH ON)
++
+   include(AddLLVM)
+   include(TableGen)
+   include(HandleLLVMOptions)
+@@ -496,9 +501,11 @@ if (builtin_cling)
+   # compilation properties.
+   if (builtin_llvm)
+     get_directory_property(LLVM_DEFS DIRECTORY llvm-project/llvm COMPILE_DEFINITIONS)
+-    # Turns DEFINE1;DEFINE2 to -DDEFINE1 -DDEFINE2
+-    string (REPLACE ";" " -D" LLVM_DEFS ";${LLVM_DEFS}")
++  else()
++    set(LLVM_DEFS "_GNU_SOURCE;__STDC_CONSTANT_MACROS;__STDC_FORMAT_MACROS;__STDC_LIMIT_MACROS")
+   endif()
++  # Turns DEFINE1;DEFINE2 to -DDEFINE1 -DDEFINE2
++  string (REPLACE ";" " -D" LLVM_DEFS ";${LLVM_DEFS}")
+ 
+   # FIXME: Reduce the usage of CLING_CXXFLAGS by adding a cmake routine in
+   # RootMacros.cmake for all cling-dependent libraries
+-- 
+2.45.0
+

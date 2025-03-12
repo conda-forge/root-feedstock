@@ -1,0 +1,61 @@
+From b0c6ebe9f41b44c6ac1d3195952ee8be5f8dc201 Mon Sep 17 00:00:00 2001
+From: Chris Burr <christopher.burr@cern.ch>
+Date: Wed, 12 Mar 2025 09:02:23 +0100
+Subject: [PATCH 1/8] Respect fail-on-missing when searching for dependencies
+ of afterimage
+
+---
+ cmake/modules/SearchInstalledSoftware.cmake | 24 +++++++++++++++++----
+ 1 file changed, 20 insertions(+), 4 deletions(-)
+
+diff --git a/cmake/modules/SearchInstalledSoftware.cmake b/cmake/modules/SearchInstalledSoftware.cmake
+index 509ed53ffb..567809db59 100644
+--- a/cmake/modules/SearchInstalledSoftware.cmake
++++ b/cmake/modules/SearchInstalledSoftware.cmake
+@@ -441,15 +441,27 @@ if(asimage)
+ endif()
+ if(asimage)
+   set(ASEXTRA_LIBRARIES)
+-  find_Package(GIF)
++  if (fail-on-missing)
++    find_package(GIF REQUIRED)
++  else()
++    find_package(GIF)
++  endif()
+   if(GIF_FOUND)
+     set(ASEXTRA_LIBRARIES ${ASEXTRA_LIBRARIES} ${GIF_LIBRARIES})
+   endif()
+-  find_Package(TIFF)
++  if (fail-on-missing)
++    find_package(TIFF REQUIRED)
++  else()
++    find_package(TIFF)
++  endif()
+   if(TIFF_FOUND)
+     set(ASEXTRA_LIBRARIES ${ASEXTRA_LIBRARIES} ${TIFF_LIBRARIES})
+   endif()
+-  find_Package(PNG)
++  if (fail-on-missing)
++    find_package(PNG REQUIRED)
++  else()
++    find_package(PNG)
++  endif()
+   if(PNG_FOUND)
+     set(ASEXTRA_LIBRARIES ${ASEXTRA_LIBRARIES} ${PNG_LIBRARIES})
+     # Some missing variables needed for external PNG build
+@@ -457,7 +469,11 @@ if(asimage)
+     # apparently there will be two set of includes here (needs to be selected only last that was passed: PNG_INCLUDE_DIR)
+     list(GET PNG_INCLUDE_DIRS 0 PNG_INCLUDE_DIR)
+   endif()
+-  find_Package(JPEG)
++  if (fail-on-missing)
++    find_package(JPEG REQUIRED)
++  else()
++    find_package(JPEG)
++  endif()
+   if(JPEG_FOUND)
+     set(ASEXTRA_LIBRARIES ${ASEXTRA_LIBRARIES} ${JPEG_LIBRARIES})
+   endif()
+-- 
+2.45.0
+
