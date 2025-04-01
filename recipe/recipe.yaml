@@ -1,9 +1,9 @@
 context:
   name: root
-  tag_name: 6-34-04
+  tag_name: 6-34-06
   build_number: 0
   clang_version: 18.1.8
-  clang_patches_version: root_63402
+  clang_patches_version: root_63406
   builtin_pyroot: true
   builtin_clang: false
   run_gtests: false
@@ -19,7 +19,7 @@ recipe:
 
 source:
   url: https://github.com/root-project/root/archive/refs/tags/v${{ tag_name }}.tar.gz
-  sha256: b1ada06c3c8adca2fffa9a408767806ea99a64f94e97bcafadc1015993c809c5
+  sha256: 42685407545794392db22596f49e8b34874083ae720db061ea3e06f690291e64
   target_directory: root-source
   patches:
     - patches/root-x.xx.xx_cling-runtime-sysroot.patch
@@ -100,6 +100,18 @@ outputs:
             - llvm ${{ clang_version }}.* ${{ clang_patches_version }}*
             - llvmdev ${{ clang_version }}.* ${{ clang_patches_version }}*
             - clangdev ${{ clang_version }}.* ${{ clang_patches_version }}*
+        # The gtest suite runs in the build directory
+        - if: run_gtests
+          then: # Packages taken from ROOT requirements.txt
+            - if: python <= max_supported_numba_py
+              then: numba
+            - numpy
+            - pandas
+            - tensorflow
+            - torch
+            - dm-sonnet
+            - graph_nets
+            - onnx
       host:
         - libblas
         - libcblas
