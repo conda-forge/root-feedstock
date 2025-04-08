@@ -100,18 +100,6 @@ outputs:
             - llvm ${{ clang_version }}.* ${{ clang_patches_version }}*
             - llvmdev ${{ clang_version }}.* ${{ clang_patches_version }}*
             - clangdev ${{ clang_version }}.* ${{ clang_patches_version }}*
-        # The gtest suite runs in the build directory
-        - if: run_gtests
-          then: # Packages taken from ROOT requirements.txt
-            - if: python <= max_supported_numba_py
-              then: numba
-            - numpy
-            - pandas
-            - tensorflow
-            - torch
-            - dm-sonnet
-            - graph_nets
-            - onnx
       host:
         - libblas
         - libcblas
