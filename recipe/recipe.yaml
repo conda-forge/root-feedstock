@@ -95,11 +95,11 @@ outputs:
             - zstd
             - freetype
             - liblzma-devel
-        - if: build_platform != target_platform and not osx
-          then:
-            - llvm ${{ clang_version }}.* ${{ clang_patches_version }}*
-            - llvmdev ${{ clang_version }}.* ${{ clang_patches_version }}*
-            - clangdev ${{ clang_version }}.* ${{ clang_patches_version }}*
+            - if: not osx
+              then:
+                - llvm ${{ clang_version }}.* ${{ clang_patches_version }}*
+                - llvmdev ${{ clang_version }}.* ${{ clang_patches_version }}*
+                - clangdev ${{ clang_version }}.* ${{ clang_patches_version }}*
       host:
         - libblas
         - libcblas
