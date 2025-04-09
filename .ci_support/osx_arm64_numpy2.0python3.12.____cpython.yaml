@@ -11,7 +11,7 @@ c_stdlib:
 c_stdlib_version:
 - '11.0'
 cfitsio:
-- 4.5.0
+- 4.6.2
 channel_sources:
 - conda-forge
 channel_targets:
@@ -51,7 +51,7 @@ librsvg:
 libtiff:
 - '4.7'
 libxml2:
-- '2'
+- '2.13'
 lz4_c:
 - '1.10'
 macos_machine:
@@ -68,8 +68,6 @@ pin_run_as_build:
     max_pin: x.x
 python:
 - 3.12.* *_cpython
-root_base:
-- 6.32.2
 sqlite:
 - '3'
 target_platform:
@@ -80,6 +78,8 @@ tbb_devel:
 - '2021'
 xrootd:
 - '5'
+xxhash:
+- 0.8.3
 zip_keys:
 - - c_compiler_version
   - cxx_compiler_version
