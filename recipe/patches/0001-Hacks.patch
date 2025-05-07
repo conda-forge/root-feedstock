@@ -45,7 +45,3 @@ index 6275a81000..bad1aa743c 100644
    set(Cling_DIR ${LLVM_BINARY_DIR}/lib/cmake/cling/)
    find_package(Cling REQUIRED CONFIG PATHS ${Cling_DIR} "${Cling_DIR}/lib/cmake/cling" "${Cling_DIR}/cmake" NO_DEFAULT_PATH)
    find_package(Clang REQUIRED CONFIG PATHS ${Cling_DIR} "${Cling_DIR}/lib/cmake/clang" "${Cling_DIR}/cmake" NO_DEFAULT_PATH)
--- 
-2.41.0
-
-
