@@ -1,7 +1,7 @@
 context:
   name: root
   tag_name: 6-34-04
-  build_number: 0
+  build_number: 1
   clang_version: 18.1.8
   clang_patches_version: root_63402
   builtin_pyroot: true
@@ -155,6 +155,8 @@ outputs:
         - xxhash
         - zlib
         - zstd
+        # Required for roofit_multiprocess
+        - cppzmq
         - if: not (osx and arm64)
           then:
             - llvm ${{ clang_version }}.* ${{ clang_patches_version }}*
