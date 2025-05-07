@@ -1,7 +1,7 @@
 context:
   name: root
   tag_name: 6-36-04
-  build_number: 3
+  build_number: 4
   clang_version: 18.1.8
   clang_patches_version: root_63604
   builtin_clang: false
@@ -77,6 +77,7 @@ outputs:
         - sed
         - make
         - ninja
+        - zeromq
         - if: unix
           then: gnuconfig
         - if: build_platform != target_platform
@@ -148,6 +149,14 @@ outputs:
         - xxhash
         - zlib
         - zstd
+        # Required for roofit_multiprocess
+        - cppzmq
+        # Required zmq_ppoll API added in v4.3.5
+        - zeromq
+        # Need to request drafts API
+        # Note that zeromq and zeromq * drafts_* are both required
+        # c.f. https://github.com/conda-forge/root-feedstock/pull/292#discussion_r2334082389
+        - zeromq * drafts_*
         - llvm ${{ clang_version }}.* ${{ clang_patches_version }}*
         - llvm-openmp ${{ clang_version }}.*
         - llvmdev ${{ clang_version }}.* ${{ clang_patches_version }}*
