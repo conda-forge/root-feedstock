@@ -161,6 +161,8 @@ outputs:
         - xxhash
         - zlib
         - zstd
+        # Required for roofit_multiprocess
+        - cppzmq
         - if: not (osx and arm64)
           then:
             - llvm ${{ clang_version }}.* ${{ clang_patches_version }}*
