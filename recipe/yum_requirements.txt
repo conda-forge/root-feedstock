@@ -4,5 +4,3 @@ mesa-dri-drivers
 libselinux
 libXdamage
 libXxf86vm
-# Required for ROOT's tests as they use lsb_release
-redhat-lsb-core

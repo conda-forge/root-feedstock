@@ -1,0 +1,24 @@
+From d1f5e938c9760ebafb067ee6d85a2ddae8374b4c Mon Sep 17 00:00:00 2001
+From: Duncan Macleod <macleoddm@cardiff.ac.uk>
+Date: Thu, 5 Jun 2025 09:51:39 +0100
+Subject: [PATCH] Don't include RootCPack
+
+We don't need it for conda-forge, and it introduces a dependency on lsb_release that can't be provided on RL9
+---
+ CMakeLists.txt | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index be930aea2a..63cc2893c7 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -745,6 +745,3 @@ message(STATUS "Linker flags:
+ 
+ 
+ ROOT_SHOW_ENABLED_OPTIONS()
+-
+-#---Packaging-------------------------------------------------------------------------------------
+-include(RootCPack)
+-- 
+2.39.5
+
