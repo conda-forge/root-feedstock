@@ -1,7 +1,7 @@
 context:
   name: root
   tag_name: 6-34-04
-  build_number: 0
+  build_number: 1
   clang_version: 18.1.8
   clang_patches_version: root_63402
   builtin_pyroot: true
@@ -42,6 +42,7 @@ source:
     - 0001-Enforce-fail-on-missing-with-afterimage-dependencies.patch
     - 0002-Remove-cocoa-afterimage-overrides.patch
     - 0001-Detect-which-ar-binary-should-be-used-to-build-libAf.patch
+    - patches/0001-Don-t-include-RootCPack.patch
 
 build:
   number: ${{ build_number }}
@@ -95,11 +96,12 @@ outputs:
             - zstd
             - freetype
             - liblzma-devel
-        - if: build_platform != target_platform and not osx
-          then:
-            - llvm ${{ clang_version }}.* ${{ clang_patches_version }}*
-            - llvmdev ${{ clang_version }}.* ${{ clang_patches_version }}*
-            - clangdev ${{ clang_version }}.* ${{ clang_patches_version }}*
+            - if: not osx
+              then:
+                - llvm ${{ clang_version }}.* ${{ clang_patches_version }}*
+                - llvm-openmp ${{ clang_version }}.*
+                - llvmdev ${{ clang_version }}.* ${{ clang_patches_version }}*
+                - clangdev ${{ clang_version }}.* ${{ clang_patches_version }}*
       host:
         - libblas
         - libcblas
@@ -158,6 +160,7 @@ outputs:
         - if: not (osx and arm64)
           then:
             - llvm ${{ clang_version }}.* ${{ clang_patches_version }}*
+            - llvm-openmp ${{ clang_version }}.*
             - llvmdev ${{ clang_version }}.* ${{ clang_patches_version }}*
             - clangdev ${{ clang_version }}.* ${{ clang_patches_version }}*
       run:
@@ -281,3 +284,4 @@ extra:
     - vepadulano
     - chrisburr
     - henryiii
+    - duncanmmacleod
