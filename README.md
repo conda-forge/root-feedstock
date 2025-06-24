@@ -360,6 +360,7 @@ Feedstock Maintainers
 =====================
 
 * [@chrisburr](https://github.com/chrisburr/)
+* [@duncanmmacleod](https://github.com/duncanmmacleod/)
 * [@henryiii](https://github.com/henryiii/)
 * [@vepadulano](https://github.com/vepadulano/)
 

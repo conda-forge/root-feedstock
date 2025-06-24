@@ -35,7 +35,7 @@ glew:
 glib:
 - '2'
 graphviz:
-- '12'
+- '13'
 gsl:
 - '2.7'
 libblas:
@@ -83,8 +83,6 @@ xxhash:
 zip_keys:
 - - c_compiler_version
   - cxx_compiler_version
-- - python
-  - numpy
 zlib:
 - '1'
 zstd:
