@@ -2,7 +2,7 @@ context:
   name: root
   tag_name: 6-34-06
   build_number: 0
-  clang_version: 18.1.8
+  clang_version: 20.1.3
   clang_patches_version: root_63406
   builtin_pyroot: true
   builtin_clang: false
