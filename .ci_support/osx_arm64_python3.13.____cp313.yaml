@@ -5,7 +5,7 @@ MACOSX_SDK_VERSION:
 c_compiler:
 - clang
 c_compiler_version:
-- '18'
+- '19'
 c_stdlib:
 - macosx_deployment_target
 c_stdlib_version:
@@ -19,7 +19,7 @@ channel_targets:
 cxx_compiler:
 - clangxx
 cxx_compiler_version:
-- '18'
+- '19'
 davix:
 - '0.8'
 fftw:
@@ -51,7 +51,7 @@ librsvg:
 libtiff:
 - '4.7'
 libxml2:
-- '2.13'
+- '2.14'
 lz4_c:
 - '1.10'
 macos_machine:
