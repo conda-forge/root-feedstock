@@ -35,7 +35,6 @@ source:
         - patches/0001-Avoid-linking-TPython-against-libPython.patch
     - patches/0001-Hackily-fix-cross-compilation.patch
     - 0002-Debugging.patch
-    - patches/0001-Remove-bad-check-on-SDK-for-std_darwin.MacOSX14.2.sd.patch
     - if: build_platform != target_platform
       then:
         - 0002-HACK-Support-overriding-triplet-used-by-cling.patch
