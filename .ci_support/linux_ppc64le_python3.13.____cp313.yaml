@@ -51,7 +51,7 @@ librsvg:
 libtiff:
 - '4.7'
 libxml2:
-- '2.14'
+- '2'
 lz4_c:
 - '1.10'
 numpy:
