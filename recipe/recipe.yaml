@@ -1,6 +1,6 @@
 context:
   name: root
-  tag_name: 6-34-06
+  tag_name: 6-34-08
   build_number: 0
   clang_version: 18.1.8
   clang_patches_version: root_63406
@@ -19,7 +19,7 @@ recipe:
 
 source:
   url: https://github.com/root-project/root/archive/refs/tags/v${{ tag_name }}.tar.gz
-  sha256: 42685407545794392db22596f49e8b34874083ae720db061ea3e06f690291e64
+  sha256: 1ee4ed1a5acc661def41a033a91e8775b2a8f3841cb9b8502988bb23d2bc5d7a
   target_directory: root-source
   patches:
     - patches/root-x.xx.xx_cling-runtime-sysroot.patch
