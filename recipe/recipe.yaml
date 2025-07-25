@@ -202,14 +202,10 @@ outputs:
           - root -l -b -q -x test.cpp
           - "root -b -l -q -x -e '2+3; 0'"
           - "root -b -l -q -x -e 'gSystem->LoadAllLibraries(); 0'"
-          - thisroot.sh
-          - thisroot.csh
-          - thisroot.fish
-          - "root -b -l -q -x -e 'gStyle->SetCanvasPreferGL(kTRUE); c = new TCanvas(); if (!c->UseGL()) { throw std::runtime_error(\"OpenGL does not appear to be working\"); }'"
-          - "root -b -l -q -x \"${PREFIX}/tutorials/eve/geom_lhcb.C\" || true"
-          - "root -b -l -q -x \"${PREFIX}/tutorials/tree/run_h1analysis.C\""
+          - "root -b -l -q -x -e 'gStyle->SetCanvasPreferGL(kTRUE); TCanvas c; if (!c.UseGL()) { throw std::runtime_error(\"OpenGL does not appear to be working\"); }'"
+          - "root -b -l -q -x \"${PREFIX}/tutorials/analysis/tree/run_h1analysis.C\""
           - if: not ppc64le
-            then: "XrdSecPROTOCOL=unix python -c \"import ROOT; ROOT.ROOT.EnableImplicitMT(); rdf = ROOT.RDataFrame('DecayTree', 'root://eospublic.cern.ch//eos/opendata/lhcb/AntimatterMatters2017/data/B2HHH_MagnetUp.root'); print(rdf.Cache('H1_PX').AsNumpy())\""
+            then: "XrdSecPROTOCOL=unix python -c \"import ROOT; ROOT.EnableImplicitMT(); rdf = ROOT.RDataFrame('DecayTree', 'root://eospublic.cern.ch//eos/opendata/lhcb/AntimatterMatters2017/data/B2HHH_MagnetUp.root'); print(rdf.AsNumpy(['H1_PX']))\""
           - root -l -b -q -x test.cpp++
           - if: not (osx and arm64) and build_platform == target_platform
             then: "echo '.q' | root -e 'sddsa0'"
@@ -243,8 +239,7 @@ outputs:
           - python test_pyroot.py
           - root -l -b -q -x test.cpp
           - "root -b -l -q -x -e 'gSystem->LoadAllLibraries(); 0'"
-          - "root -b -l -q -x \"${PREFIX}/tutorials/eve/geom_lhcb.C\" || true"
-          - "root -b -l -q -x \"${PREFIX}/tutorials/tree/run_h1analysis.C\""
+          - "root -b -l -q -x \"${PREFIX}/tutorials/analysis/tree/run_h1analysis.C\""
           - root -l -b -q -x test.cpp++
           - "jupyter-kernelspec list | grep ' root '"
 
