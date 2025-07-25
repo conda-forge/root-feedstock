@@ -88,6 +88,7 @@ outputs:
         - sed
         - make
         - ninja
+        - zeromq
         - if: unix
           then: gnuconfig
         - if: build_platform != target_platform
