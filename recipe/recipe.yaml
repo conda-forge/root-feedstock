@@ -163,6 +163,8 @@ outputs:
         - zstd
         # Required for roofit_multiprocess
         - cppzmq
+        # Required zmq_ppoll API added in v4.3.5
+        - zeromq
         - if: not (osx and arm64)
           then:
             - llvm ${{ clang_version }}.* ${{ clang_patches_version }}*
