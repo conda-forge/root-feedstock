@@ -1,0 +1,34 @@
+From 0ef3e0eca8bc7dd6d2a87008fee33f204520506b Mon Sep 17 00:00:00 2001
+From: Vincenzo Eduardo Padulano <vincenzo.eduardo.padulano@cern.ch>
+Date: Mon, 28 Jul 2025 11:53:33 +0200
+Subject: [PATCH] Hint to external LLVM and Clang on Conda
+
+---
+ interpreter/CMakeLists.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/interpreter/CMakeLists.txt b/interpreter/CMakeLists.txt
+index e6512a8882..f7c486a2a6 100644
+--- a/interpreter/CMakeLists.txt
++++ b/interpreter/CMakeLists.txt
+@@ -256,7 +256,7 @@ if(builtin_llvm)
+     set(LLVM_TABLEGEN_EXE "${LLVM_BINARY_DIR}/bin/llvm-tblgen")
+   endif()
+ else()
+-  find_package(LLVM REQUIRED CONFIG)
++  find_package(LLVM REQUIRED CONFIG HINTS "${LLVM_CMAKE_PATH}")
+   message(STATUS "Found LLVM ${LLVM_PACKAGE_VERSION} in ${LLVM_CMAKE_DIR}")
+ 
+   separate_arguments(LLVM_DEFINITIONS_LIST NATIVE_COMMAND ${LLVM_DEFINITIONS})
+@@ -405,7 +405,7 @@ if (builtin_clang)
+     CACHE STRING "Clang include directories.")
+   set(CLANG_CMAKE_DIR "${CMAKE_BINARY_DIR}/lib/cmake/clang/")
+ else()
+-  find_package(Clang REQUIRED CONFIG)
++  find_package(Clang REQUIRED CONFIG HINTS "${LLVM_CMAKE_PATH}")
+   message(STATUS "Found Clang ${CLANG_PACKAGE_VERSION} in ${CLANG_CMAKE_DIR}")
+ endif()
+ 
+-- 
+2.39.5 (Apple Git-154)
+
