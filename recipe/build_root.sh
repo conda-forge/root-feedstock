@@ -38,6 +38,7 @@ sed -i -e "s@${OLDVERSIONMACOS}@${MACOSX_DEPLOYMENT_TARGET}@g" \
 declare -a CMAKE_PLATFORM_FLAGS
 
 Clang_DIR=${PREFIX}
+printf "\n\n\n${Clang_DIR}\n\n\n"
 
 if [[ "${target_platform}" != "${build_platform}" && "${target_platform}" == osx* ]]; then
     CONDA_SUBDIR=${build_platform} conda create --prefix "${SRC_DIR}/clang_env_build" --yes \
