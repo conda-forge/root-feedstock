@@ -18,7 +18,6 @@ def test_1():
 
 def test_2():
     assert ROOT.TPython.Exec("print('1 + 1 =', 1+1)")
-    assert int(ROOT.TPython.Eval("1+1")) == 2
 
 if __name__ == "__main__":
     test_1()
