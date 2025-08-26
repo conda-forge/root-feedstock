@@ -40,6 +40,7 @@ source:
         - patches/0003-disable-builtin-freetype-macos.patch
         - patches/0013-avoid-linking-TPython-against-libPython.patch
         - patches/0014-root-x.xx.xx-osx-remove-hardcoded-sysroot.patch
+        - patches/0015-build-Fix-script-for-conda-MacOS.patch
 
 build:
   number: ${{ build_number }}
@@ -102,7 +103,7 @@ outputs:
             - zstd
             - freetype
             - liblzma-devel
-        - if: build_platform != target_platform and not osx
+        - if: build_platform != target_platform
           then:
             - llvm ${{ clang_version }}.*
             - llvmdev ${{ clang_version }}.*
@@ -164,11 +165,9 @@ outputs:
         - xxhash
         - zlib
         - zstd
-        - if: not (osx and arm64)
-          then:
-            - llvm ${{ clang_version }}.*
-            - llvmdev ${{ clang_version }}.*
-            - clangdev ${{ clang_version }}.* ${{ clang_patches_version }}*
+        - llvm ${{ clang_version }}.*
+        - llvmdev ${{ clang_version }}.*
+        - clangdev ${{ clang_version }}.* ${{ clang_patches_version }}*
       run:
         - python
         - numpy

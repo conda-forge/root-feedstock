@@ -1,2 +1,8 @@
 c_stdlib_version:              # [osx]
   - 11.0                       # [osx]
+
+c_compiler_version:
+  - 16 # [osx]
+
+cxx_compiler_version:
+  - 16 # [osx]
