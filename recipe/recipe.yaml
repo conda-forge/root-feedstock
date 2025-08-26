@@ -22,30 +22,24 @@ source:
   sha256: f26546ba7a09a41d491541312f4d115e7eccf250bd7f9e8aee9168cda0aa1ba6
   target_directory: root-source
   patches:
-    - patches/root-x.xx.xx_cling-runtime-sysroot.patch
-    - if: osx
-      then: patches/root-x.xx.xx-osx-remove-hardcoded-sysroot.patch
-    - patches/0001-Hacks.patch
-    - patches/0001-Patch-for-apple-silicon.patch
-    - patches/0001-Set-LLVM_REQUIRES_EH-for-Cling.patch
-    - if: build_platform != target_platform
-      then: patches/disable-hsimple.root
-    - patches/0001-Reset-CMAKE-module-path-for-interpreter.patch
-    - if: osx
-      then:
-        - patches/0001-force-one-modulemap-for-darwin.patch
-        - patches/0001-Remove-check-for-SDK-version-in-CIFactory.patch
-        - patches/0001-avoid-linking-TPython-against-libPython.patch
-    - patches/0001-Hackily-fix-cross-compilation.patch
-    - 0002-Debugging.patch
-    - PR-15804.patch
-    - pr-17269.patch
-    # - 0001-Support-getting-rootcling_stage1-from-external-build.patch
+    - patches/0001-disable-cling-sysroot-at-runtime.patch
+    - patches/0002-help-find-external-LLVM-Clang.patch
+    - patches/0004-Set-LLVM_REQUIRES_EH-for-Cling.patch
+    - patches/0005-Reset-CMAKE-module-path-for-interpreter.patch
+    - patches/0006-asimage-cross-compilation-fix.patch
+    - patches/0007-allow-any-openssl3-for-civetweb.patch
+    - patches/0008-comply-with-CMP0175.patch
+    - patches/0009-Enforce-fail-on-missing-with-afterimage-dependencies.patch
+    - patches/0010-Detect-which-ar-binary-should-be-used-to-build-libAf.patch
     - if: build_platform != target_platform
       then:
-        - 0002-HACK-Support-overriding-triplet-used-by-cling.patch
-    - 0001-Enforce-fail-on-missing-with-afterimage-dependencies.patch
-    - 0001-Detect-which-ar-binary-should-be-used-to-build-libAf.patch
+        - patches/0011-HACK-Support-overriding-triplet-used-by-cling.patch
+        - patches/0012-Disable-hsimple.root-generation-if-cross-compiling.patch
+    - if: osx
+      then:
+        - patches/0003-disable-builtin-freetype-macos.patch
+        - patches/0013-avoid-linking-TPython-against-libPython.patch
+        - patches/0014-root-x.xx.xx-osx-remove-hardcoded-sysroot.patch
 
 build:
   number: ${{ build_number }}
