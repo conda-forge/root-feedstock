@@ -37,26 +37,8 @@ sed -i -e "s@${OLDVERSIONMACOS}@${MACOSX_DEPLOYMENT_TARGET}@g" \
 
 declare -a CMAKE_PLATFORM_FLAGS
 
-if [[ "${target_platform}" == osx-arm64 ]]; then
-    CONDA_SUBDIR=${target_platform} conda create --prefix "${SRC_DIR}/clang_env" --yes \
-        "llvm ${clang_version} ${clang_patches_version}*" \
-        "llvm-openmp ${clang_version}" \
-        "clangdev ${clang_version} ${clang_patches_version}*"
-    Clang_DIR=${SRC_DIR}/clang_env
-    CMAKE_PLATFORM_FLAGS+=("-DLLVM_CMAKE_PATH=${SRC_DIR}/clang_env/lib/cmake")
-else
-    Clang_DIR=${PREFIX}
-fi
-
-if [[ "${target_platform}" != "${build_platform}" && "${target_platform}" == osx* ]]; then
-    CONDA_SUBDIR=${build_platform} conda create --prefix "${SRC_DIR}/clang_env_build" --yes \
-        "llvm ${clang_version} ${clang_patches_version}*" \
-        "llvm-openmp ${clang_version}" \
-        "clangdev ${clang_version} ${clang_patches_version}*"
-    Clang_DIR_BUILD=${SRC_DIR}/clang_env_build
-else
-    Clang_DIR_BUILD=${BUILD_PREFIX}
-fi
+Clang_DIR=${PREFIX}
+Clang_DIR_BUILD=${BUILD_PREFIX}
 
 clang_version_split=(${clang_version//./ })
 CMAKE_PLATFORM_FLAGS+=("-DCLANG_RESOURCE_DIR_VERSION=${clang_version_split[0]}")
