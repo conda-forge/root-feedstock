@@ -42,9 +42,6 @@ build:
   number: ${{ build_number }}
   skip:
     - win
-     # newer macOS needs root >=6.34.8, see
-     # https://github.com/root-project/root/issues/18429
-    - osx and x86_64
 
 outputs:
   - package:
@@ -94,12 +91,10 @@ outputs:
             - zstd
             - freetype
             - liblzma-devel
-            - if: not osx
-              then:
-                - llvm ${{ clang_version }}.* ${{ clang_patches_version }}*
-                - llvm-openmp ${{ clang_version }}.*
-                - llvmdev ${{ clang_version }}.* ${{ clang_patches_version }}*
-                - clangdev ${{ clang_version }}.* ${{ clang_patches_version }}*
+            - llvm ${{ clang_version }}.* ${{ clang_patches_version }}*
+            - llvm-openmp ${{ clang_version }}.*
+            - llvmdev ${{ clang_version }}.* ${{ clang_patches_version }}*
+            - clangdev ${{ clang_version }}.* ${{ clang_patches_version }}*
       host:
         - libblas
         - libcblas
@@ -155,12 +150,10 @@ outputs:
         - xxhash
         - zlib
         - zstd
-        - if: not (osx and arm64)
-          then:
-            - llvm ${{ clang_version }}.* ${{ clang_patches_version }}*
-            - llvm-openmp ${{ clang_version }}.*
-            - llvmdev ${{ clang_version }}.* ${{ clang_patches_version }}*
-            - clangdev ${{ clang_version }}.* ${{ clang_patches_version }}*
+        - llvm ${{ clang_version }}.* ${{ clang_patches_version }}*
+        - llvm-openmp ${{ clang_version }}.*
+        - llvmdev ${{ clang_version }}.* ${{ clang_patches_version }}*
+        - clangdev ${{ clang_version }}.* ${{ clang_patches_version }}*
       run:
         - python
         - numpy

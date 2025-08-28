@@ -1,2 +1,12 @@
 c_stdlib_version:              # [osx]
   - 11.0                       # [osx]
+
+# libc++ shipped by the conda-forge compilers on MacOS may not be compatible
+# with the version of clang used by the ROOT build (i.e. by cling). Try to help
+# the build by using a compatible compiler version for the main compiler driving
+# the build process
+c_compiler_version:
+  - 18 # [osx]
+cxx_compiler_version:
+  - 18 # [osx]
+
