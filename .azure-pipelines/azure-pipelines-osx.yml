@@ -24,10 +24,6 @@ jobs:
         CONFIG: osx_arm64_python3.13.____cp313
         UPLOAD_PACKAGES: 'True'
         SHORT_CONFIG: osx_arm64_python3.13.____cp313
-      osx_arm64_python3.9.____cpython:
-        CONFIG: osx_arm64_python3.9.____cpython
-        UPLOAD_PACKAGES: 'True'
-        SHORT_CONFIG: osx_arm64_python3.9.____cpython
   timeoutInMinutes: 360
   variables: {}
 
