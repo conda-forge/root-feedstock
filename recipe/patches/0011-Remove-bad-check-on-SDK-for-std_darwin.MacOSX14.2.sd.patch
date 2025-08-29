@@ -1,0 +1,36 @@
+From 02e567125dee29ac4f50ce22868ca6c7a4eb096a Mon Sep 17 00:00:00 2001
+From: Vincenzo Eduardo Padulano <vincenzo.eduardo.padulano@cern.ch>
+Date: Thu, 31 Jul 2025 13:50:15 +0200
+Subject: [PATCH] Remove bad check on SDK for
+ std_darwin.MacOSX14.2.sdk.modulemap
+
+---
+ interpreter/cling/lib/Interpreter/CIFactory.cpp | 8 --------
+ 1 file changed, 8 deletions(-)
+
+diff --git a/interpreter/cling/lib/Interpreter/CIFactory.cpp b/interpreter/cling/lib/Interpreter/CIFactory.cpp
+index d9cedd5ed1..bd2c3dc4a5 100644
+--- a/interpreter/cling/lib/Interpreter/CIFactory.cpp
++++ b/interpreter/cling/lib/Interpreter/CIFactory.cpp
+@@ -703,18 +703,10 @@ namespace {
+                             /*AllowModulemapOverride=*/ false);
+ #elif __APPLE__
+     if (Triple.isMacOSX()) {
+-      if (CI.getTarget().getSDKVersion() < VersionTuple(14, 4)) {
+-        maybeAppendOverlayEntry(stdIncLoc.str(),
+-                                "std_darwin.MacOSX14.2.sdk.modulemap",
+-                                clingIncLoc.str().str(), MOverlay,
+-                                /*RegisterModuleMap=*/true,
+-                                /*AllowModulemapOverride=*/false);
+-      } else {
+         maybeAppendOverlayEntry(stdIncLoc.str(), "std_darwin.modulemap",
+                                 clingIncLoc.str().str(), MOverlay,
+                                 /*RegisterModuleMap=*/ true,
+                                 /*AllowModulemapOverride=*/ false);
+-      }
+     }
+ #else
+     maybeAppendOverlayEntry(cIncLoc.str(), "libc.modulemap",
+-- 
+2.39.5 (Apple Git-154)
+
