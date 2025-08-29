@@ -164,6 +164,9 @@ CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_xxhash=OFF")
 CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_zlib=OFF")
 CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_zstd=OFF")
 
+# Keep on HTML option which is still supported in 6.34 release cycle
+CMAKE_PLATFORM_FLAGS+=("-Dhtml=ON")
+
 # Configure LLVM/Clang/Cling
 if [ "${ROOT_CONDA_BUILTIN_CLANG-}" = "1" ]; then
     CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_llvm=ON")
