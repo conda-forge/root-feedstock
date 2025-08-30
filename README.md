@@ -7,13 +7,21 @@ Home: https://root.cern/
 
 Package license: LGPL-2.1-only
 
-Summary: ROOT is a unified software package for the storage, processing, and analysis of scientific data: from its acquisition to the final visualization in form of highly customizable, publication-ready plots. It is reliable, performant and well supported, easy to use and obtain, and strives to maximize the quantity and impact of scientific results obtained per unit cost, both of human effort and computing resources. ROOT is performance critical software written in C++ and enables rapid prototyping powered by a unique C++ compliant interpreter called Cling. Cling also enables performant C++ type introspection which is a building block of automatic interoperability with Python. Thanks to its dynamic Python bindings, leveraging the cppyy technology, ROOT offers efficient, on-demand C++/Python interoperability in a uniform cross-language execution environment.
+Summary: ROOT is a unified software package for the storage, processing, and analysis of scientific data: from its
+acquisition to the final visualization in form of highly customizable, publication-ready plots. It is reliable,
+performant and well supported, easy to use and obtain, and strives to maximize the quantity and impact of scientific
+results obtained per unit cost, both of human effort and computing resources. ROOT is performance critical software
+written in C++ and enables rapid prototyping powered by a unique C++ compliant interpreter called Cling. Cling also
+enables performant C++ type introspection which is a building block of automatic interoperability with Python.
+Thanks to its dynamic Python bindings, leveraging the cppyy technology, ROOT offers efficient, on-demand C++/Python
+interoperability in a uniform cross-language execution environment.
 
 Development: https://github.com/root-project/root/
 
 Documentation: https://root.cern/documentation
 
-While the feature set of the ROOT framework is vast and not everything can be supported in the conda distribution, this package aims at enabling most of the features of ROOT. Here are a few things to try:
+While the feature set of the ROOT framework is vast and not everything can be supported in the conda distribution,
+this package aims at enabling most of the features of ROOT. Here are a few things to try:
 
 * `root`: you can start up a session and see the splash screen; Control-D to exit.
 * `python` followed by `import ROOT` to access all ROOT functionalities via the Python bindings.
@@ -28,7 +36,8 @@ The ROOT package will prepare the required compilers. Everything in Conda is sym
 `$CONDA_PREFIX` if you build things by hand; tools like CMake should find it automatically.
 
 There is also a `root_base` package, with minimal dependecies, that libraries should depend on this to avoid
-having a runtime dependency on the `compilers` package. In most cases users should use the `root` package directly, since it adds more features (taking care of their dependencies) to facilitate usage of the ROOT Python bindings.
+having a runtime dependency on the `compilers` package. In most cases users should use the `root` package directly,
+since it adds more features (taking care of their dependencies) to facilitate usage of the ROOT Python bindings.
 
 Current build status
 ====================
