@@ -33,9 +33,7 @@ The ROOT package will prepare the required compilers. Everything in Conda is sym
 scripts should not be used and are not provided. Graphics, `rootbrowse`, etc. all should work. OpenGL is enabled.
 
 There is also a `root_base` package, with minimal dependecies, that libraries should depend on this to avoid
-having a runtime dependency on the `compilers` package. `root-dependencies` and `root-binaries` are also available.
-In most cases users should use the `root` package directly, since it adds both of these, along with compilers,
-Jupyter, and a few other things to facilitate using ROOT or PyROOT.
+having a runtime dependency on the `compilers` package. In most cases users should use the `root` package directly, since it adds more features (taking care of their dependencies) to facilitate usage of the ROOT Python bindings.
 
 Current build status
 ====================
