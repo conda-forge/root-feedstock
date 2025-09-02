@@ -10,7 +10,7 @@ context:
   # When new Python versions are released numba tends to be slow to support them
   # to prevent ROOT from being held up by this, only have a strong dependency on
   # numba for supported python versions
-  max_supported_numba_py: 3.13
+  unsupported_numba_pyversion: 3.14
   root_cxx_standard: 20
 
 recipe:
@@ -210,7 +210,7 @@ outputs:
         - metakernel
         - ipython
         - notebook
-        - if: python <= max_supported_numba_py
+        - if: python < unsupported_numba_pyversion
           then: numba
     tests:
       - python:
