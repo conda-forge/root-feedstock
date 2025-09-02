@@ -140,33 +140,28 @@ CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_zlib=OFF")
 CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_zstd=OFF")
 
 # Configure LLVM/Clang/Cling
-if [ "${ROOT_CONDA_BUILTIN_CLANG-}" = "1" ]; then
-    CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_llvm=ON")
-    CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_clang=ON")
+CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_llvm=OFF")
+CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_clang=OFF")
+
+if [[ "${target_platform}" == "${build_platform}" ]]; then
+    CMAKE_PLATFORM_FLAGS+=("-DLLVM_CONFIG=${Clang_DIR}/bin/llvm-config")
+    CMAKE_PLATFORM_FLAGS+=("-DLLVM_TABLEGEN_EXE=${Clang_DIR}/bin/llvm-tblgen")
 else
-    CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_llvm=OFF")
-    CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_clang=OFF")
+    CMAKE_PLATFORM_FLAGS+=("-DLLVM_CONFIG=${Clang_DIR_BUILD}/bin/llvm-config")
+    CMAKE_PLATFORM_FLAGS+=("-DLLVM_TABLEGEN_EXE=${Clang_DIR_BUILD}/bin/llvm-tblgen")
+fi
 
-    if [[ "${target_platform}" == "${build_platform}" ]]; then
-        CMAKE_PLATFORM_FLAGS+=("-DLLVM_CONFIG=${Clang_DIR}/bin/llvm-config")
-        CMAKE_PLATFORM_FLAGS+=("-DLLVM_TABLEGEN_EXE=${Clang_DIR}/bin/llvm-tblgen")
-    else
-        CMAKE_PLATFORM_FLAGS+=("-DLLVM_CONFIG=${Clang_DIR_BUILD}/bin/llvm-config")
-        CMAKE_PLATFORM_FLAGS+=("-DLLVM_TABLEGEN_EXE=${Clang_DIR_BUILD}/bin/llvm-tblgen")
-    fi
+CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_cling=ON")
+CMAKE_PLATFORM_FLAGS+=("-DCLING_BUILD_PLUGINS=ON")
+CMAKE_PLATFORM_FLAGS+=("-Dclad=ON")
 
-    CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_cling=ON")
-    CMAKE_PLATFORM_FLAGS+=("-DCLING_BUILD_PLUGINS=ON")
-    CMAKE_PLATFORM_FLAGS+=("-Dclad=ON")
-
-    # Cling needs some minor patches to the LLVM sources, hackily apply them rather than rebuilding LLVM
-    # The following lines are used to avoid linking against LLVM during the build of ROOT, which is not supported.
-    # The setting is done globally by the LLVM CMake configuration and it overrides any other setting in our build
-    # For more details, see https://github.com/root-project/root/issues/18387 and https://github.com/llvm/llvm-project/pull/135570
-    sed -i "s@LLVM_LINK_LLVM_DYLIB yes@LLVM_LINK_LLVM_DYLIB no@g" "${Clang_DIR}/lib/cmake/llvm/LLVMConfig.cmake"
-    if [[ "${target_platform}" != "${build_platform}" ]]; then
-        sed -i "s@LLVM_LINK_LLVM_DYLIB yes@LLVM_LINK_LLVM_DYLIB no@g" "${Clang_DIR_BUILD}/lib/cmake/llvm/LLVMConfig.cmake"
-    fi
+# Cling needs some minor patches to the LLVM sources, hackily apply them rather than rebuilding LLVM
+# The following lines are used to avoid linking against LLVM during the build of ROOT, which is not supported.
+# The setting is done globally by the LLVM CMake configuration and it overrides any other setting in our build
+# For more details, see https://github.com/root-project/root/issues/18387 and https://github.com/llvm/llvm-project/pull/135570
+sed -i "s@LLVM_LINK_LLVM_DYLIB yes@LLVM_LINK_LLVM_DYLIB no@g" "${Clang_DIR}/lib/cmake/llvm/LLVMConfig.cmake"
+if [[ "${target_platform}" != "${build_platform}" ]]; then
+    sed -i "s@LLVM_LINK_LLVM_DYLIB yes@LLVM_LINK_LLVM_DYLIB no@g" "${Clang_DIR_BUILD}/lib/cmake/llvm/LLVMConfig.cmake"
 fi
 
 # Enable some vectorisation options
