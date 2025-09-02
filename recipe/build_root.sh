@@ -382,8 +382,6 @@ if [[ "${target_platform}" == linux* ]]; then
 else
     CMAKE_PLATFORM_FLAGS+=("-Dcocoa=ON")
 fi
-# Should be disabled for ARM?
-# runtime_cxxmodules 	Enable runtime support for C++ modules 	ON
 
 # Configure the tests
 if [ "${ROOT_CONDA_RUN_GTESTS-}" = "1" ]; then
@@ -447,10 +445,6 @@ if [[ "${target_platform}" != "${build_platform}" ]]; then
     mv core/rootcling_stage1/src/rootcling_stage1{.orig,}
     mv bin/rootcling{.orig,}
 fi
-
-# cd tutorials
-# EXTRA_CLING_ARGS='-O1' LD_LIBRARY_PATH=$SRC_DIR/build-dir/lib: ROOTIGNOREPREFIX=1 ROOT_HIST=0 $SRC_DIR/build-dir/bin/root.exe -l -q -b -n -x hsimple.C -e return
-# cd ..
 
 if [ "${ROOT_CONDA_RUN_GTESTS-}" = "1" ]; then
     # Run gtests, never fail as Jenkins will check the test results instead
