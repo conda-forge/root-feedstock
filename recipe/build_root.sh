@@ -91,6 +91,7 @@ if [ "${ROOT_CONDA_BUILD_TYPE-}" == "" ]; then
 else
     CMAKE_PLATFORM_FLAGS+=("-DCMAKE_BUILD_TYPE=${ROOT_CONDA_BUILD_TYPE}")
 fi
+CMAKE_PLATFORM_FLAGS+=("-GNinja")
 CMAKE_PLATFORM_FLAGS+=("-DCMAKE_INSTALL_PREFIX=${PREFIX}")
 CMAKE_PLATFORM_FLAGS+=("-DCMAKE_PREFIX_PATH=${PREFIX}")
 
@@ -198,7 +199,6 @@ if [[ "${target_platform}" != "${build_platform}" ]]; then
         clang_version_split=(${clang_version//./ })
         CMAKE_PLATFORM_FLAGS_BUILD+=("-DCLANG_RESOURCE_DIR_VERSION=${clang_version_split[0]}")
     elif [[ "${target_platform}" == linux* ]]; then
-        CMAKE_PLATFORM_FLAGS_BUILD+=("-GNinja")
         CONDA_BUILD_SYSROOT_BUILD="${BUILD_PREFIX}/${BUILD}/sysroot"
     else
         echo "Unsupported cross-compilation target"
