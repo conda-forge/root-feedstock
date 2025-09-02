@@ -224,6 +224,7 @@ outputs:
             - test_pyroot.py
         script:
           - python test_pyroot.py
+          - python ${PREFIX}/tutorials/analysis/dataframe/df038_NumbaDeclare.py
           - root -l -b -q -x test.cpp
           - "root -b -l -q -x -e 'gSystem->LoadAllLibraries(); 0'"
           - "root -b -l -q -x \"${PREFIX}/tutorials/analysis/tree/run_h1analysis.C\""
