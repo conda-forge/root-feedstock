@@ -47,10 +47,6 @@ if [[ "${target_platform}" == linux* ]]; then
     CMAKE_PLATFORM_FLAGS+=("-DDEFAULT_SYSROOT=${INSTALL_SYSROOT}")
     CMAKE_PLATFORM_FLAGS+=("-DRT_LIBRARY=${INSTALL_SYSROOT}/usr/lib/librt.so")
 
-    # Fix finding X11 with CMake, copied from below with minor modifications
-    # https://github.com/Kitware/CMake/blob/e59e17c1c7059b7d0f02d6b12bc3094a2afee778/Modules/FindX11.cmake
-    cp "${RECIPE_DIR}/FindX11.cmake" "root-source/cmake/modules/"
-
     # Hide symbols from LLVM/clang to avoid conflicts with other libraries
     set +x
     for lib_name in $(ls "${PREFIX}/lib" | grep -E 'lib(LLVM|clang).*\.a'); do
