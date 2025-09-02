@@ -4,7 +4,6 @@ context:
   build_number: 2
   clang_version: 18.1.8
   clang_patches_version: root_63604
-  builtin_pyroot: true
   builtin_clang: false
   run_gtests: false
   # When new Python versions are released numba tends to be slow to support them
@@ -52,7 +51,6 @@ outputs:
         env:
           clang_version: ${{ clang_version }}
           clang_patches_version: ${{ clang_patches_version }}
-          ROOT_CONDA_BUILTIN_PYROOT: ${{ builtin_pyroot }}
           ROOT_CXX_STANDARD: ${{ root_cxx_standard }}
       dynamic_linking:
         overdepending_behavior: ignore

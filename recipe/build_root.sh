@@ -246,25 +246,17 @@ if [[ "${target_platform}" != "${build_platform}" ]]; then
         cmake --build "${SRC_DIR}/build-rootcling-xp" --target rootcling -- "-j${CPU_COUNT}"
 fi
 
-# Disable the Python bindings if we're building them in standalone mode
-CMAKE_PLATFORM_FLAGS+=("-Dpyroot_legacy=OFF")
-if [ "${ROOT_CONDA_BUILTIN_PYROOT-}" = "true" ]; then
-    Python_INCLUDE_DIR="$(python -c 'import sysconfig; print(sysconfig.get_path("include"))')"
-    Python_NumPy_INCLUDE_DIR="$(python -c 'import numpy;print(numpy.get_include())')"
-    CMAKE_PLATFORM_FLAGS+=("-DPython_EXECUTABLE:PATH=${PYTHON}")
-    CMAKE_PLATFORM_FLAGS+=("-DPython_INCLUDE_DIR:PATH=${Python_INCLUDE_DIR}")
-    CMAKE_PLATFORM_FLAGS+=("-DPython_NumPy_INCLUDE_DIR=${Python_NumPy_INCLUDE_DIR}")
-    CMAKE_PLATFORM_FLAGS+=("-DPython3_EXECUTABLE:PATH=${PYTHON}")
-    CMAKE_PLATFORM_FLAGS+=("-DPython3_INCLUDE_DIR:PATH=${Python_INCLUDE_DIR}")
-    CMAKE_PLATFORM_FLAGS+=("-DPython3_NumPy_INCLUDE_DIR=${Python_NumPy_INCLUDE_DIR}")
-    CMAKE_PLATFORM_FLAGS+=("-DCMAKE_INSTALL_PYTHONDIR=${SP_DIR}")
-    CMAKE_PLATFORM_FLAGS+=("-Dpyroot=ON")
-    CMAKE_PLATFORM_FLAGS+=("-Dtmva-pymva=ON")
-else
-    CMAKE_PLATFORM_FLAGS+=("-DPython3_EXECUTABLE=${PYTHON}")
-    CMAKE_PLATFORM_FLAGS+=("-Dpyroot=OFF")
-    CMAKE_PLATFORM_FLAGS+=("-Dtmva-pymva=OFF")
-fi
+Python_INCLUDE_DIR="$(python -c 'import sysconfig; print(sysconfig.get_path("include"))')"
+Python_NumPy_INCLUDE_DIR="$(python -c 'import numpy;print(numpy.get_include())')"
+CMAKE_PLATFORM_FLAGS+=("-DPython_EXECUTABLE:PATH=${PYTHON}")
+CMAKE_PLATFORM_FLAGS+=("-DPython_INCLUDE_DIR:PATH=${Python_INCLUDE_DIR}")
+CMAKE_PLATFORM_FLAGS+=("-DPython_NumPy_INCLUDE_DIR=${Python_NumPy_INCLUDE_DIR}")
+CMAKE_PLATFORM_FLAGS+=("-DPython3_EXECUTABLE:PATH=${PYTHON}")
+CMAKE_PLATFORM_FLAGS+=("-DPython3_INCLUDE_DIR:PATH=${Python_INCLUDE_DIR}")
+CMAKE_PLATFORM_FLAGS+=("-DPython3_NumPy_INCLUDE_DIR=${Python_NumPy_INCLUDE_DIR}")
+CMAKE_PLATFORM_FLAGS+=("-DCMAKE_INSTALL_PYTHONDIR=${SP_DIR}")
+CMAKE_PLATFORM_FLAGS+=("-Dpyroot=ON")
+CMAKE_PLATFORM_FLAGS+=("-Dtmva-pymva=ON")
 
 # Disable the R bindings, should be made standalong like PyROOT
 CMAKE_PLATFORM_FLAGS+=("-Dr=OFF")
