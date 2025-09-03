@@ -1,7 +1,7 @@
 context:
   name: root
   tag_name: 6-34-10
-  build_number: 1
+  build_number: 2
   clang_version: 18.1.8
   clang_patches_version: root_63410
   builtin_pyroot: true
@@ -33,6 +33,8 @@ source:
     - if: osx
       then:
         - patches/0001-Avoid-linking-TPython-against-libPython.patch
+        - patches/0001-build-Fix-script-for-conda-MacOS.patch
+        - patches/0001-Remove-bad-check-on-SDK-for-std_darwin.MacOSX14.2.sd.patch
     - patches/0001-Hackily-fix-cross-compilation.patch
     - 0002-Debugging.patch
     - if: build_platform != target_platform
@@ -46,9 +48,6 @@ build:
   number: ${{ build_number }}
   skip:
     - win
-     # newer macOS needs root >=6.34.8, see
-     # https://github.com/root-project/root/issues/18429
-    - osx and x86_64
 
 outputs:
   - package:
@@ -98,12 +97,10 @@ outputs:
             - zstd
             - freetype
             - liblzma-devel
-            - if: not osx
-              then:
-                - llvm ${{ clang_version }}.* ${{ clang_patches_version }}*
-                - llvm-openmp ${{ clang_version }}.*
-                - llvmdev ${{ clang_version }}.* ${{ clang_patches_version }}*
-                - clangdev ${{ clang_version }}.* ${{ clang_patches_version }}*
+            - llvm ${{ clang_version }}.* ${{ clang_patches_version }}*
+            - llvm-openmp ${{ clang_version }}.*
+            - llvmdev ${{ clang_version }}.* ${{ clang_patches_version }}*
+            - clangdev ${{ clang_version }}.* ${{ clang_patches_version }}*
       host:
         - libblas
         - libcblas
@@ -159,12 +156,10 @@ outputs:
         - xxhash
         - zlib
         - zstd
-        - if: not (osx and arm64)
-          then:
-            - llvm ${{ clang_version }}.* ${{ clang_patches_version }}*
-            - llvm-openmp ${{ clang_version }}.*
-            - llvmdev ${{ clang_version }}.* ${{ clang_patches_version }}*
-            - clangdev ${{ clang_version }}.* ${{ clang_patches_version }}*
+        - llvm ${{ clang_version }}.* ${{ clang_patches_version }}*
+        - llvm-openmp ${{ clang_version }}.*
+        - llvmdev ${{ clang_version }}.* ${{ clang_patches_version }}*
+        - clangdev ${{ clang_version }}.* ${{ clang_patches_version }}*
       run:
         - python
         - numpy
