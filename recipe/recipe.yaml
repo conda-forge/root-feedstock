@@ -1,7 +1,7 @@
 context:
   name: root
   tag_name: 6-34-10
-  build_number: 1
+  build_number: 2
   clang_version: 18.1.8
   clang_patches_version: root_63410
   builtin_pyroot: true
@@ -46,9 +46,6 @@ build:
   number: ${{ build_number }}
   skip:
     - win
-     # newer macOS needs root >=6.34.8, see
-     # https://github.com/root-project/root/issues/18429
-    - osx and x86_64
 
 outputs:
   - package:
