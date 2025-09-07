@@ -412,3 +412,45 @@ mkdir -p "${PREFIX}/etc/conda/deactivate.d"
 cp "${RECIPE_DIR}/deactivate.sh" "${PREFIX}/etc/conda/deactivate.d/deactivate-root.sh"
 cp "${RECIPE_DIR}/deactivate.csh" "${PREFIX}/etc/conda/deactivate.d/deactivate-root.csh"
 cp "${RECIPE_DIR}/deactivate.fish" "${PREFIX}/etc/conda/deactivate.d/deactivate-root.fish"
+
+# Non-bourne-like shells do not get the same level of support as bourne-like shells on conda.
+# Patch the activation scripts to set the required environment variable on Linux. MacOS seems
+# to not be affected by the same issue.
+# See https://github.com/conda/conda/issues/7993 and https://github.com/ContinuumIO/anaconda-issues/issues/11624
+if [[ "${target_platform}" == "linux-"* ]]; then
+  source $RECIPE_DIR/get_cpu_arch.sh # populates CHOST variable
+  # fish
+  cat >> "${PREFIX}/etc/conda/activate.d/activate-root.fish" << EOF
+
+if set -q CONDA_BUILD_SYSROOT
+    set -gx BACKUP_CONDA_BUILD_SYSROOT "\$CONDA_BUILD_SYSROOT"
+end
+set -gx CONDA_BUILD_SYSROOT "\$CONDA_PREFIX/${CHOST}/sysroot"
+EOF
+  cat >> "${PREFIX}/etc/conda/deactivate.d/deactivate-root.fish" << EOF
+
+if set -q BACKUP_CONDA_BUILD_SYSROOT
+    set -gx CONDA_BUILD_SYSROOT "\$BACKUP_CONDA_BUILD_SYSROOT"
+    set -e BACKUP_CONDA_BUILD_SYSROOT
+else
+    set -e CONDA_BUILD_SYSROOT
+end
+EOF
+  # tcsh
+  cat >> "${PREFIX}/etc/conda/activate.d/activate-root.csh" << EOF
+
+if (\$?CONDA_BUILD_SYSROOT) then
+  setenv BACKUP_CONDA_BUILD_SYSROOT "\${CONDA_BUILD_SYSROOT}"
+endif
+setenv CONDA_BUILD_SYSROOT "\${CONDA_PREFIX}/${CHOST}/sysroot"
+EOF
+  cat >> "${PREFIX}/etc/conda/deactivate.d/deactivate-root.csh" << EOF
+
+if (\$?BACKUP_CONDA_BUILD_SYSROOT) then
+  setenv CONDA_BUILD_SYSROOT "\${BACKUP_CONDA_BUILD_SYSROOT}"
+  unsetenv BACKUP_CONDA_BUILD_SYSROOT
+else
+  unsetenv CONDA_BUILD_SYSROOT
+endif
+EOF
+fi
