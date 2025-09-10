@@ -14,9 +14,6 @@ if [[ "${target_platform}" == "linux-"* ]]; then
   export CFLAGS="${CFLAGS} -fno-merge-constants"
 fi
 
-# https://github.com/conda-forge/root-feedstock/issues/160
-export CXXFLAGS="${CXXFLAGS} -D__ROOFIT_NOBANNER"
-
 if [[ "${target_platform}" == "linux-ppc64le" ]]; then
   export CXXFLAGS="${CXXFLAGS} -fplt"
   export CFLAGS="${CFLAGS} -fplt"
@@ -284,6 +281,7 @@ CMAKE_PLATFORM_FLAGS+=("-Dmlp=ON")
 CMAKE_PLATFORM_FLAGS+=("-Dopengl=ON")
 CMAKE_PLATFORM_FLAGS+=("-Dpythia8=ON")
 CMAKE_PLATFORM_FLAGS+=("-Droofit=ON")
+CMAKE_PLATFORM_FLAGS+=("-Droofit_multiprocess=ON")
 CMAKE_PLATFORM_FLAGS+=("-Droot7=ON")
 CMAKE_PLATFORM_FLAGS+=("-Dspectrum=ON")
 CMAKE_PLATFORM_FLAGS+=("-Dsqlite=ON")
