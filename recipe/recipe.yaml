@@ -229,8 +229,10 @@ outputs:
           recipe:
             - test.cpp
             - test_pyroot.py
+            - test_roofit_multiprocess.py
         script:
           - python test_pyroot.py
+          - python test_roofit_multiprocess.py
           - python ${PREFIX}/tutorials/analysis/dataframe/df038_NumbaDeclare.py
           - root -l -b -q -x test.cpp
           - "root -b -l -q -x -e 'gSystem->LoadAllLibraries(); 0'"
