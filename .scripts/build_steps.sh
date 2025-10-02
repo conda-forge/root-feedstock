@@ -31,8 +31,6 @@ pkgs_dirs:
 solver: libmamba
 
 CONDARC
-curl -fsSL https://pixi.sh/install.sh | bash
-export PATH="~/.pixi/bin:$PATH"
 pushd "${FEEDSTOCK_ROOT}"
 arch=$(uname -m)
 if [[ "$arch" == "x86_64" ]]; then
