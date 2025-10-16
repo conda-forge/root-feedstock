@@ -29,7 +29,7 @@ gdk_pixbuf:
 giflib:
 - '5.2'
 glew:
-- '2.1'
+- '2.2'
 glib:
 - '2'
 graphviz:
