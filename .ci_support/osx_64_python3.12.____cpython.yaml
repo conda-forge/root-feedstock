@@ -35,7 +35,7 @@ glew:
 glib:
 - '2'
 graphviz:
-- '13'
+- '14'
 gsl:
 - '2.7'
 libblas:
@@ -50,8 +50,8 @@ librsvg:
 - '2'
 libtiff:
 - '4.7'
-libxml2:
-- '2.13'
+libxml2_devel:
+- '2.14'
 lz4_c:
 - '1.10'
 macos_machine:
@@ -59,7 +59,7 @@ macos_machine:
 numpy:
 - '2'
 openssl:
-- '3'
+- '3.5'
 pcre:
 - '8'
 pin_run_as_build:
