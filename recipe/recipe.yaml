@@ -1,9 +1,9 @@
 context:
   name: root
-  tag_name: 6-36-04
-  build_number: 7
+  tag_name: 6-36-06
+  build_number: 0
   clang_version: 18.1.8
-  clang_patches_version: root_63604
+  clang_patches_version: root_63606
   builtin_clang: false
   run_gtests: false
   # When new Python versions are released numba tends to be slow to support them
@@ -18,7 +18,7 @@ recipe:
 
 source:
   url: https://github.com/root-project/root/archive/refs/tags/v${{ tag_name }}.tar.gz
-  sha256: 65a246d2578d2f04f7ad400a26cfc6c7c9c19878434a3d8f4d0bcf7deec4f2ec
+  sha256: 27e158e8dc388d424696365109b7f62fd0a98b7dbb1a46a300a7c4b82e8417e1
   target_directory: root-source
   patches:
     - patches/0001-disable-cling-sysroot-at-runtime.patch
