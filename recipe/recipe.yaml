@@ -36,7 +36,6 @@ source:
         - patches/0009-avoid-linking-TPython-against-libPython.patch
         - patches/0010-root-x.xx.xx-osx-remove-hardcoded-sysroot.patch
         - patches/0011-Remove-bad-check-on-SDK-for-std_darwin.MacOSX14.2.sd.patch
-        - patches/0012-build-Fix-script-for-conda-MacOS.patch
 build:
   number: ${{ build_number }}
   skip:
