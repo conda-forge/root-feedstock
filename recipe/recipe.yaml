@@ -1,9 +1,9 @@
 context:
   name: root
-  tag_name: 6-36-06
-  build_number: 4
-  clang_version: 18.1.8
-  clang_patches_version: root_63606
+  tag_name: 6-38-00
+  build_number: 0
+  clang_version: 20.1.8
+  clang_patches_version: root_63800
   builtin_clang: false
   run_gtests: false
   # When new Python versions are released numba tends to be slow to support them
@@ -18,7 +18,7 @@ recipe:
 
 source:
   url: https://github.com/root-project/root/archive/refs/tags/v${{ tag_name }}.tar.gz
-  sha256: 27e158e8dc388d424696365109b7f62fd0a98b7dbb1a46a300a7c4b82e8417e1
+  sha256: cde4fe4ca40e4afc345c588b4752455e1dded4d4f2525a14d3c81943322decd6
   target_directory: root-source
   patches:
     - patches/0001-disable-cling-sysroot-at-runtime.patch
@@ -91,9 +91,9 @@ outputs:
             - zstd
             - freetype
             - liblzma-devel
-            - llvm ${{ clang_version }}.* ${{ clang_patches_version }}*
+            - llvm ${{ clang_version }}.*
             - llvm-openmp ${{ clang_version }}.*
-            - llvmdev ${{ clang_version }}.* ${{ clang_patches_version }}*
+            - llvmdev ${{ clang_version }}.*
             - clangdev ${{ clang_version }}.* ${{ clang_patches_version }}*
       host:
         - libblas
@@ -158,9 +158,9 @@ outputs:
         # Note that zeromq and zeromq * drafts_* are both required
         # c.f. https://github.com/conda-forge/root-feedstock/pull/292#discussion_r2334082389
         - zeromq * drafts_*
-        - llvm ${{ clang_version }}.* ${{ clang_patches_version }}*
+        - llvm ${{ clang_version }}.*
         - llvm-openmp ${{ clang_version }}.*
-        - llvmdev ${{ clang_version }}.* ${{ clang_patches_version }}*
+        - llvmdev ${{ clang_version }}.*
         - clangdev ${{ clang_version }}.* ${{ clang_patches_version }}*
       run:
         - python

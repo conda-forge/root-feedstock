@@ -6,7 +6,7 @@ c_stdlib_version:              # [osx]
 # the build by using a compatible compiler version for the main compiler driving
 # the build process
 c_compiler_version:
-  - 18 # [osx]
+  - 20 # [osx]
 cxx_compiler_version:
-  - 18 # [osx]
+  - 20 # [osx]
 
