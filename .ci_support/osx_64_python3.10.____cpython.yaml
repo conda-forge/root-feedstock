@@ -73,9 +73,9 @@ sqlite:
 target_platform:
 - osx-64
 tbb:
-- '2021'
+- '2022'
 tbb_devel:
-- '2021'
+- '2022'
 xrootd:
 - '5'
 xxhash:
