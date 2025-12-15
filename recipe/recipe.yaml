@@ -9,7 +9,7 @@ context:
   # When new Python versions are released numba tends to be slow to support them
   # to prevent ROOT from being held up by this, only have a strong dependency on
   # numba for supported python versions
-  unsupported_numba_pyversion: 3.14
+  unsupported_numba_pyversion: 3.15
   root_cxx_standard: 20
 
 recipe:
