@@ -31,7 +31,7 @@ gdk_pixbuf:
 giflib:
 - '5.2'
 glew:
-- '2.2'
+- '2.3'
 glib:
 - '2'
 graphviz:
