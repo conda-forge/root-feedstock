@@ -162,8 +162,6 @@ outputs:
         - python
         - numpy
         # FIXME: Required to ensure a consistent etc/allDict.cxx.pch
-        # Provide C system headers needed for ROOT macro compilation
-        - ${{ stdlib("c") }}
         # Use minimally activated compilers
         # c.f. https://github.com/conda-forge/conda-forge.github.io/issues/2595
         - if: linux
@@ -193,6 +191,10 @@ outputs:
       - files:
           recipe:
             - test.cpp
+        requirements:
+          run:
+            # Needed to bring along C system headers
+            - cxx-compiler
         script:
           - root -l -b -q -x
           - root -l -b -q -x test.cpp
