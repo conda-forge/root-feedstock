@@ -1,6 +1,6 @@
 context:
   tag_name: 6-36-06
-  build_number: 3
+  build_number: 4
   clang_version: 18.1.8
   clang_patches_version: root_63606
   builtin_clang: false
@@ -162,9 +162,12 @@ outputs:
         - python
         - numpy
         # FIXME: Required to ensure a consistent etc/allDict.cxx.pch
-        - ${{ compiler('c') }}
-        - ${{ compiler('cxx') }}
-        - ${{ stdlib("c") }}
+        # Use minimally activated compilers
+        # c.f. https://github.com/conda-forge/conda-forge.github.io/issues/2595
+        - if: linux
+          then: gxx
+        - if: osx
+          then: clangxx
         - ${{ pin_compatible('xxhash', upper_bound='x.x.x') }}
         - ${{ pin_compatible('nlohmann_json', upper_bound='x.x.x') }}
         - cffi
