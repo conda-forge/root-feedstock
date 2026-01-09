@@ -1,5 +1,4 @@
 context:
-  name: root
   tag_name: 6-36-06
   build_number: 3
   clang_version: 18.1.8
