@@ -191,6 +191,10 @@ outputs:
       - files:
           recipe:
             - test.cpp
+        requirements:
+          run:
+            # Needed to bring along C system headers
+            - cxx-compiler
         script:
           - root -l -b -q -x
           - root -l -b -q -x test.cpp
