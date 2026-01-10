@@ -109,7 +109,6 @@ outputs:
             - xorg-libxfixes
             - xorg-libxft
             - xorg-libxpm
-        - ${{ stdlib("c") }}
         - cfitsio
         - davix
         - fftw
