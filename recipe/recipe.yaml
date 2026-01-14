@@ -1,7 +1,7 @@
 context:
   name: root
   tag_name: 6-36-06
-  build_number: 3
+  build_number: 4
   clang_version: 18.1.8
   clang_patches_version: root_63606
   builtin_clang: false
@@ -36,6 +36,7 @@ source:
         - patches/0009-avoid-linking-TPython-against-libPython.patch
         - patches/0010-root-x.xx.xx-osx-remove-hardcoded-sysroot.patch
         - patches/0011-Remove-bad-check-on-SDK-for-std_darwin.MacOSX14.2.sd.patch
+    - patches/0001-Try-relative-libstdc-include-directories.patch
 build:
   number: ${{ build_number }}
   skip:
@@ -163,10 +164,15 @@ outputs:
       run:
         - python
         - numpy
-        # FIXME: Required to ensure a consistent etc/allDict.cxx.pch
-        - ${{ compiler('c') }}
-        - ${{ compiler('cxx') }}
-        - ${{ stdlib("c") }}
+        - if: linux
+          then:
+            # FIXME: Version required to ensure a consistent etc/allDict.cxx.pch
+            - libgcc-devel_${{ host_platform }} ${{ c_compiler_version }}.*
+            - libstdcxx-devel_${{ host_platform }} ${{ cxx_compiler_version }}.*
+            - sysroot_${{ host_platform }}
+        - if: osx
+          then:
+            - libcxx-devel ${{ cxx_compiler_version }}.*
         - ${{ pin_compatible('xxhash', upper_bound='x.x.x') }}
         - ${{ pin_compatible('nlohmann_json', upper_bound='x.x.x') }}
         - cffi

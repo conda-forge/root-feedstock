@@ -1,0 +1,98 @@
+From 05ce596e8d77e7b724c617a8fe2d191d509b6079 Mon Sep 17 00:00:00 2001
+From: Isuru Fernando <isuruf@gmail.com>
+Date: Thu, 15 Jan 2026 11:02:43 -0800
+Subject: [PATCH] Try relative libstdc++ include directories
+
+We try the libstd++ include directories cling was built with
+but relative to the clingBin
+For eg:
+    CLING_CXX_INCL=<BUILD_PREFIX>/bin/../lib/gcc/15.2.1/include
+relative to
+    CLING_CXX_PATH=<BUILD_PREFIX>/bin/g++
+is `../lib/gcc/15.2.1/include`
+
+Then we get parent directory of
+    clingBin=<PREFIX>/bin/root.exe
+which is `<PREFIX>/bin` and then check for
+    <PREFIX>/../lib/gcc/15.2.1/include
+
+This makes it unneccesary to have g++, just the libstdc++ headers
+are enough.
+---
+ .../cling/lib/Interpreter/CIFactory.cpp       | 53 +++++++++++++++++++
+ 1 file changed, 53 insertions(+)
+
+diff --git a/interpreter/cling/lib/Interpreter/CIFactory.cpp b/interpreter/cling/lib/Interpreter/CIFactory.cpp
+index d9cedd5ed19..b411a472a38 100644
+--- a/interpreter/cling/lib/Interpreter/CIFactory.cpp
++++ b/interpreter/cling/lib/Interpreter/CIFactory.cpp
+@@ -178,6 +178,47 @@ namespace {
+ 
+     return true;
+   }
++  static bool AddCxxPathsRelative(llvm::StringRef PathStr, AdditionalArgList& Args,
++                          bool Verbose, llvm::StringRef clingBin) {
++
++    Verbose = cling::utils::ConvertEnvValueToBool(std::getenv("CLING_VERBOSE"));
++    if (Verbose)
++      cling::log() << "Looking for C++ headers in \"" << PathStr << "\"\n";
++
++    llvm::SmallVector<llvm::StringRef, 6> Paths;
++    if (!utils::SplitPaths(PathStr, Paths, utils::kAllowNonExistant,
++                           platform::kEnvDelim, Verbose))
++      return false;
++
++    llvm::StringRef cxxBin;
++    #ifdef CLING_CXX_PATH
++      cxxBin = CLING_CXX_PATH;
++    #endif
++    llvm::StringRef newBinDir = llvm::sys::path::parent_path(clingBin);
++    llvm::StringRef oldBinDir = llvm::sys::path::parent_path(cxxBin);
++
++    for (llvm::StringRef Path : Paths) {
++      if (Path.starts_with(oldBinDir)) {
++        llvm::SmallString<256> relativePath = Path;
++	llvm::sys::path::replace_path_prefix(relativePath, oldBinDir, newBinDir);
++        if (Verbose) {
++          cling::log() << "Trying relative path: " << Path << "\n";
++        }
++        if (llvm::sys::fs::is_directory(relativePath)) {
++          if (Verbose) {
++            cling::log() << "Found: " << relativePath.str() << "\n";
++          }
++          Args.addArgument("-cxx-isystem", relativePath.str().str());
++        }
++      } else {
++        if (Verbose) {
++          cling::log() << "Path: " << Path << " is not relative to cxxBin\n";
++        }
++      }
++    }
++    return true;
++  }
++
+ 
+ #endif
+ 
+@@ -307,6 +348,18 @@ namespace {
+         }
+   #endif // _LIBCPP_VERSION
+ 
++  // First try the include directories cling was built with, but relative
++  // to the clangBin
++  // For eg: <BUILD_PREFIX>/bin/../lib/gcc/15.2.1/include relative
++  // to CLING_CXX_PATH=<BUILD_PREFIX>/bin/g++ is ../lib/gcc/15.2.1/include
++  // We get parent directory of clingBin (<PREFIX>/bin/root.exe) which is
++  // <PREFIX>/bin and then check for <PREFIX>/../lib/gcc/15.2.1/include
++  // This makes it unneccesary to have g++, just the libstdc++ headers are
++  // neeeded
++  #if defined(CLING_CXX_INCL) && defined(CLING_CXX_PATH)
++        if (sArguments.empty())
++          AddCxxPathsRelative(CLING_CXX_INCL, sArguments, Verbose, clingBin);
++  #endif
+   // First try the relative path 'g++'
+   #ifdef CLING_CXX_RLTV
+         if (sArguments.empty())
+-- 
+2.45.2
+
