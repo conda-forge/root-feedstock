@@ -173,6 +173,15 @@ outputs:
         - if: osx
           then:
             - libcxx-devel ${{ cxx_compiler_version }}.*
+        - if: unix
+          then:
+            # Need an external compiler for some parts.
+            # FIXME: make root use the builtin clang, seems like a waste
+            # to require an external compiler
+            - ${{ cxx_compiler }}_impl_${{ host_platform }}
+        - if: win
+          then:
+            - ${{ compiler('cxx') }}
         - ${{ pin_compatible('xxhash', upper_bound='x.x.x') }}
         - ${{ pin_compatible('nlohmann_json', upper_bound='x.x.x') }}
         - cffi
