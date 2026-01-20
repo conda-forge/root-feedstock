@@ -30,6 +30,7 @@ source:
       then:
         - patches/0006-HACK-Support-overriding-triplet-used-by-cling.patch
         - patches/0007-Disable-hsimple.root-generation-if-cross-compiling.patch
+        - patches/0012-try_run-cannot-be-used-when-cross-compiling.patch
     - if: osx
       then:
         - patches/0008-disable-builtin-freetype-macos.patch

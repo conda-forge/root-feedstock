@@ -1,29 +1,30 @@
-From a71f6addeb6bd48a47dacbedd662f47d3a98dde1 Mon Sep 17 00:00:00 2001
+From f44a65ec20e388e897bd02155d9d8b5139e485bb Mon Sep 17 00:00:00 2001
 From: Vincenzo Eduardo Padulano <vincenzo.eduardo.padulano@cern.ch>
 Date: Mon, 28 Jul 2025 09:55:16 +0200
 Subject: [PATCH] Don't try to generate hsimple.root when cross-compiling
 
 ---
- CMakeLists.txt | 39 +++++++++++++++++++++++----------------
- 1 file changed, 23 insertions(+), 16 deletions(-)
+ CMakeLists.txt | 38 +++++++++++++++++++++-----------------
+ 1 file changed, 21 insertions(+), 17 deletions(-)
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index e8060c7d1d..a1afb3305c 100644
+index cd226232cfc..aea6a6db3bf 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -549,23 +549,30 @@ if(runtime_cxxmodules)
- endif()
+@@ -575,24 +575,28 @@ endif()
+ ROOT_ADD_TEST_SUBDIRECTORY(tutorials)
  
  #---hsimple.root---------(use the executable for clearer dependencies and proper return code)---
 -add_custom_target(hsimple ALL DEPENDS tutorials/hsimple.root)
 -add_dependencies(hsimple onepcm)
 -if(WIN32)
 -  set(hsimple_cmd COMMAND ${CMAKE_COMMAND} -E env PATH="${CMAKE_RUNTIME_OUTPUT_DIRECTORY}\\\;%PATH%"
+-                          ROOT_INCLUDE_PATH=${DEFAULT_ROOT_INCLUDE_PATH}
 -                          ROOTIGNOREPREFIX=1 ROOT_HIST=0 $<TARGET_FILE:root.exe> -l -q -b -n -x ${CMAKE_SOURCE_DIR}/tutorials/hsimple.C -e return)
 +if(CMAKE_CROSSCOMPILING)
 +  message(WARNING "Cross-compiling: hsimple.root will not be generated")
  else()
--  set(hsimple_cmd COMMAND ${MODULES_ROOT_INCPATH} ${ld_library_path}=${CMAKE_LIBRARY_OUTPUT_DIRECTORY}:$ENV{${ld_library_path}}
+-  set(hsimple_cmd COMMAND ROOT_INCLUDE_PATH=${DEFAULT_ROOT_INCLUDE_PATH} ${ld_library_path}=${CMAKE_LIBRARY_OUTPUT_DIRECTORY}:$ENV{${ld_library_path}}
 -                          ROOTIGNOREPREFIX=1 ROOT_HIST=0 $<TARGET_FILE:root.exe> -l -q -b -n -x ${CMAKE_SOURCE_DIR}/tutorials/hsimple.C -e return)
 -endif()
 -add_custom_command(OUTPUT tutorials/hsimple.root
@@ -37,21 +38,19 @@ index e8060c7d1d..a1afb3305c 100644
 +  add_custom_target(hsimple ALL DEPENDS tutorials/hsimple.root)
 +  add_dependencies(hsimple onepcm)
 +  if(WIN32)
-+    add_custom_command(OUTPUT tutorials/hsimple.root
-+                      COMMAND set PATH=${CMAKE_RUNTIME_OUTPUT_DIRECTORY} &&
-+                              set ROOTIGNOREPREFIX=1 && set ROOT_HIST=0 &&
-+                              $<TARGET_FILE:root.exe> -l -q -b -n -x hsimple.C -e return
-+                      WORKING_DIRECTORY tutorials
-+                      DEPENDS $<TARGET_FILE:root.exe> Cling Hist Tree Gpad Graf HistPainter move_artifacts)
++    set(hsimple_cmd COMMAND ${CMAKE_COMMAND} -E env PATH="${CMAKE_RUNTIME_OUTPUT_DIRECTORY}\\\;%PATH%"
++                            ROOT_INCLUDE_PATH=${DEFAULT_ROOT_INCLUDE_PATH}
++                            ROOTIGNOREPREFIX=1 ROOT_HIST=0 $<TARGET_FILE:root.exe> -l -q -b -n -x ${CMAKE_SOURCE_DIR}/tutorials/hsimple.C -e return)
 +  else()
-+    add_custom_command(OUTPUT tutorials/hsimple.root
-+                      COMMAND ${MODULES_ROOT_INCPATH} ${ld_library_path}=${CMAKE_LIBRARY_OUTPUT_DIRECTORY}:$ENV{${ld_library_path}}
-+                              ROOTIGNOREPREFIX=1 ROOT_HIST=0
-+                              $<TARGET_FILE:root.exe> -l -q -b -n -x hsimple.C -e return
-+                      WORKING_DIRECTORY tutorials
-+                      DEPENDS $<TARGET_FILE:root.exe> Cling Hist Tree Gpad Graf HistPainter move_artifacts)
++    set(hsimple_cmd COMMAND ROOT_INCLUDE_PATH=${DEFAULT_ROOT_INCLUDE_PATH} ${ld_library_path}=${CMAKE_LIBRARY_OUTPUT_DIRECTORY}:$ENV{${ld_library_path}}
++                            ROOTIGNOREPREFIX=1 ROOT_HIST=0 $<TARGET_FILE:root.exe> -l -q -b -n -x ${CMAKE_SOURCE_DIR}/tutorials/hsimple.C -e return)
 +  endif()
++  add_custom_command(OUTPUT tutorials/hsimple.root
++                    ${hsimple_cmd}
++                    WORKING_DIRECTORY tutorials
++                    DEPENDS $<TARGET_FILE:root.exe> Cling Hist Tree Gpad Graf HistPainter move_artifacts)
 +  install(FILES ${CMAKE_BINARY_DIR}/tutorials/hsimple.root DESTINATION ${CMAKE_INSTALL_TUTDIR} COMPONENT tests)
++
 +  if(runtime_cxxmodules)
 +    add_dependencies(hsimple modules_idx)
 +  endif()
@@ -59,3 +58,5 @@ index e8060c7d1d..a1afb3305c 100644
  
  #---copy special headers required for building on Windows----------------------------------------
 -- 
+2.52.0
+
