@@ -37,6 +37,12 @@ source:
         - patches/0009-avoid-linking-TPython-against-libPython.patch
         - patches/0010-root-x.xx.xx-osx-remove-hardcoded-sysroot.patch
         - patches/0011-Remove-bad-check-on-SDK-for-std_darwin.MacOSX14.2.sd.patch
+        - patches/0013-Disable-libcxx-availability-in-rootcling.patch
+        - patches/0014-build-Unify-retrieval-of-MacOS-SDK-path.patch
+        - patches/0015-Force-SDKROOT.patch
+        - patches/0016-Disable-libcxx-availability-in-makepch.patch
+        - patches/0017-build-Use-appropriate-CMake-to-link-against-MacOS-fr.patch
+        - patches/0018-Use-correct-filename-for-libCore-in-TROOT-GetLibDir.patch
     - patches/0001-Try-relative-libstdc-include-directories.patch
     - patches/0012-Use-resolved-executable-path-for-clang-Driver.patch
 build:

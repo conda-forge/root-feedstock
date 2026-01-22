@@ -19,6 +19,21 @@ if [[ "${target_platform}" == "linux-ppc64le" ]]; then
   export CFLAGS="${CFLAGS} -fplt"
 fi
 
+if [[ "${target_platform}" == osx* ]]; then
+    # The following steps are necessary to properly isolate the conda MacOS
+    # build from the rest of the system
+
+    # For some reason, the conda-forge configuration sets both SDKROOT and
+    # CMAKE_OSX_SYSROOT to the wrong value by default (i.e. the system SDK).
+    # Cleanup variables first
+    unset SDKROOT
+    wrong_sysroot="-DCMAKE_OSX_SYSROOT=$(xcrun --sdk macosx --show-sdk-path)"
+    CMAKE_ARGS=${CMAKE_ARGS//"$wrong_sysroot"}
+    # Point CMAKE_OSX_SYSROOT to the correct path as suggested at
+    # https://docs.conda.io/projects/conda-build/en/latest/resources/compiler-tools.html#macos-sdk
+    CMAKE_ARGS="${CMAKE_ARGS} -DCMAKE_OSX_SYSROOT=${CONDA_BUILD_SYSROOT}"
+fi
+
 # Manually set the deployment_target
 # May not be very important but nice to do
 OLDVERSIONMACOS='${MACOSX_VERSION}'
@@ -55,6 +70,8 @@ else
 fi
 
 if [[ "${target_platform}" == osx* ]]; then
+    # TODO: investigate why we can't use modules on MacOS anymore
+    CMAKE_PLATFORM_FLAGS+=("-Druntime_cxxmodules=OFF")
     CXXFLAGS="${CXXFLAGS} -D_LIBCPP_DISABLE_AVAILABILITY"
 fi
 

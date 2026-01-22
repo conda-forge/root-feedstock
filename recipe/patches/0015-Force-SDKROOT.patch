@@ -1,0 +1,44 @@
+From cb0178973ac7d76fe0e5669559c4962a278cc611 Mon Sep 17 00:00:00 2001
+From: Vincenzo Eduardo Padulano <vincenzo.eduardo.padulano@cern.ch>
+Date: Thu, 22 Jan 2026 15:38:59 +0100
+Subject: [PATCH] Force SDKROOT
+
+---
+ cmake/modules/RootMacros.cmake | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/cmake/modules/RootMacros.cmake b/cmake/modules/RootMacros.cmake
+index 47f0fa5f1aa..05a7c0face7 100644
+--- a/cmake/modules/RootMacros.cmake
++++ b/cmake/modules/RootMacros.cmake
+@@ -614,22 +614,22 @@ function(ROOT_GENERATE_DICTIONARY dictionary)
+ 
+   #---what rootcling command to use--------------------------
+   if(ARG_STAGE1)
+-    set(command $<TARGET_FILE:rootcling_stage1>)
++    set(command ${CMAKE_COMMAND} -E env SDKROOT=${CMAKE_OSX_SYSROOT} $<TARGET_FILE:rootcling_stage1>)
+     set(ROOTCINTDEP rconfigure)
+     set(pcm_name)
+   else()
+     if(CMAKE_PROJECT_NAME STREQUAL ROOT)
+       if(MSVC AND CMAKE_ROOTTEST_DICT)
+-        set(command ${CMAKE_COMMAND} -E env "ROOTIGNOREPREFIX=1" ${CMAKE_BINARY_DIR}/bin/rootcling.exe -rootbuild)
++        set(command ${CMAKE_COMMAND} -E env "ROOTIGNOREPREFIX=1" SDKROOT=${CMAKE_OSX_SYSROOT} ${CMAKE_BINARY_DIR}/bin/rootcling.exe -rootbuild)
+       else()
+-        set(command ${CMAKE_COMMAND} -E env "ROOTIGNOREPREFIX=1" $<TARGET_FILE:rootcling> -rootbuild)
++        set(command ${CMAKE_COMMAND} -E env "ROOTIGNOREPREFIX=1" SDKROOT=${CMAKE_OSX_SYSROOT} $<TARGET_FILE:rootcling> -rootbuild)
+         # Modules need RConfigure.h copied into include/.
+         set(ROOTCINTDEP rootcling rconfigure)
+       endif()
+     elseif(TARGET ROOT::rootcling)
+-      set(command $<TARGET_FILE:ROOT::rootcling>)
++      set(command ${CMAKE_COMMAND} -E env SDKROOT=${CMAKE_OSX_SYSROOT} $<TARGET_FILE:ROOT::rootcling>)
+     else()
+-      set(command rootcling)
++      set(command ${CMAKE_COMMAND} -E env SDKROOT=${CMAKE_OSX_SYSROOT} rootcling)
+     endif()
+   endif()
+ 
+-- 
+2.50.1 (Apple Git-155)
+

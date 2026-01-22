@@ -1,0 +1,24 @@
+From 72cf68ed5ecb0ab8c1238cfca7656b1cb82dc835 Mon Sep 17 00:00:00 2001
+From: Vincenzo Eduardo Padulano <vincenzo.eduardo.padulano@cern.ch>
+Date: Thu, 22 Jan 2026 17:33:50 +0100
+Subject: [PATCH] Disable libcxx availability in makepch
+
+---
+ etc/dictpch/makepch.py | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/etc/dictpch/makepch.py b/etc/dictpch/makepch.py
+index 8233f4e2f22..829236b924c 100755
+--- a/etc/dictpch/makepch.py
++++ b/etc/dictpch/makepch.py
+@@ -85,6 +85,7 @@ def makepch():
+                  "-D__STDC_LIMIT_MACROS",
+                  "-D__STDC_CONSTANT_MACROS",
+                  "-DROOT_PCH",
++                 "-D_LIBCPP_DISABLE_AVAILABILITY",
+                  "-I%s" %os.path.join(rootdir,"include"),
+                  "-I%s" %os.path.join(rootdir,"etc"),
+                  "-I%s" %os.path.join(rootdir,cfgdir),
+-- 
+2.50.1 (Apple Git-155)
+
