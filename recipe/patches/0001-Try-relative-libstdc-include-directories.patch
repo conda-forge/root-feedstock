@@ -26,7 +26,7 @@ diff --git a/interpreter/cling/lib/Interpreter/CIFactory.cpp b/interpreter/cling
 index d9cedd5ed19..b411a472a38 100644
 --- a/interpreter/cling/lib/Interpreter/CIFactory.cpp
 +++ b/interpreter/cling/lib/Interpreter/CIFactory.cpp
-@@ -178,6 +178,47 @@ namespace {
+@@ -178,6 +178,46 @@ namespace {
  
      return true;
    }
@@ -38,9 +38,8 @@ index d9cedd5ed19..b411a472a38 100644
 +      cling::log() << "Looking for C++ headers in \"" << PathStr << "\"\n";
 +
 +    llvm::SmallVector<llvm::StringRef, 6> Paths;
-+    if (!utils::SplitPaths(PathStr, Paths, utils::kAllowNonExistant,
-+                           platform::kEnvDelim, Verbose))
-+      return false;
++    utils::SplitPaths(PathStr, Paths, utils::kAllowNonExistant,
++                           platform::kEnvDelim, Verbose);
 +
 +    llvm::StringRef cxxBin;
 +    #ifdef CLING_CXX_PATH
@@ -74,7 +73,7 @@ index d9cedd5ed19..b411a472a38 100644
  
  #endif
  
-@@ -307,6 +348,18 @@ namespace {
+@@ -307,6 +347,18 @@ namespace {
          }
    #endif // _LIBCPP_VERSION
  

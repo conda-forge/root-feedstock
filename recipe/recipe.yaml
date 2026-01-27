@@ -206,6 +206,7 @@ outputs:
           recipe:
             - test.cpp
         script:
+          - export CLING_VERBOSE=1
           - root -l -b -q -x
           - root -l -b -q -x test.cpp
           - "root -b -l -q -x -e '2+3; 0'"
