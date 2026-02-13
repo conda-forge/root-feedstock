@@ -1,0 +1,30 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Chris Burr <christopher.burr@cern.ch>
+Date: Thu, 13 Feb 2026 00:00:00 +0000
+Subject: [PATCH] Use resolved executable path for clang Driver
+
+When ROOT passes "cling4root" as argv[0] to cling, the clang Driver
+computes InstalledDir as empty, causing GCC installation detection to
+scan "/" instead of the actual prefix. This prevents automatic sysroot
+detection on conda-forge, where the GCC installation and sysroot are
+at predictable locations relative to the binary.
+
+Use the resolved executable path (ClingBin, obtained via
+GetExecutablePath/proc/self/exe) for the Driver constructor so it can
+correctly find the GCC installation and compute the sysroot.
+---
+ interpreter/cling/lib/Interpreter/CIFactory.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/interpreter/cling/lib/Interpreter/CIFactory.cpp b/interpreter/cling/lib/Interpreter/CIFactory.cpp
+--- a/interpreter/cling/lib/Interpreter/CIFactory.cpp
++++ b/interpreter/cling/lib/Interpreter/CIFactory.cpp
+@@ -1439,7 +1439,7 @@
+     }
+
+     llvm::Triple TheTriple(llvm::sys::getProcessTriple());
+-    clang::driver::Driver Drvr(argv[0], TheTriple.getTriple(), *Diags);
++    clang::driver::Driver Drvr(ClingBin, TheTriple.getTriple(), *Diags);
+     //Drvr.setWarnMissingInput(false);
+     Drvr.setCheckInputsExist(false); // think foo.C(12)
+     llvm::ArrayRef<const char*>RF(&(argvCompile[0]), argvCompile.size());
