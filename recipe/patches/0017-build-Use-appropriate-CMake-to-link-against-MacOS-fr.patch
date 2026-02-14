@@ -11,10 +11,10 @@ If the library found is a framework, then <VAR> will be set to the full path to 
 ```
 ---
  core/macosx/CMakeLists.txt    | 6 ++++--
- graf2d/cocoa/CMakeLists.txt   | 8 ++++++--
+ graf2d/cocoa/CMakeLists.txt   | 7 +++++--
  graf2d/quartz/CMakeLists.txt  | 4 +++-
  gui/cefdisplay/CMakeLists.txt | 3 ++-
- 4 files changed, 15 insertions(+), 6 deletions(-)
+ 4 files changed, 14 insertions(+), 6 deletions(-)
 
 diff --git a/core/macosx/CMakeLists.txt b/core/macosx/CMakeLists.txt
 index b959a1ea024..e3e38e95931 100644
@@ -45,13 +45,12 @@ diff --git a/graf2d/cocoa/CMakeLists.txt b/graf2d/cocoa/CMakeLists.txt
 index 28d6097fb6e..8cb8b39e92b 100644
 --- a/graf2d/cocoa/CMakeLists.txt
 +++ b/graf2d/cocoa/CMakeLists.txt
-@@ -9,6 +9,10 @@
+@@ -9,6 +9,9 @@
  # @author Pere Mato, CERN
  ############################################################################
  
 +find_library(COCOA_FRAMEWORK Cocoa REQUIRED)
 +find_library(OPENGL_FRAMEWORK OpenGL REQUIRED)
-+message(WARNING "COCOA_FRAMEWORK=${COCOA_FRAMEWORK}")
 +
  ROOT_STANDARD_LIBRARY_PACKAGE(GCocoa
    HEADERS
