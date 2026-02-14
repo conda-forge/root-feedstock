@@ -4,10 +4,10 @@
 "$schema" = "https://pixi.sh/v0.59.0/schema/manifest/schema.json"
 
 [workspace]
-name = "root-feedstock"
-version = "3.54.2"  # conda-smithy version used to generate this file
-description = "Pixi configuration for conda-forge/root-feedstock"
-authors = ["@conda-forge/root"]
+name = "root-638"
+version = "3.55.1"  # conda-smithy version used to generate this file
+description = "Pixi configuration for conda-forge/root-638"
+authors = ["@conda-forge/"]
 channels = ["conda-forge"]
 platforms = ["linux-64", "linux-aarch64", "linux-ppc64le", "osx-64", "osx-arm64", "win-64"]
 requires-pixi = ">=0.59.0"
@@ -22,157 +22,157 @@ cmd = "inspect_artifacts --all-packages"
 description = "List contents of all packages found in rattler-build build directory."
 [tasks.build]
 cmd = "rattler-build build --recipe recipe"
-description = "Build root-feedstock directly (without setup scripts), no particular variant specified"
+description = "Build root-638 directly (without setup scripts), no particular variant specified"
 [tasks."build-linux_64_python3.10.____cpython"]
 cmd = "rattler-build build --recipe recipe -m .ci_support/linux_64_python3.10.____cpython.yaml"
-description = "Build root-feedstock with variant linux_64_python3.10.____cpython directly (without setup scripts)"
+description = "Build root-638 with variant linux_64_python3.10.____cpython directly (without setup scripts)"
 [tasks."inspect-linux_64_python3.10.____cpython"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_64_python3.10.____cpython.yaml"
-description = "List contents of root-feedstock packages built for variant linux_64_python3.10.____cpython"
+description = "List contents of root-638 packages built for variant linux_64_python3.10.____cpython"
 [tasks."build-linux_64_python3.11.____cpython"]
 cmd = "rattler-build build --recipe recipe -m .ci_support/linux_64_python3.11.____cpython.yaml"
-description = "Build root-feedstock with variant linux_64_python3.11.____cpython directly (without setup scripts)"
+description = "Build root-638 with variant linux_64_python3.11.____cpython directly (without setup scripts)"
 [tasks."inspect-linux_64_python3.11.____cpython"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_64_python3.11.____cpython.yaml"
-description = "List contents of root-feedstock packages built for variant linux_64_python3.11.____cpython"
+description = "List contents of root-638 packages built for variant linux_64_python3.11.____cpython"
 [tasks."build-linux_64_python3.12.____cpython"]
 cmd = "rattler-build build --recipe recipe -m .ci_support/linux_64_python3.12.____cpython.yaml"
-description = "Build root-feedstock with variant linux_64_python3.12.____cpython directly (without setup scripts)"
+description = "Build root-638 with variant linux_64_python3.12.____cpython directly (without setup scripts)"
 [tasks."inspect-linux_64_python3.12.____cpython"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_64_python3.12.____cpython.yaml"
-description = "List contents of root-feedstock packages built for variant linux_64_python3.12.____cpython"
+description = "List contents of root-638 packages built for variant linux_64_python3.12.____cpython"
 [tasks."build-linux_64_python3.13.____cp313"]
 cmd = "rattler-build build --recipe recipe -m .ci_support/linux_64_python3.13.____cp313.yaml"
-description = "Build root-feedstock with variant linux_64_python3.13.____cp313 directly (without setup scripts)"
+description = "Build root-638 with variant linux_64_python3.13.____cp313 directly (without setup scripts)"
 [tasks."inspect-linux_64_python3.13.____cp313"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_64_python3.13.____cp313.yaml"
-description = "List contents of root-feedstock packages built for variant linux_64_python3.13.____cp313"
+description = "List contents of root-638 packages built for variant linux_64_python3.13.____cp313"
 [tasks."build-linux_64_python3.14.____cp314"]
 cmd = "rattler-build build --recipe recipe -m .ci_support/linux_64_python3.14.____cp314.yaml"
-description = "Build root-feedstock with variant linux_64_python3.14.____cp314 directly (without setup scripts)"
+description = "Build root-638 with variant linux_64_python3.14.____cp314 directly (without setup scripts)"
 [tasks."inspect-linux_64_python3.14.____cp314"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_64_python3.14.____cp314.yaml"
-description = "List contents of root-feedstock packages built for variant linux_64_python3.14.____cp314"
+description = "List contents of root-638 packages built for variant linux_64_python3.14.____cp314"
 [tasks."build-linux_aarch64_python3.10.____cpython"]
 cmd = "rattler-build build --recipe recipe -m .ci_support/linux_aarch64_python3.10.____cpython.yaml"
-description = "Build root-feedstock with variant linux_aarch64_python3.10.____cpython directly (without setup scripts)"
+description = "Build root-638 with variant linux_aarch64_python3.10.____cpython directly (without setup scripts)"
 [tasks."inspect-linux_aarch64_python3.10.____cpython"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_aarch64_python3.10.____cpython.yaml"
-description = "List contents of root-feedstock packages built for variant linux_aarch64_python3.10.____cpython"
+description = "List contents of root-638 packages built for variant linux_aarch64_python3.10.____cpython"
 [tasks."build-linux_aarch64_python3.11.____cpython"]
 cmd = "rattler-build build --recipe recipe -m .ci_support/linux_aarch64_python3.11.____cpython.yaml"
-description = "Build root-feedstock with variant linux_aarch64_python3.11.____cpython directly (without setup scripts)"
+description = "Build root-638 with variant linux_aarch64_python3.11.____cpython directly (without setup scripts)"
 [tasks."inspect-linux_aarch64_python3.11.____cpython"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_aarch64_python3.11.____cpython.yaml"
-description = "List contents of root-feedstock packages built for variant linux_aarch64_python3.11.____cpython"
+description = "List contents of root-638 packages built for variant linux_aarch64_python3.11.____cpython"
 [tasks."build-linux_aarch64_python3.12.____cpython"]
 cmd = "rattler-build build --recipe recipe -m .ci_support/linux_aarch64_python3.12.____cpython.yaml"
-description = "Build root-feedstock with variant linux_aarch64_python3.12.____cpython directly (without setup scripts)"
+description = "Build root-638 with variant linux_aarch64_python3.12.____cpython directly (without setup scripts)"
 [tasks."inspect-linux_aarch64_python3.12.____cpython"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_aarch64_python3.12.____cpython.yaml"
-description = "List contents of root-feedstock packages built for variant linux_aarch64_python3.12.____cpython"
+description = "List contents of root-638 packages built for variant linux_aarch64_python3.12.____cpython"
 [tasks."build-linux_aarch64_python3.13.____cp313"]
 cmd = "rattler-build build --recipe recipe -m .ci_support/linux_aarch64_python3.13.____cp313.yaml"
-description = "Build root-feedstock with variant linux_aarch64_python3.13.____cp313 directly (without setup scripts)"
+description = "Build root-638 with variant linux_aarch64_python3.13.____cp313 directly (without setup scripts)"
 [tasks."inspect-linux_aarch64_python3.13.____cp313"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_aarch64_python3.13.____cp313.yaml"
-description = "List contents of root-feedstock packages built for variant linux_aarch64_python3.13.____cp313"
+description = "List contents of root-638 packages built for variant linux_aarch64_python3.13.____cp313"
 [tasks."build-linux_aarch64_python3.14.____cp314"]
 cmd = "rattler-build build --recipe recipe -m .ci_support/linux_aarch64_python3.14.____cp314.yaml"
-description = "Build root-feedstock with variant linux_aarch64_python3.14.____cp314 directly (without setup scripts)"
+description = "Build root-638 with variant linux_aarch64_python3.14.____cp314 directly (without setup scripts)"
 [tasks."inspect-linux_aarch64_python3.14.____cp314"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_aarch64_python3.14.____cp314.yaml"
-description = "List contents of root-feedstock packages built for variant linux_aarch64_python3.14.____cp314"
+description = "List contents of root-638 packages built for variant linux_aarch64_python3.14.____cp314"
 [tasks."build-linux_ppc64le_python3.10.____cpython"]
 cmd = "rattler-build build --recipe recipe -m .ci_support/linux_ppc64le_python3.10.____cpython.yaml"
-description = "Build root-feedstock with variant linux_ppc64le_python3.10.____cpython directly (without setup scripts)"
+description = "Build root-638 with variant linux_ppc64le_python3.10.____cpython directly (without setup scripts)"
 [tasks."inspect-linux_ppc64le_python3.10.____cpython"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_ppc64le_python3.10.____cpython.yaml"
-description = "List contents of root-feedstock packages built for variant linux_ppc64le_python3.10.____cpython"
+description = "List contents of root-638 packages built for variant linux_ppc64le_python3.10.____cpython"
 [tasks."build-linux_ppc64le_python3.11.____cpython"]
 cmd = "rattler-build build --recipe recipe -m .ci_support/linux_ppc64le_python3.11.____cpython.yaml"
-description = "Build root-feedstock with variant linux_ppc64le_python3.11.____cpython directly (without setup scripts)"
+description = "Build root-638 with variant linux_ppc64le_python3.11.____cpython directly (without setup scripts)"
 [tasks."inspect-linux_ppc64le_python3.11.____cpython"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_ppc64le_python3.11.____cpython.yaml"
-description = "List contents of root-feedstock packages built for variant linux_ppc64le_python3.11.____cpython"
+description = "List contents of root-638 packages built for variant linux_ppc64le_python3.11.____cpython"
 [tasks."build-linux_ppc64le_python3.12.____cpython"]
 cmd = "rattler-build build --recipe recipe -m .ci_support/linux_ppc64le_python3.12.____cpython.yaml"
-description = "Build root-feedstock with variant linux_ppc64le_python3.12.____cpython directly (without setup scripts)"
+description = "Build root-638 with variant linux_ppc64le_python3.12.____cpython directly (without setup scripts)"
 [tasks."inspect-linux_ppc64le_python3.12.____cpython"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_ppc64le_python3.12.____cpython.yaml"
-description = "List contents of root-feedstock packages built for variant linux_ppc64le_python3.12.____cpython"
+description = "List contents of root-638 packages built for variant linux_ppc64le_python3.12.____cpython"
 [tasks."build-linux_ppc64le_python3.13.____cp313"]
 cmd = "rattler-build build --recipe recipe -m .ci_support/linux_ppc64le_python3.13.____cp313.yaml"
-description = "Build root-feedstock with variant linux_ppc64le_python3.13.____cp313 directly (without setup scripts)"
+description = "Build root-638 with variant linux_ppc64le_python3.13.____cp313 directly (without setup scripts)"
 [tasks."inspect-linux_ppc64le_python3.13.____cp313"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_ppc64le_python3.13.____cp313.yaml"
-description = "List contents of root-feedstock packages built for variant linux_ppc64le_python3.13.____cp313"
+description = "List contents of root-638 packages built for variant linux_ppc64le_python3.13.____cp313"
 [tasks."build-linux_ppc64le_python3.14.____cp314"]
 cmd = "rattler-build build --recipe recipe -m .ci_support/linux_ppc64le_python3.14.____cp314.yaml"
-description = "Build root-feedstock with variant linux_ppc64le_python3.14.____cp314 directly (without setup scripts)"
+description = "Build root-638 with variant linux_ppc64le_python3.14.____cp314 directly (without setup scripts)"
 [tasks."inspect-linux_ppc64le_python3.14.____cp314"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_ppc64le_python3.14.____cp314.yaml"
-description = "List contents of root-feedstock packages built for variant linux_ppc64le_python3.14.____cp314"
+description = "List contents of root-638 packages built for variant linux_ppc64le_python3.14.____cp314"
 [tasks."build-osx_64_python3.10.____cpython"]
 cmd = "rattler-build build --recipe recipe -m .ci_support/osx_64_python3.10.____cpython.yaml"
-description = "Build root-feedstock with variant osx_64_python3.10.____cpython directly (without setup scripts)"
+description = "Build root-638 with variant osx_64_python3.10.____cpython directly (without setup scripts)"
 [tasks."inspect-osx_64_python3.10.____cpython"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/osx_64_python3.10.____cpython.yaml"
-description = "List contents of root-feedstock packages built for variant osx_64_python3.10.____cpython"
+description = "List contents of root-638 packages built for variant osx_64_python3.10.____cpython"
 [tasks."build-osx_64_python3.11.____cpython"]
 cmd = "rattler-build build --recipe recipe -m .ci_support/osx_64_python3.11.____cpython.yaml"
-description = "Build root-feedstock with variant osx_64_python3.11.____cpython directly (without setup scripts)"
+description = "Build root-638 with variant osx_64_python3.11.____cpython directly (without setup scripts)"
 [tasks."inspect-osx_64_python3.11.____cpython"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/osx_64_python3.11.____cpython.yaml"
-description = "List contents of root-feedstock packages built for variant osx_64_python3.11.____cpython"
+description = "List contents of root-638 packages built for variant osx_64_python3.11.____cpython"
 [tasks."build-osx_64_python3.12.____cpython"]
 cmd = "rattler-build build --recipe recipe -m .ci_support/osx_64_python3.12.____cpython.yaml"
-description = "Build root-feedstock with variant osx_64_python3.12.____cpython directly (without setup scripts)"
+description = "Build root-638 with variant osx_64_python3.12.____cpython directly (without setup scripts)"
 [tasks."inspect-osx_64_python3.12.____cpython"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/osx_64_python3.12.____cpython.yaml"
-description = "List contents of root-feedstock packages built for variant osx_64_python3.12.____cpython"
+description = "List contents of root-638 packages built for variant osx_64_python3.12.____cpython"
 [tasks."build-osx_64_python3.13.____cp313"]
 cmd = "rattler-build build --recipe recipe -m .ci_support/osx_64_python3.13.____cp313.yaml"
-description = "Build root-feedstock with variant osx_64_python3.13.____cp313 directly (without setup scripts)"
+description = "Build root-638 with variant osx_64_python3.13.____cp313 directly (without setup scripts)"
 [tasks."inspect-osx_64_python3.13.____cp313"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/osx_64_python3.13.____cp313.yaml"
-description = "List contents of root-feedstock packages built for variant osx_64_python3.13.____cp313"
+description = "List contents of root-638 packages built for variant osx_64_python3.13.____cp313"
 [tasks."build-osx_64_python3.14.____cp314"]
 cmd = "rattler-build build --recipe recipe -m .ci_support/osx_64_python3.14.____cp314.yaml"
-description = "Build root-feedstock with variant osx_64_python3.14.____cp314 directly (without setup scripts)"
+description = "Build root-638 with variant osx_64_python3.14.____cp314 directly (without setup scripts)"
 [tasks."inspect-osx_64_python3.14.____cp314"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/osx_64_python3.14.____cp314.yaml"
-description = "List contents of root-feedstock packages built for variant osx_64_python3.14.____cp314"
+description = "List contents of root-638 packages built for variant osx_64_python3.14.____cp314"
 [tasks."build-osx_arm64_python3.10.____cpython"]
 cmd = "rattler-build build --recipe recipe -m .ci_support/osx_arm64_python3.10.____cpython.yaml"
-description = "Build root-feedstock with variant osx_arm64_python3.10.____cpython directly (without setup scripts)"
+description = "Build root-638 with variant osx_arm64_python3.10.____cpython directly (without setup scripts)"
 [tasks."inspect-osx_arm64_python3.10.____cpython"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/osx_arm64_python3.10.____cpython.yaml"
-description = "List contents of root-feedstock packages built for variant osx_arm64_python3.10.____cpython"
+description = "List contents of root-638 packages built for variant osx_arm64_python3.10.____cpython"
 [tasks."build-osx_arm64_python3.11.____cpython"]
 cmd = "rattler-build build --recipe recipe -m .ci_support/osx_arm64_python3.11.____cpython.yaml"
-description = "Build root-feedstock with variant osx_arm64_python3.11.____cpython directly (without setup scripts)"
+description = "Build root-638 with variant osx_arm64_python3.11.____cpython directly (without setup scripts)"
 [tasks."inspect-osx_arm64_python3.11.____cpython"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/osx_arm64_python3.11.____cpython.yaml"
-description = "List contents of root-feedstock packages built for variant osx_arm64_python3.11.____cpython"
+description = "List contents of root-638 packages built for variant osx_arm64_python3.11.____cpython"
 [tasks."build-osx_arm64_python3.12.____cpython"]
 cmd = "rattler-build build --recipe recipe -m .ci_support/osx_arm64_python3.12.____cpython.yaml"
-description = "Build root-feedstock with variant osx_arm64_python3.12.____cpython directly (without setup scripts)"
+description = "Build root-638 with variant osx_arm64_python3.12.____cpython directly (without setup scripts)"
 [tasks."inspect-osx_arm64_python3.12.____cpython"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/osx_arm64_python3.12.____cpython.yaml"
-description = "List contents of root-feedstock packages built for variant osx_arm64_python3.12.____cpython"
+description = "List contents of root-638 packages built for variant osx_arm64_python3.12.____cpython"
 [tasks."build-osx_arm64_python3.13.____cp313"]
 cmd = "rattler-build build --recipe recipe -m .ci_support/osx_arm64_python3.13.____cp313.yaml"
-description = "Build root-feedstock with variant osx_arm64_python3.13.____cp313 directly (without setup scripts)"
+description = "Build root-638 with variant osx_arm64_python3.13.____cp313 directly (without setup scripts)"
 [tasks."inspect-osx_arm64_python3.13.____cp313"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/osx_arm64_python3.13.____cp313.yaml"
-description = "List contents of root-feedstock packages built for variant osx_arm64_python3.13.____cp313"
+description = "List contents of root-638 packages built for variant osx_arm64_python3.13.____cp313"
 [tasks."build-osx_arm64_python3.14.____cp314"]
 cmd = "rattler-build build --recipe recipe -m .ci_support/osx_arm64_python3.14.____cp314.yaml"
-description = "Build root-feedstock with variant osx_arm64_python3.14.____cp314 directly (without setup scripts)"
+description = "Build root-638 with variant osx_arm64_python3.14.____cp314 directly (without setup scripts)"
 [tasks."inspect-osx_arm64_python3.14.____cp314"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/osx_arm64_python3.14.____cp314.yaml"
-description = "List contents of root-feedstock packages built for variant osx_arm64_python3.14.____cp314"
+description = "List contents of root-638 packages built for variant osx_arm64_python3.14.____cp314"
 
 [feature.smithy.dependencies]
 conda-smithy = "*"
