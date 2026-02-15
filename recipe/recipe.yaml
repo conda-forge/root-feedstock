@@ -10,7 +10,7 @@ context:
   # to prevent ROOT from being held up by this, only have a strong dependency on
   # numba for supported python versions
   unsupported_numba_pyversion: 3.15
-  root_cxx_standard: 20
+  preferred_root_cxx_std: "23"
 
 recipe:
   name: root
@@ -54,12 +54,15 @@ outputs:
   - package:
       name: root_base
     build:
+      string: cxx${{ root_cxx_std }}_h${{ hash }}_${{ build_number }}
+      variant:
+        down_prioritize_variant: ${{ 1 if root_cxx_std != preferred_root_cxx_std else 0 }}
       script:
         file: build_root.sh
         env:
           clang_version: ${{ clang_version }}
           clang_patches_version: ${{ clang_patches_version }}
-          ROOT_CXX_STANDARD: ${{ root_cxx_standard }}
+          ROOT_CXX_STANDARD: ${{ root_cxx_std }}
       dynamic_linking:
         overdepending_behavior: ignore
       prefix_detection:
@@ -170,6 +173,7 @@ outputs:
         - llvmdev ${{ clang_version }}.*
         - clangdev ${{ clang_version }}.* ${{ clang_patches_version }}*
       run:
+        - root_cxx_standard ==${{ root_cxx_std }}
         - python
         - numpy
         - if: linux
@@ -235,6 +239,7 @@ outputs:
         - python
       run:
         - ${{ pin_subpackage('root_base', exact=True) }}
+        - root_cxx_standard ==${{ root_cxx_std }}
         - python
         - compilers  # This package is hostile to how conda-build manages compilers
         - metakernel
@@ -262,6 +267,22 @@ outputs:
           - "root -b -l -q -x \"${PREFIX}/tutorials/analysis/tree/run_h1analysis.C\""
           - root -l -b -q -x test.cpp++
           - "jupyter-kernelspec list | grep ' root '"
+
+  - package:
+      name: root_cxx_standard
+      version: ${{ root_cxx_std }}
+    build:
+      noarch: generic
+      string: ${{ root_cxx_std }}
+      variant:
+        # Ensures conda-smithy splits linux-64 CI jobs per Python version.
+        # Without this, the noarch output drops `python` from the intersection
+        # of used loop vars, collapsing all Python variants into a single job.
+        use_keys:
+          - python
+    requirements:
+      run_exports:
+        - root_cxx_standard ==${{ root_cxx_std }}
 
 about:
   license: LGPL-2.1-only

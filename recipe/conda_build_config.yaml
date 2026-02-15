@@ -1,3 +1,7 @@
+root_cxx_std:
+  - 20
+  - 23
+
 c_stdlib_version:              # [osx]
   - 11.0                       # [osx]
 
