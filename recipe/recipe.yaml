@@ -39,6 +39,7 @@ source:
         - patches/0011-Remove-bad-check-on-SDK-for-std_darwin.MacOSX14.2.sd.patch
     - patches/0001-Try-relative-libstdc-include-directories.patch
     - patches/0012-Use-resolved-executable-path-for-clang-Driver.patch
+    - patches/21013.patch
 build:
   number: ${{ build_number }}
   skip:
