@@ -62,52 +62,52 @@ jobs:
         CONFIG: osx_arm64_python3.10.____cpythonroot_cxx_std20
         UPLOAD_PACKAGES: 'True'
         SHORT_CONFIG: osx_arm64_python3.10.____cpythonroot_cxx_std20
-        VMIMAGE: macOS-15
+        VMIMAGE: macOS-15-arm64
       osx_arm64_python3.10.____cpythonroot_cxx_std23:
         CONFIG: osx_arm64_python3.10.____cpythonroot_cxx_std23
         UPLOAD_PACKAGES: 'True'
         SHORT_CONFIG: osx_arm64_python3.10.____cpythonroot_cxx_std23
-        VMIMAGE: macOS-15
+        VMIMAGE: macOS-15-arm64
       osx_arm64_python3.11.____cpythonroot_cxx_std20:
         CONFIG: osx_arm64_python3.11.____cpythonroot_cxx_std20
         UPLOAD_PACKAGES: 'True'
         SHORT_CONFIG: osx_arm64_python3.11.____cpythonroot_cxx_std20
-        VMIMAGE: macOS-15
+        VMIMAGE: macOS-15-arm64
       osx_arm64_python3.11.____cpythonroot_cxx_std23:
         CONFIG: osx_arm64_python3.11.____cpythonroot_cxx_std23
         UPLOAD_PACKAGES: 'True'
         SHORT_CONFIG: osx_arm64_python3.11.____cpythonroot_cxx_std23
-        VMIMAGE: macOS-15
+        VMIMAGE: macOS-15-arm64
       osx_arm64_python3.12.____cpythonroot_cxx_std20:
         CONFIG: osx_arm64_python3.12.____cpythonroot_cxx_std20
         UPLOAD_PACKAGES: 'True'
         SHORT_CONFIG: osx_arm64_python3.12.____cpythonroot_cxx_std20
-        VMIMAGE: macOS-15
+        VMIMAGE: macOS-15-arm64
       osx_arm64_python3.12.____cpythonroot_cxx_std23:
         CONFIG: osx_arm64_python3.12.____cpythonroot_cxx_std23
         UPLOAD_PACKAGES: 'True'
         SHORT_CONFIG: osx_arm64_python3.12.____cpythonroot_cxx_std23
-        VMIMAGE: macOS-15
+        VMIMAGE: macOS-15-arm64
       osx_arm64_python3.13.____cp313root_cxx_std20:
         CONFIG: osx_arm64_python3.13.____cp313root_cxx_std20
         UPLOAD_PACKAGES: 'True'
         SHORT_CONFIG: osx_arm64_python3.13.____cp313root_cxx_std20
-        VMIMAGE: macOS-15
+        VMIMAGE: macOS-15-arm64
       osx_arm64_python3.13.____cp313root_cxx_std23:
         CONFIG: osx_arm64_python3.13.____cp313root_cxx_std23
         UPLOAD_PACKAGES: 'True'
         SHORT_CONFIG: osx_arm64_python3.13.____cp313root_cxx_std23
-        VMIMAGE: macOS-15
+        VMIMAGE: macOS-15-arm64
       osx_arm64_python3.14.____cp314root_cxx_std20:
         CONFIG: osx_arm64_python3.14.____cp314root_cxx_std20
         UPLOAD_PACKAGES: 'True'
         SHORT_CONFIG: osx_arm64_python3.14.____cp314root_cxx_std20
-        VMIMAGE: macOS-15
+        VMIMAGE: macOS-15-arm64
       osx_arm64_python3.14.____cp314root_cxx_std23:
         CONFIG: osx_arm64_python3.14.____cp314root_cxx_std23
         UPLOAD_PACKAGES: 'True'
         SHORT_CONFIG: osx_arm64_python3.14.____cp314root_cxx_std23
-        VMIMAGE: macOS-15
+        VMIMAGE: macOS-15-arm64
   timeoutInMinutes: 360
   variables: {}
 
