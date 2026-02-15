@@ -246,6 +246,7 @@ Current release info
 | --- | --- | --- | --- |
 | [![Conda Recipe](https://img.shields.io/badge/recipe-root-green.svg)](https://anaconda.org/conda-forge/root) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/root.svg)](https://anaconda.org/conda-forge/root) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/root.svg)](https://anaconda.org/conda-forge/root) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/root.svg)](https://anaconda.org/conda-forge/root) |
 | [![Conda Recipe](https://img.shields.io/badge/recipe-root__base-green.svg)](https://anaconda.org/conda-forge/root_base) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/root_base.svg)](https://anaconda.org/conda-forge/root_base) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/root_base.svg)](https://anaconda.org/conda-forge/root_base) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/root_base.svg)](https://anaconda.org/conda-forge/root_base) |
+| [![Conda Recipe](https://img.shields.io/badge/recipe-root__cxx__standard-green.svg)](https://anaconda.org/conda-forge/root_cxx_standard) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/root_cxx_standard.svg)](https://anaconda.org/conda-forge/root_cxx_standard) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/root_cxx_standard.svg)](https://anaconda.org/conda-forge/root_cxx_standard) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/root_cxx_standard.svg)](https://anaconda.org/conda-forge/root_cxx_standard) |
 
 Installing root
 ===============
@@ -257,16 +258,16 @@ conda config --add channels conda-forge
 conda config --set channel_priority strict
 ```
 
-Once the `conda-forge` channel has been enabled, `root, root_base` can be installed with `conda`:
+Once the `conda-forge` channel has been enabled, `root, root_base, root_cxx_standard` can be installed with `conda`:
 
 ```
-conda install root root_base
+conda install root root_base root_cxx_standard
 ```
 
 or with `mamba`:
 
 ```
-mamba install root root_base
+mamba install root root_base root_cxx_standard
 ```
 
 It is possible to list all of the versions of `root` available on your platform with `conda`:

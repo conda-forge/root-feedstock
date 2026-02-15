@@ -68,6 +68,8 @@ pin_run_as_build:
     max_pin: x.x
 python:
 - 3.13.* *_cp313
+root_cxx_std:
+- '20'
 sqlite:
 - '3'
 target_platform:
