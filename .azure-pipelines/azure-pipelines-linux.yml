@@ -8,81 +8,156 @@ jobs:
     vmImage: ubuntu-latest
   strategy:
     matrix:
-      linux_64_python3.10.____cpython:
-        CONFIG: linux_64_python3.10.____cpython
+      linux_64_python3.10.____cpythonroot_cxx_std20:
+        CONFIG: linux_64_python3.10.____cpythonroot_cxx_std20
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
-        SHORT_CONFIG: linux_64_python3.10.____cpython
-      linux_64_python3.11.____cpython:
-        CONFIG: linux_64_python3.11.____cpython
+        SHORT_CONFIG: linux_64_python3.10.____cpythonroot_cxx_std20
+      linux_64_python3.10.____cpythonroot_cxx_std23:
+        CONFIG: linux_64_python3.10.____cpythonroot_cxx_std23
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
-        SHORT_CONFIG: linux_64_python3.11.____cpython
-      linux_64_python3.12.____cpython:
-        CONFIG: linux_64_python3.12.____cpython
+        SHORT_CONFIG: linux_64_python3.10.____cpythonroot_cxx_std23
+      linux_64_python3.11.____cpythonroot_cxx_std20:
+        CONFIG: linux_64_python3.11.____cpythonroot_cxx_std20
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
-        SHORT_CONFIG: linux_64_python3.12.____cpython
-      linux_64_python3.13.____cp313:
-        CONFIG: linux_64_python3.13.____cp313
+        SHORT_CONFIG: linux_64_python3.11.____cpythonroot_cxx_std20
+      linux_64_python3.11.____cpythonroot_cxx_std23:
+        CONFIG: linux_64_python3.11.____cpythonroot_cxx_std23
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
-        SHORT_CONFIG: linux_64_python3.13.____cp313
-      linux_64_python3.14.____cp314:
-        CONFIG: linux_64_python3.14.____cp314
+        SHORT_CONFIG: linux_64_python3.11.____cpythonroot_cxx_std23
+      linux_64_python3.12.____cpythonroot_cxx_std20:
+        CONFIG: linux_64_python3.12.____cpythonroot_cxx_std20
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
-        SHORT_CONFIG: linux_64_python3.14.____cp314
-      linux_aarch64_python3.10.____cpython:
-        CONFIG: linux_aarch64_python3.10.____cpython
+        SHORT_CONFIG: linux_64_python3.12.____cpythonroot_cxx_std20
+      linux_64_python3.12.____cpythonroot_cxx_std23:
+        CONFIG: linux_64_python3.12.____cpythonroot_cxx_std23
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
-        SHORT_CONFIG: linux_aarch64_python3.10.____cpython
-      linux_aarch64_python3.11.____cpython:
-        CONFIG: linux_aarch64_python3.11.____cpython
+        SHORT_CONFIG: linux_64_python3.12.____cpythonroot_cxx_std23
+      linux_64_python3.13.____cp313root_cxx_std20:
+        CONFIG: linux_64_python3.13.____cp313root_cxx_std20
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
-        SHORT_CONFIG: linux_aarch64_python3.11.____cpython
-      linux_aarch64_python3.12.____cpython:
-        CONFIG: linux_aarch64_python3.12.____cpython
+        SHORT_CONFIG: linux_64_python3.13.____cp313root_cxx_std20
+      linux_64_python3.13.____cp313root_cxx_std23:
+        CONFIG: linux_64_python3.13.____cp313root_cxx_std23
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
-        SHORT_CONFIG: linux_aarch64_python3.12.____cpython
-      linux_aarch64_python3.13.____cp313:
-        CONFIG: linux_aarch64_python3.13.____cp313
+        SHORT_CONFIG: linux_64_python3.13.____cp313root_cxx_std23
+      linux_64_python3.14.____cp314root_cxx_std20:
+        CONFIG: linux_64_python3.14.____cp314root_cxx_std20
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
-        SHORT_CONFIG: linux_aarch64_python3.13.____cp313
-      linux_aarch64_python3.14.____cp314:
-        CONFIG: linux_aarch64_python3.14.____cp314
+        SHORT_CONFIG: linux_64_python3.14.____cp314root_cxx_std20
+      linux_64_python3.14.____cp314root_cxx_std23:
+        CONFIG: linux_64_python3.14.____cp314root_cxx_std23
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
-        SHORT_CONFIG: linux_aarch64_python3.14.____cp314
-      linux_ppc64le_python3.10.____cpython:
-        CONFIG: linux_ppc64le_python3.10.____cpython
+        SHORT_CONFIG: linux_64_python3.14.____cp314root_cxx_std23
+      linux_aarch64_python3.10.____cpythonroot_cxx_std20:
+        CONFIG: linux_aarch64_python3.10.____cpythonroot_cxx_std20
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
-        SHORT_CONFIG: linux_ppc64le_python3.10.____cpython
-      linux_ppc64le_python3.11.____cpython:
-        CONFIG: linux_ppc64le_python3.11.____cpython
+        SHORT_CONFIG: linux_aarch64_python3.10.____cpythonroot_hae0ffaab
+      linux_aarch64_python3.10.____cpythonroot_cxx_std23:
+        CONFIG: linux_aarch64_python3.10.____cpythonroot_cxx_std23
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
-        SHORT_CONFIG: linux_ppc64le_python3.11.____cpython
-      linux_ppc64le_python3.12.____cpython:
-        CONFIG: linux_ppc64le_python3.12.____cpython
+        SHORT_CONFIG: linux_aarch64_python3.10.____cpythonroot_hb4f7f44d
+      linux_aarch64_python3.11.____cpythonroot_cxx_std20:
+        CONFIG: linux_aarch64_python3.11.____cpythonroot_cxx_std20
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
-        SHORT_CONFIG: linux_ppc64le_python3.12.____cpython
-      linux_ppc64le_python3.13.____cp313:
-        CONFIG: linux_ppc64le_python3.13.____cp313
+        SHORT_CONFIG: linux_aarch64_python3.11.____cpythonroot_hecd6d0b1
+      linux_aarch64_python3.11.____cpythonroot_cxx_std23:
+        CONFIG: linux_aarch64_python3.11.____cpythonroot_cxx_std23
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
-        SHORT_CONFIG: linux_ppc64le_python3.13.____cp313
-      linux_ppc64le_python3.14.____cp314:
-        CONFIG: linux_ppc64le_python3.14.____cp314
+        SHORT_CONFIG: linux_aarch64_python3.11.____cpythonroot_h41aa9be9
+      linux_aarch64_python3.12.____cpythonroot_cxx_std20:
+        CONFIG: linux_aarch64_python3.12.____cpythonroot_cxx_std20
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
-        SHORT_CONFIG: linux_ppc64le_python3.14.____cp314
+        SHORT_CONFIG: linux_aarch64_python3.12.____cpythonroot_h641436f3
+      linux_aarch64_python3.12.____cpythonroot_cxx_std23:
+        CONFIG: linux_aarch64_python3.12.____cpythonroot_cxx_std23
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
+        SHORT_CONFIG: linux_aarch64_python3.12.____cpythonroot_h4f8b5f76
+      linux_aarch64_python3.13.____cp313root_cxx_std20:
+        CONFIG: linux_aarch64_python3.13.____cp313root_cxx_std20
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
+        SHORT_CONFIG: linux_aarch64_python3.13.____cp313root_cxx_std20
+      linux_aarch64_python3.13.____cp313root_cxx_std23:
+        CONFIG: linux_aarch64_python3.13.____cp313root_cxx_std23
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
+        SHORT_CONFIG: linux_aarch64_python3.13.____cp313root_cxx_std23
+      linux_aarch64_python3.14.____cp314root_cxx_std20:
+        CONFIG: linux_aarch64_python3.14.____cp314root_cxx_std20
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
+        SHORT_CONFIG: linux_aarch64_python3.14.____cp314root_cxx_std20
+      linux_aarch64_python3.14.____cp314root_cxx_std23:
+        CONFIG: linux_aarch64_python3.14.____cp314root_cxx_std23
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
+        SHORT_CONFIG: linux_aarch64_python3.14.____cp314root_cxx_std23
+      linux_ppc64le_python3.10.____cpythonroot_cxx_std20:
+        CONFIG: linux_ppc64le_python3.10.____cpythonroot_cxx_std20
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
+        SHORT_CONFIG: linux_ppc64le_python3.10.____cpythonroot_h8e88c586
+      linux_ppc64le_python3.10.____cpythonroot_cxx_std23:
+        CONFIG: linux_ppc64le_python3.10.____cpythonroot_cxx_std23
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
+        SHORT_CONFIG: linux_ppc64le_python3.10.____cpythonroot_h8c143dcf
+      linux_ppc64le_python3.11.____cpythonroot_cxx_std20:
+        CONFIG: linux_ppc64le_python3.11.____cpythonroot_cxx_std20
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
+        SHORT_CONFIG: linux_ppc64le_python3.11.____cpythonroot_h860ff3b1
+      linux_ppc64le_python3.11.____cpythonroot_cxx_std23:
+        CONFIG: linux_ppc64le_python3.11.____cpythonroot_cxx_std23
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
+        SHORT_CONFIG: linux_ppc64le_python3.11.____cpythonroot_h9dde2dfb
+      linux_ppc64le_python3.12.____cpythonroot_cxx_std20:
+        CONFIG: linux_ppc64le_python3.12.____cpythonroot_cxx_std20
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
+        SHORT_CONFIG: linux_ppc64le_python3.12.____cpythonroot_h10974a94
+      linux_ppc64le_python3.12.____cpythonroot_cxx_std23:
+        CONFIG: linux_ppc64le_python3.12.____cpythonroot_cxx_std23
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
+        SHORT_CONFIG: linux_ppc64le_python3.12.____cpythonroot_hd45d6beb
+      linux_ppc64le_python3.13.____cp313root_cxx_std20:
+        CONFIG: linux_ppc64le_python3.13.____cp313root_cxx_std20
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
+        SHORT_CONFIG: linux_ppc64le_python3.13.____cp313root_cxx_std20
+      linux_ppc64le_python3.13.____cp313root_cxx_std23:
+        CONFIG: linux_ppc64le_python3.13.____cp313root_cxx_std23
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
+        SHORT_CONFIG: linux_ppc64le_python3.13.____cp313root_cxx_std23
+      linux_ppc64le_python3.14.____cp314root_cxx_std20:
+        CONFIG: linux_ppc64le_python3.14.____cp314root_cxx_std20
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
+        SHORT_CONFIG: linux_ppc64le_python3.14.____cp314root_cxx_std20
+      linux_ppc64le_python3.14.____cp314root_cxx_std23:
+        CONFIG: linux_ppc64le_python3.14.____cp314root_cxx_std23
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
+        SHORT_CONFIG: linux_ppc64le_python3.14.____cp314root_cxx_std23
   timeoutInMinutes: 360
   variables: {}
 
