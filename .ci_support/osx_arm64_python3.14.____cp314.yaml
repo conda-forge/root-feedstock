@@ -55,7 +55,7 @@ libxml2_devel:
 lz4_c:
 - '1.10'
 macos_machine:
-- x86_64-apple-darwin13.4.0
+- arm64-apple-darwin20.0.0
 numpy:
 - '2'
 openssl:
@@ -67,13 +67,13 @@ pin_run_as_build:
     min_pin: x.x
     max_pin: x.x
 python:
-- 3.12.* *_cpython
+- 3.14.* *_cp314
 root_cxx_std:
 - '20'
 sqlite:
 - '3'
 target_platform:
-- osx-64
+- osx-arm64
 tbb:
 - '2022'
 tbb_devel:

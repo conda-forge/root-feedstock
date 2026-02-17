@@ -1,16 +1,17 @@
 context:
   name: root
-  tag_name: 6-36-06
+  tag_name: 6-36-08
   build_number: 0
   clang_version: 18.1.8
+  # Clang patches are identical between root_63606 and root_63608
   clang_patches_version: root_63606
   builtin_clang: false
   run_gtests: false
   # When new Python versions are released numba tends to be slow to support them
   # to prevent ROOT from being held up by this, only have a strong dependency on
   # numba for supported python versions
-  unsupported_numba_pyversion: 3.14
-  root_cxx_standard: 20
+  unsupported_numba_pyversion: 3.15
+  preferred_root_cxx_std: "23"
 
 recipe:
   name: root
@@ -18,7 +19,7 @@ recipe:
 
 source:
   url: https://github.com/root-project/root/archive/refs/tags/v${{ tag_name }}.tar.gz
-  sha256: 27e158e8dc388d424696365109b7f62fd0a98b7dbb1a46a300a7c4b82e8417e1
+  sha256: 0c4a74c3fddb1845ba8ceabd28e7a67c1a44826fe37d6185eaec672bdf2d7c3d
   target_directory: root-source
   patches:
     - patches/0001-disable-cling-sysroot-at-runtime.patch
@@ -36,6 +37,9 @@ source:
         - patches/0009-avoid-linking-TPython-against-libPython.patch
         - patches/0010-root-x.xx.xx-osx-remove-hardcoded-sysroot.patch
         - patches/0011-Remove-bad-check-on-SDK-for-std_darwin.MacOSX14.2.sd.patch
+    - patches/0001-Try-relative-libstdc-include-directories.patch
+    - patches/0012-Use-resolved-executable-path-for-clang-Driver.patch
+    - patches/21282.patch
 build:
   number: ${{ build_number }}
   skip:
@@ -45,12 +49,15 @@ outputs:
   - package:
       name: root_base
     build:
+      string: cxx${{ root_cxx_std }}_h${{ hash }}_${{ build_number }}
+      variant:
+        down_prioritize_variant: ${{ 1 if root_cxx_std != preferred_root_cxx_std else 0 }}
       script:
         file: build_root.sh
         env:
           clang_version: ${{ clang_version }}
           clang_patches_version: ${{ clang_patches_version }}
-          ROOT_CXX_STANDARD: ${{ root_cxx_standard }}
+          ROOT_CXX_STANDARD: ${{ root_cxx_std }}
       dynamic_linking:
         overdepending_behavior: ignore
       prefix_detection:
@@ -161,12 +168,27 @@ outputs:
         - llvmdev ${{ clang_version }}.* ${{ clang_patches_version }}*
         - clangdev ${{ clang_version }}.* ${{ clang_patches_version }}*
       run:
+        - root_cxx_standard ==${{ root_cxx_std }}
         - python
         - numpy
-        # FIXME: Required to ensure a consistent etc/allDict.cxx.pch
-        - ${{ compiler('c') }}
-        - ${{ compiler('cxx') }}
-        - ${{ stdlib("c") }}
+        - if: linux
+          then:
+            # FIXME: Version required to ensure a consistent etc/allDict.cxx.pch
+            - libgcc-devel_${{ host_platform }} ${{ c_compiler_version }}.*
+            - libstdcxx-devel_${{ host_platform }} ${{ cxx_compiler_version }}.*
+            - sysroot_${{ host_platform }} ${{ c_stdlib_version }}.*
+        - if: osx
+          then:
+            - libcxx-devel ${{ cxx_compiler_version }}.*
+        - if: unix
+          then:
+            # Need an external compiler for some parts.
+            # FIXME: make root use the builtin clang, seems like a waste
+            # to require an external compiler
+            - ${{ cxx_compiler }}_impl_${{ host_platform }}
+        - if: win
+          then:
+            - ${{ compiler('cxx') }}
         - ${{ pin_compatible('xxhash', upper_bound='x.x.x') }}
         - ${{ pin_compatible('nlohmann_json', upper_bound='x.x.x') }}
         - cffi
@@ -191,6 +213,7 @@ outputs:
           recipe:
             - test.cpp
         script:
+          - export CLING_VERBOSE=1
           - root -l -b -q -x
           - root -l -b -q -x test.cpp
           - "root -b -l -q -x -e '2+3; 0'"
@@ -200,6 +223,7 @@ outputs:
           - if: not ppc64le
             then: "XrdSecPROTOCOL=unix python -c \"import ROOT; ROOT.EnableImplicitMT(); rdf = ROOT.RDataFrame('DecayTree', 'root://eospublic.cern.ch//eos/opendata/lhcb/AntimatterMatters2017/data/B2HHH_MagnetUp.root'); print(rdf.AsNumpy(['H1_PX']))\""
           - root -l -b -q -x test.cpp++
+          - "python -c \"import ROOT; assert ROOT.gInterpreter.Declare('#include <Python.h>')\""
           - if: not (osx and arm64) and build_platform == target_platform
             then: "echo '.q' | root -e 'sddsa0'"
 
@@ -211,6 +235,7 @@ outputs:
         - python
       run:
         - ${{ pin_subpackage('root_base', exact=True) }}
+        - root_cxx_standard ==${{ root_cxx_std }}
         - python
         - compilers  # This package is hostile to how conda-build manages compilers
         - metakernel
@@ -238,6 +263,22 @@ outputs:
           - "root -b -l -q -x \"${PREFIX}/tutorials/analysis/tree/run_h1analysis.C\""
           - root -l -b -q -x test.cpp++
           - "jupyter-kernelspec list | grep ' root '"
+
+  - package:
+      name: root_cxx_standard
+      version: ${{ root_cxx_std }}
+    build:
+      noarch: generic
+      string: ${{ root_cxx_std }}
+      variant:
+        # Ensures conda-smithy splits linux-64 CI jobs per Python version.
+        # Without this, the noarch output drops `python` from the intersection
+        # of used loop vars, collapsing all Python variants into a single job.
+        use_keys:
+          - python
+    requirements:
+      run_exports:
+        - root_cxx_standard ==${{ root_cxx_std }}
 
 about:
   license: LGPL-2.1-only

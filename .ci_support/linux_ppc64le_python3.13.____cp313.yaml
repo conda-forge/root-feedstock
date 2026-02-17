@@ -29,7 +29,7 @@ gdk_pixbuf:
 giflib:
 - '5.2'
 glew:
-- '2.2'
+- '2.3'
 glib:
 - '2'
 graphviz:
@@ -64,14 +64,16 @@ pin_run_as_build:
     max_pin: x.x
 python:
 - 3.13.* *_cp313
+root_cxx_std:
+- '20'
 sqlite:
 - '3'
 target_platform:
 - linux-ppc64le
 tbb:
-- '2021'
+- '2022'
 tbb_devel:
-- '2021'
+- '2022'
 xrootd:
 - '5'
 xxhash:

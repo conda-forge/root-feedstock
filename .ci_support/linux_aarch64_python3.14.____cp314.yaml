@@ -1,15 +1,11 @@
-MACOSX_DEPLOYMENT_TARGET:
-- '11.0'
-MACOSX_SDK_VERSION:
-- '11.0'
 c_compiler:
-- clang
+- gcc
 c_compiler_version:
-- '18'
+- '14'
 c_stdlib:
-- macosx_deployment_target
+- sysroot
 c_stdlib_version:
-- '11.0'
+- '2.17'
 cfitsio:
 - 4.6.3
 channel_sources:
@@ -17,11 +13,13 @@ channel_sources:
 channel_targets:
 - conda-forge main
 cxx_compiler:
-- clangxx
+- gxx
 cxx_compiler_version:
-- '18'
+- '14'
 davix:
 - '0.8'
+docker_image:
+- quay.io/condaforge/linux-anvil-x86_64:alma9
 fftw:
 - '3'
 freetype:
@@ -54,8 +52,6 @@ libxml2_devel:
 - '2.14'
 lz4_c:
 - '1.10'
-macos_machine:
-- x86_64-apple-darwin13.4.0
 numpy:
 - '2'
 openssl:
@@ -67,13 +63,13 @@ pin_run_as_build:
     min_pin: x.x
     max_pin: x.x
 python:
-- 3.12.* *_cpython
+- 3.14.* *_cp314
 root_cxx_std:
 - '20'
 sqlite:
 - '3'
 target_platform:
-- osx-64
+- linux-aarch64
 tbb:
 - '2022'
 tbb_devel:

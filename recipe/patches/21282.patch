@@ -1,0 +1,37 @@
+From eb3136f0921ec43708e7d7781a8b4cfd037fec9e Mon Sep 17 00:00:00 2001
+From: Chris Burr <christopher.burr@cern.ch>
+Date: Sun, 15 Feb 2026 04:43:46 +0100
+Subject: [PATCH] fix: macOS build with older SDKs: replace clipsToBounds with
+ layer.masksToBounds
+
+---
+ graf2d/cocoa/src/QuartzWindow.mm | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/graf2d/cocoa/src/QuartzWindow.mm b/graf2d/cocoa/src/QuartzWindow.mm
+index dd3bbaf0e50..7a137011bc9 100644
+--- a/graf2d/cocoa/src/QuartzWindow.mm
++++ b/graf2d/cocoa/src/QuartzWindow.mm
+@@ -2615,13 +2615,17 @@ - (BOOL) acceptsCrossingEvents : (unsigned) eventMask
+ //______________________________________________________________________________
+ - (void)didAddSubview:(NSView *)subview
+ {
+-    self.clipsToBounds = YES;
++    [super didAddSubview:subview];
++    self.wantsLayer = YES;
++    self.layer.masksToBounds = YES;
+ }
+ 
+ //______________________________________________________________________________
+ - (void)willRemoveSubview:(NSView *)subview
+ {
+-    self.clipsToBounds = self.subviews.count > 1;
++    [super willRemoveSubview:subview];
++    self.wantsLayer = YES;
++    self.layer.masksToBounds = self.subviews.count > 1;
+ }
+ 
+ //______________________________________________________________________________
+-- 
+2.39.5 (Apple Git-154)
+
