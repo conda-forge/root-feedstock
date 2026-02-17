@@ -181,7 +181,7 @@ outputs:
             # FIXME: Version required to ensure a consistent etc/allDict.cxx.pch
             - libgcc-devel_${{ host_platform }} ${{ c_compiler_version }}.*
             - libstdcxx-devel_${{ host_platform }} ${{ cxx_compiler_version }}.*
-            - sysroot_${{ host_platform }}
+            - sysroot_${{ host_platform }} ${{ c_stdlib_version }}.*
         - if: osx
           then:
             - libcxx-devel ${{ cxx_compiler_version }}.*
@@ -228,6 +228,7 @@ outputs:
           - if: not ppc64le
             then: "XrdSecPROTOCOL=unix python -c \"import ROOT; ROOT.EnableImplicitMT(); rdf = ROOT.RDataFrame('DecayTree', 'root://eospublic.cern.ch//eos/opendata/lhcb/AntimatterMatters2017/data/B2HHH_MagnetUp.root'); print(rdf.AsNumpy(['H1_PX']))\""
           - root -l -b -q -x test.cpp++
+          - "python -c \"import ROOT; assert ROOT.gInterpreter.Declare('#include <Python.h>')\""
           - if: not (osx and arm64) and build_platform == target_platform
             then: "echo '.q' | root -e 'sddsa0'"
 
