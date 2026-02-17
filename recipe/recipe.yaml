@@ -1,7 +1,7 @@
 context:
   name: root
   tag_name: 6-36-08
-  build_number: 0
+  build_number: 1
   clang_version: 18.1.8
   # Clang patches are identical between root_63606 and root_63608
   clang_patches_version: root_63606
