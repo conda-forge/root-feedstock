@@ -1,16 +1,16 @@
 context:
   name: root
-  tag_name: 6-36-06
-  build_number: 4
-  clang_version: 18.1.8
-  clang_patches_version: root_63606
+  tag_name: 6-38-00
+  build_number: 0
+  clang_version: 20.1.8
+  clang_patches_version: root_63800
   builtin_clang: false
   run_gtests: false
   # When new Python versions are released numba tends to be slow to support them
   # to prevent ROOT from being held up by this, only have a strong dependency on
   # numba for supported python versions
   unsupported_numba_pyversion: 3.15
-  root_cxx_standard: 20
+  preferred_root_cxx_std: "20"
 
 recipe:
   name: root
@@ -18,7 +18,7 @@ recipe:
 
 source:
   url: https://github.com/root-project/root/archive/refs/tags/v${{ tag_name }}.tar.gz
-  sha256: 27e158e8dc388d424696365109b7f62fd0a98b7dbb1a46a300a7c4b82e8417e1
+  sha256: cde4fe4ca40e4afc345c588b4752455e1dded4d4f2525a14d3c81943322decd6
   target_directory: root-source
   patches:
     - patches/0001-disable-cling-sysroot-at-runtime.patch
@@ -30,12 +30,19 @@ source:
       then:
         - patches/0006-HACK-Support-overriding-triplet-used-by-cling.patch
         - patches/0007-Disable-hsimple.root-generation-if-cross-compiling.patch
+        - patches/0012-try_run-cannot-be-used-when-cross-compiling.patch
     - if: osx
       then:
         - patches/0008-disable-builtin-freetype-macos.patch
         - patches/0009-avoid-linking-TPython-against-libPython.patch
         - patches/0010-root-x.xx.xx-osx-remove-hardcoded-sysroot.patch
         - patches/0011-Remove-bad-check-on-SDK-for-std_darwin.MacOSX14.2.sd.patch
+        - patches/0013-Disable-libcxx-availability-in-rootcling.patch
+        - patches/0014-build-Unify-retrieval-of-MacOS-SDK-path.patch
+        - patches/0015-Force-SDKROOT.patch
+        - patches/0016-Disable-libcxx-availability-in-makepch.patch
+        - patches/0017-build-Use-appropriate-CMake-to-link-against-MacOS-fr.patch
+        - patches/0018-Use-correct-filename-for-libCore-in-TROOT-GetLibDir.patch
     - patches/0001-Try-relative-libstdc-include-directories.patch
     - patches/0012-Use-resolved-executable-path-for-clang-Driver.patch
 build:
@@ -47,12 +54,15 @@ outputs:
   - package:
       name: root_base
     build:
+      string: cxx${{ root_cxx_std }}_h${{ hash }}_${{ build_number }}
+      variant:
+        down_prioritize_variant: ${{ 1 if root_cxx_std != preferred_root_cxx_std else 0 }}
       script:
         file: build_root.sh
         env:
           clang_version: ${{ clang_version }}
           clang_patches_version: ${{ clang_patches_version }}
-          ROOT_CXX_STANDARD: ${{ root_cxx_standard }}
+          ROOT_CXX_STANDARD: ${{ root_cxx_std }}
       dynamic_linking:
         overdepending_behavior: ignore
       prefix_detection:
@@ -91,9 +101,9 @@ outputs:
             - zstd
             - freetype
             - liblzma-devel
-            - llvm ${{ clang_version }}.* ${{ clang_patches_version }}*
+            - llvm ${{ clang_version }}.*
             - llvm-openmp ${{ clang_version }}.*
-            - llvmdev ${{ clang_version }}.* ${{ clang_patches_version }}*
+            - llvmdev ${{ clang_version }}.*
             - clangdev ${{ clang_version }}.* ${{ clang_patches_version }}*
       host:
         - libblas
@@ -158,11 +168,12 @@ outputs:
         # Note that zeromq and zeromq * drafts_* are both required
         # c.f. https://github.com/conda-forge/root-feedstock/pull/292#discussion_r2334082389
         - zeromq * drafts_*
-        - llvm ${{ clang_version }}.* ${{ clang_patches_version }}*
+        - llvm ${{ clang_version }}.*
         - llvm-openmp ${{ clang_version }}.*
-        - llvmdev ${{ clang_version }}.* ${{ clang_patches_version }}*
+        - llvmdev ${{ clang_version }}.*
         - clangdev ${{ clang_version }}.* ${{ clang_patches_version }}*
       run:
+        - root_cxx_standard ==${{ root_cxx_std }}
         - python
         - numpy
         - if: linux
@@ -170,7 +181,7 @@ outputs:
             # FIXME: Version required to ensure a consistent etc/allDict.cxx.pch
             - libgcc-devel_${{ host_platform }} ${{ c_compiler_version }}.*
             - libstdcxx-devel_${{ host_platform }} ${{ cxx_compiler_version }}.*
-            - sysroot_${{ host_platform }}
+            - sysroot_${{ host_platform }} ${{ c_stdlib_version }}.*
         - if: osx
           then:
             - libcxx-devel ${{ cxx_compiler_version }}.*
@@ -217,6 +228,7 @@ outputs:
           - if: not ppc64le
             then: "XrdSecPROTOCOL=unix python -c \"import ROOT; ROOT.EnableImplicitMT(); rdf = ROOT.RDataFrame('DecayTree', 'root://eospublic.cern.ch//eos/opendata/lhcb/AntimatterMatters2017/data/B2HHH_MagnetUp.root'); print(rdf.AsNumpy(['H1_PX']))\""
           - root -l -b -q -x test.cpp++
+          - "python -c \"import ROOT; assert ROOT.gInterpreter.Declare('#include <Python.h>')\""
           - if: not (osx and arm64) and build_platform == target_platform
             then: "echo '.q' | root -e 'sddsa0'"
 
@@ -228,6 +240,7 @@ outputs:
         - python
       run:
         - ${{ pin_subpackage('root_base', exact=True) }}
+        - root_cxx_standard ==${{ root_cxx_std }}
         - python
         - compilers  # This package is hostile to how conda-build manages compilers
         - metakernel
@@ -255,6 +268,22 @@ outputs:
           - "root -b -l -q -x \"${PREFIX}/tutorials/analysis/tree/run_h1analysis.C\""
           - root -l -b -q -x test.cpp++
           - "jupyter-kernelspec list | grep ' root '"
+
+  - package:
+      name: root_cxx_standard
+      version: ${{ root_cxx_std }}
+    build:
+      noarch: generic
+      string: ${{ root_cxx_std }}
+      variant:
+        # Ensures conda-smithy splits linux-64 CI jobs per Python version.
+        # Without this, the noarch output drops `python` from the intersection
+        # of used loop vars, collapsing all Python variants into a single job.
+        use_keys:
+          - python
+    requirements:
+      run_exports:
+        - root_cxx_standard ==${{ root_cxx_std }}
 
 about:
   license: LGPL-2.1-only

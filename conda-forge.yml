@@ -1,10 +1,12 @@
+bot:
+  abi_migration_branches:
+    - "6.36.x"
 azure:
   free_disk_space: true
   store_build_artifacts: true
 build_platform:
   linux_aarch64: linux_64
   linux_ppc64le: linux_64
-  osx_arm64: osx_64
 conda_build:
   pkg_format: '2'
 conda_build_tool: rattler-build
@@ -16,5 +18,5 @@ github:
 provider:
   linux_aarch64: default
   linux_ppc64le: default
-  osx_arm64: default
+  osx_arm64: azure
 test: native

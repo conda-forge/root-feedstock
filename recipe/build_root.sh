@@ -55,6 +55,8 @@ else
 fi
 
 if [[ "${target_platform}" == osx* ]]; then
+    # TODO: investigate why we can't use modules on MacOS anymore
+    CMAKE_PLATFORM_FLAGS+=("-Druntime_cxxmodules=OFF")
     CXXFLAGS="${CXXFLAGS} -D_LIBCPP_DISABLE_AVAILABILITY"
 fi
 

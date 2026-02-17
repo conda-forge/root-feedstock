@@ -1,0 +1,35 @@
+From 88b17788e6bd8a85dfb76ef6a129b01037376d67 Mon Sep 17 00:00:00 2001
+From: Vincenzo Eduardo Padulano <vincenzo.eduardo.padulano@cern.ch>
+Date: Sat, 24 Jan 2026 13:17:55 +0100
+Subject: [PATCH] Use correct filename for libCore in TROOT::GetLibDir
+
+This is a partial cherry-pick of https://github.com/root-project/root/commit/ff7e63177e9b91ddf7bed88fb429339528137a3d
+
+Because previous commit https://github.com/root-project/root/commit/47caba598a1529cbbacc170a0fb6c0d139bd352c broke the conda build on MacOS soversion configuration.
+---
+ core/base/CMakeLists.txt | 9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
+
+diff --git a/core/base/CMakeLists.txt b/core/base/CMakeLists.txt
+index f2f9518eb34..abb9aad2e03 100644
+--- a/core/base/CMakeLists.txt
++++ b/core/base/CMakeLists.txt
+@@ -212,14 +212,7 @@ if(ROOT_NEED_STDCXXFS)
+ endif()
+ 
+ # This code about the LIB_CORE_NAME define is important for TROOT::GetLibDir()
+-get_target_property(core_prefix Core PREFIX)
+-get_target_property(core_suffix Core SUFFIX)
+-get_target_property(core_soversion Core SOVERSION)
+-if(core_soversion)
+-    set(full_core_filename "${core_prefix}Core${core_suffix}.${core_soversion}")
+-else()
+-    set(full_core_filename "${core_prefix}Core${core_suffix}")
+-endif()
++set(full_core_filename $<TARGET_FILE_NAME:Core>)
+ target_compile_options(Core PRIVATE -DLIB_CORE_NAME=${full_core_filename})
+ 
+ if(PCRE2_FOUND)
+-- 
+2.50.1 (Apple Git-155)
+

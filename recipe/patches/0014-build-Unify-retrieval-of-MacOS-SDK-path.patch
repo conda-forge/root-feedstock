@@ -1,0 +1,81 @@
+From 820e6d6a580581d24c48d026c0133facf74446ba Mon Sep 17 00:00:00 2001
+From: Vincenzo Eduardo Padulano <vincenzo.eduardo.padulano@cern.ch>
+Date: Thu, 22 Jan 2026 18:00:07 +0100
+Subject: [PATCH 1/2] [build] Unify retrieval of MacOS SDK path
+
+Use `xcrun --show-sdk-path` only once to set the CMAKE_OSX_SYSROOT variable and then reuse it also for the modulemap fix on Darwin.
+
+Since the modulemap fix needed the `xcrun` command to work anyway, turn the warning previously issued if CMake couldn't find this command to an error.
+---
+ CMakeLists.txt                            |  4 ++--
+ cmake/scripts/std_modulemap_darwin_fix.py | 18 +++++-------------
+ core/clingutils/CMakeLists.txt            |  2 +-
+ 3 files changed, 8 insertions(+), 16 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index cd226232cfc..1ff3647c5f1 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -34,8 +34,8 @@ if(CMAKE_HOST_APPLE AND (NOT CMAKE_OSX_SYSROOT OR CMAKE_OSX_SYSROOT STREQUAL "")
+ 
+     set(CMAKE_OSX_SYSROOT "${SDK_PATH}" CACHE PATH "SDK path" FORCE)
+   else()
+-    message(WARNING "The CMAKE_OSX_SYSROOT variable is not set and the 'xcrun' executable is not available. "
+-                    "This build of ROOT might not be able to find the correct MacOS SDK.")
++    message(FATAL_ERROR "The CMAKE_OSX_SYSROOT variable is not set and the 'xcrun' executable is not available. "
++                        "This build of ROOT cannot find the correct MacOS SDK.")
+   endif()
+ endif()
+ 
+diff --git a/cmake/scripts/std_modulemap_darwin_fix.py b/cmake/scripts/std_modulemap_darwin_fix.py
+index bfa32200303..d610a7a8c50 100644
+--- a/cmake/scripts/std_modulemap_darwin_fix.py
++++ b/cmake/scripts/std_modulemap_darwin_fix.py
+@@ -4,14 +4,6 @@ import re
+ import subprocess
+ import sys
+ 
+-
+-def get_sdk_path():
+-    result = subprocess.run(["xcrun", "--show-sdk-path"], capture_output=True, text=True)
+-    if result.returncode != 0:
+-        raise RuntimeError("Could not resolve SDK path")
+-    return os.path.realpath(result.stdout.strip())
+-
+-
+ def remove_ctype_module(content):
+     # Break cyclic module dependencies
+     # See: https://github.com/root-project/root/commit/8045591a17125b49c1007787c586868dea764479
+@@ -20,11 +12,11 @@ def remove_ctype_module(content):
+ 
+ 
+ def main():
+-    if len(sys.argv) < 2:
+-        raise ValueError("Usage: std_modulemap_darwin_fix.py <output_path>")
+-    output_path = sys.argv[1]
+-    sdk = get_sdk_path()
+-    cpp_modulemap = os.path.join(sdk, "usr/include/c++/v1/module.modulemap")
++    if len(sys.argv) < 3:
++        raise ValueError("Usage: std_modulemap_darwin_fix.py <sdk_path> <output_path>")
++    sdk_path = sys.argv[1]
++    output_path = sys.argv[2]
++    cpp_modulemap = os.path.join(sdk_path, "usr/include/c++/v1/module.modulemap")
+     if not os.path.exists(cpp_modulemap):
+         # Try again if we are running a conda build. conda-forge ships the MacOS SDK stripped of libc++.
+         # Instead, the standard libraries are shipped as a separate package which must be declared as a build
+diff --git a/core/clingutils/CMakeLists.txt b/core/clingutils/CMakeLists.txt
+index 2a74a10eb07..b0ca97cf062 100644
+--- a/core/clingutils/CMakeLists.txt
++++ b/core/clingutils/CMakeLists.txt
+@@ -133,7 +133,7 @@ if (runtime_cxxmodules)
+ 
+       add_custom_command(
+         OUTPUT ${GENERATED_MODULEMAP}
+-        COMMAND ${Python3_EXECUTABLE} ${PROJECT_SOURCE_DIR}/cmake/scripts/std_modulemap_darwin_fix.py ${GENERATED_MODULEMAP}
++        COMMAND ${Python3_EXECUTABLE} ${PROJECT_SOURCE_DIR}/cmake/scripts/std_modulemap_darwin_fix.py ${CMAKE_OSX_SYSROOT} ${GENERATED_MODULEMAP}
+         DEPENDS ${PROJECT_SOURCE_DIR}/cmake/scripts/std_modulemap_darwin_fix.py
+         COMMENT "Generating wrapped std modulemap for macOS SDK"
+       )
+-- 
+2.50.1 (Apple Git-155)
+

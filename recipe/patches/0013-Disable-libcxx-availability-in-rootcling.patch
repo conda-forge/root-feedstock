@@ -1,0 +1,24 @@
+From 5512e1c7590493e2e14d223e9d6ca570b5ac9b26 Mon Sep 17 00:00:00 2001
+From: Vincenzo Eduardo Padulano <vincenzo.eduardo.padulano@cern.ch>
+Date: Thu, 22 Jan 2026 15:15:00 +0100
+Subject: [PATCH] Disable libcxx availability in rootcling
+
+---
+ cmake/modules/RootMacros.cmake | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/cmake/modules/RootMacros.cmake b/cmake/modules/RootMacros.cmake
+index 9b25c0a1c14..47f0fa5f1aa 100644
+--- a/cmake/modules/RootMacros.cmake
++++ b/cmake/modules/RootMacros.cmake
+@@ -696,6 +696,7 @@ function(ROOT_GENERATE_DICTIONARY dictionary)
+                        # make the dictionary generation command depend on the C++ standard, ensuring that the
+                        # dictionaries will be rebuilt if the C++ standard is changed in an incremental build.
+                        -DR__DUMMY_CXX_STANDARD_${CMAKE_CXX_STANDARD}
++                       -D_LIBCPP_DISABLE_AVAILABILITY
+     IMPLICIT_DEPENDS ${_implicitdeps}
+     DEPENDS ${_list_of_header_dependencies} ${_linkdef} ${ROOTCINTDEP}
+             ${pcm_dependencies}
+-- 
+2.50.1 (Apple Git-155)
+
