@@ -10,7 +10,7 @@ context:
   # to prevent ROOT from being held up by this, only have a strong dependency on
   # numba for supported python versions
   unsupported_numba_pyversion: 3.15
-  preferred_root_cxx_std: "23"
+  preferred_root_cxx_std: "20"
 
 recipe:
   name: root
