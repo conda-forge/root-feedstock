@@ -1,7 +1,7 @@
 context:
   name: root
-  tag_name: 6-38-00
-  build_number: 2
+  tag_name: 6-38-02
+  build_number: 0
   clang_version: 20.1.8
   clang_patches_version: root_63800
   builtin_clang: false
@@ -18,7 +18,7 @@ recipe:
 
 source:
   url: https://github.com/root-project/root/archive/refs/tags/v${{ tag_name }}.tar.gz
-  sha256: cde4fe4ca40e4afc345c588b4752455e1dded4d4f2525a14d3c81943322decd6
+  sha256: 5368df39857783c3412feda6646ad9553aca597ad7ed57348b575671d3415ff4
   target_directory: root-source
   patches:
     - patches/0001-disable-cling-sysroot-at-runtime.patch
@@ -30,21 +30,20 @@ source:
       then:
         - patches/0006-HACK-Support-overriding-triplet-used-by-cling.patch
         - patches/0007-Disable-hsimple.root-generation-if-cross-compiling.patch
-        - patches/0012-try_run-cannot-be-used-when-cross-compiling.patch
+        - patches/0008-try_run-cannot-be-used-when-cross-compiling.patch
     - if: osx
       then:
-        - patches/0008-disable-builtin-freetype-macos.patch
-        - patches/0009-avoid-linking-TPython-against-libPython.patch
-        - patches/0010-root-x.xx.xx-osx-remove-hardcoded-sysroot.patch
-        - patches/0011-Remove-bad-check-on-SDK-for-std_darwin.MacOSX14.2.sd.patch
+        - patches/0009-disable-builtin-freetype-macos.patch
+        - patches/0010-avoid-linking-TPython-against-libPython.patch
+        - patches/0011-root-x.xx.xx-osx-remove-hardcoded-sysroot.patch
+        - patches/0012-Remove-bad-check-on-SDK-for-std_darwin.MacOSX14.2.sd.patch
         - patches/0013-Disable-libcxx-availability-in-rootcling.patch
-        - patches/0014-build-Unify-retrieval-of-MacOS-SDK-path.patch
-        - patches/0015-Force-SDKROOT.patch
-        - patches/0016-Disable-libcxx-availability-in-makepch.patch
-        - patches/0017-build-Use-appropriate-CMake-to-link-against-MacOS-fr.patch
-        - patches/0018-Use-correct-filename-for-libCore-in-TROOT-GetLibDir.patch
-    - patches/0001-Try-relative-libstdc-include-directories.patch
-    - patches/0012-Use-resolved-executable-path-for-clang-Driver.patch
+        - patches/0014-Force-SDKROOT.patch
+        - patches/0015-Disable-libcxx-availability-in-makepch.patch
+        - patches/0016-build-Use-appropriate-CMake-to-link-against-MacOS-fr.patch
+    - patches/0017-Fix-LIB_CORE_NAME-mismatch-when-soversion-is-enabled.patch
+    - patches/0018-Use-resolved-executable-path-for-clang-Driver.patch
+    - patches/0019-Try-relative-libstdc-include-directories.patch
 build:
   number: ${{ build_number }}
   skip:
