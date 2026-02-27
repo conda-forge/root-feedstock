@@ -46,7 +46,7 @@ source:
     - patches/0018-Use-resolved-executable-path-for-clang-Driver.patch
     - patches/0019-Try-relative-libstdc-include-directories.patch
     - patches/0021-feat-use-ROOT-s-own-libc.modulemap-on-macOS-instead-.patch
-    - patches/0022-fix-Add-extern-template-declarations-to-suppress-mac.patch
+    - patches/0022-fix-Set-default-visibility-on-dictionary-targets-for.patch
     - patches/0023-fix-Set-CXX_VISIBILITY_PRESET-hidden-for-ClingUtils.patch
 build:
   number: ${{ build_number }}
