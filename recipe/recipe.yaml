@@ -41,6 +41,7 @@ source:
         - patches/0014-Force-SDKROOT.patch
         - patches/0015-Disable-libcxx-availability-in-makepch.patch
         - patches/0016-build-Use-appropriate-CMake-to-link-against-MacOS-fr.patch
+    - patches/0020-Disable-libcxx-availability-in-cling-runtime.patch
     - patches/0017-Fix-LIB_CORE_NAME-mismatch-when-soversion-is-enabled.patch
     - patches/0018-Use-resolved-executable-path-for-clang-Driver.patch
     - patches/0019-Try-relative-libstdc-include-directories.patch
