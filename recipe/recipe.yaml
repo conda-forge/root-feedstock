@@ -1,7 +1,7 @@
 context:
   name: root
   tag_name: 6-38-02
-  build_number: 0
+  build_number: 1
   clang_version: 20.1.8
   clang_patches_version: root_63800
   builtin_clang: false
@@ -44,6 +44,7 @@ source:
     - patches/0017-Fix-LIB_CORE_NAME-mismatch-when-soversion-is-enabled.patch
     - patches/0018-Use-resolved-executable-path-for-clang-Driver.patch
     - patches/0019-Try-relative-libstdc-include-directories.patch
+    - patches/0001-feat-use-ROOT-s-own-libc.modulemap-on-macOS-instead-.patch
 build:
   number: ${{ build_number }}
   skip:
