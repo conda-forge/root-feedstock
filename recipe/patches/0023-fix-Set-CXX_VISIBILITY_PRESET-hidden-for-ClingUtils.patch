@@ -1,0 +1,32 @@
+From 59c8a4588b340753cec6df7ebb7ba4e531e8a23a Mon Sep 17 00:00:00 2001
+From: Chris Burr <christopher.burr@cern.ch>
+Date: Fri, 27 Feb 2026 15:53:45 +0100
+Subject: [PATCH 2/2] fix: Set CXX_VISIBILITY_PRESET hidden for ClingUtils
+
+ClingUtils is linked into libCling.so alongside libclingInterpreter.a,
+which is compiled with CMAKE_CXX_VISIBILITY_PRESET=hidden. When both
+are linked together, symbols like std::piecewise_construct have
+conflicting visibility, causing macOS linker warnings about "direct
+access to global weak symbol."
+
+Align ClingUtils visibility with the interpreter by adding
+CXX_VISIBILITY_PRESET hidden (it already had VISIBILITY_INLINES_HIDDEN).
+---
+ core/clingutils/CMakeLists.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/core/clingutils/CMakeLists.txt b/core/clingutils/CMakeLists.txt
+index fa3a1cc3663..eb3cfa61408 100644
+--- a/core/clingutils/CMakeLists.txt
++++ b/core/clingutils/CMakeLists.txt
+@@ -47,6 +47,7 @@ target_include_directories(ClingUtils SYSTEM PRIVATE ${CLANG_INCLUDE_DIRS} ${LLV
+ set_target_properties(ClingUtils PROPERTIES
+   COMPILE_FLAGS "${CMAKE_CXX_FLAGS} ${CLING_CXXFLAGS}"
+   VISIBILITY_INLINES_HIDDEN "ON"
++  CXX_VISIBILITY_PRESET "hidden"
+ )
+ 
+ ROOT_INSTALL_HEADERS()
+-- 
+2.39.5 (Apple Git-154)
+
