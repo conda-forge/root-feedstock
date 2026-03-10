@@ -44,19 +44,9 @@ if [[ "${target_platform}" == linux* ]]; then
 
 else
     CMAKE_PLATFORM_FLAGS+=("-DBLA_PREFER_PKGCONFIG=ON")
-
-    # HACK: Hack the macOS SDK to make rootcling find the correct ncurses
-    if [[ -f  "$CONDA_BUILD_SYSROOT/usr/include/module.modulemap.bak" ]]; then
-        echo "ERROR: Looks like the macOS SDK hack has already been applied"
-        exit 1
-    else
-        sed -i.bak "s@\"ncurses.h\"@\"${PREFIX}/include/ncurses.h\"@g" "${CONDA_BUILD_SYSROOT}/usr/include/module.modulemap"
-    fi
 fi
 
 if [[ "${target_platform}" == osx* ]]; then
-    # TODO: investigate why we can't use modules on MacOS anymore
-    CMAKE_PLATFORM_FLAGS+=("-Druntime_cxxmodules=OFF")
     CXXFLAGS="${CXXFLAGS} -D_LIBCPP_DISABLE_AVAILABILITY"
 fi
 

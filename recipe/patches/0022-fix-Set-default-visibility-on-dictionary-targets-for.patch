@@ -1,0 +1,39 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Chris Burr <christopher.burr@cern.ch>
+Date: Fri, 27 Feb 2026 16:30:00 +0100
+Subject: [PATCH] fix: Set default visibility on dictionary targets for macOS
+
+rootcling-generated dictionary files (G__*.cxx) use typeid() on template
+classes in GenerateInitInstanceLocal(), creating references to typeinfo
+weak symbols. When the dictionary is compiled with
+-fvisibility-inlines-hidden (set by conda-forge on macOS), these
+references get hidden visibility, while the explicit template
+instantiations in the source .cxx files emit typeinfo with default
+visibility. This mismatch causes macOS linker warnings about "direct
+access to global weak symbol."
+
+Fix by ensuring dictionary OBJECT libraries are compiled with default
+visibility on Apple platforms, overriding any inherited visibility
+flags.
+---
+ cmake/modules/RootMacros.cmake | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/cmake/modules/RootMacros.cmake b/cmake/modules/RootMacros.cmake
+--- a/cmake/modules/RootMacros.cmake
++++ b/cmake/modules/RootMacros.cmake
+@@ -734,6 +734,11 @@ function(ROOT_GENERATE_DICTIONARY dictionary)
+     #   target_link_libraries(G__MODULE PRIVATE dependency)
+     set_property(TARGET ${dictionary} APPEND PROPERTY
+       INTERFACE_SYSTEM_INCLUDE_DIRECTORIES $<TARGET_PROPERTY:${ARG_MODULE},INTERFACE_SYSTEM_INCLUDE_DIRECTORIES>)
++
++    if(APPLE)
++      target_compile_options(${dictionary} PRIVATE -fvisibility=default -fno-visibility-inlines-hidden)
++    endif()
++
+   else()
+     get_filename_component(dictionary_name ${dictionary} NAME)
+     add_custom_target(${dictionary_name} DEPENDS ${dictionary}.cxx ${pcm_name} ${rootmap_name} ${cpp_module_file})
+--
+2.39.5 (Apple Git-154)
+

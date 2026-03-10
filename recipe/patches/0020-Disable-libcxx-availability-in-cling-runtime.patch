@@ -1,0 +1,15 @@
+diff --git a/core/metacling/src/TCling.cxx b/core/metacling/src/TCling.cxx
+index cfa581781a..045f04f23e 100644
+--- a/core/metacling/src/TCling.cxx
++++ b/core/metacling/src/TCling.cxx
+@@ -1423,6 +1423,10 @@ TCling::TCling(const char *name, const char *title, const char* const argv[], vo
+       clingArgsStorage.push_back("-Wno-undefined-inline");
+       clingArgsStorage.push_back("-fsigned-char");
+       clingArgsStorage.push_back("-fsized-deallocation");
++#ifdef R__MACOSX
++      clingArgsStorage.push_back("-D_LIBCPP_DISABLE_AVAILABILITY");
++      clingArgsStorage.push_back("-faligned-allocation");
++#endif
+       // The -O1 optimization flag has nasty side effects on Windows (32 and 64 bit)
+       // See the GitHub issues #9809 and #9944
+       // TODO: to be reviewed after the upgrade of LLVM & Clang

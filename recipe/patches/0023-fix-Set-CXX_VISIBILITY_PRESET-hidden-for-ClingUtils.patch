@@ -1,0 +1,46 @@
+From 59c8a4588b340753cec6df7ebb7ba4e531e8a23a Mon Sep 17 00:00:00 2001
+From: Chris Burr <christopher.burr@cern.ch>
+Date: Fri, 27 Feb 2026 15:53:45 +0100
+Subject: [PATCH] fix: Set CXX_VISIBILITY_PRESET hidden for ClingUtils and
+ Dictgen
+
+ClingUtils and Dictgen are linked into rootcling alongside
+libclingInterpreter.a, which is compiled with hidden visibility (from
+the LLVM/cling build). When the visibility settings differ, symbols like
+std::piecewise_construct have conflicting visibility, causing macOS
+linker warnings about "direct access to global weak symbol."
+
+Align ClingUtils and Dictgen visibility with the interpreter by adding
+CXX_VISIBILITY_PRESET hidden (both already had VISIBILITY_INLINES_HIDDEN).
+---
+ core/clingutils/CMakeLists.txt | 1 +
+ core/dictgen/CMakeLists.txt    | 1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/core/clingutils/CMakeLists.txt b/core/clingutils/CMakeLists.txt
+index fa3a1cc3663..eb3cfa61408 100644
+--- a/core/clingutils/CMakeLists.txt
++++ b/core/clingutils/CMakeLists.txt
+@@ -47,6 +47,7 @@ target_include_directories(ClingUtils SYSTEM PRIVATE ${CLANG_INCLUDE_DIRS} ${LLV
+ set_target_properties(ClingUtils PROPERTIES
+   COMPILE_FLAGS "${CMAKE_CXX_FLAGS} ${CLING_CXXFLAGS}"
+   VISIBILITY_INLINES_HIDDEN "ON"
++  CXX_VISIBILITY_PRESET "hidden"
+ )
+
+ ROOT_INSTALL_HEADERS()
+diff --git a/core/dictgen/CMakeLists.txt b/core/dictgen/CMakeLists.txt
+index 73fc3cce82f..a1b2c3d4e5f 100644
+--- a/core/dictgen/CMakeLists.txt
++++ b/core/dictgen/CMakeLists.txt
+@@ -51,6 +51,7 @@ target_include_directories(Dictgen SYSTEM PRIVATE ${CLANG_INCLUDE_DIRS} ${LLVM_I
+ set_target_properties(Dictgen PROPERTIES
+   COMPILE_FLAGS "${CMAKE_CXX_FLAGS} ${CLING_CXXFLAGS}"
+   VISIBILITY_INLINES_HIDDEN "ON"
++  CXX_VISIBILITY_PRESET "hidden"
+ )
+
+ if(CXX_HAS_fno_rtti)
+--
+2.39.5 (Apple Git-154)
+
