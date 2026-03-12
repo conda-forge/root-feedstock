@@ -1,7 +1,7 @@
 context:
   name: root
-  tag_name: 6-38-02
-  build_number: 1
+  tag_name: 6-38-04
+  build_number: 0
   clang_version: 20.1.8
   clang_patches_version: root_63800
   builtin_clang: false
@@ -18,7 +18,7 @@ recipe:
 
 source:
   url: https://github.com/root-project/root/archive/refs/tags/v${{ tag_name }}.tar.gz
-  sha256: 5368df39857783c3412feda6646ad9553aca597ad7ed57348b575671d3415ff4
+  sha256: 3d909ce7b1f8c296834f95e617dd51ccca5cdab041798c6c05a4c10bf779eb36
   target_directory: root-source
   patches:
     - patches/0001-disable-cling-sysroot-at-runtime.patch
@@ -41,13 +41,12 @@ source:
         - patches/0014-Force-SDKROOT.patch
         - patches/0015-Disable-libcxx-availability-in-makepch.patch
         - patches/0016-build-Use-appropriate-CMake-to-link-against-MacOS-fr.patch
-    - patches/0020-Disable-libcxx-availability-in-cling-runtime.patch
-    - patches/0017-Fix-LIB_CORE_NAME-mismatch-when-soversion-is-enabled.patch
-    - patches/0018-Use-resolved-executable-path-for-clang-Driver.patch
-    - patches/0019-Try-relative-libstdc-include-directories.patch
-    - patches/0021-feat-use-ROOT-s-own-libc.modulemap-on-macOS-instead-.patch
-    - patches/0022-fix-Set-default-visibility-on-dictionary-targets-for.patch
-    - patches/0023-fix-Set-CXX_VISIBILITY_PRESET-hidden-for-ClingUtils.patch
+    - patches/0017-Use-resolved-executable-path-for-clang-Driver.patch
+    - patches/0018-Try-relative-libstdc-include-directories.patch
+    - patches/0019-Disable-libcxx-availability-in-cling-runtime.patch
+    - patches/0020-feat-use-ROOT-s-own-libc.modulemap-on-macOS-instead-.patch
+    - patches/0021-fix-Set-default-visibility-on-dictionary-targets-for.patch
+    - patches/0022-fix-Set-CXX_VISIBILITY_PRESET-hidden-for-ClingUtils.patch
 build:
   number: ${{ build_number }}
   skip:
