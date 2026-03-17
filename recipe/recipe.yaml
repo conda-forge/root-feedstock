@@ -1,16 +1,15 @@
 context:
   name: root
-  tag_name: 6-36-08
-  build_number: 2
+  tag_name: 6-36-10
+  build_number: 0
   clang_version: 18.1.8
-  # Clang patches are identical between root_63606 and root_63608
-  clang_patches_version: root_63606
+  clang_patches_version: root_63610
   builtin_clang: false
   run_gtests: false
   # When new Python versions are released numba tends to be slow to support them
   # to prevent ROOT from being held up by this, only have a strong dependency on
   # numba for supported python versions
-  unsupported_numba_pyversion: 3.15
+  unsupported_numba_pyversion: "3.15"
   preferred_root_cxx_std: "23"
 
 recipe:
@@ -19,7 +18,7 @@ recipe:
 
 source:
   url: https://github.com/root-project/root/archive/refs/tags/v${{ tag_name }}.tar.gz
-  sha256: 0c4a74c3fddb1845ba8ceabd28e7a67c1a44826fe37d6185eaec672bdf2d7c3d
+  sha256: f1ae2966dbf7ec084a1981d33c4b42cea7b55ec3b28a7e8355c639c5b62a8f25
   target_directory: root-source
   patches:
     - patches/0001-disable-cling-sysroot-at-runtime.patch
@@ -39,7 +38,6 @@ source:
         - patches/0011-Remove-bad-check-on-SDK-for-std_darwin.MacOSX14.2.sd.patch
     - patches/0001-Try-relative-libstdc-include-directories.patch
     - patches/0012-Use-resolved-executable-path-for-clang-Driver.patch
-    - patches/21282.patch
 build:
   number: ${{ build_number }}
   skip:
