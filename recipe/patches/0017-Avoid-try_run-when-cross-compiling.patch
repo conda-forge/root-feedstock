@@ -1,0 +1,26 @@
+From 78e719a45ea4d962959151f5a837783dc5808ece Mon Sep 17 00:00:00 2001
+From: Vincenzo Eduardo Padulano <vincenzo.eduardo.padulano@cern.ch>
+Date: Thu, 28 May 2026 12:21:36 +0700
+Subject: [PATCH] Avoid try_run when cross-compiling
+
+---
+ cmake/modules/FindFTGL.cmake | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/cmake/modules/FindFTGL.cmake b/cmake/modules/FindFTGL.cmake
+index 43cdb74d1ec..7859ac00c27 100644
+--- a/cmake/modules/FindFTGL.cmake
++++ b/cmake/modules/FindFTGL.cmake
+@@ -35,7 +35,8 @@ if(FTGL_FOUND)
+       LINK_LIBRARIES ${FTGL_LIBRARY}
+       OUTPUT_VARIABLE FTGL_VERSION_API_LOG
+   )
+-  if (FTGL_VERSION_API)
++  # try_run cannot be used when cross-compiling
++  if (FTGL_VERSION_API AND NOT CMAKE_CROSSCOMPILING)
+     try_run(RUN_RESULT COMPILE_RESULT
+       "${CMAKE_BINARY_DIR}"
+       "${FTGL_VERSION_SRC}"
+-- 
+2.50.1 (Apple Git-155)
+

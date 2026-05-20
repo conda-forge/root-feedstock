@@ -1,0 +1,26 @@
+From 027af9f2f5c4666d0caf4aa9c3e151db1bdd2067 Mon Sep 17 00:00:00 2001
+From: Vincenzo Eduardo Padulano <vincenzo.eduardo.padulano@cern.ch>
+Date: Thu, 21 May 2026 16:40:53 +0200
+Subject: [PATCH] [build] Use correct CMake syntax to check for variable
+ definition
+
+---
+ cmake/modules/SetOSX_SDK.cmake | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/cmake/modules/SetOSX_SDK.cmake b/cmake/modules/SetOSX_SDK.cmake
+index cceb8ae0f3d..0e311aeb685 100644
+--- a/cmake/modules/SetOSX_SDK.cmake
++++ b/cmake/modules/SetOSX_SDK.cmake
+@@ -16,7 +16,7 @@ endif()
+ 
+ find_program(XCRUN_EXECUTABLE xcrun)
+ if(EXISTS ${XCRUN_EXECUTABLE})
+-  if(NOT DEFINED "${CMAKE_OSX_SYSROOT}")
++  if(NOT DEFINED CMAKE_OSX_SYSROOT)
+     execute_process(COMMAND ${XCRUN_EXECUTABLE} --sdk macosx --show-sdk-path
+       OUTPUT_VARIABLE SDK_PATH
+       OUTPUT_STRIP_TRAILING_WHITESPACE)
+-- 
+2.50.1 (Apple Git-155)
+

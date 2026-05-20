@@ -1,10 +1,6 @@
 #!/bin/bash
 set -x
 
-# rebuild afterimage ./configure script after patch
-cp $BUILD_PREFIX/share/gnuconfig/config.* root-source/graf2d/asimage/src/libAfterImage
-(cd root-source/graf2d/asimage/src/libAfterImage; autoconf)
-
 if [[ "${target_platform}" == "linux-"* ]]; then
   # Conda's binary relocation can result in string changing which can result in errors like
   #   > $ root.exe -l -b -q -x root-feedstock/recipe/test.cpp++
@@ -56,11 +52,6 @@ cd build-dir
 # Remove -std=c++XX from build ${CXXFLAGS}
 CXXFLAGS=$(echo "${CXXFLAGS}" | sed -E 's@-std=c\+\+[^ ]+@@g')
 export CXXFLAGS
-
-# The cross-linux toolchain breaks find_file relative to the current file
-# Patch up with sed
-sed -i -E 's#(ROOT_TEST_DRIVER RootTestDriver.cmake PATHS \$\{THISDIR\} \$\{CMAKE_MODULE_PATH\} NO_DEFAULT_PATH)#\1 CMAKE_FIND_ROOT_PATH_BOTH#g' \
-    ${SRC_DIR}/root-source/cmake/modules/RootNewMacros.cmake
 
 # The basics
 if [ "${ROOT_CONDA_BUILD_TYPE-}" == "" ]; then
