@@ -66,7 +66,6 @@ CMAKE_PLATFORM_FLAGS+=("-DCMAKE_PREFIX_PATH=${PREFIX}")
 CMAKE_PLATFORM_FLAGS+=("-Dfail-on-missing=ON")
 # TODO: Switch this on?
 CMAKE_PLATFORM_FLAGS+=("-Dgnuinstall=OFF")
-CMAKE_PLATFORM_FLAGS+=("-Drpath=ON")
 CMAKE_PLATFORM_FLAGS+=("-Dshared=ON")
 CMAKE_PLATFORM_FLAGS+=("-Dsoversion=ON")
 CMAKE_PLATFORM_FLAGS+=("-DCMAKE_CXX_STANDARD=${ROOT_CXX_STANDARD}")
@@ -122,11 +121,6 @@ if [[ "${target_platform}" != "${build_platform}" ]]; then
     sed -i "s@LLVM_LINK_LLVM_DYLIB yes@LLVM_LINK_LLVM_DYLIB no@g" "${Clang_DIR_BUILD}/lib/cmake/llvm/LLVMConfig.cmake"
 fi
 
-# Enable some vectorisation options
-CMAKE_PLATFORM_FLAGS+=("-Dveccore=ON")
-CMAKE_PLATFORM_FLAGS+=("-Dvc=ON")
-CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_veccore=ON")
-
 # Cross compilation options
 if [[ "${target_platform}" != "${build_platform}" ]]; then
     CMAKE_PLATFORM_FLAGS+=("-Dfound_urandom=ON")
@@ -142,7 +136,6 @@ if [[ "${target_platform}" != "${build_platform}" ]]; then
     declare -a CMAKE_PLATFORM_FLAGS_BUILD
     CMAKE_PLATFORM_FLAGS_BUILD+=("-Dminimal=ON")
     CMAKE_PLATFORM_FLAGS_BUILD+=("-Dfail-on-missing=ON")
-    CMAKE_PLATFORM_FLAGS_BUILD+=("-Drpath=ON")
     CMAKE_PLATFORM_FLAGS_BUILD+=("-DCMAKE_BUILD_TYPE=Release")
     CMAKE_PLATFORM_FLAGS_BUILD+=("-DLLVM_CONFIG=${Clang_DIR_BUILD}/bin/llvm-config")
     CMAKE_PLATFORM_FLAGS_BUILD+=("-DLLVM_TABLEGEN_EXE=${Clang_DIR_BUILD}/bin/llvm-tblgen")
