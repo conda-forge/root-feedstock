@@ -1,9 +1,9 @@
 context:
   name: root
-  tag_name: 6-38-04
-  build_number: 1
+  tag_name: 6-40-00
+  build_number: 0
   clang_version: 20.1.8
-  clang_patches_version: root_63800
+  clang_patches_version: root_64000
   builtin_clang: false
   run_gtests: false
   # When new Python versions are released numba tends to be slow to support them
@@ -18,35 +18,30 @@ recipe:
 
 source:
   url: https://github.com/root-project/root/archive/refs/tags/v${{ tag_name }}.tar.gz
-  sha256: 3d909ce7b1f8c296834f95e617dd51ccca5cdab041798c6c05a4c10bf779eb36
+  sha256: 750d8b5f592c78e542524d68648c533a7a75bbf3b8c004f1d350c5965dfb0fcb
   target_directory: root-source
   patches:
     - patches/0001-disable-cling-sysroot-at-runtime.patch
     - patches/0002-Hint-to-external-LLVM-and-Clang-on-Conda.patch
     - patches/0003-Set-LLVM_REQUIRES_EH-for-Cling.patch
-    - patches/0004-asimage-cross-compilation-fix.patch
-    - patches/0005-Detect-which-ar-binary-should-be-used-to-build-libAf.patch
     - if: build_platform != target_platform
       then:
-        - patches/0006-HACK-Support-overriding-triplet-used-by-cling.patch
-        - patches/0007-Disable-hsimple.root-generation-if-cross-compiling.patch
-        - patches/0008-try_run-cannot-be-used-when-cross-compiling.patch
+        - patches/0004-HACK-Support-overriding-triplet-used-by-cling.patch
     - if: osx
       then:
-        - patches/0009-disable-builtin-freetype-macos.patch
-        - patches/0010-avoid-linking-TPython-against-libPython.patch
-        - patches/0011-root-x.xx.xx-osx-remove-hardcoded-sysroot.patch
-        - patches/0012-Remove-bad-check-on-SDK-for-std_darwin.MacOSX14.2.sd.patch
-        - patches/0013-Disable-libcxx-availability-in-rootcling.patch
-        - patches/0014-Force-SDKROOT.patch
-        - patches/0015-Disable-libcxx-availability-in-makepch.patch
-        - patches/0016-build-Use-appropriate-CMake-to-link-against-MacOS-fr.patch
-    - patches/0017-Use-resolved-executable-path-for-clang-Driver.patch
-    - patches/0018-Try-relative-libstdc-include-directories.patch
-    - patches/0019-Disable-libcxx-availability-in-cling-runtime.patch
-    - patches/0020-feat-use-ROOT-s-own-libc.modulemap-on-macOS-instead-.patch
-    - patches/0021-fix-Set-default-visibility-on-dictionary-targets-for.patch
-    - patches/0022-fix-Set-CXX_VISIBILITY_PRESET-hidden-for-ClingUtils.patch
+        - patches/0005-avoid-linking-TPython-against-libPython.patch
+        - patches/0006-root-x.xx.xx-osx-remove-hardcoded-sysroot.patch
+        - patches/0007-Remove-bad-check-on-SDK-for-std_darwin.MacOSX14.2.sd.patch
+        - patches/0008-Disable-libcxx-availability-in-rootcling.patch
+        - patches/0009-Disable-libcxx-availability-in-makepch.patch
+    - patches/0010-Use-resolved-executable-path-for-clang-Driver.patch
+    - patches/0011-Try-relative-libstdc-include-directories.patch
+    - patches/0012-Disable-libcxx-availability-in-cling-runtime.patch
+    - patches/0013-feat-use-ROOT-s-own-libc.modulemap-on-macOS-instead-.patch
+    - patches/0014-fix-Set-default-visibility-on-dictionary-targets-for.patch
+    - patches/0015-fix-Set-CXX_VISIBILITY_PRESET-hidden-for-ClingUtils.patch
+    - patches/0016-build-Use-correct-CMake-syntax-to-check-for-variable.patch
+    - patches/0017-Avoid-try_run-when-cross-compiling.patch
 build:
   number: ${{ build_number }}
   skip:
@@ -254,7 +249,6 @@ outputs:
       - python:
           imports:
             - ROOT
-            - JupyROOT
           pip_check: false
       - files:
           recipe:

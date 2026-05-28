@@ -1,10 +1,6 @@
 #!/bin/bash
 set -x
 
-# rebuild afterimage ./configure script after patch
-cp $BUILD_PREFIX/share/gnuconfig/config.* root-source/graf2d/asimage/src/libAfterImage
-(cd root-source/graf2d/asimage/src/libAfterImage; autoconf)
-
 if [[ "${target_platform}" == "linux-"* ]]; then
   # Conda's binary relocation can result in string changing which can result in errors like
   #   > $ root.exe -l -b -q -x root-feedstock/recipe/test.cpp++
@@ -57,11 +53,6 @@ cd build-dir
 CXXFLAGS=$(echo "${CXXFLAGS}" | sed -E 's@-std=c\+\+[^ ]+@@g')
 export CXXFLAGS
 
-# The cross-linux toolchain breaks find_file relative to the current file
-# Patch up with sed
-sed -i -E 's#(ROOT_TEST_DRIVER RootTestDriver.cmake PATHS \$\{THISDIR\} \$\{CMAKE_MODULE_PATH\} NO_DEFAULT_PATH)#\1 CMAKE_FIND_ROOT_PATH_BOTH#g' \
-    ${SRC_DIR}/root-source/cmake/modules/RootNewMacros.cmake
-
 # The basics
 if [ "${ROOT_CONDA_BUILD_TYPE-}" == "" ]; then
     CMAKE_PLATFORM_FLAGS+=("-DCMAKE_BUILD_TYPE=Release")
@@ -75,7 +66,6 @@ CMAKE_PLATFORM_FLAGS+=("-DCMAKE_PREFIX_PATH=${PREFIX}")
 CMAKE_PLATFORM_FLAGS+=("-Dfail-on-missing=ON")
 # TODO: Switch this on?
 CMAKE_PLATFORM_FLAGS+=("-Dgnuinstall=OFF")
-CMAKE_PLATFORM_FLAGS+=("-Drpath=ON")
 CMAKE_PLATFORM_FLAGS+=("-Dshared=ON")
 CMAKE_PLATFORM_FLAGS+=("-Dsoversion=ON")
 CMAKE_PLATFORM_FLAGS+=("-DCMAKE_CXX_STANDARD=${ROOT_CXX_STANDARD}")
@@ -131,11 +121,6 @@ if [[ "${target_platform}" != "${build_platform}" ]]; then
     sed -i "s@LLVM_LINK_LLVM_DYLIB yes@LLVM_LINK_LLVM_DYLIB no@g" "${Clang_DIR_BUILD}/lib/cmake/llvm/LLVMConfig.cmake"
 fi
 
-# Enable some vectorisation options
-CMAKE_PLATFORM_FLAGS+=("-Dveccore=ON")
-CMAKE_PLATFORM_FLAGS+=("-Dvc=ON")
-CMAKE_PLATFORM_FLAGS+=("-Dbuiltin_veccore=ON")
-
 # Cross compilation options
 if [[ "${target_platform}" != "${build_platform}" ]]; then
     CMAKE_PLATFORM_FLAGS+=("-Dfound_urandom=ON")
@@ -151,7 +136,6 @@ if [[ "${target_platform}" != "${build_platform}" ]]; then
     declare -a CMAKE_PLATFORM_FLAGS_BUILD
     CMAKE_PLATFORM_FLAGS_BUILD+=("-Dminimal=ON")
     CMAKE_PLATFORM_FLAGS_BUILD+=("-Dfail-on-missing=ON")
-    CMAKE_PLATFORM_FLAGS_BUILD+=("-Drpath=ON")
     CMAKE_PLATFORM_FLAGS_BUILD+=("-DCMAKE_BUILD_TYPE=Release")
     CMAKE_PLATFORM_FLAGS_BUILD+=("-DLLVM_CONFIG=${Clang_DIR_BUILD}/bin/llvm-config")
     CMAKE_PLATFORM_FLAGS_BUILD+=("-DLLVM_TABLEGEN_EXE=${Clang_DIR_BUILD}/bin/llvm-tblgen")
