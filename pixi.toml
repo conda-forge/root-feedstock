@@ -5,7 +5,7 @@
 
 [workspace]
 name = "root-feedstock"
-version = "3.56.3"  # conda-smithy version used to generate this file
+version = "2026.5.29"  # conda-smithy version used to generate this file
 description = "Pixi configuration for conda-forge/root-feedstock"
 authors = ["@conda-forge/root"]
 channels = ["conda-forge"]
@@ -13,7 +13,7 @@ platforms = ["linux-64", "linux-aarch64", "linux-ppc64le", "osx-64", "osx-arm64"
 requires-pixi = ">=0.59.0"
 
 [dependencies]
-conda-build = ">=24.1"
+conda-build = ">=26.3"
 conda-forge-ci-setup = "4.*"
 rattler-build = "*"
 
