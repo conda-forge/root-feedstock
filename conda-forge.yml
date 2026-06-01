@@ -1,10 +1,11 @@
-bot:
-  abi_migration_branches:
-    - "6.36.x"
 azure:
   free_disk_space: true
   store_build_artifacts: true
+bot:
+  abi_migration_branches:
+  - 6.36.x
 build_platform:
+  linux_aarch64: linux_64
   linux_ppc64le: linux_64
 conda_build:
   pkg_format: '2'
