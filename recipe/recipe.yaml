@@ -1,7 +1,7 @@
 context:
   name: root
   tag_name: 6-40-00
-  build_number: 0
+  build_number: 1
   clang_version: 20.1.8
   clang_patches_version: root_64000
   builtin_clang: false
@@ -31,7 +31,7 @@ source:
       then:
         - patches/0005-avoid-linking-TPython-against-libPython.patch
         - patches/0006-root-x.xx.xx-osx-remove-hardcoded-sysroot.patch
-        - patches/0007-Remove-bad-check-on-SDK-for-std_darwin.MacOSX14.2.sd.patch
+        - patches/0007-Avoid-using-patched-MacOS-modulemap-on-conda-forge-b.patch
         - patches/0008-Disable-libcxx-availability-in-rootcling.patch
         - patches/0009-Disable-libcxx-availability-in-makepch.patch
     - patches/0010-Use-resolved-executable-path-for-clang-Driver.patch
