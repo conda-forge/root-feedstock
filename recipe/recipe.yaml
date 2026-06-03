@@ -1,7 +1,7 @@
 context:
   name: root
   tag_name: 6-40-00
-  build_number: 5
+  build_number: 6
   clang_version: 20.1.8
   clang_patches_version: root_64000
   builtin_clang: false
@@ -29,18 +29,17 @@ source:
         - patches/0004-HACK-Support-overriding-triplet-used-by-cling.patch
     - if: osx
       then:
-        - patches/0005-avoid-linking-TPython-against-libPython.patch
-        - patches/0006-root-x.xx.xx-osx-remove-hardcoded-sysroot.patch
-        - patches/0007-Remove-bad-check-on-SDK-for-std_darwin.MacOSX14.2.sd.patch
-        - patches/0008-Disable-libcxx-availability-in-rootcling.patch
-        - patches/0009-Disable-libcxx-availability-in-makepch.patch
-    - patches/0010-Try-relative-libstdc-include-directories.patch
-    - patches/0011-Disable-libcxx-availability-in-cling-runtime.patch
-    - patches/0012-feat-use-ROOT-s-own-libc.modulemap-on-macOS-instead-.patch
-    - patches/0013-fix-Set-default-visibility-on-dictionary-targets-for.patch
-    - patches/0014-fix-Set-CXX_VISIBILITY_PRESET-hidden-for-ClingUtils.patch
-    - patches/0015-build-Use-correct-CMake-syntax-to-check-for-variable.patch
-    - patches/0016-Avoid-try_run-when-cross-compiling.patch
+        - patches/0005-root-x.xx.xx-osx-remove-hardcoded-sysroot.patch
+        - patches/0006-Remove-bad-check-on-SDK-for-std_darwin.MacOSX14.2.sd.patch
+        - patches/0007-Disable-libcxx-availability-in-rootcling.patch
+        - patches/0008-Disable-libcxx-availability-in-makepch.patch
+    - patches/0009-Try-relative-libstdc-include-directories.patch
+    - patches/0010-Disable-libcxx-availability-in-cling-runtime.patch
+    - patches/0011-feat-use-ROOT-s-own-libc.modulemap-on-macOS-instead-.patch
+    - patches/0012-fix-Set-default-visibility-on-dictionary-targets-for.patch
+    - patches/0013-fix-Set-CXX_VISIBILITY_PRESET-hidden-for-ClingUtils.patch
+    - patches/0014-build-Use-correct-CMake-syntax-to-check-for-variable.patch
+    - patches/0015-Avoid-try_run-when-cross-compiling.patch
 build:
   number: ${{ build_number }}
   skip:
