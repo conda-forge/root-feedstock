@@ -62,6 +62,8 @@ pin_run_as_build:
   python:
     min_pin: x.x
     max_pin: x.x
+pythia8:
+- '8.312'
 python:
 - 3.11.* *_cpython
 root_cxx_std:
