@@ -37,7 +37,7 @@ glib:
 graphviz:
 - '14'
 gsl:
-- '2.7'
+- '2.8'
 libblas:
 - 3.9.* *netlib
 libcblas:
@@ -52,6 +52,8 @@ libtiff:
 - '4.7'
 libxml2_devel:
 - '2.14'
+libxrootd_devel:
+- '6'
 lz4_c:
 - '1.10'
 macos_machine:
