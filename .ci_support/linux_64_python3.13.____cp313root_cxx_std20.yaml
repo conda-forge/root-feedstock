@@ -19,7 +19,7 @@ cxx_compiler_version:
 davix:
 - '0.8'
 docker_image:
-- quay.io/condaforge/linux-anvil-x86_64:alma9
+- quay.io/condaforge/linux-anvil-x86_64:alma10
 fftw:
 - '3'
 freetype:
@@ -27,7 +27,7 @@ freetype:
 gdk_pixbuf:
 - '2'
 giflib:
-- '5.2'
+- '6'
 glew:
 - '2.3'
 glib:
@@ -50,6 +50,8 @@ libtiff:
 - '4.7'
 libxml2_devel:
 - '2.14'
+libxrootd_devel:
+- '6'
 lz4_c:
 - '1.10'
 numpy:
