@@ -11,6 +11,16 @@ context:
   # numba for supported python versions
   unsupported_numba_pyversion: "3.15"
   preferred_root_cxx_std: "20"
+  # Make the preferred C++ standard variant the solver default via a
+  # build-number offset instead of down_prioritize_variant. Track-features are
+  # minimized ahead of version ordering, so after a change of the preferred
+  # standard they strand solves on the newest track-feature-free build of the
+  # previously preferred variant (cf. the same failure mode against
+  # pre-variant builds in https://github.com/prefix-dev/pixi/issues/6647).
+  # A build-number offset only acts within a version, so history stays inert.
+  # The step of 1000 leaves room for a graded preference order once more than
+  # two standards are built.
+  variant_build_number: ${{ build_number + (1000 if root_cxx_std == preferred_root_cxx_std else 0) }}
 
 recipe:
   name: root
@@ -51,9 +61,8 @@ outputs:
   - package:
       name: root_base
     build:
-      string: cxx${{ root_cxx_std }}_h${{ hash }}_${{ build_number }}
-      variant:
-        down_prioritize_variant: ${{ 1 if root_cxx_std != preferred_root_cxx_std else 0 }}
+      number: ${{ variant_build_number }}
+      string: cxx${{ root_cxx_std }}_h${{ hash }}_${{ variant_build_number }}
       script:
         file: build_root.sh
         env:
@@ -231,6 +240,11 @@ outputs:
 
   - package:
       name: root
+    build:
+      # Same variant preference as root_base: without it the root builds of a
+      # given version would tie on build number and the default C++ standard
+      # would be left to hash ordering.
+      number: ${{ variant_build_number }}
     requirements:
       host:
         - ${{ pin_subpackage('root_base', exact=True) }}
@@ -269,7 +283,10 @@ outputs:
       version: ${{ root_cxx_std }}
     build:
       noarch: generic
-      string: ${{ root_cxx_std }}
+      # Include the build number so updated marker artifacts can be published;
+      # the original root_cxx_standard-<std>-<std> filenames are immutable and
+      # predate the run_constraints below.
+      string: ${{ root_cxx_std }}_${{ build_number }}
       variant:
         # Ensures conda-smithy splits linux-64 CI jobs per Python version.
         # Without this, the noarch output drops `python` from the intersection
@@ -277,6 +294,14 @@ outputs:
         use_keys:
           - python
     requirements:
+      run_constraints:
+        # root_base builds older than 6.36.08 predate the C++-standard variant
+        # split and ignore this marker entirely. Without this floor, solvers
+        # prefer those ancient track-feature-free builds over the down-prioritized
+        # non-default variants when a specific standard is requested, e.g.
+        # https://github.com/prefix-dev/pixi/issues/6647. The same constraint is
+        # applied to the original marker artifacts via conda-forge-repodata-patches.
+        - root_base >=6.36.8
       run_exports:
         - root_cxx_standard ==${{ root_cxx_std }}
     tests:
