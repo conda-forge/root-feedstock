@@ -27,7 +27,7 @@ freetype:
 gdk_pixbuf:
 - '2'
 giflib:
-- '5.2'
+- '6'
 glew:
 - '2.3'
 glib:
@@ -49,7 +49,7 @@ librsvg:
 libtiff:
 - '4.7'
 libxml2_devel:
-- '2.14'
+- '2.15'
 libxrootd_devel:
 - '6'
 lz4_c:
