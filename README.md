@@ -32,13 +32,6 @@ this package aims at enabling most of the features of ROOT. Here are a few thing
 
 See the post [here](https://iscinumpy.gitlab.io/post/root-conda/) for more information about using this Conda package.
 
-The ROOT package will prepare the required compilers. Everything in Conda is symlinked into
-`$CONDA_PREFIX` if you build things by hand; tools like CMake should find it automatically.
-
-There is also a `root_base` package, with minimal dependecies, that libraries should depend on this to avoid
-having a runtime dependency on the `compilers` package. In most cases users should use the `root` package directly,
-since it adds more features (taking care of their dependencies) to facilitate usage of the ROOT Python bindings.
-
 Current build status
 ====================
 

@@ -1,7 +1,7 @@
 context:
   name: root
   tag_name: 6-40-04
-  build_number: 0
+  build_number: 1
   clang_version: 20.1.8
   clang_patches_version: root_64004
   builtin_clang: false
@@ -309,13 +309,6 @@ about:
     * `root -b -q -l -n -e "std::cout << TROOT::GetTutorialDir() << std::endl;"` will print the tutorial dir.
 
     See the post [here](https://iscinumpy.gitlab.io/post/root-conda/) for more information about using this Conda package.
-
-    The ROOT package will prepare the required compilers. Everything in Conda is symlinked into
-    `$CONDA_PREFIX` if you build things by hand; tools like CMake should find it automatically.
-
-    There is also a `root_base` package, with minimal dependecies, that libraries should depend on this to avoid
-    having a runtime dependency on the `compilers` package. In most cases users should use the `root` package directly,
-    since it adds more features (taking care of their dependencies) to facilitate usage of the ROOT Python bindings.
 
   homepage: https://root.cern/
   repository: https://github.com/root-project/root/
