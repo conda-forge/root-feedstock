@@ -1,7 +1,7 @@
 context:
   name: root
-  tag_name: 6-38-04
-  build_number: 9
+  tag_name: 6-38-06
+  build_number: 0
   clang_version: 20.1.8
   clang_patches_version: root_63800
   builtin_clang: false
@@ -18,7 +18,7 @@ recipe:
 
 source:
   url: https://github.com/root-project/root/archive/refs/tags/v${{ tag_name }}.tar.gz
-  sha256: 3d909ce7b1f8c296834f95e617dd51ccca5cdab041798c6c05a4c10bf779eb36
+  sha256: 62a706b4387de92a80e580fd56d90d29373caec2aacaa0133e46c846bc5b2461
   target_directory: root-source
   patches:
     - patches/0001-disable-cling-sysroot-at-runtime.patch
