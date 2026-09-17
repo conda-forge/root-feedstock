@@ -1,7 +1,7 @@
 context:
   name: root
   tag_name: 6-40-04
-  build_number: 0
+  build_number: 1
   clang_version: 20.1.8
   clang_patches_version: root_64004
   builtin_clang: false
@@ -150,6 +150,10 @@ outputs:
         - vector-classes
         - vdt
         - python
+        # TPython and PyMVA link an embedded interpreter (Python3::Python), not
+        # just the extension-module ABI. Up to 3.14 `python` depended on
+        # `libpython` so it came in transitively; from 3.15 it does not.
+        - libpython
         - numpy
         - libxrootd-devel
         - liblzma-devel
@@ -172,6 +176,7 @@ outputs:
       run:
         - root_cxx_standard ==${{ root_cxx_std }}
         - python
+        - libpython
         - numpy
         - if: linux
           then:
