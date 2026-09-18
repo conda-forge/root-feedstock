@@ -1,7 +1,7 @@
 context:
   name: root
-  tag_name: 6-36-10
-  build_number: 5
+  tag_name: 6-36-14
+  build_number: 0
   clang_version: 18.1.8
   clang_patches_version: root_63610
   builtin_clang: false
@@ -18,7 +18,7 @@ recipe:
 
 source:
   url: https://github.com/root-project/root/archive/refs/tags/v${{ tag_name }}.tar.gz
-  sha256: f1ae2966dbf7ec084a1981d33c4b42cea7b55ec3b28a7e8355c639c5b62a8f25
+  sha256: 98bd40c7c9df52789105f48157ed3bd48b5a501ca1debd0c46b4a034c5ecc7cd
   target_directory: root-source
   patches:
     - patches/0001-disable-cling-sysroot-at-runtime.patch
@@ -148,6 +148,10 @@ outputs:
         - vector-classes
         - vdt
         - python
+        # TPython and PyMVA link an embedded interpreter (Python3::Python), not
+        # just the extension-module ABI. Up to 3.14 `python` depended on
+        # `libpython` so it came in transitively; from 3.15 it does not.
+        - libpython
         - numpy
         - libxrootd-devel
         - liblzma-devel
@@ -170,6 +174,7 @@ outputs:
       run:
         - root_cxx_standard ==${{ root_cxx_std }}
         - python
+        - libpython
         - numpy
         - if: linux
           then:
@@ -257,7 +262,8 @@ outputs:
         script:
           - python test_pyroot.py
           - python test_roofit_multiprocess.py
-          - python ${PREFIX}/tutorials/analysis/dataframe/df038_NumbaDeclare.py
+          - if: python < unsupported_numba_pyversion
+            then: python ${PREFIX}/tutorials/analysis/dataframe/df038_NumbaDeclare.py
           - root -l -b -q -x test.cpp
           - "root -b -l -q -x -e 'gSystem->LoadAllLibraries(); 0'"
           - "root -b -l -q -x \"${PREFIX}/tutorials/analysis/tree/run_h1analysis.C\""
