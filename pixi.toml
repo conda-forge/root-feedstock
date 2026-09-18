@@ -5,7 +5,7 @@
 
 [workspace]
 name = "root-feedstock"
-version = "2026.8.9"  # conda-smithy version used to generate this file
+version = "2026.9.10"  # conda-smithy version used to generate this file
 description = "Pixi configuration for conda-forge/root-feedstock"
 authors = ["@conda-forge/root"]
 channels = ["conda-forge"]
@@ -37,453 +37,363 @@ description = "List contents of all packages found in rattler-build build direct
 [feature.build.tasks.build]
 cmd = "rattler-build build --recipe recipe"
 description = "Build root-feedstock directly (without setup scripts), no particular variant specified"
-[feature.build.tasks."build-linux_64_python3.10.____cpythonroot_cxx_std20"]
-cmd = "rattler-build build --recipe recipe -m .ci_support/linux_64_python3.10.____cpythonroot_cxx_std20.yaml"
-description = "Build root-feedstock with variant linux_64_python3.10.____cpythonroot_cxx_std20 directly (without setup scripts)"
-[feature.build.tasks."debug-linux_64_python3.10.____cpythonroot_cxx_std20"]
-cmd = "rattler-build debug setup --recipe recipe -m .ci_support/linux_64_python3.10.____cpythonroot_cxx_std20.yaml"
-description = "Build root-feedstock with variant linux_64_python3.10.____cpythonroot_cxx_std20 directly (without setup scripts)"
-[feature.build.tasks."inspect-linux_64_python3.10.____cpythonroot_cxx_std20"]
-cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_64_python3.10.____cpythonroot_cxx_std20.yaml"
-description = "List contents of root-feedstock packages built for variant linux_64_python3.10.____cpythonroot_cxx_std20"
-[feature.build.tasks."build-linux_64_python3.10.____cpythonroot_cxx_std23"]
-cmd = "rattler-build build --recipe recipe -m .ci_support/linux_64_python3.10.____cpythonroot_cxx_std23.yaml"
-description = "Build root-feedstock with variant linux_64_python3.10.____cpythonroot_cxx_std23 directly (without setup scripts)"
-[feature.build.tasks."debug-linux_64_python3.10.____cpythonroot_cxx_std23"]
-cmd = "rattler-build debug setup --recipe recipe -m .ci_support/linux_64_python3.10.____cpythonroot_cxx_std23.yaml"
-description = "Build root-feedstock with variant linux_64_python3.10.____cpythonroot_cxx_std23 directly (without setup scripts)"
-[feature.build.tasks."inspect-linux_64_python3.10.____cpythonroot_cxx_std23"]
-cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_64_python3.10.____cpythonroot_cxx_std23.yaml"
-description = "List contents of root-feedstock packages built for variant linux_64_python3.10.____cpythonroot_cxx_std23"
 [feature.build.tasks."build-linux_64_python3.11.____cpythonroot_cxx_std20"]
-cmd = "rattler-build build --recipe recipe -m .ci_support/linux_64_python3.11.____cpythonroot_cxx_std20.yaml"
+cmd = "rattler-build build --recipe recipe -m .ci_support/linux_64_python3.11.____cpythonroot_cxx_std20.yaml --target-platform linux-64"
 description = "Build root-feedstock with variant linux_64_python3.11.____cpythonroot_cxx_std20 directly (without setup scripts)"
 [feature.build.tasks."debug-linux_64_python3.11.____cpythonroot_cxx_std20"]
-cmd = "rattler-build debug setup --recipe recipe -m .ci_support/linux_64_python3.11.____cpythonroot_cxx_std20.yaml"
-description = "Build root-feedstock with variant linux_64_python3.11.____cpythonroot_cxx_std20 directly (without setup scripts)"
+cmd = "rattler-build debug setup --recipe recipe -m .ci_support/linux_64_python3.11.____cpythonroot_cxx_std20.yaml --target-platform linux-64"
+description = "Debug root-feedstock with variant linux_64_python3.11.____cpythonroot_cxx_std20 directly (without setup scripts)"
 [feature.build.tasks."inspect-linux_64_python3.11.____cpythonroot_cxx_std20"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_64_python3.11.____cpythonroot_cxx_std20.yaml"
 description = "List contents of root-feedstock packages built for variant linux_64_python3.11.____cpythonroot_cxx_std20"
 [feature.build.tasks."build-linux_64_python3.11.____cpythonroot_cxx_std23"]
-cmd = "rattler-build build --recipe recipe -m .ci_support/linux_64_python3.11.____cpythonroot_cxx_std23.yaml"
+cmd = "rattler-build build --recipe recipe -m .ci_support/linux_64_python3.11.____cpythonroot_cxx_std23.yaml --target-platform linux-64"
 description = "Build root-feedstock with variant linux_64_python3.11.____cpythonroot_cxx_std23 directly (without setup scripts)"
 [feature.build.tasks."debug-linux_64_python3.11.____cpythonroot_cxx_std23"]
-cmd = "rattler-build debug setup --recipe recipe -m .ci_support/linux_64_python3.11.____cpythonroot_cxx_std23.yaml"
-description = "Build root-feedstock with variant linux_64_python3.11.____cpythonroot_cxx_std23 directly (without setup scripts)"
+cmd = "rattler-build debug setup --recipe recipe -m .ci_support/linux_64_python3.11.____cpythonroot_cxx_std23.yaml --target-platform linux-64"
+description = "Debug root-feedstock with variant linux_64_python3.11.____cpythonroot_cxx_std23 directly (without setup scripts)"
 [feature.build.tasks."inspect-linux_64_python3.11.____cpythonroot_cxx_std23"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_64_python3.11.____cpythonroot_cxx_std23.yaml"
 description = "List contents of root-feedstock packages built for variant linux_64_python3.11.____cpythonroot_cxx_std23"
 [feature.build.tasks."build-linux_64_python3.12.____cpythonroot_cxx_std20"]
-cmd = "rattler-build build --recipe recipe -m .ci_support/linux_64_python3.12.____cpythonroot_cxx_std20.yaml"
+cmd = "rattler-build build --recipe recipe -m .ci_support/linux_64_python3.12.____cpythonroot_cxx_std20.yaml --target-platform linux-64"
 description = "Build root-feedstock with variant linux_64_python3.12.____cpythonroot_cxx_std20 directly (without setup scripts)"
 [feature.build.tasks."debug-linux_64_python3.12.____cpythonroot_cxx_std20"]
-cmd = "rattler-build debug setup --recipe recipe -m .ci_support/linux_64_python3.12.____cpythonroot_cxx_std20.yaml"
-description = "Build root-feedstock with variant linux_64_python3.12.____cpythonroot_cxx_std20 directly (without setup scripts)"
+cmd = "rattler-build debug setup --recipe recipe -m .ci_support/linux_64_python3.12.____cpythonroot_cxx_std20.yaml --target-platform linux-64"
+description = "Debug root-feedstock with variant linux_64_python3.12.____cpythonroot_cxx_std20 directly (without setup scripts)"
 [feature.build.tasks."inspect-linux_64_python3.12.____cpythonroot_cxx_std20"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_64_python3.12.____cpythonroot_cxx_std20.yaml"
 description = "List contents of root-feedstock packages built for variant linux_64_python3.12.____cpythonroot_cxx_std20"
 [feature.build.tasks."build-linux_64_python3.12.____cpythonroot_cxx_std23"]
-cmd = "rattler-build build --recipe recipe -m .ci_support/linux_64_python3.12.____cpythonroot_cxx_std23.yaml"
+cmd = "rattler-build build --recipe recipe -m .ci_support/linux_64_python3.12.____cpythonroot_cxx_std23.yaml --target-platform linux-64"
 description = "Build root-feedstock with variant linux_64_python3.12.____cpythonroot_cxx_std23 directly (without setup scripts)"
 [feature.build.tasks."debug-linux_64_python3.12.____cpythonroot_cxx_std23"]
-cmd = "rattler-build debug setup --recipe recipe -m .ci_support/linux_64_python3.12.____cpythonroot_cxx_std23.yaml"
-description = "Build root-feedstock with variant linux_64_python3.12.____cpythonroot_cxx_std23 directly (without setup scripts)"
+cmd = "rattler-build debug setup --recipe recipe -m .ci_support/linux_64_python3.12.____cpythonroot_cxx_std23.yaml --target-platform linux-64"
+description = "Debug root-feedstock with variant linux_64_python3.12.____cpythonroot_cxx_std23 directly (without setup scripts)"
 [feature.build.tasks."inspect-linux_64_python3.12.____cpythonroot_cxx_std23"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_64_python3.12.____cpythonroot_cxx_std23.yaml"
 description = "List contents of root-feedstock packages built for variant linux_64_python3.12.____cpythonroot_cxx_std23"
 [feature.build.tasks."build-linux_64_python3.13.____cp313root_cxx_std20"]
-cmd = "rattler-build build --recipe recipe -m .ci_support/linux_64_python3.13.____cp313root_cxx_std20.yaml"
+cmd = "rattler-build build --recipe recipe -m .ci_support/linux_64_python3.13.____cp313root_cxx_std20.yaml --target-platform linux-64"
 description = "Build root-feedstock with variant linux_64_python3.13.____cp313root_cxx_std20 directly (without setup scripts)"
 [feature.build.tasks."debug-linux_64_python3.13.____cp313root_cxx_std20"]
-cmd = "rattler-build debug setup --recipe recipe -m .ci_support/linux_64_python3.13.____cp313root_cxx_std20.yaml"
-description = "Build root-feedstock with variant linux_64_python3.13.____cp313root_cxx_std20 directly (without setup scripts)"
+cmd = "rattler-build debug setup --recipe recipe -m .ci_support/linux_64_python3.13.____cp313root_cxx_std20.yaml --target-platform linux-64"
+description = "Debug root-feedstock with variant linux_64_python3.13.____cp313root_cxx_std20 directly (without setup scripts)"
 [feature.build.tasks."inspect-linux_64_python3.13.____cp313root_cxx_std20"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_64_python3.13.____cp313root_cxx_std20.yaml"
 description = "List contents of root-feedstock packages built for variant linux_64_python3.13.____cp313root_cxx_std20"
 [feature.build.tasks."build-linux_64_python3.13.____cp313root_cxx_std23"]
-cmd = "rattler-build build --recipe recipe -m .ci_support/linux_64_python3.13.____cp313root_cxx_std23.yaml"
+cmd = "rattler-build build --recipe recipe -m .ci_support/linux_64_python3.13.____cp313root_cxx_std23.yaml --target-platform linux-64"
 description = "Build root-feedstock with variant linux_64_python3.13.____cp313root_cxx_std23 directly (without setup scripts)"
 [feature.build.tasks."debug-linux_64_python3.13.____cp313root_cxx_std23"]
-cmd = "rattler-build debug setup --recipe recipe -m .ci_support/linux_64_python3.13.____cp313root_cxx_std23.yaml"
-description = "Build root-feedstock with variant linux_64_python3.13.____cp313root_cxx_std23 directly (without setup scripts)"
+cmd = "rattler-build debug setup --recipe recipe -m .ci_support/linux_64_python3.13.____cp313root_cxx_std23.yaml --target-platform linux-64"
+description = "Debug root-feedstock with variant linux_64_python3.13.____cp313root_cxx_std23 directly (without setup scripts)"
 [feature.build.tasks."inspect-linux_64_python3.13.____cp313root_cxx_std23"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_64_python3.13.____cp313root_cxx_std23.yaml"
 description = "List contents of root-feedstock packages built for variant linux_64_python3.13.____cp313root_cxx_std23"
 [feature.build.tasks."build-linux_64_python3.14.____cp314root_cxx_std20"]
-cmd = "rattler-build build --recipe recipe -m .ci_support/linux_64_python3.14.____cp314root_cxx_std20.yaml"
+cmd = "rattler-build build --recipe recipe -m .ci_support/linux_64_python3.14.____cp314root_cxx_std20.yaml --target-platform linux-64"
 description = "Build root-feedstock with variant linux_64_python3.14.____cp314root_cxx_std20 directly (without setup scripts)"
 [feature.build.tasks."debug-linux_64_python3.14.____cp314root_cxx_std20"]
-cmd = "rattler-build debug setup --recipe recipe -m .ci_support/linux_64_python3.14.____cp314root_cxx_std20.yaml"
-description = "Build root-feedstock with variant linux_64_python3.14.____cp314root_cxx_std20 directly (without setup scripts)"
+cmd = "rattler-build debug setup --recipe recipe -m .ci_support/linux_64_python3.14.____cp314root_cxx_std20.yaml --target-platform linux-64"
+description = "Debug root-feedstock with variant linux_64_python3.14.____cp314root_cxx_std20 directly (without setup scripts)"
 [feature.build.tasks."inspect-linux_64_python3.14.____cp314root_cxx_std20"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_64_python3.14.____cp314root_cxx_std20.yaml"
 description = "List contents of root-feedstock packages built for variant linux_64_python3.14.____cp314root_cxx_std20"
 [feature.build.tasks."build-linux_64_python3.14.____cp314root_cxx_std23"]
-cmd = "rattler-build build --recipe recipe -m .ci_support/linux_64_python3.14.____cp314root_cxx_std23.yaml"
+cmd = "rattler-build build --recipe recipe -m .ci_support/linux_64_python3.14.____cp314root_cxx_std23.yaml --target-platform linux-64"
 description = "Build root-feedstock with variant linux_64_python3.14.____cp314root_cxx_std23 directly (without setup scripts)"
 [feature.build.tasks."debug-linux_64_python3.14.____cp314root_cxx_std23"]
-cmd = "rattler-build debug setup --recipe recipe -m .ci_support/linux_64_python3.14.____cp314root_cxx_std23.yaml"
-description = "Build root-feedstock with variant linux_64_python3.14.____cp314root_cxx_std23 directly (without setup scripts)"
+cmd = "rattler-build debug setup --recipe recipe -m .ci_support/linux_64_python3.14.____cp314root_cxx_std23.yaml --target-platform linux-64"
+description = "Debug root-feedstock with variant linux_64_python3.14.____cp314root_cxx_std23 directly (without setup scripts)"
 [feature.build.tasks."inspect-linux_64_python3.14.____cp314root_cxx_std23"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_64_python3.14.____cp314root_cxx_std23.yaml"
 description = "List contents of root-feedstock packages built for variant linux_64_python3.14.____cp314root_cxx_std23"
-[feature.build.tasks."build-linux_aarch64_python3.10.____cpythonroot_cxx_std20"]
-cmd = "rattler-build build --recipe recipe -m .ci_support/linux_aarch64_python3.10.____cpythonroot_cxx_std20.yaml"
-description = "Build root-feedstock with variant linux_aarch64_python3.10.____cpythonroot_cxx_std20 directly (without setup scripts)"
-[feature.build.tasks."debug-linux_aarch64_python3.10.____cpythonroot_cxx_std20"]
-cmd = "rattler-build debug setup --recipe recipe -m .ci_support/linux_aarch64_python3.10.____cpythonroot_cxx_std20.yaml"
-description = "Build root-feedstock with variant linux_aarch64_python3.10.____cpythonroot_cxx_std20 directly (without setup scripts)"
-[feature.build.tasks."inspect-linux_aarch64_python3.10.____cpythonroot_cxx_std20"]
-cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_aarch64_python3.10.____cpythonroot_cxx_std20.yaml"
-description = "List contents of root-feedstock packages built for variant linux_aarch64_python3.10.____cpythonroot_cxx_std20"
-[feature.build.tasks."build-linux_aarch64_python3.10.____cpythonroot_cxx_std23"]
-cmd = "rattler-build build --recipe recipe -m .ci_support/linux_aarch64_python3.10.____cpythonroot_cxx_std23.yaml"
-description = "Build root-feedstock with variant linux_aarch64_python3.10.____cpythonroot_cxx_std23 directly (without setup scripts)"
-[feature.build.tasks."debug-linux_aarch64_python3.10.____cpythonroot_cxx_std23"]
-cmd = "rattler-build debug setup --recipe recipe -m .ci_support/linux_aarch64_python3.10.____cpythonroot_cxx_std23.yaml"
-description = "Build root-feedstock with variant linux_aarch64_python3.10.____cpythonroot_cxx_std23 directly (without setup scripts)"
-[feature.build.tasks."inspect-linux_aarch64_python3.10.____cpythonroot_cxx_std23"]
-cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_aarch64_python3.10.____cpythonroot_cxx_std23.yaml"
-description = "List contents of root-feedstock packages built for variant linux_aarch64_python3.10.____cpythonroot_cxx_std23"
 [feature.build.tasks."build-linux_aarch64_python3.11.____cpythonroot_cxx_std20"]
-cmd = "rattler-build build --recipe recipe -m .ci_support/linux_aarch64_python3.11.____cpythonroot_cxx_std20.yaml"
+cmd = "rattler-build build --recipe recipe -m .ci_support/linux_aarch64_python3.11.____cpythonroot_cxx_std20.yaml --target-platform linux-aarch64"
 description = "Build root-feedstock with variant linux_aarch64_python3.11.____cpythonroot_cxx_std20 directly (without setup scripts)"
 [feature.build.tasks."debug-linux_aarch64_python3.11.____cpythonroot_cxx_std20"]
-cmd = "rattler-build debug setup --recipe recipe -m .ci_support/linux_aarch64_python3.11.____cpythonroot_cxx_std20.yaml"
-description = "Build root-feedstock with variant linux_aarch64_python3.11.____cpythonroot_cxx_std20 directly (without setup scripts)"
+cmd = "rattler-build debug setup --recipe recipe -m .ci_support/linux_aarch64_python3.11.____cpythonroot_cxx_std20.yaml --target-platform linux-aarch64"
+description = "Debug root-feedstock with variant linux_aarch64_python3.11.____cpythonroot_cxx_std20 directly (without setup scripts)"
 [feature.build.tasks."inspect-linux_aarch64_python3.11.____cpythonroot_cxx_std20"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_aarch64_python3.11.____cpythonroot_cxx_std20.yaml"
 description = "List contents of root-feedstock packages built for variant linux_aarch64_python3.11.____cpythonroot_cxx_std20"
 [feature.build.tasks."build-linux_aarch64_python3.11.____cpythonroot_cxx_std23"]
-cmd = "rattler-build build --recipe recipe -m .ci_support/linux_aarch64_python3.11.____cpythonroot_cxx_std23.yaml"
+cmd = "rattler-build build --recipe recipe -m .ci_support/linux_aarch64_python3.11.____cpythonroot_cxx_std23.yaml --target-platform linux-aarch64"
 description = "Build root-feedstock with variant linux_aarch64_python3.11.____cpythonroot_cxx_std23 directly (without setup scripts)"
 [feature.build.tasks."debug-linux_aarch64_python3.11.____cpythonroot_cxx_std23"]
-cmd = "rattler-build debug setup --recipe recipe -m .ci_support/linux_aarch64_python3.11.____cpythonroot_cxx_std23.yaml"
-description = "Build root-feedstock with variant linux_aarch64_python3.11.____cpythonroot_cxx_std23 directly (without setup scripts)"
+cmd = "rattler-build debug setup --recipe recipe -m .ci_support/linux_aarch64_python3.11.____cpythonroot_cxx_std23.yaml --target-platform linux-aarch64"
+description = "Debug root-feedstock with variant linux_aarch64_python3.11.____cpythonroot_cxx_std23 directly (without setup scripts)"
 [feature.build.tasks."inspect-linux_aarch64_python3.11.____cpythonroot_cxx_std23"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_aarch64_python3.11.____cpythonroot_cxx_std23.yaml"
 description = "List contents of root-feedstock packages built for variant linux_aarch64_python3.11.____cpythonroot_cxx_std23"
 [feature.build.tasks."build-linux_aarch64_python3.12.____cpythonroot_cxx_std20"]
-cmd = "rattler-build build --recipe recipe -m .ci_support/linux_aarch64_python3.12.____cpythonroot_cxx_std20.yaml"
+cmd = "rattler-build build --recipe recipe -m .ci_support/linux_aarch64_python3.12.____cpythonroot_cxx_std20.yaml --target-platform linux-aarch64"
 description = "Build root-feedstock with variant linux_aarch64_python3.12.____cpythonroot_cxx_std20 directly (without setup scripts)"
 [feature.build.tasks."debug-linux_aarch64_python3.12.____cpythonroot_cxx_std20"]
-cmd = "rattler-build debug setup --recipe recipe -m .ci_support/linux_aarch64_python3.12.____cpythonroot_cxx_std20.yaml"
-description = "Build root-feedstock with variant linux_aarch64_python3.12.____cpythonroot_cxx_std20 directly (without setup scripts)"
+cmd = "rattler-build debug setup --recipe recipe -m .ci_support/linux_aarch64_python3.12.____cpythonroot_cxx_std20.yaml --target-platform linux-aarch64"
+description = "Debug root-feedstock with variant linux_aarch64_python3.12.____cpythonroot_cxx_std20 directly (without setup scripts)"
 [feature.build.tasks."inspect-linux_aarch64_python3.12.____cpythonroot_cxx_std20"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_aarch64_python3.12.____cpythonroot_cxx_std20.yaml"
 description = "List contents of root-feedstock packages built for variant linux_aarch64_python3.12.____cpythonroot_cxx_std20"
 [feature.build.tasks."build-linux_aarch64_python3.12.____cpythonroot_cxx_std23"]
-cmd = "rattler-build build --recipe recipe -m .ci_support/linux_aarch64_python3.12.____cpythonroot_cxx_std23.yaml"
+cmd = "rattler-build build --recipe recipe -m .ci_support/linux_aarch64_python3.12.____cpythonroot_cxx_std23.yaml --target-platform linux-aarch64"
 description = "Build root-feedstock with variant linux_aarch64_python3.12.____cpythonroot_cxx_std23 directly (without setup scripts)"
 [feature.build.tasks."debug-linux_aarch64_python3.12.____cpythonroot_cxx_std23"]
-cmd = "rattler-build debug setup --recipe recipe -m .ci_support/linux_aarch64_python3.12.____cpythonroot_cxx_std23.yaml"
-description = "Build root-feedstock with variant linux_aarch64_python3.12.____cpythonroot_cxx_std23 directly (without setup scripts)"
+cmd = "rattler-build debug setup --recipe recipe -m .ci_support/linux_aarch64_python3.12.____cpythonroot_cxx_std23.yaml --target-platform linux-aarch64"
+description = "Debug root-feedstock with variant linux_aarch64_python3.12.____cpythonroot_cxx_std23 directly (without setup scripts)"
 [feature.build.tasks."inspect-linux_aarch64_python3.12.____cpythonroot_cxx_std23"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_aarch64_python3.12.____cpythonroot_cxx_std23.yaml"
 description = "List contents of root-feedstock packages built for variant linux_aarch64_python3.12.____cpythonroot_cxx_std23"
 [feature.build.tasks."build-linux_aarch64_python3.13.____cp313root_cxx_std20"]
-cmd = "rattler-build build --recipe recipe -m .ci_support/linux_aarch64_python3.13.____cp313root_cxx_std20.yaml"
+cmd = "rattler-build build --recipe recipe -m .ci_support/linux_aarch64_python3.13.____cp313root_cxx_std20.yaml --target-platform linux-aarch64"
 description = "Build root-feedstock with variant linux_aarch64_python3.13.____cp313root_cxx_std20 directly (without setup scripts)"
 [feature.build.tasks."debug-linux_aarch64_python3.13.____cp313root_cxx_std20"]
-cmd = "rattler-build debug setup --recipe recipe -m .ci_support/linux_aarch64_python3.13.____cp313root_cxx_std20.yaml"
-description = "Build root-feedstock with variant linux_aarch64_python3.13.____cp313root_cxx_std20 directly (without setup scripts)"
+cmd = "rattler-build debug setup --recipe recipe -m .ci_support/linux_aarch64_python3.13.____cp313root_cxx_std20.yaml --target-platform linux-aarch64"
+description = "Debug root-feedstock with variant linux_aarch64_python3.13.____cp313root_cxx_std20 directly (without setup scripts)"
 [feature.build.tasks."inspect-linux_aarch64_python3.13.____cp313root_cxx_std20"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_aarch64_python3.13.____cp313root_cxx_std20.yaml"
 description = "List contents of root-feedstock packages built for variant linux_aarch64_python3.13.____cp313root_cxx_std20"
 [feature.build.tasks."build-linux_aarch64_python3.13.____cp313root_cxx_std23"]
-cmd = "rattler-build build --recipe recipe -m .ci_support/linux_aarch64_python3.13.____cp313root_cxx_std23.yaml"
+cmd = "rattler-build build --recipe recipe -m .ci_support/linux_aarch64_python3.13.____cp313root_cxx_std23.yaml --target-platform linux-aarch64"
 description = "Build root-feedstock with variant linux_aarch64_python3.13.____cp313root_cxx_std23 directly (without setup scripts)"
 [feature.build.tasks."debug-linux_aarch64_python3.13.____cp313root_cxx_std23"]
-cmd = "rattler-build debug setup --recipe recipe -m .ci_support/linux_aarch64_python3.13.____cp313root_cxx_std23.yaml"
-description = "Build root-feedstock with variant linux_aarch64_python3.13.____cp313root_cxx_std23 directly (without setup scripts)"
+cmd = "rattler-build debug setup --recipe recipe -m .ci_support/linux_aarch64_python3.13.____cp313root_cxx_std23.yaml --target-platform linux-aarch64"
+description = "Debug root-feedstock with variant linux_aarch64_python3.13.____cp313root_cxx_std23 directly (without setup scripts)"
 [feature.build.tasks."inspect-linux_aarch64_python3.13.____cp313root_cxx_std23"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_aarch64_python3.13.____cp313root_cxx_std23.yaml"
 description = "List contents of root-feedstock packages built for variant linux_aarch64_python3.13.____cp313root_cxx_std23"
 [feature.build.tasks."build-linux_aarch64_python3.14.____cp314root_cxx_std20"]
-cmd = "rattler-build build --recipe recipe -m .ci_support/linux_aarch64_python3.14.____cp314root_cxx_std20.yaml"
+cmd = "rattler-build build --recipe recipe -m .ci_support/linux_aarch64_python3.14.____cp314root_cxx_std20.yaml --target-platform linux-aarch64"
 description = "Build root-feedstock with variant linux_aarch64_python3.14.____cp314root_cxx_std20 directly (without setup scripts)"
 [feature.build.tasks."debug-linux_aarch64_python3.14.____cp314root_cxx_std20"]
-cmd = "rattler-build debug setup --recipe recipe -m .ci_support/linux_aarch64_python3.14.____cp314root_cxx_std20.yaml"
-description = "Build root-feedstock with variant linux_aarch64_python3.14.____cp314root_cxx_std20 directly (without setup scripts)"
+cmd = "rattler-build debug setup --recipe recipe -m .ci_support/linux_aarch64_python3.14.____cp314root_cxx_std20.yaml --target-platform linux-aarch64"
+description = "Debug root-feedstock with variant linux_aarch64_python3.14.____cp314root_cxx_std20 directly (without setup scripts)"
 [feature.build.tasks."inspect-linux_aarch64_python3.14.____cp314root_cxx_std20"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_aarch64_python3.14.____cp314root_cxx_std20.yaml"
 description = "List contents of root-feedstock packages built for variant linux_aarch64_python3.14.____cp314root_cxx_std20"
 [feature.build.tasks."build-linux_aarch64_python3.14.____cp314root_cxx_std23"]
-cmd = "rattler-build build --recipe recipe -m .ci_support/linux_aarch64_python3.14.____cp314root_cxx_std23.yaml"
+cmd = "rattler-build build --recipe recipe -m .ci_support/linux_aarch64_python3.14.____cp314root_cxx_std23.yaml --target-platform linux-aarch64"
 description = "Build root-feedstock with variant linux_aarch64_python3.14.____cp314root_cxx_std23 directly (without setup scripts)"
 [feature.build.tasks."debug-linux_aarch64_python3.14.____cp314root_cxx_std23"]
-cmd = "rattler-build debug setup --recipe recipe -m .ci_support/linux_aarch64_python3.14.____cp314root_cxx_std23.yaml"
-description = "Build root-feedstock with variant linux_aarch64_python3.14.____cp314root_cxx_std23 directly (without setup scripts)"
+cmd = "rattler-build debug setup --recipe recipe -m .ci_support/linux_aarch64_python3.14.____cp314root_cxx_std23.yaml --target-platform linux-aarch64"
+description = "Debug root-feedstock with variant linux_aarch64_python3.14.____cp314root_cxx_std23 directly (without setup scripts)"
 [feature.build.tasks."inspect-linux_aarch64_python3.14.____cp314root_cxx_std23"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_aarch64_python3.14.____cp314root_cxx_std23.yaml"
 description = "List contents of root-feedstock packages built for variant linux_aarch64_python3.14.____cp314root_cxx_std23"
-[feature.build.tasks."build-linux_ppc64le_python3.10.____cpythonroot_cxx_std20"]
-cmd = "rattler-build build --recipe recipe -m .ci_support/linux_ppc64le_python3.10.____cpythonroot_cxx_std20.yaml"
-description = "Build root-feedstock with variant linux_ppc64le_python3.10.____cpythonroot_cxx_std20 directly (without setup scripts)"
-[feature.build.tasks."debug-linux_ppc64le_python3.10.____cpythonroot_cxx_std20"]
-cmd = "rattler-build debug setup --recipe recipe -m .ci_support/linux_ppc64le_python3.10.____cpythonroot_cxx_std20.yaml"
-description = "Build root-feedstock with variant linux_ppc64le_python3.10.____cpythonroot_cxx_std20 directly (without setup scripts)"
-[feature.build.tasks."inspect-linux_ppc64le_python3.10.____cpythonroot_cxx_std20"]
-cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_ppc64le_python3.10.____cpythonroot_cxx_std20.yaml"
-description = "List contents of root-feedstock packages built for variant linux_ppc64le_python3.10.____cpythonroot_cxx_std20"
-[feature.build.tasks."build-linux_ppc64le_python3.10.____cpythonroot_cxx_std23"]
-cmd = "rattler-build build --recipe recipe -m .ci_support/linux_ppc64le_python3.10.____cpythonroot_cxx_std23.yaml"
-description = "Build root-feedstock with variant linux_ppc64le_python3.10.____cpythonroot_cxx_std23 directly (without setup scripts)"
-[feature.build.tasks."debug-linux_ppc64le_python3.10.____cpythonroot_cxx_std23"]
-cmd = "rattler-build debug setup --recipe recipe -m .ci_support/linux_ppc64le_python3.10.____cpythonroot_cxx_std23.yaml"
-description = "Build root-feedstock with variant linux_ppc64le_python3.10.____cpythonroot_cxx_std23 directly (without setup scripts)"
-[feature.build.tasks."inspect-linux_ppc64le_python3.10.____cpythonroot_cxx_std23"]
-cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_ppc64le_python3.10.____cpythonroot_cxx_std23.yaml"
-description = "List contents of root-feedstock packages built for variant linux_ppc64le_python3.10.____cpythonroot_cxx_std23"
 [feature.build.tasks."build-linux_ppc64le_python3.11.____cpythonroot_cxx_std20"]
-cmd = "rattler-build build --recipe recipe -m .ci_support/linux_ppc64le_python3.11.____cpythonroot_cxx_std20.yaml"
+cmd = "rattler-build build --recipe recipe -m .ci_support/linux_ppc64le_python3.11.____cpythonroot_cxx_std20.yaml --target-platform linux-ppc64le"
 description = "Build root-feedstock with variant linux_ppc64le_python3.11.____cpythonroot_cxx_std20 directly (without setup scripts)"
 [feature.build.tasks."debug-linux_ppc64le_python3.11.____cpythonroot_cxx_std20"]
-cmd = "rattler-build debug setup --recipe recipe -m .ci_support/linux_ppc64le_python3.11.____cpythonroot_cxx_std20.yaml"
-description = "Build root-feedstock with variant linux_ppc64le_python3.11.____cpythonroot_cxx_std20 directly (without setup scripts)"
+cmd = "rattler-build debug setup --recipe recipe -m .ci_support/linux_ppc64le_python3.11.____cpythonroot_cxx_std20.yaml --target-platform linux-ppc64le"
+description = "Debug root-feedstock with variant linux_ppc64le_python3.11.____cpythonroot_cxx_std20 directly (without setup scripts)"
 [feature.build.tasks."inspect-linux_ppc64le_python3.11.____cpythonroot_cxx_std20"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_ppc64le_python3.11.____cpythonroot_cxx_std20.yaml"
 description = "List contents of root-feedstock packages built for variant linux_ppc64le_python3.11.____cpythonroot_cxx_std20"
 [feature.build.tasks."build-linux_ppc64le_python3.11.____cpythonroot_cxx_std23"]
-cmd = "rattler-build build --recipe recipe -m .ci_support/linux_ppc64le_python3.11.____cpythonroot_cxx_std23.yaml"
+cmd = "rattler-build build --recipe recipe -m .ci_support/linux_ppc64le_python3.11.____cpythonroot_cxx_std23.yaml --target-platform linux-ppc64le"
 description = "Build root-feedstock with variant linux_ppc64le_python3.11.____cpythonroot_cxx_std23 directly (without setup scripts)"
 [feature.build.tasks."debug-linux_ppc64le_python3.11.____cpythonroot_cxx_std23"]
-cmd = "rattler-build debug setup --recipe recipe -m .ci_support/linux_ppc64le_python3.11.____cpythonroot_cxx_std23.yaml"
-description = "Build root-feedstock with variant linux_ppc64le_python3.11.____cpythonroot_cxx_std23 directly (without setup scripts)"
+cmd = "rattler-build debug setup --recipe recipe -m .ci_support/linux_ppc64le_python3.11.____cpythonroot_cxx_std23.yaml --target-platform linux-ppc64le"
+description = "Debug root-feedstock with variant linux_ppc64le_python3.11.____cpythonroot_cxx_std23 directly (without setup scripts)"
 [feature.build.tasks."inspect-linux_ppc64le_python3.11.____cpythonroot_cxx_std23"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_ppc64le_python3.11.____cpythonroot_cxx_std23.yaml"
 description = "List contents of root-feedstock packages built for variant linux_ppc64le_python3.11.____cpythonroot_cxx_std23"
 [feature.build.tasks."build-linux_ppc64le_python3.12.____cpythonroot_cxx_std20"]
-cmd = "rattler-build build --recipe recipe -m .ci_support/linux_ppc64le_python3.12.____cpythonroot_cxx_std20.yaml"
+cmd = "rattler-build build --recipe recipe -m .ci_support/linux_ppc64le_python3.12.____cpythonroot_cxx_std20.yaml --target-platform linux-ppc64le"
 description = "Build root-feedstock with variant linux_ppc64le_python3.12.____cpythonroot_cxx_std20 directly (without setup scripts)"
 [feature.build.tasks."debug-linux_ppc64le_python3.12.____cpythonroot_cxx_std20"]
-cmd = "rattler-build debug setup --recipe recipe -m .ci_support/linux_ppc64le_python3.12.____cpythonroot_cxx_std20.yaml"
-description = "Build root-feedstock with variant linux_ppc64le_python3.12.____cpythonroot_cxx_std20 directly (without setup scripts)"
+cmd = "rattler-build debug setup --recipe recipe -m .ci_support/linux_ppc64le_python3.12.____cpythonroot_cxx_std20.yaml --target-platform linux-ppc64le"
+description = "Debug root-feedstock with variant linux_ppc64le_python3.12.____cpythonroot_cxx_std20 directly (without setup scripts)"
 [feature.build.tasks."inspect-linux_ppc64le_python3.12.____cpythonroot_cxx_std20"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_ppc64le_python3.12.____cpythonroot_cxx_std20.yaml"
 description = "List contents of root-feedstock packages built for variant linux_ppc64le_python3.12.____cpythonroot_cxx_std20"
 [feature.build.tasks."build-linux_ppc64le_python3.12.____cpythonroot_cxx_std23"]
-cmd = "rattler-build build --recipe recipe -m .ci_support/linux_ppc64le_python3.12.____cpythonroot_cxx_std23.yaml"
+cmd = "rattler-build build --recipe recipe -m .ci_support/linux_ppc64le_python3.12.____cpythonroot_cxx_std23.yaml --target-platform linux-ppc64le"
 description = "Build root-feedstock with variant linux_ppc64le_python3.12.____cpythonroot_cxx_std23 directly (without setup scripts)"
 [feature.build.tasks."debug-linux_ppc64le_python3.12.____cpythonroot_cxx_std23"]
-cmd = "rattler-build debug setup --recipe recipe -m .ci_support/linux_ppc64le_python3.12.____cpythonroot_cxx_std23.yaml"
-description = "Build root-feedstock with variant linux_ppc64le_python3.12.____cpythonroot_cxx_std23 directly (without setup scripts)"
+cmd = "rattler-build debug setup --recipe recipe -m .ci_support/linux_ppc64le_python3.12.____cpythonroot_cxx_std23.yaml --target-platform linux-ppc64le"
+description = "Debug root-feedstock with variant linux_ppc64le_python3.12.____cpythonroot_cxx_std23 directly (without setup scripts)"
 [feature.build.tasks."inspect-linux_ppc64le_python3.12.____cpythonroot_cxx_std23"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_ppc64le_python3.12.____cpythonroot_cxx_std23.yaml"
 description = "List contents of root-feedstock packages built for variant linux_ppc64le_python3.12.____cpythonroot_cxx_std23"
 [feature.build.tasks."build-linux_ppc64le_python3.13.____cp313root_cxx_std20"]
-cmd = "rattler-build build --recipe recipe -m .ci_support/linux_ppc64le_python3.13.____cp313root_cxx_std20.yaml"
+cmd = "rattler-build build --recipe recipe -m .ci_support/linux_ppc64le_python3.13.____cp313root_cxx_std20.yaml --target-platform linux-ppc64le"
 description = "Build root-feedstock with variant linux_ppc64le_python3.13.____cp313root_cxx_std20 directly (without setup scripts)"
 [feature.build.tasks."debug-linux_ppc64le_python3.13.____cp313root_cxx_std20"]
-cmd = "rattler-build debug setup --recipe recipe -m .ci_support/linux_ppc64le_python3.13.____cp313root_cxx_std20.yaml"
-description = "Build root-feedstock with variant linux_ppc64le_python3.13.____cp313root_cxx_std20 directly (without setup scripts)"
+cmd = "rattler-build debug setup --recipe recipe -m .ci_support/linux_ppc64le_python3.13.____cp313root_cxx_std20.yaml --target-platform linux-ppc64le"
+description = "Debug root-feedstock with variant linux_ppc64le_python3.13.____cp313root_cxx_std20 directly (without setup scripts)"
 [feature.build.tasks."inspect-linux_ppc64le_python3.13.____cp313root_cxx_std20"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_ppc64le_python3.13.____cp313root_cxx_std20.yaml"
 description = "List contents of root-feedstock packages built for variant linux_ppc64le_python3.13.____cp313root_cxx_std20"
 [feature.build.tasks."build-linux_ppc64le_python3.13.____cp313root_cxx_std23"]
-cmd = "rattler-build build --recipe recipe -m .ci_support/linux_ppc64le_python3.13.____cp313root_cxx_std23.yaml"
+cmd = "rattler-build build --recipe recipe -m .ci_support/linux_ppc64le_python3.13.____cp313root_cxx_std23.yaml --target-platform linux-ppc64le"
 description = "Build root-feedstock with variant linux_ppc64le_python3.13.____cp313root_cxx_std23 directly (without setup scripts)"
 [feature.build.tasks."debug-linux_ppc64le_python3.13.____cp313root_cxx_std23"]
-cmd = "rattler-build debug setup --recipe recipe -m .ci_support/linux_ppc64le_python3.13.____cp313root_cxx_std23.yaml"
-description = "Build root-feedstock with variant linux_ppc64le_python3.13.____cp313root_cxx_std23 directly (without setup scripts)"
+cmd = "rattler-build debug setup --recipe recipe -m .ci_support/linux_ppc64le_python3.13.____cp313root_cxx_std23.yaml --target-platform linux-ppc64le"
+description = "Debug root-feedstock with variant linux_ppc64le_python3.13.____cp313root_cxx_std23 directly (without setup scripts)"
 [feature.build.tasks."inspect-linux_ppc64le_python3.13.____cp313root_cxx_std23"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_ppc64le_python3.13.____cp313root_cxx_std23.yaml"
 description = "List contents of root-feedstock packages built for variant linux_ppc64le_python3.13.____cp313root_cxx_std23"
 [feature.build.tasks."build-linux_ppc64le_python3.14.____cp314root_cxx_std20"]
-cmd = "rattler-build build --recipe recipe -m .ci_support/linux_ppc64le_python3.14.____cp314root_cxx_std20.yaml"
+cmd = "rattler-build build --recipe recipe -m .ci_support/linux_ppc64le_python3.14.____cp314root_cxx_std20.yaml --target-platform linux-ppc64le"
 description = "Build root-feedstock with variant linux_ppc64le_python3.14.____cp314root_cxx_std20 directly (without setup scripts)"
 [feature.build.tasks."debug-linux_ppc64le_python3.14.____cp314root_cxx_std20"]
-cmd = "rattler-build debug setup --recipe recipe -m .ci_support/linux_ppc64le_python3.14.____cp314root_cxx_std20.yaml"
-description = "Build root-feedstock with variant linux_ppc64le_python3.14.____cp314root_cxx_std20 directly (without setup scripts)"
+cmd = "rattler-build debug setup --recipe recipe -m .ci_support/linux_ppc64le_python3.14.____cp314root_cxx_std20.yaml --target-platform linux-ppc64le"
+description = "Debug root-feedstock with variant linux_ppc64le_python3.14.____cp314root_cxx_std20 directly (without setup scripts)"
 [feature.build.tasks."inspect-linux_ppc64le_python3.14.____cp314root_cxx_std20"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_ppc64le_python3.14.____cp314root_cxx_std20.yaml"
 description = "List contents of root-feedstock packages built for variant linux_ppc64le_python3.14.____cp314root_cxx_std20"
 [feature.build.tasks."build-linux_ppc64le_python3.14.____cp314root_cxx_std23"]
-cmd = "rattler-build build --recipe recipe -m .ci_support/linux_ppc64le_python3.14.____cp314root_cxx_std23.yaml"
+cmd = "rattler-build build --recipe recipe -m .ci_support/linux_ppc64le_python3.14.____cp314root_cxx_std23.yaml --target-platform linux-ppc64le"
 description = "Build root-feedstock with variant linux_ppc64le_python3.14.____cp314root_cxx_std23 directly (without setup scripts)"
 [feature.build.tasks."debug-linux_ppc64le_python3.14.____cp314root_cxx_std23"]
-cmd = "rattler-build debug setup --recipe recipe -m .ci_support/linux_ppc64le_python3.14.____cp314root_cxx_std23.yaml"
-description = "Build root-feedstock with variant linux_ppc64le_python3.14.____cp314root_cxx_std23 directly (without setup scripts)"
+cmd = "rattler-build debug setup --recipe recipe -m .ci_support/linux_ppc64le_python3.14.____cp314root_cxx_std23.yaml --target-platform linux-ppc64le"
+description = "Debug root-feedstock with variant linux_ppc64le_python3.14.____cp314root_cxx_std23 directly (without setup scripts)"
 [feature.build.tasks."inspect-linux_ppc64le_python3.14.____cp314root_cxx_std23"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_ppc64le_python3.14.____cp314root_cxx_std23.yaml"
 description = "List contents of root-feedstock packages built for variant linux_ppc64le_python3.14.____cp314root_cxx_std23"
-[feature.build.tasks."build-osx_64_python3.10.____cpythonroot_cxx_std20"]
-cmd = "rattler-build build --recipe recipe -m .ci_support/osx_64_python3.10.____cpythonroot_cxx_std20.yaml"
-description = "Build root-feedstock with variant osx_64_python3.10.____cpythonroot_cxx_std20 directly (without setup scripts)"
-[feature.build.tasks."debug-osx_64_python3.10.____cpythonroot_cxx_std20"]
-cmd = "rattler-build debug setup --recipe recipe -m .ci_support/osx_64_python3.10.____cpythonroot_cxx_std20.yaml"
-description = "Build root-feedstock with variant osx_64_python3.10.____cpythonroot_cxx_std20 directly (without setup scripts)"
-[feature.build.tasks."inspect-osx_64_python3.10.____cpythonroot_cxx_std20"]
-cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/osx_64_python3.10.____cpythonroot_cxx_std20.yaml"
-description = "List contents of root-feedstock packages built for variant osx_64_python3.10.____cpythonroot_cxx_std20"
-[feature.build.tasks."build-osx_64_python3.10.____cpythonroot_cxx_std23"]
-cmd = "rattler-build build --recipe recipe -m .ci_support/osx_64_python3.10.____cpythonroot_cxx_std23.yaml"
-description = "Build root-feedstock with variant osx_64_python3.10.____cpythonroot_cxx_std23 directly (without setup scripts)"
-[feature.build.tasks."debug-osx_64_python3.10.____cpythonroot_cxx_std23"]
-cmd = "rattler-build debug setup --recipe recipe -m .ci_support/osx_64_python3.10.____cpythonroot_cxx_std23.yaml"
-description = "Build root-feedstock with variant osx_64_python3.10.____cpythonroot_cxx_std23 directly (without setup scripts)"
-[feature.build.tasks."inspect-osx_64_python3.10.____cpythonroot_cxx_std23"]
-cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/osx_64_python3.10.____cpythonroot_cxx_std23.yaml"
-description = "List contents of root-feedstock packages built for variant osx_64_python3.10.____cpythonroot_cxx_std23"
 [feature.build.tasks."build-osx_64_python3.11.____cpythonroot_cxx_std20"]
-cmd = "rattler-build build --recipe recipe -m .ci_support/osx_64_python3.11.____cpythonroot_cxx_std20.yaml"
+cmd = "rattler-build build --recipe recipe -m .ci_support/osx_64_python3.11.____cpythonroot_cxx_std20.yaml --target-platform osx-64"
 description = "Build root-feedstock with variant osx_64_python3.11.____cpythonroot_cxx_std20 directly (without setup scripts)"
 [feature.build.tasks."debug-osx_64_python3.11.____cpythonroot_cxx_std20"]
-cmd = "rattler-build debug setup --recipe recipe -m .ci_support/osx_64_python3.11.____cpythonroot_cxx_std20.yaml"
-description = "Build root-feedstock with variant osx_64_python3.11.____cpythonroot_cxx_std20 directly (without setup scripts)"
+cmd = "rattler-build debug setup --recipe recipe -m .ci_support/osx_64_python3.11.____cpythonroot_cxx_std20.yaml --target-platform osx-64"
+description = "Debug root-feedstock with variant osx_64_python3.11.____cpythonroot_cxx_std20 directly (without setup scripts)"
 [feature.build.tasks."inspect-osx_64_python3.11.____cpythonroot_cxx_std20"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/osx_64_python3.11.____cpythonroot_cxx_std20.yaml"
 description = "List contents of root-feedstock packages built for variant osx_64_python3.11.____cpythonroot_cxx_std20"
 [feature.build.tasks."build-osx_64_python3.11.____cpythonroot_cxx_std23"]
-cmd = "rattler-build build --recipe recipe -m .ci_support/osx_64_python3.11.____cpythonroot_cxx_std23.yaml"
+cmd = "rattler-build build --recipe recipe -m .ci_support/osx_64_python3.11.____cpythonroot_cxx_std23.yaml --target-platform osx-64"
 description = "Build root-feedstock with variant osx_64_python3.11.____cpythonroot_cxx_std23 directly (without setup scripts)"
 [feature.build.tasks."debug-osx_64_python3.11.____cpythonroot_cxx_std23"]
-cmd = "rattler-build debug setup --recipe recipe -m .ci_support/osx_64_python3.11.____cpythonroot_cxx_std23.yaml"
-description = "Build root-feedstock with variant osx_64_python3.11.____cpythonroot_cxx_std23 directly (without setup scripts)"
+cmd = "rattler-build debug setup --recipe recipe -m .ci_support/osx_64_python3.11.____cpythonroot_cxx_std23.yaml --target-platform osx-64"
+description = "Debug root-feedstock with variant osx_64_python3.11.____cpythonroot_cxx_std23 directly (without setup scripts)"
 [feature.build.tasks."inspect-osx_64_python3.11.____cpythonroot_cxx_std23"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/osx_64_python3.11.____cpythonroot_cxx_std23.yaml"
 description = "List contents of root-feedstock packages built for variant osx_64_python3.11.____cpythonroot_cxx_std23"
 [feature.build.tasks."build-osx_64_python3.12.____cpythonroot_cxx_std20"]
-cmd = "rattler-build build --recipe recipe -m .ci_support/osx_64_python3.12.____cpythonroot_cxx_std20.yaml"
+cmd = "rattler-build build --recipe recipe -m .ci_support/osx_64_python3.12.____cpythonroot_cxx_std20.yaml --target-platform osx-64"
 description = "Build root-feedstock with variant osx_64_python3.12.____cpythonroot_cxx_std20 directly (without setup scripts)"
 [feature.build.tasks."debug-osx_64_python3.12.____cpythonroot_cxx_std20"]
-cmd = "rattler-build debug setup --recipe recipe -m .ci_support/osx_64_python3.12.____cpythonroot_cxx_std20.yaml"
-description = "Build root-feedstock with variant osx_64_python3.12.____cpythonroot_cxx_std20 directly (without setup scripts)"
+cmd = "rattler-build debug setup --recipe recipe -m .ci_support/osx_64_python3.12.____cpythonroot_cxx_std20.yaml --target-platform osx-64"
+description = "Debug root-feedstock with variant osx_64_python3.12.____cpythonroot_cxx_std20 directly (without setup scripts)"
 [feature.build.tasks."inspect-osx_64_python3.12.____cpythonroot_cxx_std20"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/osx_64_python3.12.____cpythonroot_cxx_std20.yaml"
 description = "List contents of root-feedstock packages built for variant osx_64_python3.12.____cpythonroot_cxx_std20"
 [feature.build.tasks."build-osx_64_python3.12.____cpythonroot_cxx_std23"]
-cmd = "rattler-build build --recipe recipe -m .ci_support/osx_64_python3.12.____cpythonroot_cxx_std23.yaml"
+cmd = "rattler-build build --recipe recipe -m .ci_support/osx_64_python3.12.____cpythonroot_cxx_std23.yaml --target-platform osx-64"
 description = "Build root-feedstock with variant osx_64_python3.12.____cpythonroot_cxx_std23 directly (without setup scripts)"
 [feature.build.tasks."debug-osx_64_python3.12.____cpythonroot_cxx_std23"]
-cmd = "rattler-build debug setup --recipe recipe -m .ci_support/osx_64_python3.12.____cpythonroot_cxx_std23.yaml"
-description = "Build root-feedstock with variant osx_64_python3.12.____cpythonroot_cxx_std23 directly (without setup scripts)"
+cmd = "rattler-build debug setup --recipe recipe -m .ci_support/osx_64_python3.12.____cpythonroot_cxx_std23.yaml --target-platform osx-64"
+description = "Debug root-feedstock with variant osx_64_python3.12.____cpythonroot_cxx_std23 directly (without setup scripts)"
 [feature.build.tasks."inspect-osx_64_python3.12.____cpythonroot_cxx_std23"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/osx_64_python3.12.____cpythonroot_cxx_std23.yaml"
 description = "List contents of root-feedstock packages built for variant osx_64_python3.12.____cpythonroot_cxx_std23"
 [feature.build.tasks."build-osx_64_python3.13.____cp313root_cxx_std20"]
-cmd = "rattler-build build --recipe recipe -m .ci_support/osx_64_python3.13.____cp313root_cxx_std20.yaml"
+cmd = "rattler-build build --recipe recipe -m .ci_support/osx_64_python3.13.____cp313root_cxx_std20.yaml --target-platform osx-64"
 description = "Build root-feedstock with variant osx_64_python3.13.____cp313root_cxx_std20 directly (without setup scripts)"
 [feature.build.tasks."debug-osx_64_python3.13.____cp313root_cxx_std20"]
-cmd = "rattler-build debug setup --recipe recipe -m .ci_support/osx_64_python3.13.____cp313root_cxx_std20.yaml"
-description = "Build root-feedstock with variant osx_64_python3.13.____cp313root_cxx_std20 directly (without setup scripts)"
+cmd = "rattler-build debug setup --recipe recipe -m .ci_support/osx_64_python3.13.____cp313root_cxx_std20.yaml --target-platform osx-64"
+description = "Debug root-feedstock with variant osx_64_python3.13.____cp313root_cxx_std20 directly (without setup scripts)"
 [feature.build.tasks."inspect-osx_64_python3.13.____cp313root_cxx_std20"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/osx_64_python3.13.____cp313root_cxx_std20.yaml"
 description = "List contents of root-feedstock packages built for variant osx_64_python3.13.____cp313root_cxx_std20"
 [feature.build.tasks."build-osx_64_python3.13.____cp313root_cxx_std23"]
-cmd = "rattler-build build --recipe recipe -m .ci_support/osx_64_python3.13.____cp313root_cxx_std23.yaml"
+cmd = "rattler-build build --recipe recipe -m .ci_support/osx_64_python3.13.____cp313root_cxx_std23.yaml --target-platform osx-64"
 description = "Build root-feedstock with variant osx_64_python3.13.____cp313root_cxx_std23 directly (without setup scripts)"
 [feature.build.tasks."debug-osx_64_python3.13.____cp313root_cxx_std23"]
-cmd = "rattler-build debug setup --recipe recipe -m .ci_support/osx_64_python3.13.____cp313root_cxx_std23.yaml"
-description = "Build root-feedstock with variant osx_64_python3.13.____cp313root_cxx_std23 directly (without setup scripts)"
+cmd = "rattler-build debug setup --recipe recipe -m .ci_support/osx_64_python3.13.____cp313root_cxx_std23.yaml --target-platform osx-64"
+description = "Debug root-feedstock with variant osx_64_python3.13.____cp313root_cxx_std23 directly (without setup scripts)"
 [feature.build.tasks."inspect-osx_64_python3.13.____cp313root_cxx_std23"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/osx_64_python3.13.____cp313root_cxx_std23.yaml"
 description = "List contents of root-feedstock packages built for variant osx_64_python3.13.____cp313root_cxx_std23"
 [feature.build.tasks."build-osx_64_python3.14.____cp314root_cxx_std20"]
-cmd = "rattler-build build --recipe recipe -m .ci_support/osx_64_python3.14.____cp314root_cxx_std20.yaml"
+cmd = "rattler-build build --recipe recipe -m .ci_support/osx_64_python3.14.____cp314root_cxx_std20.yaml --target-platform osx-64"
 description = "Build root-feedstock with variant osx_64_python3.14.____cp314root_cxx_std20 directly (without setup scripts)"
 [feature.build.tasks."debug-osx_64_python3.14.____cp314root_cxx_std20"]
-cmd = "rattler-build debug setup --recipe recipe -m .ci_support/osx_64_python3.14.____cp314root_cxx_std20.yaml"
-description = "Build root-feedstock with variant osx_64_python3.14.____cp314root_cxx_std20 directly (without setup scripts)"
+cmd = "rattler-build debug setup --recipe recipe -m .ci_support/osx_64_python3.14.____cp314root_cxx_std20.yaml --target-platform osx-64"
+description = "Debug root-feedstock with variant osx_64_python3.14.____cp314root_cxx_std20 directly (without setup scripts)"
 [feature.build.tasks."inspect-osx_64_python3.14.____cp314root_cxx_std20"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/osx_64_python3.14.____cp314root_cxx_std20.yaml"
 description = "List contents of root-feedstock packages built for variant osx_64_python3.14.____cp314root_cxx_std20"
 [feature.build.tasks."build-osx_64_python3.14.____cp314root_cxx_std23"]
-cmd = "rattler-build build --recipe recipe -m .ci_support/osx_64_python3.14.____cp314root_cxx_std23.yaml"
+cmd = "rattler-build build --recipe recipe -m .ci_support/osx_64_python3.14.____cp314root_cxx_std23.yaml --target-platform osx-64"
 description = "Build root-feedstock with variant osx_64_python3.14.____cp314root_cxx_std23 directly (without setup scripts)"
 [feature.build.tasks."debug-osx_64_python3.14.____cp314root_cxx_std23"]
-cmd = "rattler-build debug setup --recipe recipe -m .ci_support/osx_64_python3.14.____cp314root_cxx_std23.yaml"
-description = "Build root-feedstock with variant osx_64_python3.14.____cp314root_cxx_std23 directly (without setup scripts)"
+cmd = "rattler-build debug setup --recipe recipe -m .ci_support/osx_64_python3.14.____cp314root_cxx_std23.yaml --target-platform osx-64"
+description = "Debug root-feedstock with variant osx_64_python3.14.____cp314root_cxx_std23 directly (without setup scripts)"
 [feature.build.tasks."inspect-osx_64_python3.14.____cp314root_cxx_std23"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/osx_64_python3.14.____cp314root_cxx_std23.yaml"
 description = "List contents of root-feedstock packages built for variant osx_64_python3.14.____cp314root_cxx_std23"
-[feature.build.tasks."build-osx_arm64_python3.10.____cpythonroot_cxx_std20"]
-cmd = "rattler-build build --recipe recipe -m .ci_support/osx_arm64_python3.10.____cpythonroot_cxx_std20.yaml"
-description = "Build root-feedstock with variant osx_arm64_python3.10.____cpythonroot_cxx_std20 directly (without setup scripts)"
-[feature.build.tasks."debug-osx_arm64_python3.10.____cpythonroot_cxx_std20"]
-cmd = "rattler-build debug setup --recipe recipe -m .ci_support/osx_arm64_python3.10.____cpythonroot_cxx_std20.yaml"
-description = "Build root-feedstock with variant osx_arm64_python3.10.____cpythonroot_cxx_std20 directly (without setup scripts)"
-[feature.build.tasks."inspect-osx_arm64_python3.10.____cpythonroot_cxx_std20"]
-cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/osx_arm64_python3.10.____cpythonroot_cxx_std20.yaml"
-description = "List contents of root-feedstock packages built for variant osx_arm64_python3.10.____cpythonroot_cxx_std20"
-[feature.build.tasks."build-osx_arm64_python3.10.____cpythonroot_cxx_std23"]
-cmd = "rattler-build build --recipe recipe -m .ci_support/osx_arm64_python3.10.____cpythonroot_cxx_std23.yaml"
-description = "Build root-feedstock with variant osx_arm64_python3.10.____cpythonroot_cxx_std23 directly (without setup scripts)"
-[feature.build.tasks."debug-osx_arm64_python3.10.____cpythonroot_cxx_std23"]
-cmd = "rattler-build debug setup --recipe recipe -m .ci_support/osx_arm64_python3.10.____cpythonroot_cxx_std23.yaml"
-description = "Build root-feedstock with variant osx_arm64_python3.10.____cpythonroot_cxx_std23 directly (without setup scripts)"
-[feature.build.tasks."inspect-osx_arm64_python3.10.____cpythonroot_cxx_std23"]
-cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/osx_arm64_python3.10.____cpythonroot_cxx_std23.yaml"
-description = "List contents of root-feedstock packages built for variant osx_arm64_python3.10.____cpythonroot_cxx_std23"
 [feature.build.tasks."build-osx_arm64_python3.11.____cpythonroot_cxx_std20"]
-cmd = "rattler-build build --recipe recipe -m .ci_support/osx_arm64_python3.11.____cpythonroot_cxx_std20.yaml"
+cmd = "rattler-build build --recipe recipe -m .ci_support/osx_arm64_python3.11.____cpythonroot_cxx_std20.yaml --target-platform osx-arm64"
 description = "Build root-feedstock with variant osx_arm64_python3.11.____cpythonroot_cxx_std20 directly (without setup scripts)"
 [feature.build.tasks."debug-osx_arm64_python3.11.____cpythonroot_cxx_std20"]
-cmd = "rattler-build debug setup --recipe recipe -m .ci_support/osx_arm64_python3.11.____cpythonroot_cxx_std20.yaml"
-description = "Build root-feedstock with variant osx_arm64_python3.11.____cpythonroot_cxx_std20 directly (without setup scripts)"
+cmd = "rattler-build debug setup --recipe recipe -m .ci_support/osx_arm64_python3.11.____cpythonroot_cxx_std20.yaml --target-platform osx-arm64"
+description = "Debug root-feedstock with variant osx_arm64_python3.11.____cpythonroot_cxx_std20 directly (without setup scripts)"
 [feature.build.tasks."inspect-osx_arm64_python3.11.____cpythonroot_cxx_std20"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/osx_arm64_python3.11.____cpythonroot_cxx_std20.yaml"
 description = "List contents of root-feedstock packages built for variant osx_arm64_python3.11.____cpythonroot_cxx_std20"
 [feature.build.tasks."build-osx_arm64_python3.11.____cpythonroot_cxx_std23"]
-cmd = "rattler-build build --recipe recipe -m .ci_support/osx_arm64_python3.11.____cpythonroot_cxx_std23.yaml"
+cmd = "rattler-build build --recipe recipe -m .ci_support/osx_arm64_python3.11.____cpythonroot_cxx_std23.yaml --target-platform osx-arm64"
 description = "Build root-feedstock with variant osx_arm64_python3.11.____cpythonroot_cxx_std23 directly (without setup scripts)"
 [feature.build.tasks."debug-osx_arm64_python3.11.____cpythonroot_cxx_std23"]
-cmd = "rattler-build debug setup --recipe recipe -m .ci_support/osx_arm64_python3.11.____cpythonroot_cxx_std23.yaml"
-description = "Build root-feedstock with variant osx_arm64_python3.11.____cpythonroot_cxx_std23 directly (without setup scripts)"
+cmd = "rattler-build debug setup --recipe recipe -m .ci_support/osx_arm64_python3.11.____cpythonroot_cxx_std23.yaml --target-platform osx-arm64"
+description = "Debug root-feedstock with variant osx_arm64_python3.11.____cpythonroot_cxx_std23 directly (without setup scripts)"
 [feature.build.tasks."inspect-osx_arm64_python3.11.____cpythonroot_cxx_std23"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/osx_arm64_python3.11.____cpythonroot_cxx_std23.yaml"
 description = "List contents of root-feedstock packages built for variant osx_arm64_python3.11.____cpythonroot_cxx_std23"
 [feature.build.tasks."build-osx_arm64_python3.12.____cpythonroot_cxx_std20"]
-cmd = "rattler-build build --recipe recipe -m .ci_support/osx_arm64_python3.12.____cpythonroot_cxx_std20.yaml"
+cmd = "rattler-build build --recipe recipe -m .ci_support/osx_arm64_python3.12.____cpythonroot_cxx_std20.yaml --target-platform osx-arm64"
 description = "Build root-feedstock with variant osx_arm64_python3.12.____cpythonroot_cxx_std20 directly (without setup scripts)"
 [feature.build.tasks."debug-osx_arm64_python3.12.____cpythonroot_cxx_std20"]
-cmd = "rattler-build debug setup --recipe recipe -m .ci_support/osx_arm64_python3.12.____cpythonroot_cxx_std20.yaml"
-description = "Build root-feedstock with variant osx_arm64_python3.12.____cpythonroot_cxx_std20 directly (without setup scripts)"
+cmd = "rattler-build debug setup --recipe recipe -m .ci_support/osx_arm64_python3.12.____cpythonroot_cxx_std20.yaml --target-platform osx-arm64"
+description = "Debug root-feedstock with variant osx_arm64_python3.12.____cpythonroot_cxx_std20 directly (without setup scripts)"
 [feature.build.tasks."inspect-osx_arm64_python3.12.____cpythonroot_cxx_std20"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/osx_arm64_python3.12.____cpythonroot_cxx_std20.yaml"
 description = "List contents of root-feedstock packages built for variant osx_arm64_python3.12.____cpythonroot_cxx_std20"
 [feature.build.tasks."build-osx_arm64_python3.12.____cpythonroot_cxx_std23"]
-cmd = "rattler-build build --recipe recipe -m .ci_support/osx_arm64_python3.12.____cpythonroot_cxx_std23.yaml"
+cmd = "rattler-build build --recipe recipe -m .ci_support/osx_arm64_python3.12.____cpythonroot_cxx_std23.yaml --target-platform osx-arm64"
 description = "Build root-feedstock with variant osx_arm64_python3.12.____cpythonroot_cxx_std23 directly (without setup scripts)"
 [feature.build.tasks."debug-osx_arm64_python3.12.____cpythonroot_cxx_std23"]
-cmd = "rattler-build debug setup --recipe recipe -m .ci_support/osx_arm64_python3.12.____cpythonroot_cxx_std23.yaml"
-description = "Build root-feedstock with variant osx_arm64_python3.12.____cpythonroot_cxx_std23 directly (without setup scripts)"
+cmd = "rattler-build debug setup --recipe recipe -m .ci_support/osx_arm64_python3.12.____cpythonroot_cxx_std23.yaml --target-platform osx-arm64"
+description = "Debug root-feedstock with variant osx_arm64_python3.12.____cpythonroot_cxx_std23 directly (without setup scripts)"
 [feature.build.tasks."inspect-osx_arm64_python3.12.____cpythonroot_cxx_std23"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/osx_arm64_python3.12.____cpythonroot_cxx_std23.yaml"
 description = "List contents of root-feedstock packages built for variant osx_arm64_python3.12.____cpythonroot_cxx_std23"
 [feature.build.tasks."build-osx_arm64_python3.13.____cp313root_cxx_std20"]
-cmd = "rattler-build build --recipe recipe -m .ci_support/osx_arm64_python3.13.____cp313root_cxx_std20.yaml"
+cmd = "rattler-build build --recipe recipe -m .ci_support/osx_arm64_python3.13.____cp313root_cxx_std20.yaml --target-platform osx-arm64"
 description = "Build root-feedstock with variant osx_arm64_python3.13.____cp313root_cxx_std20 directly (without setup scripts)"
 [feature.build.tasks."debug-osx_arm64_python3.13.____cp313root_cxx_std20"]
-cmd = "rattler-build debug setup --recipe recipe -m .ci_support/osx_arm64_python3.13.____cp313root_cxx_std20.yaml"
-description = "Build root-feedstock with variant osx_arm64_python3.13.____cp313root_cxx_std20 directly (without setup scripts)"
+cmd = "rattler-build debug setup --recipe recipe -m .ci_support/osx_arm64_python3.13.____cp313root_cxx_std20.yaml --target-platform osx-arm64"
+description = "Debug root-feedstock with variant osx_arm64_python3.13.____cp313root_cxx_std20 directly (without setup scripts)"
 [feature.build.tasks."inspect-osx_arm64_python3.13.____cp313root_cxx_std20"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/osx_arm64_python3.13.____cp313root_cxx_std20.yaml"
 description = "List contents of root-feedstock packages built for variant osx_arm64_python3.13.____cp313root_cxx_std20"
 [feature.build.tasks."build-osx_arm64_python3.13.____cp313root_cxx_std23"]
-cmd = "rattler-build build --recipe recipe -m .ci_support/osx_arm64_python3.13.____cp313root_cxx_std23.yaml"
+cmd = "rattler-build build --recipe recipe -m .ci_support/osx_arm64_python3.13.____cp313root_cxx_std23.yaml --target-platform osx-arm64"
 description = "Build root-feedstock with variant osx_arm64_python3.13.____cp313root_cxx_std23 directly (without setup scripts)"
 [feature.build.tasks."debug-osx_arm64_python3.13.____cp313root_cxx_std23"]
-cmd = "rattler-build debug setup --recipe recipe -m .ci_support/osx_arm64_python3.13.____cp313root_cxx_std23.yaml"
-description = "Build root-feedstock with variant osx_arm64_python3.13.____cp313root_cxx_std23 directly (without setup scripts)"
+cmd = "rattler-build debug setup --recipe recipe -m .ci_support/osx_arm64_python3.13.____cp313root_cxx_std23.yaml --target-platform osx-arm64"
+description = "Debug root-feedstock with variant osx_arm64_python3.13.____cp313root_cxx_std23 directly (without setup scripts)"
 [feature.build.tasks."inspect-osx_arm64_python3.13.____cp313root_cxx_std23"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/osx_arm64_python3.13.____cp313root_cxx_std23.yaml"
 description = "List contents of root-feedstock packages built for variant osx_arm64_python3.13.____cp313root_cxx_std23"
 [feature.build.tasks."build-osx_arm64_python3.14.____cp314root_cxx_std20"]
-cmd = "rattler-build build --recipe recipe -m .ci_support/osx_arm64_python3.14.____cp314root_cxx_std20.yaml"
+cmd = "rattler-build build --recipe recipe -m .ci_support/osx_arm64_python3.14.____cp314root_cxx_std20.yaml --target-platform osx-arm64"
 description = "Build root-feedstock with variant osx_arm64_python3.14.____cp314root_cxx_std20 directly (without setup scripts)"
 [feature.build.tasks."debug-osx_arm64_python3.14.____cp314root_cxx_std20"]
-cmd = "rattler-build debug setup --recipe recipe -m .ci_support/osx_arm64_python3.14.____cp314root_cxx_std20.yaml"
-description = "Build root-feedstock with variant osx_arm64_python3.14.____cp314root_cxx_std20 directly (without setup scripts)"
+cmd = "rattler-build debug setup --recipe recipe -m .ci_support/osx_arm64_python3.14.____cp314root_cxx_std20.yaml --target-platform osx-arm64"
+description = "Debug root-feedstock with variant osx_arm64_python3.14.____cp314root_cxx_std20 directly (without setup scripts)"
 [feature.build.tasks."inspect-osx_arm64_python3.14.____cp314root_cxx_std20"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/osx_arm64_python3.14.____cp314root_cxx_std20.yaml"
 description = "List contents of root-feedstock packages built for variant osx_arm64_python3.14.____cp314root_cxx_std20"
 [feature.build.tasks."build-osx_arm64_python3.14.____cp314root_cxx_std23"]
-cmd = "rattler-build build --recipe recipe -m .ci_support/osx_arm64_python3.14.____cp314root_cxx_std23.yaml"
+cmd = "rattler-build build --recipe recipe -m .ci_support/osx_arm64_python3.14.____cp314root_cxx_std23.yaml --target-platform osx-arm64"
 description = "Build root-feedstock with variant osx_arm64_python3.14.____cp314root_cxx_std23 directly (without setup scripts)"
 [feature.build.tasks."debug-osx_arm64_python3.14.____cp314root_cxx_std23"]
-cmd = "rattler-build debug setup --recipe recipe -m .ci_support/osx_arm64_python3.14.____cp314root_cxx_std23.yaml"
-description = "Build root-feedstock with variant osx_arm64_python3.14.____cp314root_cxx_std23 directly (without setup scripts)"
+cmd = "rattler-build debug setup --recipe recipe -m .ci_support/osx_arm64_python3.14.____cp314root_cxx_std23.yaml --target-platform osx-arm64"
+description = "Debug root-feedstock with variant osx_arm64_python3.14.____cp314root_cxx_std23 directly (without setup scripts)"
 [feature.build.tasks."inspect-osx_arm64_python3.14.____cp314root_cxx_std23"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/osx_arm64_python3.14.____cp314root_cxx_std23.yaml"
 description = "List contents of root-feedstock packages built for variant osx_arm64_python3.14.____cp314root_cxx_std23"
