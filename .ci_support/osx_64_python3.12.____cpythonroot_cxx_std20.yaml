@@ -37,7 +37,7 @@ glib:
 graphviz:
 - '14'
 gsl:
-- '2.7'
+- '2.8'
 libblas:
 - 3.9.* *netlib
 libcblas:
