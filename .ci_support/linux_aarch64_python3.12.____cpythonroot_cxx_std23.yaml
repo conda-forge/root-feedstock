@@ -1,3 +1,5 @@
+DOCKER_PLATFORM:
+- linux/aarch64
 c_compiler:
 - gcc
 c_compiler_version:
@@ -53,7 +55,7 @@ libxml2_devel:
 libxrootd_devel:
 - '6'
 lz4_c:
-- '1.10'
+- '1.11'
 numpy:
 - '2'
 openssl:
